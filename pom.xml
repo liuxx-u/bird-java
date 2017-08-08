@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cczcrv</groupId>
+    <artifactId>cczcrv-project</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>cczcrv-core</module>
+        <module>cczcrv-service-user</module>
+        <module>cczcrv-service-product</module>
+        <module>cczcrv-service-order</module>
+        <module>cczcrv-web-website</module>
+        <module>cczcrv-service-cms</module>
+        <module>cczcrv-service-cms</module>
+        <module>cczcrv-service-cms</module>
+        <module>cczcrv-service-common</module>
+    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.cczcrv</groupId>
+            <artifactId>cczcrv-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <!-- 开发阶段配置文件位置-->
+        <sys.jdbc.config.path>classpath:config/jdbc.properties</sys.jdbc.config.path>
+        <system.config.path>classpath:config/system.properties</system.config.path>
+
+        <!-- 编码 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--spring版本号-->
+        <spring.version>4.3.8.RELEASE</spring.version>
+        <spring-data-redis.version>1.8.3.RELEASE</spring-data-redis.version>
+
+        <!--junit版本号-->
+        <junit.version>3.8.1</junit.version>
+
+        <!-- slf4j版本号 -->
+        <slf4j.version>1.7.25</slf4j.version>
+
+        <!--redis组件版本号-->
+        <redisson.version>3.4.2</redisson.version>
+        <jedis.version>2.9.0</jedis.version>
+
+        <!--dubbo版本号-->
+        <dubbo.version>2.5.3</dubbo.version>
+        <zkclient.version>0.10</zkclient.version>
+        <javassist.version>3.21.0-GA</javassist.version>
+
+        <!--mybatis版本号-->
+        <mybatis.version>3.4.4</mybatis.version>
+        <mybatis-spring.version>1.3.1</mybatis-spring.version>
+        <mybatis-plus.version>2.0.8</mybatis-plus.version>
+        <velocity.version>1.7</velocity.version>
+
+        <!--mssql-jdbc版本号-->
+        <mssql-jdbc.version>6.1.0.jre8</mssql-jdbc.version>
+
+        <!--druid版本号-->
+        <druid.version>1.0.29</druid.version>
+
+        <!--json组件版本号-->
+        <jackson.version>2.9.0.pr3</jackson.version>
+        <fastjson.version>1.2.32</fastjson.version>
+
+        <!--aop组件版本号-->
+        <aspectj.version>1.8.10</aspectj.version>
+
+        <!--反射组件版本号-->
+        <reflectasm.version>1.11.4-2</reflectasm.version>
+
+        <springfox.version>2.6.1</springfox.version>
+
+        <!--bean映射组件版本号-->
+        <dozer.version>5.5.1</dozer.version>
+
+        <!--其他版本号-->
+        <javax.version>3.1.0</javax.version>
+        <jstl.version>1.2</jstl.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <commons-httpclient.version>3.1</commons-httpclient.version>
+        <okhttp-version>2.7.5</okhttp-version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
