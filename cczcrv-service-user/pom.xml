@@ -67,6 +67,24 @@
             <version>${spring.version}</version>
         </dependency>
 
+        <!--日志组件-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
         <!-- 添加mybatis-plus依赖 -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -97,11 +115,6 @@
         <dependency>
             <groupId>com.cczcrv</groupId>
             <artifactId>cczcrv-service-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.cczcrv</groupId>
-            <artifactId>cczcrv-service-order</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

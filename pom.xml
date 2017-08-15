@@ -10,22 +10,13 @@
 
     <modules>
         <module>cczcrv-core</module>
+        <module>cczcrv-service-common</module>
         <module>cczcrv-service-user</module>
         <module>cczcrv-service-product</module>
         <module>cczcrv-service-order</module>
         <module>cczcrv-web-website</module>
         <module>cczcrv-service-cms</module>
-        <module>cczcrv-service-cms</module>
-        <module>cczcrv-service-cms</module>
-        <module>cczcrv-service-common</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>com.cczcrv</groupId>
-            <artifactId>cczcrv-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 
     <properties>
         <!-- 开发阶段配置文件位置-->
@@ -42,8 +33,12 @@
         <!--junit版本号-->
         <junit.version>3.8.1</junit.version>
 
-        <!-- slf4j版本号 -->
+        <!-- 日志组件版本号 -->
         <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.1.11</logback.version>
+
+        <!--quartz组件版本号-->
+        <quartz.version>2.2.3</quartz.version>
 
         <!--redis组件版本号-->
         <redisson.version>3.4.2</redisson.version>
@@ -81,13 +76,15 @@
         <!--bean映射组件版本号-->
         <dozer.version>5.5.1</dozer.version>
 
+        <!--httpclient组件版本号-->
+        <httpclient.version>4.0.2</httpclient.version>
+
         <!--其他版本号-->
         <javax.version>3.1.0</javax.version>
         <jstl.version>1.2</jstl.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
-        <okhttp-version>2.7.5</okhttp-version>
     </properties>
 
     <build>

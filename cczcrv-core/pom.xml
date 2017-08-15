@@ -82,10 +82,16 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
 
         <!-- 添加mybatis-plus依赖 -->
@@ -105,6 +111,13 @@
             <groupId>org.db4j</groupId>
             <artifactId>reflectasm</artifactId>
             <version>${reflectasm.version}</version>
+        </dependency>
+
+        <!-- quartz调度框架 -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
         </dependency>
 
         <!--redis组件-->
@@ -167,7 +180,7 @@
         <dependency>
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>
-            <version>RELEASE</version>
+            <version>${dozer.version}</version>
         </dependency>
         <dependency>
             <groupId>com.beust</groupId>
@@ -175,14 +188,9 @@
             <version>RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.0.2</version>
+            <version>${httpclient.version}</version>
         </dependency>
     </dependencies>
 </project>

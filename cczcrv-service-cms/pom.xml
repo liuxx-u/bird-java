@@ -12,10 +12,6 @@
     <groupId>com.cczcrv</groupId>
     <artifactId>cczcrv-service-cms</artifactId>
 
-    <properties>
-        <server.port>5001</server.port>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -39,18 +35,6 @@
     </build>
 
     <dependencies>
-        <!--日志组件-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
         <!-- 添加spring框架包 -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -81,6 +65,24 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+
+        <!--日志组件-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
 
         <!-- 添加mybatis-plus依赖 -->

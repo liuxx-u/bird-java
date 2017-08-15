@@ -1,7 +1,5 @@
 package com.cczcrv.service;
 
-import com.cczcrv.core.utils.DataHelper;
-import org.apache.log4j.PropertyConfigurator;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -9,7 +7,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class Bootstrap {
     public static void main(String arg[]){
-        PropertyConfigurator.configure(DataHelper.getFullPathRelateClass("../../../config/log4j.properties",Bootstrap.class));
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"classpath:spring/spring-user-context.xml"});
         context.start();
 

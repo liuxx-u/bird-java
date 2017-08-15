@@ -24,4 +24,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <!--项目依赖-->
+        <dependency>
+            <groupId>com.cczcrv</groupId>
+            <artifactId>cczcrv-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
