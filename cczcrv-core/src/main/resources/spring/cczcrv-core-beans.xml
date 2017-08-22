@@ -11,4 +11,5 @@
 
 
     <import resource="classpath*:spring/cczcrv-core-redis.xml" />
+    <import resource="classpath*:spring/cczcrv-core-quartz.xml"/>
 </beans>
