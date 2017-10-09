@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <context:component-scan base-package="com.bird"/>
+
+    <!--添加配置文件-->
+    <bean class="com.bird.core.utils.PropertiesHelper">
+        <property name="locations">
+            <list>
+                <value>classpath:/config/system.properties</value>
+                <value> classpath:/config/sso.properties</value>
+            </list>
+        </property>
+        <property name="properties">
+            <props>
+                <!-- dubbo个性化配置(服务名,端口) -->
+                <prop key="dubbo.application.name">bird-web-website</prop>
+                <prop key="dubbo.protocol.port">5010</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--配置beans映射组件-->
+    <!--<bean mapperspper" class="org.dozer.DozerBeanMapper"></bean>-->
+    <bean id="mapper" class="com.bird.core.utils.DozerHelper"></bean>
+
+    <!--配置单点登陆组件-->
+    <bean id="ticketProtector" class="com.bird.core.sso.DesTicketInfoProtector">
+        <property name="key" value="${sso.des.key}"></property>
+        <property name="salt" value="${sso.des.salt}"></property>
+    </bean>
+    <bean id="ssoConfig" class="com.bird.core.sso.SsoAuthorizeConfig">
+        <property name="cookieName" value="${sso.cookieName}"></property>
+        <property name="loginPath" value="${sso.loginPath}"></property>
+        <property name="protector" ref="ticketProtector"></property>
+    </bean>
+
+    <import resource="classpath*:spring/bird-core-beans.xml" />
+    <import resource="classpath*:dubbo/dubbo.xml" />
+</beans>

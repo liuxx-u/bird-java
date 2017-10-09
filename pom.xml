@@ -3,19 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cczcrv</groupId>
-    <artifactId>cczcrv-project</artifactId>
+    <groupId>com.bird</groupId>
+    <artifactId>bird-project</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>cczcrv-core</module>
-        <module>cczcrv-service-common</module>
-        <module>cczcrv-service-user</module>
-        <module>cczcrv-service-product</module>
-        <module>cczcrv-service-order</module>
-        <module>cczcrv-web-website</module>
-        <module>cczcrv-service-cms</module>
+        <module>bird-core</module>
+        <module>bird-service-common</module>
+        <module>bird-service-zero</module>
+        <module>bird-web-website</module>
     </modules>
 
     <properties>
