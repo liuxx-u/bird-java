@@ -1,0 +1,8 @@
+CREATE SCHEMA IF NOT EXISTS `bird-zero`;
+
+CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_user` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userName` VARCHAR(32) NULL COMMENT '用户名',
+  `nickName` VARCHAR(32) NULL COMMENT '昵称',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
