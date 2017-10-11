@@ -12,7 +12,7 @@
         <module>bird-core</module>
         <module>bird-service-common</module>
         <module>bird-service-zero</module>
-        <module>bird-web-website</module>
+        <module>bird-web-admin</module>
     </modules>
 
     <properties>
@@ -26,6 +26,9 @@
         <!--spring版本号-->
         <spring.version>4.3.8.RELEASE</spring.version>
         <spring-data-redis.version>1.8.3.RELEASE</spring-data-redis.version>
+
+        <!--shiro版本号-->
+        <shiro.version>1.4.0</shiro.version>
 
         <!--junit版本号-->
         <junit.version>3.8.1</junit.version>
@@ -53,7 +56,7 @@
         <velocity.version>1.7</velocity.version>
 
         <!--mssql-jdbc版本号-->
-        <mssql-jdbc.version>6.1.0.jre8</mssql-jdbc.version>
+        <mysql.version>5.1.44</mysql.version>
 
         <!--druid版本号-->
         <druid.version>1.0.29</druid.version>
