@@ -5,7 +5,11 @@ import com.bird.core.service.query.PagedListQueryDTO;
 import com.bird.core.utils.StringHelper;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by liuxx on 2017/10/10.
@@ -74,19 +78,20 @@ public class PagedQueryParam implements Serializable {
         return select;
     }
 
-    public Class<?> gettClass() {
-        return tClass;
-    }
-
-    public void settClass(Class<?> tClass) {
-        this.tClass = tClass;
-    }
-
 
     private void initWithClass() {
         if (StringHelper.isNullOrWhiteSpace(this.select)) {
             StringBuilder sb = new StringBuilder();
-            for (Field field : tClass.getDeclaredFields()) {
+            List<Field> fields = new ArrayList<>();
+
+            Class tempClass = tClass;
+            while (tempClass != null && !tempClass.getName().toLowerCase().equals("java.lang.object")) {
+                Field[] tempFields = tempClass.getDeclaredFields();
+                fields.addAll(Arrays.asList(tempFields));
+                tempClass = tempClass.getSuperclass();
+            }
+
+            for (Field field : fields) {
                 sb.append(field.getName() + ",");
             }
             this.select = StringHelper.trimEnd(sb.toString(), ',');

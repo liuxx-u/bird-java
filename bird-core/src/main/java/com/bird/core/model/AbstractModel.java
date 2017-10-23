@@ -16,14 +16,14 @@ public abstract class AbstractModel implements Serializable {
     private Long id;
     @TableField("delFlag")
     private Integer delFlag;
+    @TableField("deleteBy")
+    private Long deleteBy;
+    @TableField("deleteTime")
+    private Date deleteTime;
     @TableField("createBy")
     private Long createBy;
     @TableField("createTime")
     private Date createTime;
-    @TableField("updateBy")
-    private Long updateBy;
-    @TableField("updateTime")
-    private Date updateTime;
     @TableField("remark")
     private String remark;
 
@@ -62,27 +62,27 @@ public abstract class AbstractModel implements Serializable {
         this.createTime = createTime;
     }
 
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getDeleteBy() {
+        return deleteBy;
+    }
+
+    public void setDeleteBy(Long deleteBy) {
+        this.deleteBy = deleteBy;
+    }
+
+    public Date getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Date deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

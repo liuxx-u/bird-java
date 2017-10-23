@@ -6,14 +6,14 @@ import com.bird.core.service.AbstractDTO;
  * Created by liuxx on 2017/6/22.
  */
 public class FilterRule extends AbstractDTO {
-    private String key;
+    private String field;
     private String operate;
     private String value;
 
     public FilterRule(){}
 
-    public FilterRule(String key,String operate,String value) {
-        this.key = key;
+    public FilterRule(String field,String operate,String value) {
+        this.field = field;
         this.operate = operate;
         this.value = value;
     }
@@ -23,12 +23,12 @@ public class FilterRule extends AbstractDTO {
     }
 
 
-    public String getKey() {
-        return key;
+    public String getField() {
+        return field;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public String getOperate() {

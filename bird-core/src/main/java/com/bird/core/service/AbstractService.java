@@ -2,6 +2,7 @@ package com.bird.core.service;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.bird.core.mapper.CommonSaveParam;
 import com.bird.core.mapper.PagedQueryParam;
 import com.bird.core.model.AbstractModel;
 import com.bird.core.service.query.PagedListResultDTO;
@@ -23,6 +24,13 @@ public interface AbstractService<T extends AbstractModel> {
      * @return 查询的结果
      */
     PagedListResultDTO queryPagedList(PagedQueryParam param);
+
+    /**
+     * 以DTO为根据的通用保存方法
+     * param.getEntityDTO().getId()>0 则更新，否则新增
+     * @param param
+     */
+    void save(CommonSaveParam param);
 
     /**
      * 根据id集合获取数据

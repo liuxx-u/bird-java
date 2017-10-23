@@ -1,7 +1,10 @@
 package com.bird.core.mapper;
 
 import com.bird.core.model.AbstractModel;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +32,18 @@ public interface AbstractMapper<T extends AbstractModel> extends com.baomidou.my
      */
     @SelectProvider(type = PagedQueryProvider.class, method = "queryTotalCount")
     Long queryTotalCount(PagedQueryParam param);
+
+    /**
+     * 通用新增方法
+     * @param param
+     */
+    @InsertProvider(type = CommonSaveProvider.class,method = "insert")
+    void insertDto(CommonSaveParam param);
+
+    /**
+     * 通用更新方法
+     * @param param
+     */
+    @UpdateProvider(type = CommonSaveProvider.class,method = "update")
+    void updateDto(CommonSaveParam param);
 }

@@ -5,6 +5,7 @@ import com.bird.core.Constants;
 import com.bird.core.cache.CacheHelper;
 import com.bird.core.exception.ExceptionHelper;
 import com.bird.core.mapper.AbstractMapper;
+import com.bird.core.mapper.CommonSaveParam;
 import com.bird.core.mapper.PagedQueryParam;
 import com.bird.core.model.AbstractModel;
 import com.bird.core.service.query.PagedListResultDTO;
@@ -57,6 +58,20 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
         Long totalCount = mapper.queryTotalCount(param);
         List<Map> items = mapper.queryPagedList(param);
         return new PagedListResultDTO(totalCount, items);
+    }
+
+    /**
+     * 以DTO为根据的通用保存方法
+     * param.getEntityDTO().getId()>0 则更新，否则新增
+     * @param param
+     */
+    public void save(CommonSaveParam param) {
+        Long id = param.getEntityDTO().getId();
+        if (id == null || id <= 0) {
+            mapper.insertDto(param);
+        } else {
+            mapper.updateDto(param);
+        }
     }
 
     /**
@@ -127,8 +142,6 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
         try {
             T record = this.queryById(id);
             record.setDelFlag(1);
-            record.setUpdateTime(new Date());
-            record.setUpdateBy(userId);
             mapper.updateById(record);
             CacheHelper.getCache().set(getCacheKey(id), record);
         } catch (Exception e) {
@@ -159,7 +172,6 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
     @Transactional
     public T save(T record) {
         try {
-            record.setUpdateTime(new Date());
             if (record.getId() == null || record.getId() == 0) {
                 record.setCreateTime(new Date());
                 mapper.insert(record);
