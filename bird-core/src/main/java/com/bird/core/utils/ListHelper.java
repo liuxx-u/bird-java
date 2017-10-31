@@ -7,49 +7,47 @@ import java.util.function.Predicate;
 /**
  * Created by liuxx on 2017/6/7.
  */
-public class CollectionHelper<T> {
-    private Collection<T> items;
+public class ListHelper<T> {
+    private List<T> items;
 
-    private CollectionHelper(Collection<T> items) {
+    private ListHelper(List<T> items) {
         this.items = items;
     }
 
-    public static <S> CollectionHelper<S> init(Collection<S> items) {
-        return new CollectionHelper(items);
+    public static <S> ListHelper<S> init(List<S> items) {
+        return new ListHelper(items);
     }
 
-    public CollectionHelper<T> where(Predicate<? super T> filter) {
+    public ListHelper<T> where(Predicate<? super T> filter) {
         Objects.requireNonNull(filter);
 
-        List list = new ArrayList(items);
-        final Iterator<T> each = list.iterator();
+        final Iterator<T> each = this.items.iterator();
         while (each.hasNext()) {
             T item = each.next();
             if (!filter.test(item)) {
                 each.remove();
             }
         }
-        this.items = list;
         return this;
     }
 
-    public <R> Collection<R> select(Function<T,R> func){
-        ArrayList<R> result=new ArrayList<>();
-        List list = new ArrayList(items);
-        final Iterator<T> each = list.iterator();
+    public <R> List<R> select(Function<T, R> func) {
+        ArrayList<R> result = new ArrayList<>();
+        final Iterator<T> each = this.items.iterator();
         while (each.hasNext()) {
             result.add(func.apply(each.next()));
         }
         return result;
     }
 
-    public T firstOrDefault(Predicate<? super T> filter){
+    public T firstOrDefault(Predicate<? super T> filter) {
         int size = this.items.size();
-        if(size==0)return null;
-        List list=new ArrayList(items);
-        if(filter==null)return (T)list.get(0);
+        if (size == 0) return null;
 
-        for (int i = 0; i <= size-1; i++) {
+        List list = this.items;
+        if (filter == null) return (T) list.get(0);
+
+        for (int i = 0; i <= size - 1; i++) {
             T item = (T) list.get(i);
             if (filter.test(item)) {
                 return item;
@@ -61,7 +59,8 @@ public class CollectionHelper<T> {
     public T lastOrDefault(Predicate<? super T> filter) {
         int size = this.items.size();
         if (size == 0) return null;
-        List list = new ArrayList(items);
+
+        List list = this.items;
         if (filter == null) return (T) list.get(size - 1);
 
         for (int i = size - 1; i >= 0; i--) {
@@ -73,15 +72,7 @@ public class CollectionHelper<T> {
         return null;
     }
 
-    public List<T> toList() {
-        return new ArrayList<>(this.items);
-    }
-
-    public Set<T> toSet() {
-        return new HashSet<>(this.items);
-    }
-
-    public T[] toArray() {
-        return (T[]) this.items.toArray();
+    public List<T> toList(){
+        return this.items;
     }
 }

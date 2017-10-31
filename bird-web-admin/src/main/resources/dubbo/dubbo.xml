@@ -11,4 +11,6 @@
 
     <!--zero-->
     <dubbo:reference id="userService" interface="com.bird.service.zero.UserService" url="dubbo://${dubbo.provider.host}:6001" />
+    <dubbo:reference id="roleService" interface="com.bird.service.zero.RoleService" url="dubbo://${dubbo.provider.host}:6001" />
+    <dubbo:reference id="menuService" interface="com.bird.service.zero.MenuService" url="dubbo://${dubbo.provider.host}:6001" />
 </beans>

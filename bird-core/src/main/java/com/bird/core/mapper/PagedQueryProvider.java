@@ -36,22 +36,13 @@ public class PagedQueryProvider {
             sortDirection = query.getSortDirection();
         }
 
+        String sql = "select " + param.getSelect() + " from " + param.getFrom();
         String whereSql = where(query.getFilters());
-
-
-        //使用主键索引进行分页，提高效率
-        //参考文章：http://www.cnblogs.com/lpfuture/p/5772055.html
-        String subSql = "select id from " + param.getFrom()
-                + (StringHelper.isNullOrWhiteSpace(whereSql) ? "" : " where " + where(query.getFilters()))
-                + " order by " + sortField + " " + (sortDirection == ListSortDirection.DESC ? "desc" : "asc")
-                + " limit " + (query.getPageIndex() - 1) * query.getPageSize() + ",1";
-
-        String sql = "select " + param.getSelect()
-                + " from " + param.getFrom()
-                + " where id " + (sortDirection == ListSortDirection.ASC ? ">" : "<") + "= (" + subSql + ")"
-                + (StringHelper.isNullOrWhiteSpace(whereSql) ? "" : " and " + where(query.getFilters()))
-                + " order by " + sortField + " " + (sortDirection == ListSortDirection.DESC ? "desc" : "asc")
-                + " limit " + query.getPageSize();
+        if (!StringHelper.isNullOrWhiteSpace(whereSql)) {
+            sql += " where " + whereSql;
+        }
+        sql += " order by " + sortField + " " + (sortDirection == ListSortDirection.DESC ? "desc" : "asc")
+                + " limit " + (query.getPageIndex() - 1) * query.getPageSize() + "," + query.getPageSize();
         return sql;
     }
 

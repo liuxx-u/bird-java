@@ -74,7 +74,7 @@ public class CommonSaveProvider {
                 return field.getLong(instance) + "";
             } else if (fieldTyppeName.equals("java.lang.Boolean") || fieldTyppeName.equals("boolean")) {
                 return field.getBoolean(instance) ? "1" : "0";
-            }else if(fieldTyppeName.equals("java.util.Date")||fieldTyppeName.equals("java.sql.Date")) {
+            } else if (fieldTyppeName.equals("java.util.Date") || fieldTyppeName.equals("java.sql.Date")) {
                 Object value = field.get(instance);
                 return value == null ? "''" : "'" + dateFormat.format((Date) value) + "'";
             }

@@ -1,22 +1,19 @@
 package com.bird.core;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import java.io.Serializable;
 
 /**
  * Created by liuxx on 2017/5/17.
  */
-public class NameValue {
-    @JSONField(name = "Name")
-    private String name;
-    @JSONField(name = "Value")
+public class NameValue implements Serializable {
+    private String label;
     private String value;
 
-    public String getName() {
-        return name;
-    }
+    public NameValue (){}
 
-    public void setName(String name) {
-        this.name = name;
+    public NameValue(String label,String value) {
+        this.label = label;
+        this.value = value;
     }
 
     public String getValue() {
@@ -25,5 +22,13 @@ public class NameValue {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

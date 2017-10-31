@@ -35,16 +35,11 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by liuxx on 2017/5/12.
  */
-public abstract class AbstractServiceImpl<T extends AbstractModel> implements AbstractService<T>, ApplicationContextAware {
+public abstract class AbstractServiceImpl<T extends AbstractModel> implements AbstractService<T> {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     protected AbstractMapper<T> mapper;
-    protected ApplicationContext applicationContext;
-
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
 
     /**
      * 定义通用的查询接口（支持查询、分页、排序）
@@ -135,10 +130,9 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
      * 逻辑删除
      *
      * @param id     数据id
-     * @param userId 当前操作的用户id
      */
     @Transactional
-    public void softDelete(Long id, Long userId) {
+    public void softDelete(Long id) {
         try {
             T record = this.queryById(id);
             record.setDelFlag(1);

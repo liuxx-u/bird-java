@@ -54,10 +54,9 @@ public interface AbstractService<T extends AbstractModel> {
      * 逻辑删除
      *
      * @param id     数据id
-     * @param userId 当前操作的用户id
      */
     @Transactional
-    void softDelete(Long id, Long userId);
+    void softDelete(Long id);
 
     /**
      * 物理删除

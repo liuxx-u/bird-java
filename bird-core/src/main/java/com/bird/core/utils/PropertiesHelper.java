@@ -89,10 +89,4 @@ public final class PropertiesHelper extends PropertyPlaceholderConfigurer {
         }
         return new Boolean(value);
     }
-
-    public static void main(String[] args) {
-        String encrypt = SecurityHelper.encryptDes("buzhidao", KEY);
-        System.out.println(encrypt);
-        System.out.println(SecurityHelper.decryptDes(encrypt, KEY));
-    }
 }

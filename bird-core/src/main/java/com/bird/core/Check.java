@@ -1,0 +1,44 @@
+package com.bird.core;
+
+import com.bird.core.exception.ArgumentException;
+
+/**
+ * Created by liuxx on 2017/10/30.
+ */
+public final class Check {
+
+    /**
+     * 校验参数不能为空
+     * @param object 参数
+     * @param name 参数名
+     */
+    public static final void NotNull(Object object, String name) {
+        if (object.equals(null)) {
+            throw new ArgumentException(name + "不能为空.");
+        }
+    }
+
+    /**
+     * 校验参数必须大于某值
+     * @param value 参数
+     * @param target 目标值
+     * @param name 参数名
+     */
+    public static final void GreaterThan(Long value, Long target, String name) {
+        if (value <= target) {
+            throw new ArgumentException(name + "必须大于" + target);
+        }
+    }
+
+    /**
+     * 校验参数必须小于某值
+     * @param value 参数
+     * @param target 目标值
+     * @param name 参数名
+     */
+    public static final void LessThan(Long value,Long target,String name){
+        if (value >= target) {
+            throw new ArgumentException(name + "必须小于" + target);
+        }
+    }
+}

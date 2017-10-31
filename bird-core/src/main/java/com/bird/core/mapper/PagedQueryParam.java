@@ -1,5 +1,6 @@
 package com.bird.core.mapper;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.bird.core.service.query.PagedListQueryDTO;
 import com.bird.core.utils.StringHelper;
@@ -92,7 +93,9 @@ public class PagedQueryParam implements Serializable {
             }
 
             for (Field field : fields) {
-                sb.append(field.getName() + ",");
+                TableField tableField = field.getAnnotation(TableField.class);
+                String fieldName = tableField == null ? field.getName() : tableField.value();
+                sb.append(fieldName + ",");
             }
             this.select = StringHelper.trimEnd(sb.toString(), ',');
         }

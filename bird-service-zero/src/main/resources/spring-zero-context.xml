@@ -69,7 +69,7 @@
 
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
         <!-- 自动扫描mapping.xml文件 -->
-        <!--<property name="mapperLocations" value="classpath*:com/bird/service/*/mapper/**/*.xml" />-->
+        <property name="mapperLocations" value="classpath*:com/bird/service/*/mapper/**/*.xml" />
         <property name="typeAliasesPackage" value="com.bird.service.**.model*" />
         <property name="globalConfig">
             <bean class="com.baomidou.mybatisplus.entity.GlobalConfiguration">

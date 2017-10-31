@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_role` (
   `name` VARCHAR(45) NOT NULL COMMENT '角色名',
   `remark` VARCHAR(128) NULL COMMENT '备注',
   `displayName` VARCHAR(45) NULL COMMENT '显示名',
-  `static` TINYINT NOT NULL DEFAULT 0 COMMENT '是否静态角色，静态角色不能删除',
-  `default` TINYINT NOT NULL DEFAULT 0 COMMENT '是否默认角色，默认角色新增用户自动关联',
+  `isStatic` TINYINT NOT NULL DEFAULT 0 COMMENT '是否静态角色，静态角色不能删除',
+  `isDefault` TINYINT NOT NULL DEFAULT 0 COMMENT '是否默认角色，默认角色新增用户自动关联',
   `delFlag` TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
   `createBy` BIGINT NULL,
   `createTime` DATETIME NULL,
@@ -85,7 +85,12 @@ CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_menu` (
   `orderNo` INT NOT NULL DEFAULT 0 COMMENT '排序号',
   `permissionName` VARCHAR(128) NULL COMMENT '所需权限名',
   `remark` VARCHAR(128) NULL COMMENT '备注',
-  `visitType` VARCHAR(45) NULL COMMENT '1.游客访问;2.登录访问;3.权限访问',
+  `visitType` INT NULL COMMENT '1.游客访问;2.登录访问;3.权限访问',
+  `delFlag` TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `createBy` BIGINT NULL,
+  `createTime` DATETIME NULL,
+  `deleteBy` BIGINT NULL,
+  `deleteTime` DATETIME NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
