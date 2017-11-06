@@ -1,10 +1,12 @@
 package com.bird.service.zero.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.bird.core.Check;
 import com.bird.core.service.AbstractServiceImpl;
 import com.bird.core.service.TreeDTO;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.zero.MenuService;
+import com.bird.service.zero.dto.MenuBriefDTO;
 import com.bird.service.zero.dto.MenuDTO;
 import com.bird.service.zero.mapper.MenuMapper;
 import com.bird.service.zero.model.Menu;
@@ -50,5 +52,15 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
         return dozerHelper.map(menu,MenuDTO.class);
     }
 
+    /**
+     * 获取所有菜单（测试用）
+     * @return
+     */
+    public List<MenuBriefDTO> getAllMenus(){
+        EntityWrapper<Menu> wrapper = new EntityWrapper<>();
+        wrapper.where("delFlag = 0");
+        List<Menu> menus = selectList(wrapper);
 
+        return dozerHelper.mapList(menus,MenuBriefDTO.class);
+    }
 }

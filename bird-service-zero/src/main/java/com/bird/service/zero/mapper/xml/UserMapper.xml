@@ -18,4 +18,8 @@
         </foreach>
     </insert>
 
+    <select id="getUserPermissionNames" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT permissionName FROM zero_role_permission WHERE roleId IN (SELECT roleId FROM zero_user_role WHERE userId=#{userId})
+    </select>
+
 </mapper>

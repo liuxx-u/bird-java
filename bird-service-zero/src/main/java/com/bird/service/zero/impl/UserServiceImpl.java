@@ -57,6 +57,19 @@ public class UserServiceImpl extends AbstractServiceImpl<User> implements UserSe
      */
     @Override
     public List<Long> getUserRoleIds(Long userId) {
+        Check.GreaterThan(userId,0L,"userId");
         return userMapper.getUserRoleIds(userId);
+    }
+
+    /**
+     * 获取用户拥有的权限集合
+     *
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public List<String> getUserPermissions(Long userId) {
+        Check.GreaterThan(userId,0L,"userId");
+        return userMapper.getUserPermissionNames(userId);
     }
 }

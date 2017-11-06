@@ -2,6 +2,7 @@ package com.bird.service.zero;
 
 import com.bird.core.service.AbstractService;
 import com.bird.core.service.TreeDTO;
+import com.bird.service.zero.dto.MenuBriefDTO;
 import com.bird.service.zero.dto.MenuDTO;
 import com.bird.service.zero.model.Menu;
 
@@ -23,4 +24,10 @@ public interface MenuService  extends AbstractService<Menu> {
      * @return
      */
     MenuDTO getMenu(Long menuId);
+
+    /**
+     * 获取所有菜单（测试用）
+     * @return
+     */
+    List<MenuBriefDTO> getAllMenus();
 }

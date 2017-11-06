@@ -12,7 +12,7 @@ public class Role extends AbstractModel {
     private String displayName;
 
     private boolean isStatic;
-    private boolean isDefault;
+    private long organizationId;
 
     public String getName() {
         return name;
@@ -38,11 +38,11 @@ public class Role extends AbstractModel {
         isStatic = aStatic;
     }
 
-    public boolean isDefault() {
-        return isDefault;
+    public long getOrganizationId() {
+        return organizationId;
     }
 
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
+    public void setOrganizationId(long organizationId) {
+        this.organizationId = organizationId;
     }
 }

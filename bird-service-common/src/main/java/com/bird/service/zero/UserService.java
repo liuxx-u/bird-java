@@ -31,4 +31,11 @@ public interface UserService extends AbstractService<User> {
      * @return
      */
     List<Long> getUserRoleIds(Long userId);
+
+    /**
+     * 获取用户拥有的权限集合
+     * @param userId 用户id
+     * @return
+     */
+    List<String> getUserPermissions(Long userId);
 }

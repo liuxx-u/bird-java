@@ -1,6 +1,7 @@
 package com.bird.core;
 
 import com.bird.core.exception.ArgumentException;
+import com.bird.core.utils.StringHelper;
 
 /**
  * Created by liuxx on 2017/10/30.
@@ -14,6 +15,17 @@ public final class Check {
      */
     public static final void NotNull(Object object, String name) {
         if (object.equals(null)) {
+            throw new ArgumentException(name + "不能为空.");
+        }
+    }
+
+    /**
+     * 校验字符串不能为空白
+     * @param value 参数
+     * @param name 参数名
+     */
+    public static final void NotNullOrWhiteSpace(String value,String name){
+        if(StringHelper.isNullOrWhiteSpace(value)){
             throw new ArgumentException(name + "不能为空.");
         }
     }

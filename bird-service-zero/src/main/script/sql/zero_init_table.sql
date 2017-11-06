@@ -17,13 +17,11 @@ CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_user` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_role` (
+CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_organization` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL COMMENT '角色名',
+  `name` VARCHAR(45) NOT NULL COMMENT '岗位名称',
+  `parentId` INT NOT NULL DEFAULT 0 COMMENT '父级Id',
   `remark` VARCHAR(128) NULL COMMENT '备注',
-  `displayName` VARCHAR(45) NULL COMMENT '显示名',
-  `isStatic` TINYINT NOT NULL DEFAULT 0 COMMENT '是否静态角色，静态角色不能删除',
-  `isDefault` TINYINT NOT NULL DEFAULT 0 COMMENT '是否默认角色，默认角色新增用户自动关联',
   `delFlag` TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
   `createBy` BIGINT NULL,
   `createTime` DATETIME NULL,
@@ -32,10 +30,50 @@ CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_role` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_user_organization` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NOT NULL COMMENT '用户id',
+  `organizationId` INT NOT NULL COMMENT '岗位id',
+  PRIMARY KEY (`id`),
+  INDEX `user_organization_userId_idx` (`userId` ASC),
+  INDEX `user_organization_organizationId_idx` (`organizationId` ASC),
+  CONSTRAINT `user_organization_userId`
+    FOREIGN KEY (`userId`)
+    REFERENCES `bird-zero`.`zero_user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `user_organization_organizationId`
+    FOREIGN KEY (`organizationId`)
+    REFERENCES `bird-zero`.`zero_organization` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_role` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL COMMENT '角色名',
+  `remark` VARCHAR(128) NULL COMMENT '备注',
+  `displayName` VARCHAR(45) NULL COMMENT '显示名',
+  `isStatic` TINYINT NOT NULL DEFAULT 0 COMMENT '是否静态角色，静态角色不能删除',
+  `organizationId` INT NOT NULL COMMENT '组织机构id',
+  `delFlag` TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `createBy` BIGINT NULL,
+  `createTime` DATETIME NULL,
+  `deleteBy` BIGINT NULL,
+  `deleteTime` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `role_organizationId_idx` (`organizationId` ASC),
+  CONSTRAINT `role_organizationId`
+    FOREIGN KEY (`organizationId`)
+    REFERENCES `bird-zero`.`zero_organization` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_user_role` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `userId` BIGINT NOT NULL,
-  `roleId` INT NOT NULL,
+  `userId` BIGINT NOT NULL COMMENT '用户id',
+  `roleId` INT NOT NULL COMMENT '角色id',
   PRIMARY KEY (`id`),
   INDEX `userId_idx` (`userId` ASC),
   INDEX `roleId_idx` (`roleId` ASC),
@@ -93,4 +131,40 @@ CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_menu` (
   `deleteTime` DATETIME NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_dicType` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL COMMENT '字典名称',
+  `key` VARCHAR(64) NOT NULL COMMENT 'key',
+  `remark` VARCHAR(128) NULL COMMENT '备注',
+  `delFlag` TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `createBy` BIGINT NULL,
+  `createTime` DATETIME NULL,
+  `deleteBy` BIGINT NULL,
+  `deleteTime` DATETIME NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `bird-zero`.`zero_dicItem` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL COMMENT '名称',
+  `code` VARCHAR(128) NOT NULL COMMENT '业务码',
+  `dicTypeId` INT NOT NULL COMMENT '所属字典id',
+  `orderNo` INT NOT NULL DEFAULT 0 COMMENT '排序号',
+  `disable` TINYINT NULL DEFAULT 0 COMMENT '是否禁用',
+  `remark` VARCHAR(128) NULL COMMENT '备注',
+  `delFlag` TINYINT NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `createBy` BIGINT NULL,
+  `createTime` DATETIME NULL,
+  `deleteBy` BIGINT NULL,
+  `deleteTime` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `zero_dicItem_dicTypeId_idx` (`dicTypeId` ASC),
+  CONSTRAINT `zero_dicItem_dicTypeId`
+    FOREIGN KEY (`dicTypeId`)
+    REFERENCES `bird-zero`.`zero_dicType` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 

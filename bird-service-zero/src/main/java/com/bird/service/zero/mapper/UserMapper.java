@@ -17,4 +17,6 @@ public interface UserMapper extends AbstractMapper<User> {
     void deleteUserRoles(@Param("userId") Long userId);
 
     List<Long> getUserRoleIds(@Param("userId") Long userId);
+
+    List<String> getUserPermissionNames(@Param("userId") Long userId);
 }

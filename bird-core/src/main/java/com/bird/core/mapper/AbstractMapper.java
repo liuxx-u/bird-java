@@ -1,10 +1,7 @@
 package com.bird.core.mapper;
 
 import com.bird.core.model.AbstractModel;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -46,4 +43,11 @@ public interface AbstractMapper<T extends AbstractModel> extends com.baomidou.my
      */
     @UpdateProvider(type = CommonSaveProvider.class,method = "update")
     void updateDto(CommonSaveParam param);
+
+    /**
+     * 通用删除方法
+     * @param param
+     */
+    @DeleteProvider(type = CommonDeleteProvider.class,method = "delete")
+    void deleteDto(CommonDeleteParam param);
 }

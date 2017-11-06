@@ -60,12 +60,24 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
      * param.getEntityDTO().getId()>0 则更新，否则新增
      * @param param
      */
+    @Transactional
     public void save(CommonSaveParam param) {
         Long id = param.getEntityDTO().getId();
         if (id == null || id <= 0) {
             mapper.insertDto(param);
         } else {
-            mapper.updateDto(param);
+            String lockKey = getLockKey(id);
+            if (CacheHelper.getLock(lockKey)) {
+                try {
+                    mapper.updateDto(param);
+                    CacheHelper.getCache().del(getCacheKey(id));
+                } finally {
+                    CacheHelper.unlock(lockKey);
+                }
+            } else {
+                sleep(20);
+                save(param);
+            }
         }
     }
 
