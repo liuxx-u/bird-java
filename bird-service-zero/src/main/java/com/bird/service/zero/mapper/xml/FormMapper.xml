@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bird.service.zero.mapper.FormMapper">
+    <resultMap id="operateForm" type="com.bird.service.zero.dto.FormOperateDTO">
+        <id property="id" column="id" />
+        <collection property="fields" column="id" select="getFieldsByFormId" ofType="com.bird.service.zero.dto.FieldDTO"></collection>
+    </resultMap>
+
+    <select id="getFormByKey" resultMap="operateForm">
+        SELECT `id`,`withTab`,`tabType`,`tabPosition`,`defaultGroupName`,`saveUrl`,`lineCapacity`,`createTime` FROM `zero_form` WHERE delFlag = 0 AND `key` =#{key}
+    </select>
+
+    <select id="getFieldsByFormId" parameterType="long" resultType="com.bird.service.zero.dto.FieldDTO">
+        SELECT * from `zero_form_field` WHERE `delFlag` = 0 AND `formId` = #{id}
+    </select>
+</mapper>

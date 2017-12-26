@@ -1,7 +1,6 @@
 package com.bird.core.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.bird.core.http.AbpViewModel;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -68,13 +67,7 @@ public class HttpHelper {
             System.out.println(response);
 
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                AbpViewModel vm = JSON.parseObject(response, AbpViewModel.class);
-                if (vm != null && vm.getAbp()) {
-                   // result = InstanceHelper.to(vm.getResult(), clazz);
-                    result=new DozerHelper().map(vm.getResult(), clazz);
-                } else {
-                    result = JSON.parseObject(response, clazz);
-                }
+                result = JSON.parseObject(response, clazz);
                 System.out.println("请求服务器成功，做相应处理");
 
             } else {

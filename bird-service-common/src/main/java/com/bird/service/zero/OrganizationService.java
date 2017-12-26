@@ -13,14 +13,14 @@ import java.util.List;
 public interface OrganizationService extends AbstractService<Organization> {
 
     /**
-     * 获取组织机构树数据
-     * @return
-     */
-    List<TreeDTO> getOrganizationTreeData();
-
-    /**
      * 获取组织机构信息
      * @return
      */
     OrganizationDTO getOrganization(Long id);
+
+    /**
+     * 保存组织机构
+     * @param dto
+     */
+    void saveOrganization(OrganizationDTO dto);
 }

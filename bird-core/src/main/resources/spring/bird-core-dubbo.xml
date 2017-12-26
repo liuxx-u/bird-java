@@ -14,7 +14,7 @@
     <dubbo:registry address="${dubbo.registry.address}" check="false" file="${dubbo.cache.dir}/dubbo-${dubbo.application.name}.cache" />
 
     <!-- 用dubbo协议在端口暴露服务 -->
-    <dubbo:protocol name="dubbo" host="${dubbo.provider.host}" port="${dubbo.protocol.port}" threads="${dubbo.protocol.threads}" />
+    <dubbo:protocol name="dubbo" host="${dubbo.provider.host}" port="${dubbo.provider.port}" threads="${dubbo.protocol.threads}" />
 
     <!-- 服务端要暴露的服务接口,注解@com.alibaba.dubbo.config.annotation.Service -->
     <dubbo:annotation package="com.bird.service" />

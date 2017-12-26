@@ -13,21 +13,31 @@
     <bean class="com.bird.core.utils.PropertiesHelper">
         <property name="locations">
             <list>
-                <value>classpath:/config/system.properties</value>
+                <value>classpath:system.properties</value>
             </list>
-        </property>
-        <property name="properties">
-            <props>
-                <!-- dubbo个性化配置(服务名,端口) -->
-                <prop key="dubbo.application.name">bird-web-admin</prop>
-                <prop key="dubbo.protocol.port">5010</prop>
-            </props>
         </property>
     </bean>
 
-    <!--配置beans映射组件-->
-    <bean id="mapper" class="com.bird.core.utils.DozerHelper"></bean>
-
+    <!--配置单点登陆组件-->
+    <!--配置用户可登录站点存储器-->
+    <bean id="userClientStore" class="com.bird.security.BirdUserClientStore" />
+    <!--配置权限检查器-->
+    <bean id="permissionChecker" class="com.bird.security.BirdUserPermissionChecker" />
+    <!--配置票据信息存储器-->
+    <bean id="ticketSessionStore" class="com.bird.core.sso.ticket.RedisTicketSessionStore"/>
+    <!--配置票据加密器-->
+    <bean id="ticketProtector" class="com.bird.core.sso.ticket.DesTicketProtector">
+        <property name="key" value="${sso.des.key}"></property>
+        <property name="salt" value="${sso.des.salt}"></property>
+    </bean>
+    <bean id="ssoAuthorizeManager" class="com.bird.core.sso.SsoAuthorizeManager">
+        <property name="cookieName" value="${sso.cookieName}"></property>
+        <property name="loginPath" value="${sso.loginPath}"></property>
+        <property name="protector" ref="ticketProtector"></property>
+        <property name="userClientStore" ref="userClientStore"></property>
+        <property name="userPermissionChecker" ref="permissionChecker"></property>
+        <property name="sessionStore" ref="ticketSessionStore"></property>
+    </bean>
 
     <import resource="classpath*:spring/bird-core-beans.xml" />
     <import resource="classpath*:dubbo/dubbo.xml" />

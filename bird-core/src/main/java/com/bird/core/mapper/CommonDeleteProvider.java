@@ -11,8 +11,8 @@ public class CommonDeleteProvider {
         String tableName = param.getTableName();
         String where = param.getWhere();
 
-        Check.NotNullOrWhiteSpace(tableName, "tableName");
-        Check.NotNullOrWhiteSpace(where, "where");
+        Check.NotEmpty(tableName, "tableName");
+        Check.NotEmpty(where, "where");
 
         if (param.isSoftDelete()) {
             return "update " + tableName + " set delFlag=1 where " + where;

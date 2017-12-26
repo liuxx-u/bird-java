@@ -10,10 +10,10 @@ import java.util.List;
  */
 public class RolePermissionDTO extends AbstractDTO {
     private Long roleId;
-    private List<String> permissions;
+    private List<Long> permissionIds;
 
     public RolePermissionDTO(){
-        permissions = new ArrayList<>();
+        permissionIds = new ArrayList<>();
     }
 
     public Long getRoleId() {
@@ -24,11 +24,11 @@ public class RolePermissionDTO extends AbstractDTO {
         this.roleId = roleId;
     }
 
-    public List<String> getPermissions() {
-        return permissions;
+    public List<Long> getPermissionIds() {
+        return permissionIds;
     }
 
-    public void setPermissions(List<String> permissions) {
-        this.permissions = permissions;
+    public void setPermissionIds(List<Long> permissionIds) {
+        this.permissionIds = permissionIds;
     }
 }

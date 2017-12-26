@@ -2,17 +2,17 @@ package com.bird.core.utils;
 
 import com.beust.jcommander.internal.Lists;
 import org.dozer.DozerBeanMapper;
+import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static jdk.nashorn.internal.objects.NativeDebug.map;
-
 /**
  * Created by panda on 2017/6/14.
  */
+@Component
 public class DozerHelper  extends DozerBeanMapper {
 
     public <T> List<T> mapList(Collection sourceList, Class<T> destinationClass)

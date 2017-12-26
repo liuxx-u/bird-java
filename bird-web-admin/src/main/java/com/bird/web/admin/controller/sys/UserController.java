@@ -7,15 +7,13 @@ import com.bird.core.mapper.CommonSaveParam;
 import com.bird.core.mapper.PagedQueryParam;
 import com.bird.core.service.query.PagedListQueryDTO;
 import com.bird.core.service.query.PagedListResultDTO;
+import com.bird.core.sso.SsoAuthorize;
 import com.bird.service.zero.UserService;
 import com.bird.service.zero.dto.UserDTO;
 import com.bird.service.zero.dto.UserRoleDTO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class UserController extends AbstractController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/getPaged", method = {RequestMethod.POST})
+    @PostMapping(value = "/getPaged")
     public OperationResult<PagedListResultDTO> getPaged(@RequestBody PagedListQueryDTO query) {
         PagedQueryParam param = new PagedQueryParam(query, UserDTO.class);
         PagedListResultDTO result = userService.queryPagedList(param);
@@ -37,7 +35,7 @@ public class UserController extends AbstractController {
         return OperationResult.Success("获取成功", result);
     }
 
-    @RequestMapping(value = "/save", method = {RequestMethod.POST})
+    @PostMapping(value = "/save")
     public OperationResult save(@RequestBody UserDTO dto) {
         CommonSaveParam param = new CommonSaveParam(dto, UserDTO.class);
         userService.save(param);
@@ -45,7 +43,8 @@ public class UserController extends AbstractController {
         return OperationResult.Success("保存成功",null);
     }
 
-    @RequestMapping(value="/delete",method = RequestMethod.POST)
+    @PostMapping(value="/delete")
+    @SsoAuthorize(permissions = "sys:authorize:user:delete")
     public OperationResult delete(Long id){
 
         Check.GreaterThan(id,0L,"id");
@@ -70,11 +69,4 @@ public class UserController extends AbstractController {
         List<Long> result = userService.getUserRoleIds(userId);
         return OperationResult.Success("获取成功", result);
     }
-
-
-    public List<String> getUserPermissions(){
-        return null;
-    }
-
-    public void getUserMenus(){}
 }

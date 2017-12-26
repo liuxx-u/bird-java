@@ -10,6 +10,10 @@ import com.bird.core.model.AbstractModel;
 public class DicType extends AbstractModel {
     private String name;
     private String key;
+    private Long parentId;
+    private String placeholder;
+    private String remark;
+    private String defaultCode;
 
     public String getName() {
         return name;
@@ -25,5 +29,37 @@ public class DicType extends AbstractModel {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getDefaultCode() {
+        return defaultCode;
+    }
+
+    public void setDefaultCode(String defaultCode) {
+        this.defaultCode = defaultCode;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
     }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.bird.core.mapper.CommonSaveParam;
 import com.bird.core.mapper.PagedQueryParam;
+import com.bird.core.mapper.TreeQueryParam;
 import com.bird.core.model.AbstractModel;
 import com.bird.core.service.query.PagedListResultDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,15 @@ public interface AbstractService<T extends AbstractModel> {
      * param.getEntityDTO().getId()>0 则更新，否则新增
      * @param param
      */
+    @Transactional
     void save(CommonSaveParam param);
+
+    /**
+     * 定义通用的 获取树数据方法
+     * @param param
+     * @return
+     */
+    List<TreeDTO> getTreeData(TreeQueryParam param);
 
     /**
      * 根据id集合获取数据

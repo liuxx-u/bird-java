@@ -14,12 +14,6 @@ import java.util.List;
 public interface MenuService  extends AbstractService<Menu> {
 
     /**
-     * 获取菜单 树形数据
-     * @return
-     */
-    List<TreeDTO> getMenuTreeData();
-
-    /**
      * 根据id获取菜单信息
      * @return
      */

@@ -3,10 +3,12 @@ package com.bird.core.service;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.bird.core.Constants;
 import com.bird.core.cache.CacheHelper;
+import com.bird.core.event.EventBus;
 import com.bird.core.exception.ExceptionHelper;
 import com.bird.core.mapper.AbstractMapper;
 import com.bird.core.mapper.CommonSaveParam;
 import com.bird.core.mapper.PagedQueryParam;
+import com.bird.core.mapper.TreeQueryParam;
 import com.bird.core.model.AbstractModel;
 import com.bird.core.service.query.PagedListResultDTO;
 import com.bird.core.utils.DozerHelper;
@@ -22,6 +24,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,9 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
     @Autowired
     protected AbstractMapper<T> mapper;
 
+    @Autowired
+    protected EventBus eventBus;
+
     /**
      * 定义通用的查询接口（支持查询、分页、排序）
      * 支持灵活组装查询数据源
@@ -51,7 +57,10 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
      */
     public PagedListResultDTO queryPagedList(PagedQueryParam param) {
         Long totalCount = mapper.queryTotalCount(param);
-        List<Map> items = mapper.queryPagedList(param);
+        List<Map> items = new ArrayList<>();
+        if (totalCount > 0) {
+            items = mapper.queryPagedList(param);
+        }
         return new PagedListResultDTO(totalCount, items);
     }
 
@@ -79,6 +88,15 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
                 save(param);
             }
         }
+    }
+
+    /**
+     * 通用的获取树数据方法
+     * @param param
+     * @return
+     */
+    public List<TreeDTO> getTreeData(TreeQueryParam param){
+        return mapper.queryTreeData(param);
     }
 
     /**
@@ -188,6 +206,7 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
                     try {
                         T update = InstanceHelper.getDiff(org, record);
                         update.setId(record.getId());
+                        update.setModifiedTime(new Date());
                         mapper.updateById(update);
                         record = mapper.selectById(record.getId());
                         CacheHelper.getCache().set(getCacheKey(record.getId()), record);

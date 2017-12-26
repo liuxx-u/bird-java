@@ -41,7 +41,6 @@ public final class RedisCacher implements Cacher, ApplicationContextAware {
     }
 
     public final Object get(final String key) {
-        expire(key, EXPIRE);
         return getRedis().boundValueOps(key).get();
     }
 
@@ -49,7 +48,6 @@ public final class RedisCacher implements Cacher, ApplicationContextAware {
         Set<Object> values = InstanceHelper.newHashSet();
         Set<Serializable> keys = getRedis().keys(pattern);
         for (Serializable key : keys) {
-            expire(key.toString(), EXPIRE);
             values.add(getRedis().opsForValue().get(key));
         }
         return values;
@@ -78,7 +76,6 @@ public final class RedisCacher implements Cacher, ApplicationContextAware {
     }
 
     public final String type(final String key) {
-        expire(key, EXPIRE);
         return getRedis().type(key).getClass().getName();
     }
 
@@ -112,12 +109,10 @@ public final class RedisCacher implements Cacher, ApplicationContextAware {
     }
 
     public final String getrange(final String key, final long startOffset, final long endOffset) {
-        expire(key, EXPIRE);
         return getRedis().boundValueOps(key).get(startOffset, endOffset);
     }
 
     public final Object getSet(final String key, final Serializable value) {
-        expire(key, EXPIRE);
         return getRedis().boundValueOps(key).getAndSet(value);
     }
 

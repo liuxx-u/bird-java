@@ -4,6 +4,9 @@
 # IDEA file
 .idea/
 
+# Project file
+*.iml
+
 # Target
 target/
 

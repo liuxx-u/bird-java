@@ -9,12 +9,10 @@ import com.bird.core.service.query.PagedListQueryDTO;
 import com.bird.core.service.query.PagedListResultDTO;
 import com.bird.service.zero.RoleService;
 import com.bird.service.zero.dto.RoleDTO;
+import com.bird.service.zero.dto.RolePermissionDTO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class RoleController extends AbstractController {
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping(value = "/getPaged", method = {RequestMethod.POST})
+    @PostMapping(value = "/getPaged")
     public OperationResult<PagedListResultDTO> getPaged(@RequestBody PagedListQueryDTO query) {
         PagedQueryParam param = new PagedQueryParam(query, RoleDTO.class);
         PagedListResultDTO result = roleService.queryPagedList(param);
@@ -37,7 +35,7 @@ public class RoleController extends AbstractController {
         return OperationResult.Success("获取成功", result);
     }
 
-    @RequestMapping(value = "/save", method = {RequestMethod.POST})
+    @PostMapping(value = "/save")
     public OperationResult save(@RequestBody RoleDTO dto) {
         CommonSaveParam param = new CommonSaveParam(dto, RoleDTO.class);
         roleService.save(param);
@@ -45,16 +43,28 @@ public class RoleController extends AbstractController {
         return OperationResult.Success("保存成功", null);
     }
 
-    @RequestMapping(value = "/delete", method = {RequestMethod.POST})
+    @PostMapping(value = "/delete")
     public OperationResult delete(Long id) {
         roleService.softDelete(id);
 
         return OperationResult.Success("删除成功", null);
     }
 
-    @RequestMapping(value = "/getAllRoleBriefs", method = {RequestMethod.POST})
+    @PostMapping(value = "/getAllRoleBriefs")
     public OperationResult<List<NameValue>> getAllRoleBriefs() {
         List<NameValue> result = roleService.getAllRoleBriefs();
         return OperationResult.Success("获取成功", result);
+    }
+
+    @GetMapping(value = "/getRolePermissionIds")
+    public OperationResult<List<Long>> getRolePermissionIds(Long roleId) {
+        List<Long> result = roleService.getRolePermissionIds(roleId);
+        return OperationResult.Success("获取成功", result);
+    }
+
+    @PostMapping(value = "saveRolePermissions")
+    public OperationResult saveRolePermissions(@RequestBody RolePermissionDTO dto){
+        roleService.setRolePermissions(dto);
+        return OperationResult.Success("保存成功",null);
     }
 }

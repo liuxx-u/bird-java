@@ -24,7 +24,7 @@ public abstract class AbstractException extends RuntimeException {
     }
 
     public void handler(OperationResult result) {
-        result.setHttpCode(getHttpCode().value());
+        result.setCode(getHttpCode().value());
         if (StringUtils.isNotBlank(getMessage())) {
             result.setMessage(getMessage());
         } else {

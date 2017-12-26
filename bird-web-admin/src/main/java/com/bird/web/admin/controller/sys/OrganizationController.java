@@ -3,16 +3,13 @@ package com.bird.web.admin.controller.sys;
 import com.bird.core.Check;
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
-import com.bird.core.mapper.CommonSaveParam;
+import com.bird.core.mapper.TreeQueryParam;
 import com.bird.core.service.TreeDTO;
 import com.bird.service.zero.OrganizationService;
 import com.bird.service.zero.dto.OrganizationDTO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,23 +24,24 @@ public class OrganizationController extends AbstractController {
     @Autowired
     private OrganizationService organizationService;
 
-    @RequestMapping(value = "/getTreeData", method = {RequestMethod.GET})
+    @GetMapping(value = "/getTreeData")
     public OperationResult<List<TreeDTO>> getTreeData() {
-        List<TreeDTO> result = organizationService.getOrganizationTreeData();
+        TreeQueryParam param = new TreeQueryParam("`id`","`name`","`parentId`");
+        param.setFrom("`zero_organization`");
+        List<TreeDTO> result = organizationService.getTreeData(param);
         return OperationResult.Success("获取成功", result);
     }
 
-    @RequestMapping(value = "/get", method = {RequestMethod.GET})
-    public OperationResult<OrganizationDTO> getMenu(Long id) {
+    @GetMapping(value = "/get")
+    public OperationResult<OrganizationDTO> getOrganization(Long id) {
         Check.GreaterThan(id, 0L, "id");
         OrganizationDTO result = organizationService.getOrganization(id);
         return OperationResult.Success("获取成功", result);
     }
 
-    @RequestMapping(value = "/save", method = {RequestMethod.POST})
+    @PostMapping(value = "/save")
     public OperationResult save(@RequestBody OrganizationDTO dto){
-        CommonSaveParam param = new CommonSaveParam(dto, OrganizationDTO.class);
-        organizationService.save(param);
+        organizationService.saveOrganization(dto);
 
         return OperationResult.Success("保存成功", null);
     }

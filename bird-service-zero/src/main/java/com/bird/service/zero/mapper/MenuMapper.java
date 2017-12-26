@@ -10,5 +10,4 @@ import java.util.List;
  * Created by liuxx on 2017/10/30.
  */
 public interface MenuMapper extends AbstractMapper<Menu> {
-    List<TreeDTO> getMenuTreeData();
 }

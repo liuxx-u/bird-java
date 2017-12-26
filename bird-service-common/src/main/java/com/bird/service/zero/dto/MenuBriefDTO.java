@@ -10,6 +10,7 @@ public class MenuBriefDTO extends EntityDTO {
     private String url;
     private String icon;
     private String parentId;
+    private String permissionName;
 
     public String getName() {
         return name;
@@ -41,5 +42,13 @@ public class MenuBriefDTO extends EntityDTO {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public String getPermissionName() {
+        return permissionName;
+    }
+
+    public void setPermissionName(String permissionName) {
+        this.permissionName = permissionName;
     }
 }

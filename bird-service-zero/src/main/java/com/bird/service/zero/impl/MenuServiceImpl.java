@@ -21,23 +21,10 @@ import java.util.List;
  */
 @Service
 @CacheConfig(cacheNames = "zero_menu")
-@com.alibaba.dubbo.config.annotation.Service
+@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.MenuService")
 public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuService {
     @Autowired
     private DozerHelper dozerHelper;
-
-    @Autowired
-    private MenuMapper menuMapper;
-
-    /**
-     * 获取所有菜单 树形数据
-     *
-     * @return
-     */
-    @Override
-    public List<TreeDTO> getMenuTreeData() {
-        return menuMapper.getMenuTreeData();
-    }
 
     /**
      * 根据id获取菜单信息
@@ -59,6 +46,7 @@ public class MenuServiceImpl extends AbstractServiceImpl<Menu> implements MenuSe
     public List<MenuBriefDTO> getAllMenus(){
         EntityWrapper<Menu> wrapper = new EntityWrapper<>();
         wrapper.where("delFlag = 0");
+        wrapper.orderBy("orderNo");
         List<Menu> menus = selectList(wrapper);
 
         return dozerHelper.mapList(menus,MenuBriefDTO.class);

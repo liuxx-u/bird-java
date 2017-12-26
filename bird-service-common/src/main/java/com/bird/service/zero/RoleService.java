@@ -13,6 +13,13 @@ import java.util.List;
 public interface RoleService extends AbstractService<Role> {
 
     /**
+     * 获取角色的权限id集合
+     * @param roleId 角色id
+     * @return
+     */
+    List<Long> getRolePermissionIds(Long roleId);
+
+    /**
      * 设置角色权限
      * @param dto 角色权限信息
      */

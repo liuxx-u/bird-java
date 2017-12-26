@@ -6,7 +6,7 @@
     <groupId>com.bird</groupId>
     <artifactId>bird-project</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <modules>
         <module>bird-core</module>
@@ -16,9 +16,10 @@
     </modules>
 
     <properties>
+        <basedir>src/main</basedir>
+
         <!-- 开发阶段配置文件位置-->
-        <sys.jdbc.config.path>classpath:config/jdbc.properties</sys.jdbc.config.path>
-        <system.config.path>classpath:config/system.properties</system.config.path>
+        <system.config.path>classpath:system.properties</system.config.path>
 
         <!-- 编码 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,9 +46,12 @@
         <jedis.version>2.9.0</jedis.version>
 
         <!--dubbo版本号-->
-        <dubbo.version>2.5.3</dubbo.version>
+        <dubbo.version>2.5.7</dubbo.version>
         <zkclient.version>0.10</zkclient.version>
         <javassist.version>3.21.0-GA</javassist.version>
+
+        <!--kafka版本号-->
+        <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
 
         <!--mybatis版本号-->
         <mybatis.version>3.4.4</mybatis.version>
@@ -79,10 +83,15 @@
         <!--httpclient组件版本号-->
         <httpclient.version>4.0.2</httpclient.version>
 
+        <!--maven插件版本号-->
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+
         <!--其他版本号-->
         <javax.version>3.1.0</javax.version>
         <jstl.version>1.2</jstl.version>
         <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-io.version>2.6</commons-io.version>
+        <ant.version>1.10.1</ant.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
     </properties>
@@ -92,6 +101,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

@@ -3,7 +3,7 @@ package com.bird.core.utils;
 /**
  * Created by liuxx on 2017/5/18.
  */
-public final class StringHelper {
+public final class StringHelper extends org.apache.commons.lang3.StringUtils {
     public static boolean isNullOrEmpty(String str) {
         if (str == null) return true;
         if (str.length() == 0) return true;

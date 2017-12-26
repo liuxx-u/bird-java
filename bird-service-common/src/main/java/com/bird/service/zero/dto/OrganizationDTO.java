@@ -9,7 +9,9 @@ import com.bird.core.service.EntityDTO;
 @TableName("zero_organization")
 public class OrganizationDTO extends EntityDTO {
     private String name;
-    private long parentId;
+    private Long parentId;
+    private String parentIds;
+    private Integer orderNo;
     private String remark;
 
     public String getName() {
@@ -34,5 +36,21 @@ public class OrganizationDTO extends EntityDTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getParentIds() {
+        return parentIds;
+    }
+
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
+    }
+
+    public Integer getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(Integer orderNo) {
+        this.orderNo = orderNo;
     }
 }

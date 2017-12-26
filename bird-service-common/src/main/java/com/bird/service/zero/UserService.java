@@ -1,6 +1,8 @@
 package com.bird.service.zero;
 
 import com.bird.core.service.AbstractService;
+import com.bird.core.sso.LoginDTO;
+import com.bird.core.sso.LoginResult;
 import com.bird.service.zero.dto.UserRoleDTO;
 import com.bird.service.zero.model.User;
 
@@ -38,4 +40,10 @@ public interface UserService extends AbstractService<User> {
      * @return
      */
     List<String> getUserPermissions(Long userId);
+
+    /**
+     * 用户登录
+     * @return 登录结果
+     */
+    LoginResult Login(LoginDTO loginDTO);
 }

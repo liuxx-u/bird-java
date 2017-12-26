@@ -10,8 +10,16 @@
     <import resource="classpath*:spring/bird-core-dubbo.xml" />
 
     <!--zero-->
-    <dubbo:reference id="userService" interface="com.bird.service.zero.UserService" url="dubbo://${dubbo.provider.host}:6001" />
-    <dubbo:reference id="roleService" interface="com.bird.service.zero.RoleService" url="dubbo://${dubbo.provider.host}:6001" />
-    <dubbo:reference id="menuService" interface="com.bird.service.zero.MenuService" url="dubbo://${dubbo.provider.host}:6001" />
-    <dubbo:reference id="organizationService" interface="com.bird.service.zero.OrganizationService" url="dubbo://${dubbo.provider.host}:6001" />
+    <dubbo:reference id="userService" interface="com.bird.service.zero.UserService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="roleService" interface="com.bird.service.zero.RoleService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="menuService" interface="com.bird.service.zero.MenuService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="organizationService" interface="com.bird.service.zero.OrganizationService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="dicTypeService" interface="com.bird.service.zero.DicTypeService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="dicItemService" interface="com.bird.service.zero.DicItemService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="siteService" interface="com.bird.service.zero.SiteService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="moduleService" interface="com.bird.service.zero.ModuleService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="formService" interface="com.bird.service.zero.FormService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="fieldService" interface="com.bird.service.zero.FieldService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="permissionService" interface="com.bird.service.zero.PermissionService" url="dubbo://${dubbo.provider.host}:7001" />
+    <dubbo:reference id="userLoginAttemptService" interface="com.bird.service.zero.UserLoginAttemptService" url="dubbo://${dubbo.provider.host}:7001" />
 </beans>

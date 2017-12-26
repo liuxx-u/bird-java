@@ -10,6 +10,9 @@ import com.bird.core.model.AbstractModel;
 public class Organization extends AbstractModel {
     private String name;
     private Long parentId;
+    private String parentIds;
+    private Integer orderNo;
+    private String remark;
 
     public String getName() {
         return name;
@@ -25,5 +28,29 @@ public class Organization extends AbstractModel {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getParentIds() {
+        return parentIds;
+    }
+
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
+    }
+
+    public Integer getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(Integer orderNo) {
+        this.orderNo = orderNo;
     }
 }

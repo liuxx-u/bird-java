@@ -2,11 +2,13 @@ package com.bird.core.controller;
 
 import com.bird.core.HttpCode;
 
+import java.io.Serializable;
+
 /**
  * Created by liuxx on 2017/7/13.
  */
-public class OperationResult<T extends Object> {
-    private int httpCode;
+public class OperationResult<T extends Object> implements Serializable {
+    private int code;
     private String message;
     private Long timestamp;
     private T result;
@@ -33,17 +35,9 @@ public class OperationResult<T extends Object> {
 
     public OperationResult(int httpCode,String message,T result) {
         this();
-        this.httpCode = httpCode;
+        this.code = httpCode;
         this.message = message;
         this.result = result;
-    }
-
-    public int getHttpCode() {
-        return httpCode;
-    }
-
-    public void setHttpCode(int httpCode) {
-        this.httpCode = httpCode;
     }
 
     public String getMessage() {
@@ -68,5 +62,13 @@ public class OperationResult<T extends Object> {
 
     public void setResult(T result) {
         this.result = result;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

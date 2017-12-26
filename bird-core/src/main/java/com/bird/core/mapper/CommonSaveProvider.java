@@ -22,13 +22,16 @@ public class CommonSaveProvider {
         StringBuilder valueBuilder = new StringBuilder();
         for (Field field : fields) {
             TableField tableField = field.getAnnotation(TableField.class);
+            if (tableField != null && !tableField.exist()) continue;
             String fieldName = tableField == null ? field.getName() : tableField.value();
 
-            if (fieldName == "id" || fieldName == "createTime") continue;
+            if (fieldName == "id" || fieldName == "createTime" || fieldName == "modifiedTime") continue;
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
             if (fieldValue == "" || fieldValue == "''") continue;
 
-            sb.append(fieldName + ",");
+            sb.append("`");
+            sb.append(fieldName);
+            sb.append("`,");
             valueBuilder.append(fieldValue + ",");
         }
         String createTime = "'" + dateFormat.format(new Date()) + "'";
@@ -45,16 +48,18 @@ public class CommonSaveProvider {
         sb.append(" set ");
 
         Field[] fields = param.gettClass().getDeclaredFields();
-        int i = 0;
         for (Field field : fields) {
             TableField tableField = field.getAnnotation(TableField.class);
+            if (tableField != null && !tableField.exist()) continue;
             String fieldName = tableField == null ? field.getName() : tableField.value();
 
-            if (fieldName == "id" || fieldName == "createTime") continue;
+            if (fieldName == "id" || fieldName == "createTime" || fieldName == "modifiedTime") continue;
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
-            sb.append(fieldName + " = " + fieldValue);
-            if (i++ < fields.length - 1) sb.append(",");
+            sb.append("`" + fieldName + "` = " + fieldValue);
+            sb.append(",");
         }
+        String modifiedTime = "'" + dateFormat.format(new Date()) + "'";
+        sb.append("modifiedTime = " + modifiedTime);
         sb.append(" where id = " + id);
 
         return sb.toString();
@@ -65,18 +70,20 @@ public class CommonSaveProvider {
         String fieldTyppeName = field.getType().getName();
 
         try {
+            Object value = field.get(instance);
+
             if (fieldTyppeName.equals("java.lang.String")) {
-                Object value = field.get(instance);
-                return value == null ? "''" : "'" + field.get(instance).toString() + "'";
-            } else if (fieldTyppeName.equals("java.lang.Integer") || fieldTyppeName.equals("int")) {
-                return field.getInt(instance) + "";
-            } else if (fieldTyppeName.equals("java.lang.Long") || fieldTyppeName.equals("long")) {
-                return field.getLong(instance) + "";
+                return value == null ? "''" : "'" + value.toString() + "'";
+            } else if (fieldTyppeName.equals("java.lang.Integer") || fieldTyppeName.equals("int") || fieldTyppeName.equals("java.lang.Long")
+                    || fieldTyppeName.equals("long")) {
+                return value == null ? "" : value.toString();
             } else if (fieldTyppeName.equals("java.lang.Boolean") || fieldTyppeName.equals("boolean")) {
-                return field.getBoolean(instance) ? "1" : "0";
+                if (value == null) return "0";
+                return ((Boolean) value) == true ? "1" : "0";
             } else if (fieldTyppeName.equals("java.util.Date") || fieldTyppeName.equals("java.sql.Date")) {
-                Object value = field.get(instance);
                 return value == null ? "''" : "'" + dateFormat.format((Date) value) + "'";
+            } else if (fieldTyppeName.equals("java.math.BigDecimal")){
+                return  value == null ? "" : value.toString();
             }
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block

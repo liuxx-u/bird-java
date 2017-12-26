@@ -1,6 +1,7 @@
 package com.bird.core.mapper;
 
 import com.bird.core.model.AbstractModel;
+import com.bird.core.service.TreeDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public interface AbstractMapper<T extends AbstractModel> extends com.baomidou.my
 
     /**
      * 查询通用查询的中数量
+     *
      * @param param 筛选条件
      * @return
      */
@@ -32,22 +34,33 @@ public interface AbstractMapper<T extends AbstractModel> extends com.baomidou.my
 
     /**
      * 通用新增方法
+     *
      * @param param
      */
-    @InsertProvider(type = CommonSaveProvider.class,method = "insert")
+    @InsertProvider(type = CommonSaveProvider.class, method = "insert")
     void insertDto(CommonSaveParam param);
 
     /**
      * 通用更新方法
+     *
      * @param param
      */
-    @UpdateProvider(type = CommonSaveProvider.class,method = "update")
+    @UpdateProvider(type = CommonSaveProvider.class, method = "update")
     void updateDto(CommonSaveParam param);
 
     /**
      * 通用删除方法
+     *
      * @param param
      */
-    @DeleteProvider(type = CommonDeleteProvider.class,method = "delete")
+    @DeleteProvider(type = CommonDeleteProvider.class, method = "delete")
     void deleteDto(CommonDeleteParam param);
+
+    /**
+     * 通用获取树数据方法
+     *
+     * @return
+     */
+    @SelectProvider(type = TreeQueryProvider.class, method = "queryTreeData")
+    List<TreeDTO> queryTreeData(TreeQueryParam param);
 }

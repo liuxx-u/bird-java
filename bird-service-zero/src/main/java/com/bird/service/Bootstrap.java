@@ -14,11 +14,11 @@ public class Bootstrap {
         context.start();
 
         //加载定时任务
-        QuartzManager quartzManager=context.getBean(QuartzManager.class);
-        quartzManager.addJob(TestJob.class,"0 0/1 * * * ?");
+        //QuartzManager quartzManager=context.getBean(QuartzManager.class);
+        //quartzManager.addJob(TestJob.class,"0 0/1 * * * ?");
 
         System.out.println("=================================");
-        System.out.println("[基础服务]启动完成!!!");
+        System.out.println("[ZERO服务]启动完成!!!");
         System.out.println("=================================");
     }
 }

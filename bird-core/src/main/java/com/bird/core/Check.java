@@ -15,7 +15,7 @@ public final class Check {
      */
     public static final void NotNull(Object object, String name) {
         if (object.equals(null)) {
-            throw new ArgumentException(name + "不能为空.");
+            throw new ArgumentException(name + "can not be null.");
         }
     }
 
@@ -24,9 +24,9 @@ public final class Check {
      * @param value 参数
      * @param name 参数名
      */
-    public static final void NotNullOrWhiteSpace(String value,String name){
+    public static final void NotEmpty(String value, String name){
         if(StringHelper.isNullOrWhiteSpace(value)){
-            throw new ArgumentException(name + "不能为空.");
+            throw new ArgumentException(name + "can not be null.");
         }
     }
 
@@ -38,7 +38,7 @@ public final class Check {
      */
     public static final void GreaterThan(Long value, Long target, String name) {
         if (value <= target) {
-            throw new ArgumentException(name + "必须大于" + target);
+            throw new ArgumentException(name + "must greater than" + target);
         }
     }
 
@@ -50,7 +50,7 @@ public final class Check {
      */
     public static final void LessThan(Long value,Long target,String name){
         if (value >= target) {
-            throw new ArgumentException(name + "必须小于" + target);
+            throw new ArgumentException(name + "must less than" + target);
         }
     }
 }

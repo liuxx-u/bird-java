@@ -37,4 +37,7 @@ public class PagedListResultDTO extends AbstractDTO {
     public void setItems(List<Map> items) {
         this.items = items;
     }
+
+
+
 }

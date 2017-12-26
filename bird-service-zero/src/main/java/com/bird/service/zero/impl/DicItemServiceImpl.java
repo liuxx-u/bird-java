@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @CacheConfig(cacheNames = "zero_dicItem")
-@com.alibaba.dubbo.config.annotation.Service
+@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.DicItemService")
 public class DicItemServiceImpl extends AbstractServiceImpl<DicItem> implements DicItemService {
 }

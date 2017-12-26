@@ -9,9 +9,7 @@ import com.bird.core.model.AbstractModel;
 @TableName("zero_role")
 public class Role extends AbstractModel {
     private String name;
-    private String displayName;
-
-    private boolean isStatic;
+    private String remark;
     private long organizationId;
 
     public String getName() {
@@ -22,27 +20,19 @@ public class Role extends AbstractModel {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public boolean isStatic() {
-        return isStatic;
-    }
-
-    public void setStatic(boolean aStatic) {
-        isStatic = aStatic;
-    }
-
     public long getOrganizationId() {
         return organizationId;
     }
 
     public void setOrganizationId(long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

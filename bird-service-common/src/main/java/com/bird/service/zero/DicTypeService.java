@@ -1,10 +1,9 @@
 package com.bird.service.zero;
 
 import com.bird.core.service.AbstractService;
-import com.bird.core.service.TreeDTO;
+import com.bird.service.zero.dto.DicDTO;
+import com.bird.service.zero.dto.DicTypeDTO;
 import com.bird.service.zero.model.DicType;
-
-import java.util.List;
 
 /**
  * Created by liuxx on 2017/11/3.
@@ -12,8 +11,14 @@ import java.util.List;
 public interface DicTypeService extends AbstractService<DicType> {
 
     /**
-     * 获取字典类型 树形数据
+     * 根据key获取字典信息
      * @return
      */
-    List<TreeDTO> getDicTypeTreeData();
+    DicDTO getDicByKey(String key);
+
+    /**
+     * 获取字典信息
+     * @return
+     */
+    DicTypeDTO getDicType(Long id);
 }
