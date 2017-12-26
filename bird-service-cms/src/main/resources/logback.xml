@@ -8,7 +8,7 @@
 <configuration>
 
     <!-- 在Eclipse中运行，请到Eclipse的安装目录中找log文件，Tomcat下，请到Tomcat目录下找 -->
-    <property name="LOG_PATH" value="D:/logs/zero" />
+    <property name="LOG_PATH" value="D:/logs/cms" />
     <!-- 日志记录器，日期滚动记录 -->
     <appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文件的路径及文件名 -->
