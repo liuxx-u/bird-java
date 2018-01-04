@@ -7,5 +7,4 @@
     <bean id="defaultEventHandlerFactory" class="com.bird.core.event.handler.DefaultEventHandlerFactory" init-method="init"/>
 
     <import resource="classpath*:spring/bird-core-redis.xml" />
-    <import resource="classpath*:spring/bird-core-quartz.xml"/>
 </beans>

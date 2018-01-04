@@ -8,11 +8,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Bootstrap {
     public static void main(String arg[]){
         //加载spring配置
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"classpath:spring-zero-context.xml"});
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"classpath:spring-scheduler-context.xml"});
         context.start();
 
         System.out.println("=================================");
-        System.out.println("[ZERO服务]启动完成!!!");
+        System.out.println("[SCHEDULER服务]启动完成!!!");
         System.out.println("=================================");
     }
 }

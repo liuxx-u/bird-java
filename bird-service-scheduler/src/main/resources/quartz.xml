@@ -4,8 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-    <bean id="jobListener" class="com.bird.core.scheduler.JobListener" />
-    <bean id="jobFactory" class="com.bird.core.scheduler.AutowireJobFactory"></bean>
+    <bean id="jobListener" class="com.bird.scheduler.JobListener" />
+    <bean id="jobFactory" class="com.bird.scheduler.AutowireJobFactory"></bean>
 
     <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <description>定时任务调度器工厂</description>
@@ -13,7 +13,7 @@
         <property name="autoStartup" value="true" />
         <property name="jobFactory" ref="jobFactory"></property>
         <property name="schedulerFactoryClass" value="org.quartz.impl.StdSchedulerFactory"></property>
-        <property name="configLocation" value="classpath:config/quartz.properties" />
+        <property name="configLocation" value="classpath:quartz.properties" />
         <property name="globalJobListeners">
             <list>
                 <ref bean="jobListener" />
@@ -21,7 +21,7 @@
         </property>
     </bean>
 
-    <bean id="quartzManager" class="com.bird.core.scheduler.QuartzManager">
+    <bean id="quartzManager" class="com.bird.scheduler.QuartzManager">
         <property name="scheduler" ref="scheduler"></property>
     </bean>
 </beans>

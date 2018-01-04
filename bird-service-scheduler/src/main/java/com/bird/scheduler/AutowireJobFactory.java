@@ -1,4 +1,4 @@
-package com.bird.core.scheduler;
+package com.bird.scheduler;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.annotation.Autowired;

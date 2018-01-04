@@ -1,10 +1,9 @@
-package com.bird.core.scheduler;
+package com.bird.scheduler;
 
 /**
  * Created by liuxx on 2017/8/21.
  */
 
-import com.bird.core.scheduler.job.AbstractJob;
 import org.quartz.*;
 
 import static org.quartz.JobBuilder.newJob;
@@ -18,8 +17,8 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
  *
  */
 public class QuartzManager {
-    private static String JOB_GROUP_NAME = "CCZCRV_JOBGROUP_NAME";
-    private static String TRIGGER_GROUP_NAME = "CCZCRV_TRIGGERGROUP_NAME";
+    private static String JOB_GROUP_NAME = "BIRD_JOBGROUP_NAME";
+    private static String TRIGGER_GROUP_NAME = "BIRD_TRIGGERGROUP_NAME";
 
     private static Scheduler scheduler;
 
@@ -38,7 +37,7 @@ public class QuartzManager {
         String jobName = defaultKey + "_job";
         String triggerName = defaultKey + "_trigger";
 
-        addJob(jobName, JOB_GROUP_NAME, triggerName, TRIGGER_GROUP_NAME, jobClass, cronExpression);
+        addJob(jobName, JOB_GROUP_NAME, triggerName, TRIGGER_GROUP_NAME, jobClass, cronExpression,"");
     }
 
     /**
@@ -51,11 +50,11 @@ public class QuartzManager {
      * @Description: 添加一个定时任务
      * @Title: QuartzManager.java
      */
-    public static void addJob(String jobName, String jobGroupName, String triggerName, String triggerGroupName, Class<? extends AbstractJob> jobClass, String cronExpression) {
+    public static void addJob(String jobName, String jobGroupName, String triggerName, String triggerGroupName, Class<? extends AbstractJob> jobClass, String cronExpression,String description) {
         try {
-            JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, jobGroupName).build();// 任务名，任务组，任务执行类
+            JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, jobGroupName).withDescription(description).build();// 任务名，任务组，任务执行类
             // 触发器
-            Trigger trigger = newTrigger().withIdentity(triggerName, triggerGroupName).withSchedule(cronSchedule(cronExpression)).build();// 触发器名,触发器组
+            Trigger trigger = newTrigger().withIdentity(triggerName, triggerGroupName).withDescription(description).withSchedule(cronSchedule(cronExpression)).build();// 触发器名,触发器组
             scheduler.scheduleJob(jobDetail, trigger);
             // 启动
             if (!scheduler.isShutdown()) {
@@ -109,19 +108,6 @@ public class QuartzManager {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * @param jobClass 任务
-     * @Description: 移除一个任务(使用默认的任务组名，触发器名，触发器组名)
-     * @Title: QuartzManager.java
-     */
-    public static void removeJob(Class<? extends AbstractJob> jobClass) {
-        String defaultKey = jobClass.getName();
-        String jobName = defaultKey + "_job";
-        String triggerName = defaultKey + "_trigger";
-
-        removeJob(jobName, JOB_GROUP_NAME, triggerName, TRIGGER_GROUP_NAME);
     }
 
     /**

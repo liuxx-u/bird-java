@@ -122,13 +122,6 @@
             <version>${reflectasm.version}</version>
         </dependency>
 
-        <!-- quartz调度框架 -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>${quartz.version}</version>
-        </dependency>
-
         <!--redis组件-->
         <dependency>
             <groupId>org.redisson</groupId>

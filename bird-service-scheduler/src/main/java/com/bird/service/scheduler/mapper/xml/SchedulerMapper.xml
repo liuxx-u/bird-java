@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bird.service.scheduler.mapper.SchedulerMapper">
+    <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Boolean">
+      SELECT 1 FROM `qrtz_job_details` WHERE `JOB_NAME` = #{jobName} LIMIT 1
+    </select>
+
+    <delete id="removeJob" parameterType="java.lang.String">
+      DELETE FROM `qrtz_cron_triggers` WHERE `TRIGGER_NAME` in (SELECT `TRIGGER_NAME` FROM `qrtz_triggers` WHERE `JOB_NAME` = #{jobName});
+      DELETE FROM `qrtz_triggers` WHERE `JOB_NAME` = #{jobName};
+      DELETE FROM `qrtz_job_details` WHERE `JOB_NAME` = #{jobName}
+    </delete>
+</mapper>

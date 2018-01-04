@@ -27,4 +27,8 @@
     <dubbo:reference id="cmsClassifyService" interface="com.bird.service.cms.CmsClassifyService" url="dubbo://${dubbo.provider.host}:7002" />
     <dubbo:reference id="cmsAttributeService" interface="com.bird.service.cms.CmsAttributeService" url="dubbo://${dubbo.provider.host}:7002" />
     <dubbo:reference id="cmsContentService" interface="com.bird.service.cms.CmsContentService" url="dubbo://${dubbo.provider.host}:7002" />
+
+    <!--scheduler-->
+    <dubbo:reference id="schedulerService" interface="com.bird.service.scheduler.SchedulerService" url="dubbo://${dubbo.provider.host}:6008"/>
+    <dubbo:reference id="schedulerLogService" interface="com.bird.service.scheduler.SchedulerLogService" url="dubbo://${dubbo.provider.host}:6008"/>
 </beans>

@@ -1,4 +1,4 @@
-package com.bird.core.scheduler.job;
+package com.bird.scheduler;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
