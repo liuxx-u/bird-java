@@ -53,6 +53,9 @@
                             <!--应用的main class-->
                             <mainClass>com.bird.service.Bootstrap</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>conf/</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
