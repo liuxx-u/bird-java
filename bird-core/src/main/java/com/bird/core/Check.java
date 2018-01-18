@@ -2,6 +2,7 @@ package com.bird.core;
 
 import com.bird.core.exception.ArgumentException;
 import com.bird.core.utils.StringHelper;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by liuxx on 2017/10/30.
@@ -25,7 +26,7 @@ public final class Check {
      * @param name 参数名
      */
     public static final void NotEmpty(String value, String name){
-        if(StringHelper.isNullOrWhiteSpace(value)){
+        if(StringUtils.isBlank(value)){
             throw new ArgumentException(name + "can not be null.");
         }
     }

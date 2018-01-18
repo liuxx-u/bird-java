@@ -1,5 +1,7 @@
 package com.bird.core.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +22,7 @@ public final class DateHelper {
 
     public static String getDateString(Date date, String pattern) {
         if (date == null) return null;
-        if (StringHelper.isNullOrWhiteSpace(pattern)) {
+        if (StringUtils.isBlank(pattern)) {
             pattern = "yyyy-MM-dd HH:mm:ss";
         }
         SimpleDateFormat formater = new SimpleDateFormat(pattern);

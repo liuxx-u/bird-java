@@ -48,7 +48,7 @@
         <jedis.version>2.9.0</jedis.version>
 
         <!--dubbo版本号-->
-        <dubbo.version>2.5.7</dubbo.version>
+        <dubbo.version>2.6.0</dubbo.version>
         <zkclient.version>0.10</zkclient.version>
         <javassist.version>3.21.0-GA</javassist.version>
 

@@ -1,7 +1,7 @@
 package com.bird.core.mapper;
 
 import com.bird.core.Check;
-import com.bird.core.utils.StringHelper;
+import org.apache.commons.lang3.StringUtils;
 
 public class TreeQueryProvider {
     public String queryTreeData(TreeQueryParam param) {
@@ -16,11 +16,11 @@ public class TreeQueryProvider {
         sb.append(getSafeFieldName(param.getParentValueField()) + " as parentValue");
         sb.append(" from " + param.getFrom());
         sb.append(" where delFlag = 0");
-        if (!StringHelper.isNullOrWhiteSpace(param.getWhere())) {
+        if (!StringUtils.isBlank(param.getWhere())) {
             sb.append(" and " + param.getWhere());
         }
 
-        if(!StringHelper.isNullOrWhiteSpace(param.getOrderBy())) {
+        if(!StringUtils.isBlank(param.getOrderBy())) {
             sb.append(" order by " + param.getOrderBy());
         }
 
@@ -28,7 +28,7 @@ public class TreeQueryProvider {
     }
 
     private String getSafeFieldName(String fieldName) {
-        if (StringHelper.isNullOrWhiteSpace(fieldName)) return "'0'";
+        if (StringUtils.isBlank(fieldName)) return "'0'";
 
         if (!fieldName.startsWith("`")) {
             fieldName = "`" + fieldName;

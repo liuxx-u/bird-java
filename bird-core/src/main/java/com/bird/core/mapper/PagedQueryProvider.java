@@ -35,14 +35,14 @@ public class PagedQueryProvider {
 
         String sortField = "id";
         int sortDirection = ListSortDirection.DESC;//默认Id倒序
-        if (!StringHelper.isNullOrWhiteSpace(query.getSortField())) {
+        if (!StringUtils.isBlank(query.getSortField())) {
             sortField = query.getSortField();
             sortDirection = query.getSortDirection();
         }
 
         String sql = "select " + param.getSelect() + " from " + param.getFrom();
         String whereSql = where(param);
-        if (!StringHelper.isNullOrWhiteSpace(whereSql)) {
+        if (!StringUtils.isBlank(whereSql)) {
             sql += " where " + whereSql;
         }
         sql += " order by " + this.getDbFieldName(param, sortField) + (sortDirection == ListSortDirection.DESC ? " desc" : " asc")
@@ -53,7 +53,7 @@ public class PagedQueryProvider {
     public String queryTotalCount(PagedQueryParam param) {
         String sql = "select count(1) from " + param.getFrom();
         String whereSql = where(param);
-        if (!StringHelper.isNullOrWhiteSpace(whereSql)) {
+        if (!StringUtils.isBlank(whereSql)) {
             sql += " where " + whereSql;
         }
         return sql;
@@ -80,7 +80,7 @@ public class PagedQueryProvider {
 
         for (FilterRule rule : rules) {
             String value = rule.getValue();
-            if (StringHelper.isNullOrWhiteSpace(value)) continue;
+            if (StringUtils.isBlank(value)) continue;
 
             if (!OperateMap.containsKey(rule.getOperate())) {
                 rule.setOperate(FilterOperate.EQUAL);

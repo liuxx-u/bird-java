@@ -2,6 +2,7 @@ package com.bird.core.utils;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -38,7 +39,7 @@ public class HttpHelper {
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
         post.setHeader("Content-Type", "application/json");
-        if(!StringHelper.isNullOrWhiteSpace(token)){
+        if(!StringUtils.isBlank(token)){
             post.setHeader("sso.token", token);
         }
         T result;
