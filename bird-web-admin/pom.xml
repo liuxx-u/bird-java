@@ -158,7 +158,17 @@
         </dependency>
         <dependency>
             <groupId>com.bird</groupId>
-            <artifactId>bird-service-common</artifactId>
+            <artifactId>bird-service-zero-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bird</groupId>
+            <artifactId>bird-service-cms-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bird</groupId>
+            <artifactId>bird-service-scheduler-api</artifactId>
             <version>1.0.0</version>
         </dependency>
 
