@@ -2,15 +2,23 @@ package com.bird.core.mapper;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.bird.core.service.EntityDTO;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by liuxx on 2017/10/20.
  */
 public class CommonSaveProvider {
+    private static final List<String> STRING_TYPE_NAME = Arrays.asList("java.lang.String");
+    private static final List<String> NUMBER_TYPE_NAME = Arrays.asList("java.lang.Integer", "java.lang.Long", "java.math.BigDecimal", "int", "long");
+    private static final List<String> BOOLEAN_TYPE_NAME = Arrays.asList("java.lang.Boolean", "boolean");
+    private static final List<String> DATE_TYPE_NAME = Arrays.asList("java.util.Date", "java.sql.Date");
+
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public String insert(CommonSaveParam param) {
@@ -29,9 +37,7 @@ public class CommonSaveProvider {
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
             if (fieldValue == "" || fieldValue == "''") continue;
 
-            sb.append("`");
-            sb.append(fieldName);
-            sb.append("`,");
+            sb.append(getDbFieldName(fieldName) + ",");
             valueBuilder.append(fieldValue + ",");
         }
         String createTime = "'" + dateFormat.format(new Date()) + "'";
@@ -55,7 +61,7 @@ public class CommonSaveProvider {
 
             if (fieldName == "id" || fieldName == "createTime" || fieldName == "modifiedTime") continue;
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
-            sb.append("`" + fieldName + "` = " + fieldValue);
+            sb.append(getDbFieldName(fieldName) + " = " + fieldValue);
             sb.append(",");
         }
         String modifiedTime = "'" + dateFormat.format(new Date()) + "'";
@@ -72,18 +78,15 @@ public class CommonSaveProvider {
         try {
             Object value = field.get(instance);
 
-            if (fieldTyppeName.equals("java.lang.String")) {
+            if (STRING_TYPE_NAME.contains(fieldTyppeName)) {
                 return value == null ? "''" : "'" + value.toString() + "'";
-            } else if (fieldTyppeName.equals("java.lang.Integer") || fieldTyppeName.equals("int") || fieldTyppeName.equals("java.lang.Long")
-                    || fieldTyppeName.equals("long")) {
-                return value == null ? "" : value.toString();
-            } else if (fieldTyppeName.equals("java.lang.Boolean") || fieldTyppeName.equals("boolean")) {
+            } else if (NUMBER_TYPE_NAME.contains(fieldTyppeName)) {
+                return value == null ? "0" : value.toString();
+            } else if (BOOLEAN_TYPE_NAME.contains(fieldTyppeName)) {
                 if (value == null) return "0";
                 return ((Boolean) value) == true ? "1" : "0";
-            } else if (fieldTyppeName.equals("java.util.Date") || fieldTyppeName.equals("java.sql.Date")) {
+            } else if (DATE_TYPE_NAME.contains(fieldTyppeName)) {
                 return value == null ? "''" : "'" + dateFormat.format((Date) value) + "'";
-            } else if (fieldTyppeName.equals("java.math.BigDecimal")){
-                return  value == null ? "" : value.toString();
             }
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
@@ -94,5 +97,16 @@ public class CommonSaveProvider {
         }
 
         return "";
+    }
+
+    private String getDbFieldName(String fieldName) {
+        String dbFieldName = fieldName;
+        if (!StringUtils.startsWith(dbFieldName, "`")) {
+            dbFieldName = "`" + dbFieldName;
+        }
+        if (!StringUtils.endsWith(dbFieldName, "`")) {
+            dbFieldName = dbFieldName + "`";
+        }
+        return dbFieldName;
     }
 }
