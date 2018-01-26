@@ -8,9 +8,7 @@
         <setting name="callSettersOnNulls" value="true"/>
     </settings>
     <plugins>
-        <!-- 分页查询插件 -->
-        <plugin interceptor="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
-            <property name="dialectType" value="sqlserver" />
-        </plugin>
+        <!-- 数据权限插件 -->
+        <plugin interceptor="com.bird.core.mapper.permission.DataAuthorityPlugin"></plugin>
     </plugins>
 </configuration>
