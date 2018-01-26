@@ -65,4 +65,25 @@ public interface Constants {
         String REQUEST_FAIL = "请求失败";
         String SYSTEM_ERROR = "系统错误";
     }
+
+    interface SoftDelete {
+        int NORMAL = 0; //正常
+        int DELETE = 1; //删除
+    }
+
+    interface DataAuthority{
+        /**
+         * 数据权限筛选的数据库字段
+         */
+        String DEFAULT_AUTHORITY_FIELD = "userId";
+        /**
+         * 数据权限数据参数名（mybatis中的参数名）
+         */
+        String AUTHORITY_PARAM_NAME = "authority";
+
+        /**
+         * 数据权限缓存Key前缀（mybatis中的参数名）
+         */
+        String CACHE_KEY = "data_authority:bird:";
+    }
 }

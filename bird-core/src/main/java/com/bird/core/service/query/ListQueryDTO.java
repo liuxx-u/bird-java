@@ -1,5 +1,6 @@
 package com.bird.core.service.query;
 
+import com.bird.core.mapper.permission.DataAuthority;
 import com.bird.core.service.AbstractDTO;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class ListQueryDTO extends AbstractDTO {
     private String sortField;
     private int sortDirection;
     private List<FilterRule> filters;
+    private DataAuthority authority;//数据权限参数
 
     public ListQueryDTO() {
         filters = new ArrayList<>();
@@ -39,5 +41,13 @@ public class ListQueryDTO extends AbstractDTO {
 
     public void setFilters(List<FilterRule> filters) {
         this.filters = filters;
+    }
+
+    public DataAuthority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(DataAuthority authority) {
+        this.authority = authority;
     }
 }
