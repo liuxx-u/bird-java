@@ -1,6 +1,7 @@
 package com.bird.core.cache;
 
 import com.bird.core.cache.redis.RedisCacher;
+import com.bird.core.utils.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,7 @@ public class CacheHelper {
         if (cacher == null) {
             synchronized (CacheHelper.class) {
                 if (cacher == null) {
-                    cacher = new RedisCacher();
+                    cacher = SpringContextHolder.getBean(RedisCacher.class);
                 }
             }
         }

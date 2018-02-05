@@ -3,9 +3,13 @@ package com.bird.core.cache.redis;
 import com.bird.core.cache.Cacher;
 import com.bird.core.utils.InstanceHelper;
 import com.bird.core.utils.PropertiesHelper;
+import com.bird.core.utils.SpringContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,16 +19,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by liuxx on 2017/5/16.
  */
-public final class RedisCacher implements Cacher, ApplicationContextAware {
+@Component
+public final class RedisCacher implements Cacher {
 
-    private RedisTemplate<Serializable, Serializable> redisTemplate = null;
-    private Integer EXPIRE = PropertiesHelper.getInt("redis.expiration");
+    @Autowired
+    private RedisTemplate<Serializable, Serializable> redisTemplate;
 
-    protected ApplicationContext applicationContext;
-
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+    @Value("${redis.expiration}")
+    private Integer EXPIRE;
 
     // 获取连接
     @SuppressWarnings("unchecked")
@@ -32,8 +34,7 @@ public final class RedisCacher implements Cacher, ApplicationContextAware {
         if (redisTemplate == null) {
             synchronized (RedisCacher.class) {
                 if (redisTemplate == null) {
-                    redisTemplate = (RedisTemplate<Serializable, Serializable>)applicationContext
-                            .getBean("redisTemplate");
+                    redisTemplate = SpringContextHolder.getBean(RedisTemplate.class);
                 }
             }
         }
@@ -135,7 +136,5 @@ public final class RedisCacher implements Cacher, ApplicationContextAware {
     public void hdel(String key, String field) {
         getRedis().boundHashOps(key).delete(field);
     }
-
-    // 未完，待续...
 }
 
