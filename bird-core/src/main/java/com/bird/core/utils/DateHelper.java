@@ -20,7 +20,7 @@ public final class DateHelper {
      */
     public static Date parse(String strDate, String pattern)
             throws ParseException {
-        return org.apache.commons.lang.StringUtils.isBlank(strDate) ? null : new SimpleDateFormat(
+        return StringUtils.isBlank(strDate) ? null : new SimpleDateFormat(
                 pattern).parse(strDate);
     }
 

@@ -2,12 +2,9 @@ package com.bird.core.cache.redis;
 
 import com.bird.core.cache.Cacher;
 import com.bird.core.utils.InstanceHelper;
-import com.bird.core.utils.PropertiesHelper;
 import com.bird.core.utils.SpringContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
