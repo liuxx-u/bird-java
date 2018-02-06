@@ -1,7 +1,7 @@
 package com.bird.core.security;
 
 import com.bird.core.security.coder.*;
-import com.bird.core.utils.StringHelper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.security.MessageDigest;
 import java.util.Map;
@@ -46,7 +46,7 @@ public final class SecurityHelper {
     public static final String encryptBASE64(byte[] key) {
         try {
             String result= new BASE64Encoder().encode(key);
-            return StringHelper.trimEnd(result.replace('+','-').replace('/','_'),'=');
+            return StringUtils.stripEnd(result.replace('+','-').replace('/','_'),"=");
         } catch (Exception e) {
             throw new RuntimeException("加密错误，错误信息：", e);
         }

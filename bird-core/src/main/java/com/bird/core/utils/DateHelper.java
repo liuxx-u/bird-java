@@ -1,6 +1,7 @@
 package com.bird.core.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +10,7 @@ import java.util.Date;
 /**
  * Created by liuxx on 2017/6/27.
  */
-public final class DateHelper {
+public final class DateHelper extends DateUtils {
 
     /**
      * 字符串转日期

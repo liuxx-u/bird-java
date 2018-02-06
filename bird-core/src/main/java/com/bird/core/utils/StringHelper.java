@@ -26,40 +26,4 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
         }
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
-
-
-    public static String trim(String str, char c) {
-        if(StringUtils.isBlank(str))return "";
-        int len = str.length();
-        int st = 0;
-        char[] val = str.toCharArray();
-
-        while ((st < len) && (val[st] <= c)) {
-            st++;
-        }
-        while ((st < len) && (val[len - 1] <= c)) {
-            len--;
-        }
-        return ((st > 0) || (len < str.length())) ? str.substring(st, len) : str;
-    }
-
-    public static String trimStart(String str, char c) {
-        int len = str.length();
-        int st = 0;
-        char[] val = str.toCharArray();
-        while ((st < len) && (val[st] <= c)) {
-            st++;
-        }
-        return st > 0 ? str.substring(st, len) : str;
-    }
-
-    public static String trimEnd(String str,char c){
-        int len = str.length();
-        char[] val = str.toCharArray();
-
-        while ((len>0) && (val[len - 1] <= c)) {
-            len--;
-        }
-        return len < str.length() ? str.substring(0, len) : str;
-    }
 }
