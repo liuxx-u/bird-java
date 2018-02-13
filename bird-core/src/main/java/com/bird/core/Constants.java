@@ -1,8 +1,6 @@
 package com.bird.core;
 
-
-import com.bird.core.utils.InstanceHelper;
-
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,7 +13,7 @@ public interface Constants {
      */
     String Exception_Head = "OH,MY GOD! SOME ERRORS OCCURED! AS FOLLOWS :";
     /** 缓存键值 */
-    Map<Class<?>, String> cacheKeyMap = InstanceHelper.newHashMap();
+    Map<Class<?>, String> cacheKeyMap = new HashMap<>();
     /** 操作名称 */
     String OPERATION_NAME = "OPERATION_NAME";
     /** 客户端语言 */

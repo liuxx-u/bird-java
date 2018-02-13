@@ -1,7 +1,13 @@
 package com.bird.core.utils;
 
+import com.bird.core.exception.DataParseException;
+
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -115,7 +121,7 @@ public final class ClassHelper {
      * @param recursive
      * @param classes
      */
-    public static void findAndAddClassesInPackageByFile(String packageName, String packagePath, final boolean recursive, Set<Class<?>> classes) {
+    private static void findAndAddClassesInPackageByFile(String packageName, String packagePath, final boolean recursive, Set<Class<?>> classes) {
         // 获取此包的目录 建立一个File
         File dir = new File(packagePath);
         // 如果不存在或者 也不是目录就直接返回
@@ -146,6 +152,12 @@ public final class ClassHelper {
     }
 
 
+    /**
+     * 获取集合中所有clazz的子类
+     * @param clazz
+     * @param classesAll
+     * @return
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static Set<Class<?>> getByInterface(Class clazz, Set<Class<?>> classesAll) {
         Set<Class<?>> classes = new LinkedHashSet<>();
@@ -273,5 +285,73 @@ public final class ClassHelper {
                     : ClassLoader.getSystemResource(clsAsResource);
         }
         return result;
+    }
+
+    /**
+     * 根据类名获取类信息
+     * @param clazz
+     * @return
+     */
+    public static final Class<?> getClass(String clazz) {
+        /**
+         * Use the Thread context classloader if possible
+         */
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try {
+            if (loader != null) {
+                return Class.forName(clazz, true, loader);
+            }
+            /**
+             * Thread context classloader isn't working out, so use system
+             * loader.
+             */
+            return Class.forName(clazz);
+        } catch (ClassNotFoundException e) {
+            throw new DataParseException(e);
+        }
+    }
+
+    /**
+     * 获取两个对象之间的差异值
+     * @param oldBean
+     * @param newBean
+     * @return
+     */
+    public static <T> T getDiff(T oldBean, T newBean) {
+        if (oldBean == null && newBean != null) {
+            return newBean;
+        } else if (newBean == null) {
+            return null;
+        } else {
+            Class<?> cls1 = oldBean.getClass();
+            try {
+                @SuppressWarnings("unchecked")
+                T object = (T) cls1.newInstance();
+                BeanInfo beanInfo = Introspector.getBeanInfo(cls1);
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                for (PropertyDescriptor property : propertyDescriptors) {
+                    String key = property.getName();
+                    // 过滤class属性
+                    if (!key.equals("class")) {
+                        // 得到property对应的getter方法
+                        Method getter = property.getReadMethod();
+                        // 得到property对应的setter方法
+                        Method setter = property.getWriteMethod();
+                        Object oldValue = getter.invoke(oldBean);
+                        Object newValue = getter.invoke(newBean);
+                        if (newValue != null) {
+                            if (oldValue == null) {
+                                setter.invoke(object, newValue);
+                            } else if (oldValue != null && !newValue.equals(oldValue)) {
+                                setter.invoke(object, newValue);
+                            }
+                        }
+                    }
+                }
+                return object;
+            } catch (Exception e) {
+                throw new DataParseException(e);
+            }
+        }
     }
 }

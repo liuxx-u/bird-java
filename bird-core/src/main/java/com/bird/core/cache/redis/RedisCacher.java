@@ -1,7 +1,6 @@
 package com.bird.core.cache.redis;
 
 import com.bird.core.cache.Cacher;
-import com.bird.core.utils.InstanceHelper;
 import com.bird.core.utils.SpringContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +43,7 @@ public final class RedisCacher implements Cacher {
     }
 
     public final Set<Object> getAll(final String pattern) {
-        Set<Object> values = InstanceHelper.newHashSet();
+        Set<Object> values = new HashSet<>();
         Set<Serializable> keys = getRedis().keys(pattern);
         for (Serializable key : keys) {
             values.add(getRedis().opsForValue().get(key));

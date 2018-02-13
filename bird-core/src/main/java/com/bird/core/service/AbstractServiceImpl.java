@@ -11,16 +11,14 @@ import com.bird.core.mapper.PagedQueryParam;
 import com.bird.core.mapper.TreeQueryParam;
 import com.bird.core.model.AbstractModel;
 import com.bird.core.service.query.PagedListResultDTO;
+import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.DozerHelper;
-import com.bird.core.utils.InstanceHelper;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +44,9 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
 
     @Autowired
     protected EventBus eventBus;
+
+    @Autowired
+    protected DozerHelper dozer;
 
     /**
      * 定义通用的查询接口（支持查询、分页、排序）
@@ -105,7 +106,7 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
      * @param ids id集合
      */
     public List<T> getList(List<Long> ids) {
-        List<T> list = InstanceHelper.newArrayList();
+        List<T> list = new ArrayList<>();
         if (ids != null) {
             for (int i = 0; i < ids.size(); i++) {
                 list.add(null);
@@ -132,7 +133,7 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
      * @param cls 返回的数据类型
      */
     public <K> List<K> getList(List<Long> ids, Class<K> cls) {
-        List<K> list = InstanceHelper.newArrayList();
+        List<K> list = new ArrayList<>();
         if (ids != null) {
             for (int i = 0; i < ids.size(); i++) {
                 list.add(null);
@@ -142,7 +143,7 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
                 final int index = i;
                 executorService.execute(() -> {
                     T t = queryById(ids.get(index));
-                    K k = InstanceHelper.to(t, cls);
+                    K k = dozer.map(t, cls);
                     list.set(index, k);
                 });
             }
@@ -204,7 +205,7 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
                 String lockKey = getLockKey(record.getId());
                 if (CacheHelper.getLock(lockKey)) {
                     try {
-                        T update = InstanceHelper.getDiff(org, record);
+                        T update = ClassHelper.getDiff(org, record);
                         update.setId(record.getId());
                         update.setModifiedTime(new Date());
                         mapper.updateById(update);
