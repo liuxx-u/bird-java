@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,12 +13,17 @@ import java.util.List;
 @Component
 public class DozerHelper  extends DozerBeanMapper {
 
-    public <T> List<T> mapList(Collection sourceList, Class<T> destinationClass){
+    /**
+     * 使用dozer进行对象集合之间的转换
+     * @param sourceList 源集合
+     * @param destinationClass 目标class<T>
+     * @param <T>
+     * @return 目标集合
+     */
+    public <T> List<T> mapList(Collection sourceList, Class<T> destinationClass) {
         List destinationList = new ArrayList();
-        for (Iterator i$ = sourceList.iterator(); i$.hasNext(); ) { Object sourceObject = i$.next();
-            Object destinationObject = map(sourceObject, destinationClass);
-            destinationList.add(destinationObject);
-        }
+
+        sourceList.forEach(obj -> destinationList.add(map(obj, destinationClass)));
         return destinationList;
     }
 }

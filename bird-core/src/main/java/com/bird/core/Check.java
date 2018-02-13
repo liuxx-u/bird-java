@@ -1,7 +1,6 @@
 package com.bird.core;
 
 import com.bird.core.exception.ArgumentException;
-import com.bird.core.utils.StringHelper;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -40,8 +39,8 @@ public final class Check {
      * @param target 目标值
      * @param name   参数名
      */
-    public static final void GreaterThan(Long value, Long target, String name) {
-        if (value == null || value <= target) {
+    public static final void GreaterThan(Number value, Number target, String name) {
+        if (value == null || value.doubleValue() <= target.doubleValue()) {
             throw new ArgumentException(name + "must greater than" + target);
         }
     }
@@ -53,8 +52,8 @@ public final class Check {
      * @param target 目标值
      * @param name   参数名
      */
-    public static final void LessThan(Long value, Long target, String name) {
-        if (value == null || value >= target) {
+    public static final void LessThan(Number value, Number target, String name) {
+        if (value == null || value.doubleValue() >= target.doubleValue()) {
             throw new ArgumentException(name + "must less than" + target);
         }
     }
