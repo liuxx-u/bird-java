@@ -12,6 +12,7 @@ import com.bird.core.mapper.TreeQueryParam;
 import com.bird.core.model.AbstractModel;
 import com.bird.core.service.query.PagedListResultDTO;
 import com.bird.core.utils.ClassHelper;
+import com.bird.core.utils.CollectionWrapper;
 import com.bird.core.utils.DozerHelper;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,10 +23,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -301,6 +299,15 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
     protected String getLockKey(Object id) {
         String cacheName = getCacheKey();
         return new StringBuilder(Constants.CACHE_NAMESPACE).append(cacheName).append(":LOCK:").append(id).toString();
+    }
+
+    /**
+     * 获取集合包装器方法
+     * @param collection 需要操作的集合
+     * @return 链式操作的集合包装器
+     */
+    protected <S> CollectionWrapper<S> cw(Collection<S> collection) {
+        return CollectionWrapper.init(collection);
     }
 
     /**

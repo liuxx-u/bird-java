@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.bird.core.Check;
 import com.bird.core.NameValue;
 import com.bird.core.service.AbstractServiceImpl;
-import com.bird.core.utils.ListHelper;
+import com.bird.core.utils.CollectionWrapper;
 import com.bird.service.zero.RoleService;
 import com.bird.service.zero.dto.RolePermissionDTO;
 import com.bird.service.zero.mapper.RoleMapper;
@@ -64,8 +64,7 @@ public class RoleServiceImpl extends AbstractServiceImpl<Role> implements RoleSe
         wrapper.where("delFlag = 0");
         List<Role> roles = mapper.selectList(wrapper);
 
-        List<NameValue> result = ListHelper.init(roles)
-                .select(role -> new NameValue(role.getName(), role.getId().toString()));
+        List<NameValue> result = cw(roles).select(role -> new NameValue(role.getName(), role.getId().toString())).toList();
         return result;
     }
 }
