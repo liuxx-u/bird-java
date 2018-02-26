@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.bird.core.Check;
 import com.bird.core.NameValue;
 import com.bird.core.service.AbstractServiceImpl;
-import com.bird.core.utils.CollectionWrapper;
 import com.bird.service.zero.RoleService;
 import com.bird.service.zero.dto.RolePermissionDTO;
 import com.bird.service.zero.mapper.RoleMapper;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by liuxx on 2017/10/27.
@@ -64,7 +64,9 @@ public class RoleServiceImpl extends AbstractServiceImpl<Role> implements RoleSe
         wrapper.where("delFlag = 0");
         List<Role> roles = mapper.selectList(wrapper);
 
-        List<NameValue> result = cw(roles).select(role -> new NameValue(role.getName(), role.getId().toString())).toList();
+        List<NameValue> result = roles.stream()
+                .map(role->new NameValue(role.getName(),role.getId().toString()))
+                .collect(Collectors.toList());
         return result;
     }
 }

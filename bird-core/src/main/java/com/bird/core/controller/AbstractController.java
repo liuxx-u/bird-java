@@ -7,7 +7,6 @@ import com.bird.core.HttpCode;
 import com.bird.core.exception.AbstractException;
 import com.bird.core.sso.ticket.TicketHandler;
 import com.bird.core.sso.ticket.TicketInfo;
-import com.bird.core.utils.CollectionWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
-import java.util.Collection;
 
 /**
  * Created by liuxx on 2017/5/25.
@@ -27,15 +25,6 @@ public abstract class AbstractController implements Serializable{
     @Autowired
     protected TicketHandler ticketHandler;
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-    /**
-     * 获取集合包装器方法
-     * @param collection 需要操作的集合
-     * @return 链式操作的集合包装器
-     */
-    protected <S> CollectionWrapper<S> cw(Collection<S> collection) {
-        return CollectionWrapper.init(collection);
-    }
 
     /** 获取当前用户Id */
     protected TicketInfo getUser(HttpServletRequest request) {

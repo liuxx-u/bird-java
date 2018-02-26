@@ -12,7 +12,6 @@ import com.bird.core.mapper.TreeQueryParam;
 import com.bird.core.model.AbstractModel;
 import com.bird.core.service.query.PagedListResultDTO;
 import com.bird.core.utils.ClassHelper;
-import com.bird.core.utils.CollectionWrapper;
 import com.bird.core.utils.DozerHelper;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -299,15 +298,6 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
     protected String getLockKey(Object id) {
         String cacheName = getCacheKey();
         return new StringBuilder(Constants.CACHE_NAMESPACE).append(cacheName).append(":LOCK:").append(id).toString();
-    }
-
-    /**
-     * 获取集合包装器方法
-     * @param collection 需要操作的集合
-     * @return 链式操作的集合包装器
-     */
-    protected <S> CollectionWrapper<S> cw(Collection<S> collection) {
-        return CollectionWrapper.init(collection);
     }
 
     /**
