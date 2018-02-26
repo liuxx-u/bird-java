@@ -1,5 +1,6 @@
 package com.bird.service;
 
+import com.bird.core.cache.CacheHelper;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -10,6 +11,8 @@ public class Bootstrap {
         //加载spring配置
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"classpath:spring-cms-context.xml"});
         context.start();
+
+        CacheHelper.getCache().set("123","dddd");
 
         System.out.println("=================================");
         System.out.println("[CMS服务]启动完成!!!");

@@ -4,7 +4,5 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-    <bean id="defaultEventHandlerFactory" class="com.bird.core.event.handler.DefaultEventHandlerFactory" init-method="init"/>
 
-    <import resource="classpath*:spring/bird-core-redis.xml" />
 </beans>
