@@ -1,10 +1,9 @@
-package com.bird.core.event.handler.kafka;
+package com.bird.eventbus.kafka.handler;
 
-import com.bird.core.event.arg.EventArg;
+import com.bird.eventbus.arg.EventArg;
 import org.apache.kafka.common.serialization.Deserializer;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Map;
 

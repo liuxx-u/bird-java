@@ -94,6 +94,5 @@
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"></tx:annotation-driven>
 
     <import resource="classpath*:spring/bird-core-beans.xml" />
-    <import resource="classpath*:spring/bird-core-kafka.xml"/>
     <import resource="dubbo.xml" />
 </beans>

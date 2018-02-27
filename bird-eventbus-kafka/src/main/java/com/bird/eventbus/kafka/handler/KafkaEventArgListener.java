@@ -1,8 +1,8 @@
-package com.bird.core.event.handler.kafka;
+package com.bird.eventbus.kafka.handler;
 
-import com.bird.core.event.arg.EventArg;
-import com.bird.core.event.handler.IEventHandler;
-import com.bird.core.event.handler.IEventHandlerFactory;
+import com.bird.eventbus.arg.EventArg;
+import com.bird.eventbus.handler.IEventHandler;
+import com.bird.eventbus.handler.IEventHandlerFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.MessageListener;

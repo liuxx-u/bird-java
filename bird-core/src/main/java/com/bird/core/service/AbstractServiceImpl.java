@@ -3,7 +3,6 @@ package com.bird.core.service;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.bird.core.Constants;
 import com.bird.core.cache.CacheHelper;
-import com.bird.core.event.EventBus;
 import com.bird.core.exception.ExceptionHelper;
 import com.bird.core.mapper.AbstractMapper;
 import com.bird.core.mapper.CommonSaveParam;
@@ -38,9 +37,6 @@ public abstract class AbstractServiceImpl<T extends AbstractModel> implements Ab
 
     @Autowired
     protected AbstractMapper<T> mapper;
-
-    @Autowired
-    protected EventBus eventBus;
 
     @Autowired
     protected DozerHelper dozer;

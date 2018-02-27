@@ -1,12 +1,15 @@
 package com.bird.service.cms.impl;
 
 import com.bird.core.Check;
+import com.bird.eventbus.EventBus;
+import com.bird.eventbus.handler.IEventHandler;
 import com.bird.core.mapper.CommonSaveParam;
 import com.bird.core.service.AbstractServiceImpl;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.cms.CmsClassifyService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.cms.model.CmsClassify;
+import com.bird.service.zero.event.TestEventArg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "cms_classify")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsClassifyService")
-public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> implements CmsClassifyService {
+public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> implements CmsClassifyService,IEventHandler<TestEventArg> {
 
     @Autowired
     private DozerHelper dozerHelper;
+
+    @Autowired
+    private EventBus eventBus;
 
     /**
      * 获取分类
@@ -30,6 +36,8 @@ public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> imp
 
         Check.GreaterThan(id, 0L, "id");
         CmsClassify classify = queryById(id);
+
+        eventBus.push(new TestEventArg());
         return dozerHelper.map(classify, CmsClassifyDTO.class);
     }
 
@@ -50,5 +58,10 @@ public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> imp
         }
         CommonSaveParam param = new CommonSaveParam(dto, CmsClassifyDTO.class);
         save(param);
+    }
+
+    @Override
+    public void HandleEvent(TestEventArg eventArg) {
+        System.out.println("notify cms======");
     }
 }

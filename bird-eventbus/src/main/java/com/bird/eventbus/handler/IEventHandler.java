@@ -1,6 +1,6 @@
-package com.bird.core.event.handler;
+package com.bird.eventbus.handler;
 
-import com.bird.core.event.arg.IEventArg;
+import com.bird.eventbus.arg.IEventArg;
 
 public interface IEventHandler<T extends IEventArg> {
 

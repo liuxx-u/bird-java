@@ -1,4 +1,4 @@
-package com.bird.core.event.arg;
+package com.bird.eventbus.arg;
 
 import java.io.Serializable;
 

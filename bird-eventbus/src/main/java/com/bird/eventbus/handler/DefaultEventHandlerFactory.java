@@ -1,6 +1,6 @@
-package com.bird.core.event.handler;
+package com.bird.eventbus.handler;
 
-import com.bird.core.event.arg.IEventArg;
+import com.bird.eventbus.arg.IEventArg;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
@@ -23,8 +23,7 @@ public class DefaultEventHandlerFactory implements IEventHandlerFactory {
     /**
      * 初始化事件处理容器
      */
-    @PostConstruct
-    public static void init() {
+    static  {
         Set<Class<?>> classes = ClassHelper.getClasses("com.bird");
         if (classes != null) {
             String handlerClassName = (IEventHandler.class).getName();

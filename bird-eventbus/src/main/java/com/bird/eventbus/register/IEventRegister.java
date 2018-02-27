@@ -1,6 +1,6 @@
-package com.bird.core.event.register;
+package com.bird.eventbus.register;
 
-import com.bird.core.event.arg.IEventArg;
+import com.bird.eventbus.arg.IEventArg;
 
 /**
  * 事件注册器

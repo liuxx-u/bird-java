@@ -1,6 +1,6 @@
-package com.bird.core.event.handler.kafka;
+package com.bird.eventbus.kafka.handler;
 
-import com.bird.core.event.handler.DefaultEventHandlerFactory;
+import com.bird.eventbus.handler.DefaultEventHandlerFactory;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
 /**

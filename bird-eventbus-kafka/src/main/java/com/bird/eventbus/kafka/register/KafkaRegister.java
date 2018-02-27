@@ -1,7 +1,7 @@
-package com.bird.core.event.register.kafka;
+package com.bird.eventbus.kafka.register;
 
-import com.bird.core.event.arg.IEventArg;
-import com.bird.core.event.register.IEventRegister;
+import com.bird.eventbus.arg.IEventArg;
+import com.bird.eventbus.register.IEventRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

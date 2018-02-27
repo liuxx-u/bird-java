@@ -1,7 +1,7 @@
-package com.bird.core.event.register.kafka;
+package com.bird.eventbus.kafka.register;
 
 import com.bird.core.Check;
-import com.bird.core.event.arg.EventArg;
+import com.bird.eventbus.arg.EventArg;
 import org.apache.kafka.common.serialization.Serializer;
 
 

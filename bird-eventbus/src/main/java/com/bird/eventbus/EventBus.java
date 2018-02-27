@@ -1,9 +1,7 @@
-package com.bird.core.event;
+package com.bird.eventbus;
 
-import com.bird.core.event.arg.IEventArg;
-import com.bird.core.event.handler.IEventHandler;
-import com.bird.core.event.handler.IEventHandlerFactory;
-import com.bird.core.event.register.IEventRegister;
+import com.bird.eventbus.arg.IEventArg;
+import com.bird.eventbus.register.IEventRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventBus {
 
-    @Autowired
+    @Autowired(required = false)
     private IEventRegister eventRegister;
 
     /**

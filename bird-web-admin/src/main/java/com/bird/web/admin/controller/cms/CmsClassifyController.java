@@ -29,7 +29,7 @@ public class CmsClassifyController {
     }
 
     @GetMapping(value = "/get")
-    public OperationResult<CmsClassifyDTO> getMenu(Long id) {
+    public OperationResult<CmsClassifyDTO> get(Long id) {
         Check.GreaterThan(id, 0L, "id");
         CmsClassifyDTO result = classifyService.getClassify(id);
         return OperationResult.Success("获取成功", result);
