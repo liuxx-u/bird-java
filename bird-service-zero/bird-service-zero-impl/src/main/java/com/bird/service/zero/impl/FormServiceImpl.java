@@ -2,7 +2,7 @@ package com.bird.service.zero.impl;
 
 import com.bird.core.Check;
 import com.bird.core.service.AbstractServiceImpl;
-import com.bird.eventbus.handler.IEventHandler;
+import com.bird.eventbus.handler.EventHandler;
 import com.bird.service.zero.FormService;
 import com.bird.service.zero.dto.FormOperateDTO;
 import com.bird.service.zero.event.TestEventArg;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "zero_form")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.FormService")
-public class FormServiceImpl extends AbstractServiceImpl<Form> implements FormService,IEventHandler<TestEventArg> {
+public class FormServiceImpl extends AbstractServiceImpl<Form> implements FormService {
     @Autowired
     private FormMapper formMapper;
 
@@ -31,7 +31,7 @@ public class FormServiceImpl extends AbstractServiceImpl<Form> implements FormSe
         return formMapper.getFormByKey(key);
     }
 
-    @Override
+    @EventHandler
     public void HandleEvent(TestEventArg eventArg) {
         System.out.println("notify zero======");
     }

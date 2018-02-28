@@ -2,7 +2,7 @@ package com.bird.service.cms.impl;
 
 import com.bird.core.Check;
 import com.bird.eventbus.EventBus;
-import com.bird.eventbus.handler.IEventHandler;
+import com.bird.eventbus.handler.EventHandler;
 import com.bird.core.mapper.CommonSaveParam;
 import com.bird.core.service.AbstractServiceImpl;
 import com.bird.core.utils.DozerHelper;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "cms_classify")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsClassifyService")
-public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> implements CmsClassifyService,IEventHandler<TestEventArg> {
+public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> implements CmsClassifyService {
 
     @Autowired
     private DozerHelper dozerHelper;
@@ -60,7 +60,7 @@ public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> imp
         save(param);
     }
 
-    @Override
+    @EventHandler
     public void HandleEvent(TestEventArg eventArg) {
         System.out.println("notify cms======");
     }

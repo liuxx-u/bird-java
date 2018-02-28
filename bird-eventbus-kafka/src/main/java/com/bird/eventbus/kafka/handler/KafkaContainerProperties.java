@@ -1,6 +1,6 @@
 package com.bird.eventbus.kafka.handler;
 
-import com.bird.eventbus.handler.DefaultEventHandlerFactory;
+import com.bird.eventbus.handler.EventHandlerFactory;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
 /**
@@ -8,6 +8,6 @@ import org.springframework.kafka.listener.config.ContainerProperties;
  */
 public class KafkaContainerProperties extends ContainerProperties {
     public KafkaContainerProperties() {
-        super(DefaultEventHandlerFactory.getAllTopics());
+        super(EventHandlerFactory.getAllTopics());
     }
 }

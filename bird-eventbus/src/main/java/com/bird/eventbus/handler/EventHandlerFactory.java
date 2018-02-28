@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
 import java.lang.reflect.Type;
@@ -16,31 +18,32 @@ import java.util.Map;
 import java.util.Set;
 
 @Component
-public class DefaultEventHandlerFactory implements IEventHandlerFactory {
+public class EventHandlerFactory {
 
-    private static Map<String, Set<Class<?>>> eventHandlerContainer = new HashMap<>();
+    private static Map<String, Set<Method>> eventHandlerContainer = new HashMap<>();
 
     /**
      * 初始化事件处理容器
      */
-    static  {
+    static {
         Set<Class<?>> classes = ClassHelper.getClasses("com.bird");
         if (classes != null) {
-            String handlerClassName = (IEventHandler.class).getName();
-            Set<Class<?>> handlers = ClassHelper.getByInterface(IEventHandler.class, classes);
-            for (Class<?> handler : handlers) {
-                for (Type baseType : handler.getGenericInterfaces()) {
-                    if (!StringUtils.startsWith(baseType.getTypeName(), handlerClassName)) continue;
+            for (Class<?> clazz : classes) {
+                for (Method method : clazz.getDeclaredMethods()) {
+                    EventHandler eventAnnotation = method.getAnnotation(EventHandler.class);
+                    if (eventAnnotation == null) continue;
 
-                    ParameterizedType p = (ParameterizedType) baseType;
-                    Class argClass = (Class) p.getActualTypeArguments()[0];
-                    String argClassName = argClass.getName();
+                    //被@EventHandler注解标注的方法只接受一个参数，且参数必须是IEventArg的子类
+                    Class<?>[] parameterTypes = method.getParameterTypes();
+                    if (parameterTypes.length != 1) continue;
+                    if (!IEventArg.class.isAssignableFrom(parameterTypes[0])) continue;
 
+                    String argClassName = parameterTypes[0].getName();
                     if (!eventHandlerContainer.containsKey(argClassName)) {
                         eventHandlerContainer.put(argClassName, new LinkedHashSet<>());
                     }
                     Set eventHandlers = eventHandlerContainer.get(argClassName);
-                    eventHandlers.add(handler);
+                    eventHandlers.add(method);
                     eventHandlerContainer.put(argClassName, eventHandlers);
                 }
             }
@@ -49,6 +52,7 @@ public class DefaultEventHandlerFactory implements IEventHandlerFactory {
 
     /**
      * 获取当前程序所有事件的名称
+     *
      * @return
      */
     public static String[] getAllTopics() {
@@ -66,20 +70,21 @@ public class DefaultEventHandlerFactory implements IEventHandlerFactory {
      * @param eventArg
      * @return
      */
-    @Override
-    public Set<IEventHandler> getHandlers(IEventArg eventArg) {
+
+    public static void handleEvent(IEventArg eventArg) {
         String eventKey = eventArg.getClass().getName();
-        Set<Class<?>> handlerClasses = eventHandlerContainer.getOrDefault(eventKey, null);
-        if (handlerClasses == null) return null;
+        Set<Method> methods = eventHandlerContainer.getOrDefault(eventKey, null);
 
-        Set<IEventHandler> handlers = new LinkedHashSet<>();
-        for (Class<?> clazz : handlerClasses) {
-            Object handler = SpringContextHolder.getBean(clazz);
-
-            if (handler instanceof IEventHandler) {
-                handlers.add((IEventHandler) handler);
+        if (methods == null) return;
+        for (Method method : methods) {
+            Object instance = SpringContextHolder.getBean(method.getDeclaringClass());
+            if (instance == null) continue;
+            try {
+                method.invoke(instance, eventArg);
+            } catch (InvocationTargetException ex) {
+            } catch (IllegalAccessException ex) {
             }
         }
-        return handlers;
+
     }
 }
