@@ -65,7 +65,7 @@ public class EventHandlerFactory {
     }
 
     /**
-     * 获取事件处理器
+     * 事件消费
      *
      * @param eventArg
      * @return
@@ -85,6 +85,5 @@ public class EventHandlerFactory {
             } catch (IllegalAccessException ex) {
             }
         }
-
     }
 }
