@@ -1,8 +1,8 @@
 package com.bird.service.cms;
 
-import com.bird.core.service.AbstractService;
 import com.bird.service.cms.dto.CmsAttributeDTO;
 import com.bird.service.cms.model.CmsAttribute;
+import com.bird.service.common.service.AbstractService;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package com.bird.service.cms.dto;
 
-import com.bird.core.service.EntityDTO;
+
+import com.bird.service.common.service.dto.EntityDTO;
 
 public class CmsContentDTO extends EntityDTO {
     private String title;

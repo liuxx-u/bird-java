@@ -1,8 +1,8 @@
 package com.bird.service.cms;
 
-import com.bird.core.service.AbstractService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.cms.model.CmsClassify;
+import com.bird.service.common.service.AbstractService;
 
 public interface CmsClassifyService extends AbstractService<CmsClassify> {
 

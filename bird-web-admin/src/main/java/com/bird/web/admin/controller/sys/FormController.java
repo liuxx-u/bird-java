@@ -2,12 +2,12 @@ package com.bird.web.admin.controller.sys;
 
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
-import com.bird.core.mapper.CommonSaveParam;
-import com.bird.core.mapper.PagedQueryParam;
-import com.bird.core.mapper.TreeQueryParam;
-import com.bird.core.service.TreeDTO;
-import com.bird.core.service.query.PagedListQueryDTO;
-import com.bird.core.service.query.PagedListResultDTO;
+import com.bird.service.common.mapper.CommonSaveParam;
+import com.bird.service.common.mapper.PagedQueryParam;
+import com.bird.service.common.mapper.TreeQueryParam;
+import com.bird.service.common.service.dto.TreeDTO;
+import com.bird.service.common.service.query.PagedListQueryDTO;
+import com.bird.service.common.service.query.PagedListResultDTO;
 import com.bird.service.zero.FieldService;
 import com.bird.service.zero.FormService;
 import com.bird.service.zero.dto.FieldDTO;

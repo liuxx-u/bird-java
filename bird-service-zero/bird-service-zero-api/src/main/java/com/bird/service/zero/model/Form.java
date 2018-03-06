@@ -1,10 +1,10 @@
 package com.bird.service.zero.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.model.AbstractModel;
+import com.bird.service.common.model.AbstractFullModel;
 
 @TableName("zero_form")
-public class Form extends AbstractModel {
+public class Form extends AbstractFullModel {
     private String name;
     private String key;
     private String description;

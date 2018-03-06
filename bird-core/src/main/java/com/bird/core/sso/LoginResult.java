@@ -1,9 +1,10 @@
 package com.bird.core.sso;
 
-import com.bird.core.service.AbstractDTO;
 import com.bird.core.sso.ticket.TicketInfo;
 
-public class LoginResult extends AbstractDTO {
+import java.io.Serializable;
+
+public class LoginResult implements Serializable {
     private boolean success;
     private String errorInfo;
     private TicketInfo ticketInfo;

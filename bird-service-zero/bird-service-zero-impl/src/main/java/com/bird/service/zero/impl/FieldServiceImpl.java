@@ -1,6 +1,6 @@
 package com.bird.service.zero.impl;
 
-import com.bird.core.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractServiceImpl;
 import com.bird.service.zero.FieldService;
 import com.bird.service.zero.model.Field;
 import org.springframework.cache.annotation.CacheConfig;

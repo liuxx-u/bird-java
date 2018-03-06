@@ -1,12 +1,12 @@
 package com.bird.service.cms.impl;
 
 import com.bird.core.Check;
-import com.bird.core.service.AbstractServiceImpl;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.cms.CmsContentService;
 import com.bird.service.cms.dto.CmsFullContentDTO;
 import com.bird.service.cms.mapper.CmsContentMapper;
 import com.bird.service.cms.model.CmsContent;
+import com.bird.service.common.service.AbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;

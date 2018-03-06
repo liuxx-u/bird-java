@@ -1,8 +1,8 @@
 package com.bird.service.cms;
 
-import com.bird.core.service.AbstractService;
 import com.bird.service.cms.dto.CmsFullContentDTO;
 import com.bird.service.cms.model.CmsContent;
+import com.bird.service.common.service.AbstractService;
 
 public interface CmsContentService extends AbstractService<CmsContent> {
 

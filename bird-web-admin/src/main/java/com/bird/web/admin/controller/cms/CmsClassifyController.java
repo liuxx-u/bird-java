@@ -2,10 +2,10 @@ package com.bird.web.admin.controller.cms;
 
 import com.bird.core.Check;
 import com.bird.core.controller.OperationResult;
-import com.bird.core.mapper.TreeQueryParam;
-import com.bird.core.service.TreeDTO;
 import com.bird.service.cms.CmsClassifyService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
+import com.bird.service.common.mapper.TreeQueryParam;
+import com.bird.service.common.service.dto.TreeDTO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

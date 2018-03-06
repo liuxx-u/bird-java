@@ -2,12 +2,12 @@ package com.bird.web.admin.controller.cms;
 
 import com.bird.core.Check;
 import com.bird.core.controller.OperationResult;
-import com.bird.core.mapper.CommonSaveParam;
-import com.bird.core.mapper.PagedQueryParam;
-import com.bird.core.service.query.PagedListQueryDTO;
-import com.bird.core.service.query.PagedListResultDTO;
 import com.bird.service.cms.CmsAttributeService;
 import com.bird.service.cms.dto.CmsAttributeDTO;
+import com.bird.service.common.mapper.CommonSaveParam;
+import com.bird.service.common.mapper.PagedQueryParam;
+import com.bird.service.common.service.query.PagedListQueryDTO;
+import com.bird.service.common.service.query.PagedListResultDTO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

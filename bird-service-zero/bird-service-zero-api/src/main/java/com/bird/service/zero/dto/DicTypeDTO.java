@@ -2,7 +2,7 @@ package com.bird.service.zero.dto;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.service.EntityDTO;
+import com.bird.service.common.service.dto.EntityDTO;
 
 /**
  * Created by liuxx on 2017/11/2.

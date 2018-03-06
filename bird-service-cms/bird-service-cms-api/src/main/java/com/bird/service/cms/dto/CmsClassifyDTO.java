@@ -1,10 +1,10 @@
 package com.bird.service.cms.dto;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.service.EntityDTO;
+import com.bird.service.common.service.dto.EntityDTO;
 
 @TableName("cms_classify")
-public class CmsClassifyDTO extends EntityDTO{
+public class CmsClassifyDTO extends EntityDTO {
     private String name;
     private Long parentId;
     private String parentIds;

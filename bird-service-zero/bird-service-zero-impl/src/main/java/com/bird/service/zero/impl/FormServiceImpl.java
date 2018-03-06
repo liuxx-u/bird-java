@@ -1,8 +1,8 @@
 package com.bird.service.zero.impl;
 
 import com.bird.core.Check;
-import com.bird.core.service.AbstractServiceImpl;
 import com.bird.eventbus.handler.EventHandler;
+import com.bird.service.common.service.AbstractServiceImpl;
 import com.bird.service.zero.FormService;
 import com.bird.service.zero.dto.FormOperateDTO;
 import com.bird.service.zero.event.TestEventArg;

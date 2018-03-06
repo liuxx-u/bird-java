@@ -1,10 +1,10 @@
 package com.bird.service.zero.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.model.AbstractModel;
+import com.bird.service.common.model.AbstractFullModel;
 
 @TableName("zero_permission")
-public class Permission extends AbstractModel{
+public class Permission extends AbstractFullModel{
     private String key;
     private String name;
     private Long parentId;

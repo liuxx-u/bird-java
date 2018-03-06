@@ -1,6 +1,6 @@
 package com.bird.service.scheduler.impl;
 
-import com.bird.core.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractServiceImpl;
 import com.bird.service.scheduler.SchedulerLogService;
 import com.bird.service.scheduler.model.SchedulerLog;
 import org.springframework.cache.annotation.CacheConfig;

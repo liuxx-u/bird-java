@@ -1,9 +1,8 @@
 package com.bird.service.zero.mapper;
 
-import com.bird.core.mapper.AbstractMapper;
+import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.zero.dto.RolePermissionDTO;
 import com.bird.service.zero.model.Role;
-import com.bird.service.zero.model.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

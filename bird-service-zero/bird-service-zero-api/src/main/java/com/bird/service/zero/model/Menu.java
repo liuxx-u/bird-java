@@ -1,13 +1,13 @@
 package com.bird.service.zero.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.model.AbstractModel;
+import com.bird.service.common.model.AbstractFullModel;
 
 /**
  * Created by liuxx on 2017/10/30.
  */
 @TableName("zero_menu")
-public class Menu extends AbstractModel {
+public class Menu extends AbstractFullModel {
     private String name;
     private String url;
     private String icon;

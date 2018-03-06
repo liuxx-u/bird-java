@@ -1,8 +1,8 @@
 package com.bird.service.zero;
 
-import com.bird.core.service.AbstractService;
 import com.bird.core.sso.LoginDTO;
 import com.bird.core.sso.LoginResult;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.dto.UserRoleDTO;
 import com.bird.service.zero.model.User;
 

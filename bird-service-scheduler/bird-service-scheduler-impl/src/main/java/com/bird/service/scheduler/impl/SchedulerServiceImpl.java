@@ -2,10 +2,10 @@ package com.bird.service.scheduler.impl;
 
 import com.bird.core.Check;
 import com.bird.core.exception.UserFriendlyException;
-import com.bird.core.mapper.PagedQueryParam;
 import com.bird.scheduler.QuartzManager;
-import com.bird.core.service.query.PagedListQueryDTO;
-import com.bird.core.service.query.PagedListResultDTO;
+import com.bird.service.common.mapper.PagedQueryParam;
+import com.bird.service.common.service.query.PagedListQueryDTO;
+import com.bird.service.common.service.query.PagedListResultDTO;
 import com.bird.service.scheduler.SchedulerService;
 import com.bird.service.scheduler.dto.JobDTO;
 import com.bird.service.scheduler.mapper.SchedulerLogMapper;

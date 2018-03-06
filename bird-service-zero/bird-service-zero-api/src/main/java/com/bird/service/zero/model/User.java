@@ -1,7 +1,7 @@
 package com.bird.service.zero.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.model.AbstractModel;
+import com.bird.service.common.model.AbstractFullModel;
 
 import java.sql.Date;
 
@@ -10,7 +10,7 @@ import java.sql.Date;
  */
 
 @TableName("zero_user")
-public class User extends AbstractModel {
+public class User extends AbstractFullModel {
     private String userName;
 
     private String password;

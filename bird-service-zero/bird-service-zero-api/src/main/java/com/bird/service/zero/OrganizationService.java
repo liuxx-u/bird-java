@@ -1,11 +1,9 @@
 package com.bird.service.zero;
 
-import com.bird.core.service.AbstractService;
-import com.bird.core.service.TreeDTO;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.dto.OrganizationDTO;
 import com.bird.service.zero.model.Organization;
 
-import java.util.List;
 
 /**
  * Created by liuxx on 2017/11/1.

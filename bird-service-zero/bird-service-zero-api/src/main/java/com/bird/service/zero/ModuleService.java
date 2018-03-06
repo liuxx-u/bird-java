@@ -1,11 +1,9 @@
 package com.bird.service.zero;
 
-import com.bird.core.service.AbstractService;
-import com.bird.core.service.TreeDTO;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.dto.ModuleDTO;
 import com.bird.service.zero.model.Module;
 
-import java.util.List;
 
 public interface ModuleService extends AbstractService<Module> {
     /**

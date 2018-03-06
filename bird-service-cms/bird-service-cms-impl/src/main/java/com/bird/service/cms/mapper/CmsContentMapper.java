@@ -1,6 +1,7 @@
 package com.bird.service.cms.mapper;
-import com.bird.core.mapper.AbstractMapper;
+
 import com.bird.service.cms.model.CmsContent;
+import com.bird.service.common.mapper.AbstractMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;

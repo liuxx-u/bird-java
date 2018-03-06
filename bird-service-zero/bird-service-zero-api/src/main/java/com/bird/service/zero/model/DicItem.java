@@ -1,13 +1,13 @@
 package com.bird.service.zero.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.model.AbstractModel;
+import com.bird.service.common.model.AbstractFullModel;
 
 /**
  * Created by liuxx on 2017/11/2.
  */
 @TableName("zero_dicItem")
-public class DicItem extends AbstractModel {
+public class DicItem extends AbstractFullModel {
     private String name;
     private String code;
     private Long dicTypeId;

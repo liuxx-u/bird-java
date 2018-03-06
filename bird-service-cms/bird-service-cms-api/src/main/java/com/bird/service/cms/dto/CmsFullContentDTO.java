@@ -1,11 +1,10 @@
 package com.bird.service.cms.dto;
 
-import com.bird.core.service.AbstractDTO;
-
+import com.bird.service.common.service.dto.AbstractDTO;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CmsFullContentDTO extends AbstractDTO{
+public class CmsFullContentDTO extends AbstractDTO {
     private CmsContentDTO content;
     private Map<String,String> attribute;
 

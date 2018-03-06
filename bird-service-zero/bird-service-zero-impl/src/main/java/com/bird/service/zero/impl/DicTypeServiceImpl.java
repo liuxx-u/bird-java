@@ -1,22 +1,17 @@
 package com.bird.service.zero.impl;
 
 import com.bird.core.Check;
-import com.bird.core.mapper.CommonSaveParam;
-import com.bird.core.service.AbstractServiceImpl;
-import com.bird.core.service.TreeDTO;
 import com.bird.core.utils.DozerHelper;
+import com.bird.service.common.service.AbstractServiceImpl;
 import com.bird.service.zero.DicTypeService;
 import com.bird.service.zero.dto.DicDTO;
 import com.bird.service.zero.dto.DicTypeDTO;
-import com.bird.service.zero.dto.PermissionDTO;
 import com.bird.service.zero.mapper.DicTypeMapper;
 import com.bird.service.zero.model.DicType;
-import com.bird.service.zero.model.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 /**
  * Created by liuxx on 2017/11/3.

@@ -1,8 +1,9 @@
 package com.bird.core.sso;
 
-import com.bird.core.service.AbstractDTO;
 
-public class LoginDTO extends AbstractDTO {
+import java.io.Serializable;
+
+public class LoginDTO implements Serializable {
     private String userName;
     private String password;
 

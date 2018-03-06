@@ -82,7 +82,7 @@
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <description>DAO接口所在包名，Spring会自动查找其下的类</description>
-        <property name="basePackage" value="com.bird.service.*.mapper*" />
+        <property name="basePackage" value="com.bird.service.cms.mapper*" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
 

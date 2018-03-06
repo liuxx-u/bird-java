@@ -1,12 +1,12 @@
 package com.bird.service.scheduler.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.model.AbstractModel;
+import com.bird.service.common.model.AbstractFullModel;
 
 import java.util.Date;
 
 @TableName("scheduler_log")
-public class SchedulerLog extends AbstractModel {
+public class SchedulerLog extends AbstractFullModel {
     private String jobName;
     private String groupName;
     private String triggerName;

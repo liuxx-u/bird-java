@@ -1,6 +1,6 @@
 package com.bird.service.zero.dto;
 
-import com.bird.core.service.EntityDTO;
+import com.bird.service.common.service.dto.EntityDTO;
 
 import java.util.ArrayList;
 import java.util.List;

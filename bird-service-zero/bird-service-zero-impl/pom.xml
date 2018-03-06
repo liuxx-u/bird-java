@@ -77,12 +77,6 @@
     </build>
 
     <dependencies>
-        <!--添加项目依赖-->
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-core</artifactId>
-            <version>1.0.0</version>
-        </dependency>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-eventbus</artifactId>

@@ -1,7 +1,7 @@
 package com.bird.service.zero;
 
-import com.bird.core.service.AbstractService;
 import com.bird.core.sso.client.ClientInfo;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.model.Site;
 
 import java.util.List;

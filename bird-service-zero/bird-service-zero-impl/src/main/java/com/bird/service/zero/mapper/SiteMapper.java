@@ -1,7 +1,7 @@
 package com.bird.service.zero.mapper;
 
-import com.bird.core.mapper.AbstractMapper;
 import com.bird.core.sso.client.ClientInfo;
+import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.zero.model.Site;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,7 +1,7 @@
 package com.bird.service.scheduler.dto;
 
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.bird.core.service.AbstractDTO;
+import com.bird.service.common.service.dto.AbstractDTO;
 
 import java.util.Date;
 

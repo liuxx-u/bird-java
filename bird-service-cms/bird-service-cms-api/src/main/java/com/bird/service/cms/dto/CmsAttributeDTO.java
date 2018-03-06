@@ -1,7 +1,7 @@
 package com.bird.service.cms.dto;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.service.EntityDTO;
+import com.bird.service.common.service.dto.EntityDTO;
 
 @TableName("cms_attribute")
 public class CmsAttributeDTO extends EntityDTO {

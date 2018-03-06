@@ -2,7 +2,7 @@ package com.bird.service.zero.dto;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.service.EntityDTO;
+import com.bird.service.common.service.dto.EntityDTO;
 
 @TableName("zero_site")
 public class SiteDTO extends EntityDTO {

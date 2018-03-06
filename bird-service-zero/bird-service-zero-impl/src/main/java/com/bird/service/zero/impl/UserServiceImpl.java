@@ -2,10 +2,10 @@ package com.bird.service.zero.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.bird.core.Check;
-import com.bird.core.service.AbstractServiceImpl;
 import com.bird.core.sso.LoginDTO;
 import com.bird.core.sso.LoginResult;
 import com.bird.core.sso.ticket.TicketInfo;
+import com.bird.service.common.service.AbstractServiceImpl;
 import com.bird.service.zero.UserService;
 import com.bird.service.zero.dto.UserRoleDTO;
 import com.bird.service.zero.mapper.UserMapper;

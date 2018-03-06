@@ -1,7 +1,7 @@
 package com.bird.service.scheduler.mapper;
 
-import com.bird.core.mapper.PagedQueryParam;
-import com.bird.core.mapper.PagedQueryProvider;
+import com.bird.service.common.mapper.PagedQueryParam;
+import com.bird.service.common.mapper.PagedQueryProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 

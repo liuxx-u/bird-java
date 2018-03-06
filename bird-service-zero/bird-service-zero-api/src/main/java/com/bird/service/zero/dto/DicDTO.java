@@ -1,7 +1,7 @@
 package com.bird.service.zero.dto;
 
-import com.bird.core.service.AbstractDTO;
-import com.bird.core.service.OptionDTO;
+import com.bird.service.common.service.dto.AbstractDTO;
+import com.bird.service.common.service.dto.OptionDTO;
 
 import java.util.ArrayList;
 import java.util.List;

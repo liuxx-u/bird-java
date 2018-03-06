@@ -1,8 +1,8 @@
 package com.bird.service.zero.impl;
 
 import com.bird.core.Check;
-import com.bird.core.service.AbstractServiceImpl;
 import com.bird.core.sso.client.ClientInfo;
+import com.bird.service.common.service.AbstractServiceImpl;
 import com.bird.service.zero.SiteService;
 import com.bird.service.zero.mapper.SiteMapper;
 import com.bird.service.zero.model.Site;

@@ -1,14 +1,14 @@
 package com.bird.service.zero.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.core.model.AbstractModel;
+import com.bird.service.common.model.AbstractFullModel;
 
 /**
  *  用户登陆日志Model
  *  @author liuweidong
  * */
 @TableName("zero_user_login_attempt")
-public class UserLoginAttempt extends AbstractModel {
+public class UserLoginAttempt extends AbstractFullModel {
 
     private String userName; // 用户名
     private String clientIp; // 登录客户端IP
