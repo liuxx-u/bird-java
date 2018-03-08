@@ -16,7 +16,7 @@
     <bean class="com.bird.core.utils.PropertiesHelper">
         <property name="locations">
             <list>
-                <value>classpath:system.properties</value>
+                <value>classpath:/system.properties</value>
             </list>
         </property>
         <property name="properties">
@@ -90,9 +90,10 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
+
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"></tx:annotation-driven>
 
     <import resource="classpath*:spring/bird-core-beans.xml" />
-    <import resource="quartz.xml" />
     <import resource="dubbo.xml" />
+    <import resource="quartz.xml"/>
 </beans>
