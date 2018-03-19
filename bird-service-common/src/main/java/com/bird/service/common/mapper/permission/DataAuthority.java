@@ -1,6 +1,7 @@
 package com.bird.service.common.mapper.permission;
 
 import com.bird.core.Constants;
+import com.bird.service.common.ServiceConstants;
 
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ public class DataAuthority implements Serializable {
     private String field;
 
     public DataAuthority() {
-        field = Constants.DataAuthority.DEFAULT_AUTHORITY_FIELD;
+        field = ServiceConstants.DataPermission.DEFAULT_AUTHORITY_FIELD;
     }
 
     public DataAuthority(Long userId) {

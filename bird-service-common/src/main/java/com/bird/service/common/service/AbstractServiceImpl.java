@@ -10,9 +10,10 @@ import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.mapper.TreeQueryParam;
-import com.bird.service.common.model.AbstractFullModel;
+import com.bird.service.common.model.*;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by liuxx on 2017/5/12.
  */
-public abstract class AbstractServiceImpl<T extends AbstractFullModel> implements AbstractService<T> {
+public abstract class AbstractServiceImpl<T extends IModel> implements AbstractService<T> {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -65,6 +66,7 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
     /**
      * 以DTO为根据的通用保存方法
      * param.getEntityDTO().getId()>0 则更新，否则新增
+     *
      * @param param
      */
     @Transactional
@@ -90,10 +92,11 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
 
     /**
      * 通用的获取树数据方法
+     *
      * @param param
      * @return
      */
-    public List<TreeDTO> getTreeData(TreeQueryParam param){
+    public List<TreeDTO> getTreeData(TreeQueryParam param) {
         return mapper.queryTreeData(param);
     }
 
@@ -157,15 +160,18 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
     /**
      * 逻辑删除
      *
-     * @param id     数据id
+     * @param id 数据id
      */
     @Transactional
     public void softDelete(Long id) {
         try {
             T record = this.queryById(id);
-            record.setDelFlag(true);
-            mapper.updateById(record);
-            CacheHelper.getCache().set(getCacheKey(id), record);
+            if (record instanceof ISoftDelete) {
+                ((ISoftDelete) record).setDelFlag(true);
+                mapper.updateById(record);
+                CacheHelper.getCache().set(getCacheKey(id), record);
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -195,7 +201,9 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
     public T save(T record) {
         try {
             if (record.getId() == null || record.getId() == 0) {
-                record.setCreateTime(new Date());
+                if (record instanceof IHasCreateTime) {
+                    ((IHasCreateTime) record).setCreateTime(new Date());
+                }
                 mapper.insert(record);
             } else {
                 T org = this.queryById(record.getId());
@@ -204,7 +212,9 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
                     try {
                         T update = ClassHelper.getDiff(org, record);
                         update.setId(record.getId());
-                        update.setModifiedTime(new Date());
+                        if (record instanceof IHasModifyTime) {
+                            ((IHasModifyTime) update).setModifiedTime(new Date());
+                        }
                         mapper.updateById(update);
                         record = mapper.selectById(record.getId());
                         CacheHelper.getCache().set(getCacheKey(record.getId()), record);
@@ -289,7 +299,7 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
      */
     protected String getCacheKey(Object id) {
         String cacheName = getCacheKey();
-        return new StringBuilder(Constants.CACHE_NAMESPACE).append(cacheName).append(":").append(id).toString();
+        return new StringBuilder(Constants.Cache.NAMESPACE).append(cacheName).append(":").append(id).toString();
     }
 
     /**
@@ -297,7 +307,7 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
      */
     protected String getLockKey(Object id) {
         String cacheName = getCacheKey();
-        return new StringBuilder(Constants.CACHE_NAMESPACE).append(cacheName).append(":LOCK:").append(id).toString();
+        return new StringBuilder(Constants.Cache.NAMESPACE).append(cacheName).append(":LOCK:").append(id).toString();
     }
 
     /**
@@ -305,7 +315,7 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
      */
     private String getCacheKey() {
         Class<?> cls = getClass();
-        String cacheName = Constants.cacheKeyMap.get(cls);
+        String cacheName = Constants.Cache.ClassKeyMap.get(cls);
         if (StringUtils.isBlank(cacheName)) {
             CacheConfig cacheConfig = cls.getAnnotation(CacheConfig.class);
             if (cacheConfig == null || cacheConfig.cacheNames() == null || cacheConfig.cacheNames().length < 1) {
@@ -313,7 +323,7 @@ public abstract class AbstractServiceImpl<T extends AbstractFullModel> implement
             } else {
                 cacheName = cacheConfig.cacheNames()[0];
             }
-            Constants.cacheKeyMap.put(cls, cacheName);
+            Constants.Cache.ClassKeyMap.put(cls, cacheName);
         }
         return cacheName;
     }

@@ -6,8 +6,8 @@ import java.io.Serializable;
  * @author liuxx
  * @date 2018/2/27
  */
-public interface IModel<PK> extends Serializable {
-    PK getId();
+public interface IModel extends Serializable {
+    Long getId();
 
-    void setId(PK id);
+    void setId(Long id);
 }

@@ -3,6 +3,7 @@ package com.bird.service.common.mapper.permission;
 import com.baomidou.mybatisplus.toolkit.PluginUtils;
 import com.bird.core.Constants;
 import com.bird.core.utils.SpringContextHolder;
+import com.bird.service.common.ServiceConstants;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import org.apache.ibatis.binding.MapperMethod;
@@ -50,9 +51,9 @@ public class DataAuthorityPlugin implements Interceptor {
             if (param instanceof MapperMethod.ParamMap) {
                 MapperMethod.ParamMap map = (MapperMethod.ParamMap) param;
                 //如果参数不包括数据权限相关的数据，返回
-                if (!map.containsKey(Constants.DataAuthority.AUTHORITY_PARAM_NAME)) return invocation.proceed();
+                if (!map.containsKey(ServiceConstants.DataPermission.AUTHORITY_PARAM_NAME)) return invocation.proceed();
 
-                Object authorityObj = map.get(Constants.DataAuthority.AUTHORITY_PARAM_NAME);
+                Object authorityObj = map.get(ServiceConstants.DataPermission.AUTHORITY_PARAM_NAME);
                 if (!DataAuthority.class.isInstance(authority)) return invocation.proceed();
                 authority = (DataAuthority) authorityObj;
             } else {

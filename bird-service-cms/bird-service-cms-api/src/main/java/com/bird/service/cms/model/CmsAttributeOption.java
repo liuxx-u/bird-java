@@ -1,10 +1,10 @@
 package com.bird.service.cms.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.service.common.model.AbstractFullModel;
+import com.bird.service.common.model.AbstractModel;
 
 @TableName("cms_attribute_option")
-public class CmsAttributeOption extends AbstractFullModel {
+public class CmsAttributeOption extends AbstractModel {
     private String value;
     private Integer orderNo;
     private String remark;

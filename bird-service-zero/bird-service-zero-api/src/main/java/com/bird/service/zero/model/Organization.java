@@ -1,13 +1,13 @@
 package com.bird.service.zero.model;
 
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.bird.service.common.model.AbstractFullModel;
+import com.bird.service.common.model.AbstractModel;
 
 /**
  * Created by liuxx on 2017/11/1.
  */
 @TableName("zero_organization")
-public class Organization extends AbstractFullModel {
+public class Organization extends AbstractModel {
     private String name;
     private Long parentId;
     private String parentIds;

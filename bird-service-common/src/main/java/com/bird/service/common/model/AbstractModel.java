@@ -1,21 +1,39 @@
 package com.bird.service.common.model;
 
+import java.util.Date;
+
 /**
  * @author liuxx
- * @date 2018/2/27
+ * @date 2018/3/19
  *
  *
  */
-public abstract class AbstractModel<PK> implements IModel<PK> {
-    private PK id;
+public abstract class AbstractModel extends AbstractPureModel implements ISoftDelete,IHasCreateTime,IHasModifyTime {
+    private Boolean delFlag;
+    private Date createTime;
+    private Date modifiedTime;
 
-    @Override
-    public PK getId() {
-        return id;
+    public Boolean getDelFlag() {
+        return delFlag;
     }
 
-    @Override
-    public void setId(PK id) {
-        this.id = id;
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 }

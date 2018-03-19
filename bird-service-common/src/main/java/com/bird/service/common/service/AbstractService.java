@@ -5,6 +5,7 @@ import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.mapper.TreeQueryParam;
 import com.bird.service.common.model.AbstractModel;
+import com.bird.service.common.model.IModel;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * Created by liuxx on 2017/7/31.
  */
-public interface AbstractService<T extends AbstractModel> {
+public interface AbstractService<T extends IModel> {
 
     /**
      * 定义通用的查询接口（支持查询、分页、排序）

@@ -10,7 +10,7 @@ import java.util.UUID;
  * redis session存储器
  */
 public class RedisTicketSessionStore implements TicketSessionStore {
-    private final String Ticket_CacheKey_Prefix = Constants.CACHE_NAMESPACE + "sso.token:";
+    private final String Ticket_CacheKey_Prefix = Constants.Cache.NAMESPACE + "sso.token:";
 
     /**
      * 存储票据信息，并返回该票据的Key
