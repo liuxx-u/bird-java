@@ -2,10 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
          http://www.springframework.org/schema/context
-         http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+         http://www.springframework.org/schema/context/spring-context-4.0.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <mvc:annotation-driven />
+
+    <!-- 查找xxx路径下所有@Controller 注释类,添加与项目相关的controller -->
+
+    <dubbo:annotation package="com.bird.web.admin.controller" />
 
     <context:component-scan base-package="com.bird"/>
 
@@ -39,6 +46,4 @@
         <property name="sessionStore" ref="ticketSessionStore"></property>
     </bean>
 
-    <import resource="classpath*:spring/bird-core-beans.xml" />
-    <import resource="classpath*:dubbo/dubbo.xml" />
 </beans>

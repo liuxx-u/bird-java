@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.cms;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.Check;
 import com.bird.core.controller.OperationResult;
 import com.bird.service.cms.CmsAttributeService;
@@ -9,7 +10,6 @@ import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cms/attribute")
 public class CmsAttributeController {
-    @Autowired
+    @Reference
     private CmsAttributeService attributeService;
 
     @PostMapping(value = "/getPaged")

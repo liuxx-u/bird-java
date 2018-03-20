@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.sys;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.Check;
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
@@ -10,7 +11,6 @@ import com.bird.service.zero.MenuService;
 import com.bird.service.zero.dto.MenuBriefDTO;
 import com.bird.service.zero.dto.MenuDTO;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/sys/menu")
 public class MenuController extends AbstractController {
 
-    @Autowired
+    @Reference
     private MenuService menuService;
 
     @GetMapping(value = "/getAllMenus")

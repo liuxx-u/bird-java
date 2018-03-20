@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.sys;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.Check;
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
@@ -9,7 +10,6 @@ import com.bird.service.zero.PermissionService;
 import com.bird.service.zero.dto.PermissionDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/sys/permission")
 public class PermissionController extends AbstractController {
 
-    @Autowired
+    @Reference
     private PermissionService permissionService;
 
     @GetMapping(value = "/getTreeData")

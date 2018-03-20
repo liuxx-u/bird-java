@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.sys;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
 import com.bird.service.common.mapper.CommonSaveParam;
@@ -15,7 +16,6 @@ import com.bird.service.zero.dto.FormDTO;
 import com.bird.service.zero.dto.FormOperateDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,10 +24,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys/form")
 public class FormController extends AbstractController {
-    @Autowired
+    @Reference
     private FormService formService;
 
-    @Autowired
+    @Reference
     private FieldService fieldService;
 
     @ApiOperation("根据key获取表单模板")

@@ -5,6 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * Created by liuxx on 2017/8/2.
  */
+
 public class Bootstrap {
     public static void main(String arg[]){
         //加载spring配置

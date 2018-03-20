@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.sys;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.Check;
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
@@ -8,7 +9,6 @@ import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.zero.OrganizationService;
 import com.bird.service.zero.dto.OrganizationDTO;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys/organization")
 public class OrganizationController extends AbstractController {
-    @Autowired
+    @Reference
     private OrganizationService organizationService;
 
     @GetMapping(value = "/getTreeData")

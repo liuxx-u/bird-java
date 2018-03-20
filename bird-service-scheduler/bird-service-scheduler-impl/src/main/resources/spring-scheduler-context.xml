@@ -93,7 +93,5 @@
 
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"></tx:annotation-driven>
 
-    <import resource="classpath*:spring/bird-core-beans.xml" />
-    <import resource="dubbo.xml" />
     <import resource="quartz.xml"/>
 </beans>

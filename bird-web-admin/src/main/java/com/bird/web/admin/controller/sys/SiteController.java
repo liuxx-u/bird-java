@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.sys;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.Check;
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
@@ -15,7 +16,6 @@ import com.bird.service.zero.dto.ModuleDTO;
 import com.bird.service.zero.dto.SiteDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,10 +24,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys/site")
 public class SiteController extends AbstractController {
-    @Autowired
+    @Reference
     private SiteService siteService;
 
-    @Autowired
+    @Reference
     private ModuleService moduleService;
 
     @ApiOperation("获取站点分页")

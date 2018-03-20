@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.sys;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.Check;
 import com.bird.core.controller.AbstractController;
 import com.bird.core.controller.OperationResult;
@@ -14,7 +15,6 @@ import com.bird.service.zero.DicTypeService;
 import com.bird.service.zero.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,11 +27,11 @@ import java.util.List;
 @RequestMapping("/sys/dic")
 public class DicController extends AbstractController {
 
-    @Autowired
-    private DicTypeService dicTypeService;
+    @Reference
+    DicTypeService dicTypeService;
 
-    @Autowired
-    private DicItemService dicItemService;
+    @Reference
+    DicItemService dicItemService;
 
     @GetMapping(value = "/getTreeData")
     @ApiOperation(value = "获取字典树数据")

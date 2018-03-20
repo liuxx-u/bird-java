@@ -1,5 +1,6 @@
 package com.bird.web.admin.controller.sys;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.Check;
 import com.bird.core.controller.OperationResult;
 import com.bird.service.common.mapper.PagedQueryParam;
@@ -10,7 +11,6 @@ import com.bird.service.scheduler.SchedulerService;
 import com.bird.service.scheduler.dto.JobDTO;
 import com.bird.service.scheduler.dto.SchedulerLogDTO;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sys/scheduler")
 public class SchedulerController {
 
-    @Autowired
+    @Reference
     private SchedulerService schedulerService;
 
-    @Autowired
+    @Reference
     private SchedulerLogService logService;
 
     @PostMapping(value = "/getPaged")

@@ -1,14 +1,14 @@
 package com.bird.security;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.sso.permission.UserPermissionChecker;
 import com.bird.service.zero.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
 public class BirdUserPermissionChecker implements UserPermissionChecker {
 
-    @Autowired
+    @Reference
     private UserService userService;
 
     /**

@@ -1,16 +1,16 @@
 package com.bird.security;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.core.sso.client.ClientInfo;
 import com.bird.core.sso.client.UserClientStore;
 import com.bird.service.zero.SiteService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 
 public class BirdUserClientStore implements UserClientStore {
 
-    @Autowired
+    @Reference
     private SiteService siteService;
 
     /**
