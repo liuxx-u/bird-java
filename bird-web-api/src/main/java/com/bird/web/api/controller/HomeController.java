@@ -1,4 +1,4 @@
-package com.bird.web.boot.controller;
+package com.bird.web.api.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.service.zero.DicTypeService;
