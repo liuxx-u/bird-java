@@ -13,15 +13,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CacheHelper {
     private static Logger logger = LoggerFactory.getLogger(CacheHelper.class);
-    private static Cacher cacher;
+    private static ICacher cacher;
 
     @Bean
-    public Cacher setCache() {
+    public ICacher setCache() {
         cacher = getCache();
         return cacher;
     }
 
-    public static Cacher getCache() {
+    public static ICacher getCache() {
         if (cacher == null) {
             synchronized (CacheHelper.class) {
                 if (cacher == null) {
@@ -38,7 +38,7 @@ public class CacheHelper {
             if (!getCache().exists(key)) {
                 synchronized (CacheHelper.class) {
                     if (!getCache().exists(key)) {
-                        if (getCache().setnx(key, String.valueOf(System.currentTimeMillis()))) {
+                        if (getCache().setIfAbsent(key, String.valueOf(System.currentTimeMillis()))) {
                             return true;
                         }
                     }
@@ -50,7 +50,7 @@ public class CacheHelper {
         int expires = 1000 * 60 * 3;
         String currentValue = (String) getCache().get(key);
         if (currentValue != null && Long.parseLong(currentValue) < System.currentTimeMillis() - expires) {
-            if (getCache().setnx("UNLOCK_" + key, "0")) {
+            if (getCache().setIfAbsent("UNLOCK_" + key, "0")) {
                 unlock(key);
                 getCache().set("UNLOCK_" + key, "0", 1);
             }
@@ -60,6 +60,6 @@ public class CacheHelper {
     }
 
     public static void unlock(String key) {
-        getCache().unlock(key);
+        getCache().del(key);
     }
 }

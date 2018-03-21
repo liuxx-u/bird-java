@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -19,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * 文件操作工具类
  * 实现文件的创建、删除、复制、压缩、解压以及目录的创建、删除、复制、压缩解压等功能
  */
-public class FileHelper extends org.apache.commons.io.FileUtils {
+public class FileHelper extends FileUtils {
 
     private static Logger log = LoggerFactory.getLogger(FileHelper.class);
 

@@ -43,12 +43,17 @@ public final class PropertiesHelper extends PropertyPlaceholderConfigurer {
      * @param key
      * @return
      */
-    public static String getString(String key) {
+    public static String get(String key) {
         try {
             return ctxPropertiesMap.get(key);
         } catch (MissingResourceException e) {
             return null;
         }
+    }
+
+    public static String get(String key,String defaultValue) {
+        String value = get(key);
+        return StringUtils.isNotBlank(value) ? value : defaultValue;
     }
 
     /**

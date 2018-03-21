@@ -13,6 +13,7 @@
         <module>bird-service-common</module>
         <module>bird-service-zero</module>
         <module>bird-web-admin</module>
+        <module>bird-web-boot</module>
         <module>bird-service-cms</module>
         <module>bird-service-scheduler</module>
         <module>bird-eventbus</module>

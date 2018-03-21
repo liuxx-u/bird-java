@@ -12,8 +12,8 @@ public interface ServiceConstants {
      * 软删除状态
      */
     interface SoftDelete {
-        byte TRUE = 1;
-        byte FALSE = 0;
+        Byte TRUE = 1;
+        Byte FALSE = 0;
     }
 
     /**

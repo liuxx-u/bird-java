@@ -2,6 +2,8 @@ package com.bird.web.boot.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.bird.service.zero.DicTypeService;
+import com.bird.service.zero.OrganizationService;
+import com.bird.service.zero.dto.OrganizationDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,8 +18,11 @@ public class HomeController {
     @Reference
     private DicTypeService dicTypeService;
 
+    @Reference
+    private OrganizationService organizationService;
+
     @RequestMapping("/test")
-    public String test(){
-        return "sas";
+    public OrganizationDTO test(){
+        return organizationService.getOrganization(1L);
     }
 }
