@@ -20,17 +20,20 @@ public final class RedisCacher implements ICacher {
     private Integer EXPIRE;
 
     @Autowired
-    private RedisTemplate<String, Serializable> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
+    @Override
     public final Object get(final String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
+    @Override
     public final void set(final String key, final Serializable value, int seconds) {
         redisTemplate.opsForValue().set(key,value);
         expire(key, seconds);
     }
 
+    @Override
     public final void set(final String key, final Serializable value) {
         redisTemplate.opsForValue().set(key,value,EXPIRE,TimeUnit.SECONDS);
         expire(key, EXPIRE);
@@ -41,10 +44,12 @@ public final class RedisCacher implements ICacher {
         return redisTemplate.opsForValue().setIfAbsent(key,value);
     }
 
+    @Override
     public final Boolean exists(final String key) {
         return redisTemplate.hasKey(key);
     }
 
+    @Override
     public final void del(final String key) {
         redisTemplate.delete(key);
     }
@@ -65,6 +70,7 @@ public final class RedisCacher implements ICacher {
      * @param unixTime
      * @return
      */
+    @Override
     public final Boolean expireAt(final String key, final long unixTime) {
         return redisTemplate.expireAt(key, new Date(unixTime));
     }

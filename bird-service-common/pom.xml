@@ -27,5 +27,12 @@
             <version>0.10</version>
         </dependency>
 
+        <!-- 添加mybatis-plus依赖 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

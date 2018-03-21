@@ -100,13 +100,6 @@
             <version>${logback.version}</version>
         </dependency>
 
-        <!-- 添加mybatis-plus依赖 -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
-
         <!-- 反射工具 -->
         <dependency>
             <groupId>org.db4j</groupId>

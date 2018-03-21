@@ -15,7 +15,6 @@
 
     <modules>
         <module>bird-service-scheduler-api</module>
-        <module>bird-service-scheduler-impl</module>
     </modules>
 
 </project>
