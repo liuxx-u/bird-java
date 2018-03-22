@@ -6,9 +6,10 @@ import com.bird.core.Check;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.cms.CmsClassifyService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
+import com.bird.service.cms.mapper.CmsClassifyMapper;
 import com.bird.service.cms.model.CmsClassify;
 import com.bird.service.common.mapper.CommonSaveParam;
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 //import com.bird.service.zero.event.TestEventArg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -17,10 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "cms_classify")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsClassifyService")
-public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> implements CmsClassifyService {
-
-    @Autowired
-    private DozerHelper dozerHelper;
+public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,CmsClassify> implements CmsClassifyService {
 
 //    @Autowired
 //    private EventBus eventBus;
@@ -38,7 +36,7 @@ public class CmsClassifyServiceImpl extends AbstractServiceImpl<CmsClassify> imp
         CmsClassify classify = queryById(id);
 
 //        eventBus.push(new TestEventArg());
-        return dozerHelper.map(classify, CmsClassifyDTO.class);
+        return dozer.map(classify, CmsClassifyDTO.class);
     }
 
     /**

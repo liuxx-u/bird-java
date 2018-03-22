@@ -3,6 +3,8 @@ package com.bird.service.zero;
 import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
 import com.baomidou.mybatisplus.entity.GlobalConfiguration;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.LogicSqlInjector;
+import com.baomidou.mybatisplus.mapper.MetaObjectHandler;
 import com.bird.core.utils.SpringContextHolder;
 import com.bird.service.zero.mapper.OrganizationMapper;
 import com.bird.service.zero.model.Organization;
@@ -22,8 +24,12 @@ public class Bootstrap {
 
 		OrganizationMapper mapper = SpringContextHolder.getBean(OrganizationMapper.class);
 		EntityWrapper<Organization> wrapper = new EntityWrapper<>();
-		List<Organization> organizations = mapper.selectList(wrapper);
+		Organization organization = mapper.selectById(1L);
+		organization.setOrderNo(3);
+		mapper.updateById(organization);
 
-		mapper.deleteById(1L);
+		Organization newOrg = new Organization();
+		newOrg.setName("new");
+		mapper.insert(newOrg);
 	}
 }

@@ -3,7 +3,7 @@ package com.bird.service.zero.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.bird.core.Check;
 import com.bird.core.NameValue;
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.RoleService;
 import com.bird.service.zero.dto.RolePermissionDTO;
 import com.bird.service.zero.mapper.RoleMapper;
@@ -22,10 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @CacheConfig(cacheNames = "zero_role")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.RoleService")
-public class RoleServiceImpl extends AbstractServiceImpl<Role> implements RoleService {
-
-    @Autowired
-    private RoleMapper roleMapper;
+public class RoleServiceImpl extends AbstractService<RoleMapper,Role> implements RoleService {
 
     /**
      * 获取角色的权限id集合
@@ -36,7 +33,7 @@ public class RoleServiceImpl extends AbstractServiceImpl<Role> implements RoleSe
     @Override
     public List<Long> getRolePermissionIds(Long roleId) {
         Check.GreaterThan(roleId, 0L, "roleId");
-        return roleMapper.getRolePermissionIds(roleId);
+        return mapper.getRolePermissionIds(roleId);
     }
 
     /**
@@ -49,8 +46,8 @@ public class RoleServiceImpl extends AbstractServiceImpl<Role> implements RoleSe
         Check.NotNull(dto,"dto");
         Check.GreaterThan(dto.getRoleId(),0L,"roleId");
 
-        roleMapper.deleteRolePermissions(dto.getRoleId());
-        roleMapper.setRolePermissions(dto);
+        mapper.deleteRolePermissions(dto.getRoleId());
+        mapper.setRolePermissions(dto);
     }
 
     /**

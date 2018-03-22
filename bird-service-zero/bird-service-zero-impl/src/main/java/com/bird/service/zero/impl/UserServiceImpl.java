@@ -5,7 +5,7 @@ import com.bird.core.Check;
 import com.bird.core.sso.LoginDTO;
 import com.bird.core.sso.LoginResult;
 import com.bird.core.sso.ticket.TicketInfo;
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.UserService;
 import com.bird.service.zero.dto.UserRoleDTO;
 import com.bird.service.zero.mapper.UserMapper;
@@ -22,10 +22,7 @@ import java.util.List;
 @Service
 @CacheConfig(cacheNames = "zero_user")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.UserService")
-public class UserServiceImpl extends AbstractServiceImpl<User> implements UserService {
-
-    @Autowired
-    private UserMapper userMapper;
+public class UserServiceImpl extends AbstractService<UserMapper,User> implements UserService {
 
     /**
      * 根据用户名获取用户
@@ -50,8 +47,8 @@ public class UserServiceImpl extends AbstractServiceImpl<User> implements UserSe
         Check.NotNull(dto, "dto");
         Check.GreaterThan(dto.getUserId(), 0L, "dto.userId");
 
-        userMapper.deleteUserRoles(dto.getUserId());
-        userMapper.setUserRoles(dto);
+        mapper.deleteUserRoles(dto.getUserId());
+        mapper.setUserRoles(dto);
     }
 
     /**
@@ -63,7 +60,7 @@ public class UserServiceImpl extends AbstractServiceImpl<User> implements UserSe
     @Override
     public List<Long> getUserRoleIds(Long userId) {
         Check.GreaterThan(userId, 0L, "userId");
-        return userMapper.getUserRoleIds(userId);
+        return mapper.getUserRoleIds(userId);
     }
 
     /**
@@ -75,7 +72,7 @@ public class UserServiceImpl extends AbstractServiceImpl<User> implements UserSe
     @Override
     public List<String> getUserPermissions(Long userId) {
         Check.GreaterThan(userId, 0L, "userId");
-        return userMapper.getUserPermissionNames(userId);
+        return mapper.getUserPermissionNames(userId);
     }
 
     /**
@@ -89,7 +86,7 @@ public class UserServiceImpl extends AbstractServiceImpl<User> implements UserSe
         Check.NotEmpty(loginDTO.getUserName(),"userName");
         Check.NotEmpty(loginDTO.getPassword(),"password");
 
-        User user = userMapper.getUserByName(loginDTO.getUserName());
+        User user = mapper.getUserByName(loginDTO.getUserName());
         if (user == null) {
             return LoginResult.Error("登录用户不存在.");
         }

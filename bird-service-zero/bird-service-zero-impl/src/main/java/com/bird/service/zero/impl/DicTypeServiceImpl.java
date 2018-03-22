@@ -2,7 +2,7 @@ package com.bird.service.zero.impl;
 
 import com.bird.core.Check;
 import com.bird.core.utils.DozerHelper;
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.DicTypeService;
 import com.bird.service.zero.dto.DicDTO;
 import com.bird.service.zero.dto.DicTypeDTO;
@@ -19,12 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "zero_dicType")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.DicTypeService")
-public class DicTypeServiceImpl extends AbstractServiceImpl<DicType> implements DicTypeService {
-    @Autowired
-    private DicTypeMapper dicTypeMapper;
-
-    @Autowired
-    private DozerHelper dozerHelper;
+public class DicTypeServiceImpl extends AbstractService<DicTypeMapper,DicType> implements DicTypeService {
 
     /**
      * 根据key获取字典信息
@@ -33,7 +28,7 @@ public class DicTypeServiceImpl extends AbstractServiceImpl<DicType> implements 
      */
     @Override
     public DicDTO getDicByKey(String key) {
-        return dicTypeMapper.getDicByKey(key);
+        return mapper.getDicByKey(key);
     }
 
     /**
@@ -46,7 +41,7 @@ public class DicTypeServiceImpl extends AbstractServiceImpl<DicType> implements 
     public DicTypeDTO getDicType(Long id) {
         Check.GreaterThan(id, 0L, "id");
         DicType dicType = queryById(id);
-        DicTypeDTO result = dozerHelper.map(dicType, DicTypeDTO.class);
+        DicTypeDTO result = dozer.map(dicType, DicTypeDTO.class);
 
         if (dicType.getParentId() != null && dicType.getParentId() > 0) {
             DicType parent = queryById(dicType.getParentId());

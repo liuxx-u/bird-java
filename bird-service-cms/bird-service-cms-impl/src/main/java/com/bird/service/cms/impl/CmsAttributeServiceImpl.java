@@ -4,8 +4,9 @@ import com.bird.core.Check;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.cms.CmsAttributeService;
 import com.bird.service.cms.dto.CmsAttributeDTO;
+import com.bird.service.cms.mapper.CmsAttributeMapper;
 import com.bird.service.cms.model.CmsAttribute;
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,7 @@ import java.util.List;
 @Service
 @CacheConfig(cacheNames = "cms_attribute")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsAttributeService")
-public class CmsAttributeServiceImpl extends AbstractServiceImpl<CmsAttribute> implements CmsAttributeService {
-
-    @Autowired
-    private DozerHelper dozerHelper;
+public class CmsAttributeServiceImpl extends AbstractService<CmsAttributeMapper,CmsAttribute> implements CmsAttributeService {
 
     /**
      * 根据分类id获取属性集合
@@ -34,6 +32,6 @@ public class CmsAttributeServiceImpl extends AbstractServiceImpl<CmsAttribute> i
         wrapper.where("delFlag=0 and classifyId="+classifyId);
         List<CmsAttribute> attributes = selectList(wrapper);
 
-        return dozerHelper.mapList(attributes, CmsAttributeDTO.class);
+        return dozer.mapList(attributes, CmsAttributeDTO.class);
     }
 }

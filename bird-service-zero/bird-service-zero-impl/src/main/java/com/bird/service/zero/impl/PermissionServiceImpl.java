@@ -3,9 +3,10 @@ package com.bird.service.zero.impl;
 import com.bird.core.Check;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.common.mapper.CommonSaveParam;
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.PermissionService;
 import com.bird.service.zero.dto.PermissionDTO;
+import com.bird.service.zero.mapper.PermissionMapper;
 import com.bird.service.zero.model.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "zero_permission")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.PermissionService")
-public class PermissionServiceImpl extends AbstractServiceImpl<Permission> implements PermissionService {
-
-    @Autowired
-    private DozerHelper dozerHelper;
+public class PermissionServiceImpl extends AbstractService<PermissionMapper,Permission> implements PermissionService {
 
     /**
      * 获取权限信息
@@ -28,7 +26,7 @@ public class PermissionServiceImpl extends AbstractServiceImpl<Permission> imple
     public PermissionDTO getPermission(Long id) {
         Check.GreaterThan(id, 0L, "id");
         Permission permission = queryById(id);
-        PermissionDTO result = dozerHelper.map(permission, PermissionDTO.class);
+        PermissionDTO result = dozer.map(permission, PermissionDTO.class);
 
         if (permission.getParentId() != null && permission.getParentId() > 0) {
             Permission parentPermission = queryById(permission.getParentId());

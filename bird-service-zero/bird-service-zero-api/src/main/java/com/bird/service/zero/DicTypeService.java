@@ -1,6 +1,6 @@
 package com.bird.service.zero;
 
-import com.bird.service.common.service.AbstractService;
+import com.bird.service.common.service.IService;
 import com.bird.service.zero.dto.DicDTO;
 import com.bird.service.zero.dto.DicTypeDTO;
 import com.bird.service.zero.model.DicType;
@@ -8,7 +8,7 @@ import com.bird.service.zero.model.DicType;
 /**
  * Created by liuxx on 2017/11/3.
  */
-public interface DicTypeService extends AbstractService<DicType> {
+public interface DicTypeService extends IService<DicType> {
 
     /**
      * 根据key获取字典信息

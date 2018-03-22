@@ -2,9 +2,9 @@ package com.bird.service.cms;
 
 import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.cms.model.CmsClassify;
-import com.bird.service.common.service.AbstractService;
+import com.bird.service.common.service.IService;
 
-public interface CmsClassifyService extends AbstractService<CmsClassify> {
+public interface CmsClassifyService extends IService<CmsClassify> {
 
     /**
      * 获取分类

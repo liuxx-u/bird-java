@@ -1,10 +1,10 @@
 package com.bird.service.zero;
 
-import com.bird.service.common.service.AbstractService;
+import com.bird.service.common.service.IService;
 import com.bird.service.zero.dto.PermissionDTO;
 import com.bird.service.zero.model.Permission;
 
-public interface PermissionService extends AbstractService<Permission> {
+public interface PermissionService extends IService<Permission> {
     /**
      * 获取权限信息
      * @return

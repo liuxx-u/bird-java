@@ -3,7 +3,7 @@ package com.bird.service.zero.impl;
 import com.bird.core.Check;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.common.mapper.CommonSaveParam;
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.OrganizationService;
 import com.bird.service.zero.dto.OrganizationDTO;
 import com.bird.service.zero.mapper.OrganizationMapper;
@@ -18,13 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "zero_organization")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.OrganizationService")
-public class OrganizationServiceImpl extends AbstractServiceImpl<Organization> implements OrganizationService {
-
-    @Autowired
-    private OrganizationMapper organizationMapper;
-
-    @Autowired
-    private DozerHelper dozerHelper;
+public class OrganizationServiceImpl extends AbstractService<OrganizationMapper,Organization> implements OrganizationService {
 
     /**
      * 获取组织机构信息
@@ -35,7 +29,7 @@ public class OrganizationServiceImpl extends AbstractServiceImpl<Organization> i
     public OrganizationDTO getOrganization(Long id) {
         Check.GreaterThan(id, 0L, "id");
         Organization organization = queryById(id);
-        return dozerHelper.map(organization, OrganizationDTO.class);
+        return dozer.map(organization, OrganizationDTO.class);
     }
 
     /**

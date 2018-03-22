@@ -1,7 +1,9 @@
 package com.bird.service.zero.impl;
 
-import com.bird.service.common.service.AbstractServiceImpl;
+import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.DicItemService;
+import com.bird.service.zero.mapper.DicItemMapper;
+import com.bird.service.zero.mapper.DicTypeMapper;
 import com.bird.service.zero.model.DicItem;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -12,5 +14,5 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "zero_dicItem")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.DicItemService")
-public class DicItemServiceImpl extends AbstractServiceImpl<DicItem> implements DicItemService {
+public class DicItemServiceImpl extends AbstractService<DicItemMapper,DicItem> implements DicItemService {
 }
