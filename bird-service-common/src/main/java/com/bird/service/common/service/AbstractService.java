@@ -61,14 +61,6 @@ public interface AbstractService<T extends IModel> {
     <K> List<K> getList(List<Long> ids, Class<K> cls);
 
     /**
-     * 逻辑删除
-     *
-     * @param id     数据id
-     */
-    @Transactional
-    void softDelete(Long id);
-
-    /**
      * 物理删除
      *
      * @param id 数据id

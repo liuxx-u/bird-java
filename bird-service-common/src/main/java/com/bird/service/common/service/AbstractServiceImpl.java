@@ -13,7 +13,6 @@ import com.bird.service.common.mapper.TreeQueryParam;
 import com.bird.service.common.model.*;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -155,26 +154,6 @@ public abstract class AbstractServiceImpl<T extends IModel> implements AbstractS
             }
         }
         return list;
-    }
-
-    /**
-     * 逻辑删除
-     *
-     * @param id 数据id
-     */
-    @Transactional
-    public void softDelete(Long id) {
-        try {
-            T record = this.queryById(id);
-            if (record instanceof ISoftDelete) {
-                ((ISoftDelete) record).setDelFlag(true);
-                mapper.updateById(record);
-                CacheHelper.getCache().set(getCacheKey(id), record);
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     /**
