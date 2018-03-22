@@ -1,7 +1,10 @@
 package com.bird.service.common.model;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableLogic;
+import com.baomidou.mybatisplus.enums.FieldFill;
 
 /**
  * @author liuxx
@@ -12,7 +15,9 @@ import com.baomidou.mybatisplus.annotations.TableLogic;
 public abstract class AbstractModel extends AbstractPureModel implements ISoftDelete,IHasCreateTime,IHasModifyTime {
     @TableLogic
     private Boolean delFlag;
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
+    @TableField(fill = FieldFill.UPDATE)
     private Date modifiedTime;
 
     public Boolean getDelFlag() {

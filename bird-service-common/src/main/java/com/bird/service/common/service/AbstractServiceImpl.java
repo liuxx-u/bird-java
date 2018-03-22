@@ -180,9 +180,6 @@ public abstract class AbstractServiceImpl<T extends IModel> implements AbstractS
     public T save(T record) {
         try {
             if (record.getId() == null || record.getId() == 0) {
-                if (record instanceof IHasCreateTime) {
-                    ((IHasCreateTime) record).setCreateTime(new Date());
-                }
                 mapper.insert(record);
             } else {
                 T org = this.queryById(record.getId());
@@ -191,9 +188,6 @@ public abstract class AbstractServiceImpl<T extends IModel> implements AbstractS
                     try {
                         T update = ClassHelper.getDiff(org, record);
                         update.setId(record.getId());
-                        if (record instanceof IHasModifyTime) {
-                            ((IHasModifyTime) update).setModifiedTime(new Date());
-                        }
                         mapper.updateById(update);
                         record = mapper.selectById(record.getId());
                         CacheHelper.getCache().set(getCacheKey(record.getId()), record);
