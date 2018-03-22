@@ -8,7 +8,6 @@ import com.bird.service.zero.dto.FormOperateDTO;
 import com.bird.service.zero.event.TestEventArg;
 import com.bird.service.zero.mapper.FormMapper;
 import com.bird.service.zero.model.Form;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

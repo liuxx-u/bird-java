@@ -10,7 +10,6 @@ import com.bird.service.zero.UserService;
 import com.bird.service.zero.dto.UserRoleDTO;
 import com.bird.service.zero.mapper.UserMapper;
 import com.bird.service.zero.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

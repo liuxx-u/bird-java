@@ -2,14 +2,12 @@ package com.bird.service.zero.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.bird.core.Check;
-import com.bird.core.utils.DozerHelper;
 import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.MenuService;
 import com.bird.service.zero.dto.MenuBriefDTO;
 import com.bird.service.zero.dto.MenuDTO;
 import com.bird.service.zero.mapper.MenuMapper;
 import com.bird.service.zero.model.Menu;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

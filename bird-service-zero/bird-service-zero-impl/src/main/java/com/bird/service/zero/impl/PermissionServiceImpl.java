@@ -1,14 +1,12 @@
 package com.bird.service.zero.impl;
 
 import com.bird.core.Check;
-import com.bird.core.utils.DozerHelper;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.PermissionService;
 import com.bird.service.zero.dto.PermissionDTO;
 import com.bird.service.zero.mapper.PermissionMapper;
 import com.bird.service.zero.model.Permission;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

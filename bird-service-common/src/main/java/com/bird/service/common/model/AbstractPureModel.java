@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
  * @author liuxx
  * @date 2018/3/19
  */
-public class AbstractPureModel implements IModel {
+public abstract class AbstractPureModel implements IModel {
     @TableId(type = IdType.AUTO)
     private Long id;
 

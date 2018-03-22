@@ -22,14 +22,14 @@ public class Bootstrap {
 	public static void main(String[] args) {
 		SpringApplication.run(Bootstrap.class, args);
 
-		OrganizationMapper mapper = SpringContextHolder.getBean(OrganizationMapper.class);
-		EntityWrapper<Organization> wrapper = new EntityWrapper<>();
-		Organization organization = mapper.selectById(1L);
-		organization.setOrderNo(3);
-		mapper.updateById(organization);
-
-		Organization newOrg = new Organization();
-		newOrg.setName("new");
-		mapper.insert(newOrg);
+//		OrganizationMapper mapper = SpringContextHolder.getBean(OrganizationMapper.class);
+//		EntityWrapper<Organization> wrapper = new EntityWrapper<>();
+//		Organization organization = mapper.selectById(1L);
+//		organization.setOrderNo(4);
+//		mapper.updateById(organization);
+//
+//		Organization newOrg = new Organization();
+//		newOrg.setName("new");
+//		mapper.insert(newOrg);
 	}
 }

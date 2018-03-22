@@ -1,16 +1,15 @@
 package com.bird.service.cms.impl;
 
 import com.bird.core.Check;
-//import com.bird.eventbus.EventBus;
-//import com.bird.eventbus.handler.EventHandler;
-import com.bird.core.utils.DozerHelper;
+import com.bird.eventbus.EventBus;
+import com.bird.eventbus.handler.EventHandler;
 import com.bird.service.cms.CmsClassifyService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.cms.mapper.CmsClassifyMapper;
 import com.bird.service.cms.model.CmsClassify;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.service.AbstractService;
-//import com.bird.service.zero.event.TestEventArg;
+import com.bird.service.zero.event.TestEventArg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,8 @@ import org.springframework.stereotype.Service;
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsClassifyService")
 public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,CmsClassify> implements CmsClassifyService {
 
-//    @Autowired
-//    private EventBus eventBus;
+    @Autowired
+    private EventBus eventBus;
 
     /**
      * 获取分类
@@ -32,11 +31,12 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
     @Override
     public CmsClassifyDTO getClassify(Long id) {
 
-        Check.GreaterThan(id, 0L, "id");
-        CmsClassify classify = queryById(id);
+//        Check.GreaterThan(id, 0L, "id");
+//        CmsClassify classify = queryById(id);
 
-//        eventBus.push(new TestEventArg());
-        return dozer.map(classify, CmsClassifyDTO.class);
+        eventBus.push(new TestEventArg());
+        return new CmsClassifyDTO();
+//        return dozer.map(classify, CmsClassifyDTO.class);
     }
 
     /**
@@ -58,8 +58,8 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
         save(param);
     }
 
-//    @EventHandler
-//    public void HandleEvent(TestEventArg eventArg) {
-//        System.out.println("notify cms======");
-//    }
+    @EventHandler
+    public void HandleEvent(TestEventArg eventArg) {
+        System.out.println("notify cms======");
+    }
 }

@@ -12,10 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class EventHandlerFactory {
@@ -40,7 +37,7 @@ public class EventHandlerFactory {
 
                     String argClassName = parameterTypes[0].getName();
                     if (!eventHandlerContainer.containsKey(argClassName)) {
-                        eventHandlerContainer.put(argClassName, new LinkedHashSet<>());
+                        eventHandlerContainer.put(argClassName, new HashSet<>());
                     }
                     Set eventHandlers = eventHandlerContainer.get(argClassName);
                     eventHandlers.add(method);

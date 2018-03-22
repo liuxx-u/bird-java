@@ -6,7 +6,6 @@ import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.SiteService;
 import com.bird.service.zero.mapper.SiteMapper;
 import com.bird.service.zero.model.Site;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

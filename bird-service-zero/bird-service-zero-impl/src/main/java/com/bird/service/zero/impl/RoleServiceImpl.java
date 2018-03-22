@@ -8,7 +8,6 @@ import com.bird.service.zero.RoleService;
 import com.bird.service.zero.dto.RolePermissionDTO;
 import com.bird.service.zero.mapper.RoleMapper;
 import com.bird.service.zero.model.Role;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
