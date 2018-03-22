@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bird.service.zero.mapper.UserMapper">
+
+    <select id="getUserByName" parameterType="java.lang.String" resultType="com.bird.service.zero.model.User">
+        SELECT * FROM `zero_user` WHERE (`userName` = #{userName} OR `phoneNo` = #{userName}) AND `delFlag` = 0
+    </select>
+
+    <select id="getUserRoleIds" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT roleId FROM `zero_user_role` WHERE userId= #{userId}
+    </select>
+
+    <delete id="deleteUserRoles" parameterType="java.lang.Long">
+        DELETE FROM `zero_user_role` WHERE userId = #{userId}
+    </delete>
+
+    <insert id="setUserRoles" parameterType="com.bird.service.zero.dto.UserRoleDTO">
+        INSERT INTO `zero_user_role` (`userId`,`roleId`)
+        VALUES
+        <foreach item="roleId" collection="model.roleIds" separator="),(" open="(" close=")" index="">
+            #{model.userId},#{roleId}
+        </foreach>
+    </insert>
+
+    <select id="getUserPermissionNames" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT DISTINCT permissionName FROM zero_role_permission WHERE roleId IN (SELECT roleId FROM zero_user_role WHERE userId=#{userId})
+    </select>
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bird.service.zero.mapper.DicTypeMapper">
+    <resultMap id="Dic" type="com.bird.service.zero.dto.DicDTO">
+        <id property="id" column="id" />
+        <collection property="options" column="id" select="getOptionsById" ofType="com.bird.service.common.service.dto.OptionDTO"></collection>
+    </resultMap>
+
+    <select id="getDicByKey" parameterType="java.lang.String" resultMap="Dic">
+      SELECT `id`,`placeholder`,`defaultCode` from `zero_dicType` WHERE `key` = #{key}
+    </select>
+
+    <select id="getOptionsById" parameterType="long" resultType="com.bird.service.common.service.dto.OptionDTO">
+      SELECT `code` AS `value`,`name` AS `label` from `zero_dicItem` WHERE `delFlag` = 0 AND `dicTypeId` = #{id}
+    </select>
+</mapper>
