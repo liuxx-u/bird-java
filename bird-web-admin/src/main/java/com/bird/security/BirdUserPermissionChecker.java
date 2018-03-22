@@ -1,7 +1,7 @@
 package com.bird.security;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.bird.core.sso.permission.UserPermissionChecker;
+import com.bird.web.sso.permission.UserPermissionChecker;
 import com.bird.service.zero.UserService;
 import java.util.Arrays;
 import java.util.List;

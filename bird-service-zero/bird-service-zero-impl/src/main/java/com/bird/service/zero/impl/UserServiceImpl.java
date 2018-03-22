@@ -2,9 +2,6 @@ package com.bird.service.zero.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.bird.core.Check;
-import com.bird.core.sso.LoginDTO;
-import com.bird.core.sso.LoginResult;
-import com.bird.core.sso.ticket.TicketInfo;
 import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.UserService;
 import com.bird.service.zero.dto.UserRoleDTO;
@@ -72,38 +69,5 @@ public class UserServiceImpl extends AbstractService<UserMapper,User> implements
     public List<String> getUserPermissions(Long userId) {
         Check.GreaterThan(userId, 0L, "userId");
         return mapper.getUserPermissionNames(userId);
-    }
-
-    /**
-     * 用户登录
-     *
-     * @return 登录结果
-     */
-    @Override
-    public LoginResult Login(LoginDTO loginDTO) {
-        Check.NotNull(loginDTO,"loginDTO");
-        Check.NotEmpty(loginDTO.getUserName(),"userName");
-        Check.NotEmpty(loginDTO.getPassword(),"password");
-
-        User user = mapper.getUserByName(loginDTO.getUserName());
-        if (user == null) {
-            return LoginResult.Error("登录用户不存在.");
-        }
-
-        if(user.isLocked()){
-            return LoginResult.Error("用户已被锁定.");
-        }
-
-        //TODO:密码加密验证
-        String encryPassword = loginDTO.getPassword();
-        if(!encryPassword.equals(user.getPassword())){
-            return LoginResult.Error("密码错误.");
-        }
-
-        TicketInfo ticket = new TicketInfo();
-        ticket.setUserId(user.getId().toString());
-        ticket.setName(user.getUserName());
-
-        return LoginResult.Success(ticket);
     }
 }

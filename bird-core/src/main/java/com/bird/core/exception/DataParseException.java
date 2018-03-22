@@ -22,7 +22,7 @@ public class DataParseException extends AbstractException {
         super(message, ex);
     }
 
-    protected HttpCode getHttpCode() {
+    public HttpCode getHttpCode() {
         return HttpCode.INTERNAL_SERVER_ERROR;
     }
 

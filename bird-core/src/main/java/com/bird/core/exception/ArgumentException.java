@@ -12,7 +12,7 @@ public class ArgumentException extends AbstractException {
     }
 
     @Override
-    protected HttpCode getHttpCode() {
+    public HttpCode getHttpCode() {
         return HttpCode.BAD_REQUEST;
     }
 }

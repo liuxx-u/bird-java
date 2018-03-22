@@ -27,7 +27,7 @@
             <!--<mvc:exclude-mapping path="/swagger**" />-->
             <!--<mvc:exclude-mapping path="/webjars/**" />-->
             <!--<mvc:exclude-mapping path="/configuration/**" />-->
-            <!--<bean class="com.bird.core.sso.SsoAuthorizeInterceptor"/>-->
+            <!--<bean class="com.bird.web.sso.SsoAuthorizeInterceptor"/>-->
         <!--</mvc:interceptor>-->
     <!--</mvc:interceptors>-->
 

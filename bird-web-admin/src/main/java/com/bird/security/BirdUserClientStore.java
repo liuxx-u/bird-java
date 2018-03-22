@@ -1,8 +1,8 @@
 package com.bird.security;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.bird.core.sso.client.ClientInfo;
-import com.bird.core.sso.client.UserClientStore;
+import com.bird.web.sso.client.ClientInfo;
+import com.bird.web.sso.client.UserClientStore;
 import com.bird.service.zero.SiteService;
 
 import java.util.List;

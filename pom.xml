@@ -18,6 +18,8 @@
         <module>bird-service-scheduler</module>
         <module>bird-eventbus</module>
         <module>bird-eventbus-kafka</module>
+        <module>bird-web-sso</module>
+        <module>bird-web-common</module>
     </modules>
 
     <properties>

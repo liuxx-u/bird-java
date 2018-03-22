@@ -31,13 +31,13 @@
     <!--配置权限检查器-->
     <bean id="permissionChecker" class="com.bird.security.BirdUserPermissionChecker" />
     <!--配置票据信息存储器-->
-    <bean id="ticketSessionStore" class="com.bird.core.sso.ticket.RedisTicketSessionStore"/>
+    <bean id="ticketSessionStore" class="com.bird.web.sso.ticket.RedisTicketSessionStore"/>
     <!--配置票据加密器-->
-    <bean id="ticketProtector" class="com.bird.core.sso.ticket.DesTicketProtector">
+    <bean id="ticketProtector" class="com.bird.web.sso.ticket.DesTicketProtector">
         <property name="key" value="${sso.des.key}"></property>
         <property name="salt" value="${sso.des.salt}"></property>
     </bean>
-    <bean id="ssoAuthorizeManager" class="com.bird.core.sso.SsoAuthorizeManager">
+    <bean id="ssoAuthorizeManager" class="com.bird.web.sso.SsoAuthorizeManager">
         <property name="cookieName" value="${sso.cookieName}"></property>
         <property name="loginPath" value="${sso.loginPath}"></property>
         <property name="protector" ref="ticketProtector"></property>
