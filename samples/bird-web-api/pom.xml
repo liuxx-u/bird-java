@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.bird</groupId>
-	<artifactId>bird-web-boot</artifactId>
+	<artifactId>bird-web-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>bird-web-boot</name>
+	<name>bird-web-api</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>

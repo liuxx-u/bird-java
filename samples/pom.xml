@@ -3,22 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>bird-service-scheduler</artifactId>
+        <artifactId>bird-project</artifactId>
         <groupId>com.bird</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>bird-service-scheduler-api</artifactId>
-    <version>1.0.0</version>
-
-    <dependencies>
-        <!--项目依赖-->
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-service-common</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-    </dependencies>
+    <artifactId>samples</artifactId>
+    <modules>
+        <module>bird-service-cms</module>
+        <module>bird-service-zero</module>
+        <module>bird-web-api</module>
+    </modules>
 </project>

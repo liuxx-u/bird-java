@@ -10,16 +10,12 @@
 
     <modules>
         <module>bird-core</module>
-        <module>bird-service-common</module>
-        <module>bird-service-zero</module>
-        <module>bird-web-admin</module>
-        <module>bird-web-api</module>
-        <module>bird-service-cms</module>
-        <module>bird-service-scheduler</module>
         <module>bird-eventbus</module>
         <module>bird-eventbus-kafka</module>
+        <module>bird-service-common</module>
         <module>bird-web-sso</module>
         <module>bird-web-common</module>
+        <module>samples</module>
     </modules>
 
     <properties>
