@@ -1,5 +1,6 @@
-package com.bird.eventbus.kafka.register;
+package com.bird.eventbus.kafka.configure;
 
+import com.bird.eventbus.kafka.register.EventArgSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import java.util.HashMap;
  * @date 2018/2/26
  */
 @Configuration
-public class KafkaProviderConfig {
+public class KafkaProviderConfigure {
     @Value("${kafka.bootstrap.server:127.0.0.1}")
     private String host;
     @Value("${kafka.defaultTopic:bird-kafka-default-topic}")

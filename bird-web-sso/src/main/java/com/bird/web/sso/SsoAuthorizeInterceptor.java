@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by liuxx on 2017/5/18.
  */
+
 public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired

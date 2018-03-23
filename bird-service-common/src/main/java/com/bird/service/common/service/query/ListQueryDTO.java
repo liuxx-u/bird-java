@@ -2,7 +2,6 @@ package com.bird.service.common.service.query;
 
 import com.bird.service.common.mapper.permission.DataAuthority;
 import com.bird.service.common.service.dto.AbstractDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ public class ListQueryDTO extends AbstractDTO {
     private int sortDirection;
     private List<FilterRule> filters;
 
-    @JsonIgnore
     private DataAuthority authority;//数据权限参数
 
     public ListQueryDTO() {

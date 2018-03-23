@@ -1,5 +1,8 @@
-package com.bird.eventbus.kafka.handler;
+package com.bird.eventbus.kafka.configure;
 
+import com.bird.eventbus.kafka.handler.EventArgDeserializer;
+import com.bird.eventbus.kafka.handler.KafkaContainerProperties;
+import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +18,7 @@ import java.util.HashMap;
  */
 
 @Configuration
-public class KafkaListenerConfig {
+public class KafkaListenerConfigure {
 
     @Value("${kafka.bootstrap.server:127.0.0.1}")
     private String host;
