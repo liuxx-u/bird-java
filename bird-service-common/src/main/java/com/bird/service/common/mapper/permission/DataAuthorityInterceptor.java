@@ -1,7 +1,6 @@
 package com.bird.service.common.mapper.permission;
 
 import com.baomidou.mybatisplus.toolkit.PluginUtils;
-import com.bird.core.Constants;
 import com.bird.core.utils.SpringContextHolder;
 import com.bird.service.common.ServiceConstants;
 import com.bird.service.common.mapper.PagedQueryParam;
@@ -25,7 +24,7 @@ import java.util.Set;
  * @date 2018/1/25
  */
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class,Integer.class})})
-public class DataAuthorityPlugin implements Interceptor {
+public class DataAuthorityInterceptor implements Interceptor {
 
     /**
      * 拦截方法
@@ -36,7 +35,6 @@ public class DataAuthorityPlugin implements Interceptor {
      */
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-
         StatementHandler handler = (StatementHandler) PluginUtils.realTarget(invocation.getTarget());
         MetaObject statementHandler = SystemMetaObject.forObject(handler);
         MappedStatement mappedStatement = (MappedStatement) statementHandler.getValue("delegate.mappedStatement");
