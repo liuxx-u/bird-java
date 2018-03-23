@@ -6,7 +6,7 @@ bird-java是以dubbo为基础的分布式服务框架，专注于业务开发，
 
  - 基础框架：spring
  - 服务调度：dubbo
- - web层：spring-mvc
+ - web层：spring-boot
  - 缓存：redis
  - 数据访问：mybatis、mybatis-plus
  - 数据库连接池：druid
@@ -25,16 +25,6 @@ bird-java是以dubbo为基础的分布式服务框架，专注于业务开发，
  - 数据层：包括数据的持久化与缓存。每个服务可对应其各自的数据库，缓存使用redis。
  - 基础设施层：为以上各层提供服务，包括日志、工具类、任务调度等。
 
-## 项目介绍
-
-![!\[项目截图.png-35kB\]][2]
-
-- thchengtay-core：包括各种抽象基类与工具类、缓存的实现等。
-- thchengtay-service-common：依赖thchengtay-core，包括所有服务接口、DTO、Model、EventArg的定义。
-- thchengtay-service-xxx：依赖thchengtay-core、thchengtay-service-common，服务的实现，可自由扩展。每个模块均可集群部署，可拥有自己的数据库，可单独做读写分离等。
-- thchengtay-web-admin：依赖thchengtay-core、thchengtay-service-common，web层，可负载均衡，调用远程服务，不依赖具体实现。
-- thchengtay-web-user：用户中心，单点登录服务器。
-- thchengtay-web-file：文件服务器。
 
 ## 功能特性
 
@@ -46,4 +36,3 @@ bird-java提供了许多功能特性，包括：
 
 
   [1]: http://static.zybuluo.com/liuxx-/psky0g6hw6r0a2pmvp9fjig5/image.png
-  [2]: http://static.zybuluo.com/liuxx-/2u37osf83fou3h7202ephqbu/image.png
