@@ -32,7 +32,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.bird</groupId>
-			<artifactId>bird-eventbus-kafka</artifactId>
+			<artifactId>bird-service-starter</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 

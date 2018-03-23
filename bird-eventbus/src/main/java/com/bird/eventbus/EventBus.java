@@ -17,7 +17,11 @@ public class EventBus {
     /**
      * 向EventBus中推消息
      */
-    public void push(IEventArg eventArg){
+    public void push(IEventArg eventArg) {
+        if (eventRegister == null) {
+            //TODO:未注入消息提供者
+            return;
+        }
         eventRegister.regist(eventArg);
     }
 }
