@@ -30,6 +30,11 @@
 			<artifactId>bird-service-zero-api</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.bird</groupId>
+			<artifactId>bird-eventbus-kafka</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -61,10 +66,11 @@
 			<artifactId>mybatisplus-spring-boot-starter</artifactId>
 			<version>1.0.5</version>
 		</dependency>
+
 		<dependency>
-			<groupId>com.bird</groupId>
-			<artifactId>bird-eventbus-kafka</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
