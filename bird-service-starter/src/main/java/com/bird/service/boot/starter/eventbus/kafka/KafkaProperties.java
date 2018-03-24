@@ -13,11 +13,6 @@ public class KafkaProperties {
 
     private String host;
 
-    /**
-     * 0:只启动provider;1:只启动listener;2:全部启动
-     */
-    private Integer type;
-
     @NestedConfigurationProperty
     private KafkaProviderProperties provider;
 
@@ -46,13 +41,5 @@ public class KafkaProperties {
 
     public void setListener(KafkaListenerProperties listener) {
         this.listener = listener;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
     }
 }

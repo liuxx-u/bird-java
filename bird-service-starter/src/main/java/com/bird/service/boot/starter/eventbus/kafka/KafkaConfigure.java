@@ -24,7 +24,7 @@ import java.util.HashMap;
  * @date 2018/3/23
  */
 @Configuration
-@ConditionalOnProperty(prefix = EventbusConstant.PREFIX, name = "enabled", matchIfMissing = true, havingValue = "true")
+@ConditionalOnProperty(value = EventbusConstant.KAFKA.HOST_PROPERTY_NAME)
 @EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfigure {
 
@@ -32,7 +32,7 @@ public class KafkaConfigure {
     private KafkaProperties kafkaProperties;
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.KAFKA.PREFIX + ".provider.defaultTopic")
+    @ConditionalOnProperty(value = EventbusConstant.KAFKA.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
     public KafkaTemplate kafkaTemplate() {
         HashMap properties = new HashMap();
         properties.put("bootstrap.servers", kafkaProperties.getHost());
@@ -53,7 +53,7 @@ public class KafkaConfigure {
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.KAFKA.PREFIX + ".listener.groupId")
+    @ConditionalOnProperty(value = EventbusConstant.KAFKA.LISTENER_GROUP_ID)
     public KafkaMessageListenerContainer kafkaListenerContainer() {
         KafkaEventArgListener listener = new KafkaEventArgListener();
 
