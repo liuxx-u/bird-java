@@ -1,6 +1,6 @@
 package com.bird.web.sso.permission;
 
-public interface UserPermissionChecker {
+public interface IUserPermissionChecker {
 
     /**
      * 检查用户是否拥有权限

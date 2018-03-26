@@ -17,6 +17,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 
 /**
@@ -28,7 +29,7 @@ import java.util.HashMap;
 @EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfigure {
 
-    @Autowired
+    @Inject
     private KafkaProperties kafkaProperties;
 
     @Bean

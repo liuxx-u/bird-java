@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * redis session存储器
  */
-public class RedisTicketSessionStore implements TicketSessionStore {
+public class RedisTicketSessionStore implements ITicketSessionStore {
     private final String Ticket_CacheKey_Prefix = Constants.Cache.NAMESPACE + "sso.token:";
 
     /**

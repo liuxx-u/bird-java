@@ -43,6 +43,12 @@
             <artifactId>spring-data-redis</artifactId>
             <version>${spring-data-redis.version}</version>
         </dependency>
+        <!--javax.inject组件-->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
         <!--redis组件-->
         <dependency>
             <groupId>redis.clients</groupId>

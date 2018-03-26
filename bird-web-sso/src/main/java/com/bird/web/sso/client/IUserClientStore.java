@@ -2,7 +2,7 @@ package com.bird.web.sso.client;
 
 import java.util.List;
 
-public interface UserClientStore {
+public interface IUserClientStore {
     /**
      * 获取用户能够登录的站点信息
      * @param userId

@@ -1,13 +1,18 @@
 package com.bird.web.sso;
 
+import com.bird.core.Check;
 import com.bird.web.sso.client.ClientInfo;
-import com.bird.web.sso.client.UserClientStore;
-import com.bird.web.sso.permission.UserPermissionChecker;
+import com.bird.web.sso.client.IUserClientStore;
+import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.TicketInfo;
-import com.bird.web.sso.ticket.TicketProtector;
-import com.bird.web.sso.ticket.TicketSessionStore;
+import com.bird.web.sso.ticket.ITicketProtector;
+import com.bird.web.sso.ticket.ITicketSessionStore;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +29,8 @@ public class SsoAuthorizeManager {
     /**
      * 票据加密器
      */
-    private TicketProtector protector;
+    @Inject
+    private ITicketProtector protector;
 
     /**
      * 前端js执行代码生成器
@@ -34,17 +40,20 @@ public class SsoAuthorizeManager {
     /**
      * 用户-站点信息存储器
      */
-    private UserClientStore userClientStore;
+    @Inject
+    private IUserClientStore userClientStore;
 
     /**
      * 票据信息存储器
      */
-    private TicketSessionStore sessionStore;
+    @Inject
+    private ITicketSessionStore sessionStore;
 
     /**
      * 用户权限检查器
      */
-    private UserPermissionChecker userPermissionChecker;
+    @Inject
+    private IUserPermissionChecker userPermissionChecker;
 
     /**
      * 生成登录成功的前端js执行代码
@@ -52,13 +61,20 @@ public class SsoAuthorizeManager {
      * @param redirectUrl
      * @return
      */
-    public String getLoginJsCode(TicketInfo ticketInfo,String redirectUrl){
+    public String getLoginJsCode(HttpServletResponse response, TicketInfo ticketInfo, String redirectUrl){
         List<ClientInfo> clients = userClientStore.getUserClients(ticketInfo.getUserId());
 
         //确保ticket信息中包含允许登录的站点信息
         ticketInfo.setClaim(User_Client_CliamKey,clients);
         String token = generateToken(ticketInfo);
 
+        //用户中心写入Cookie
+        Cookie cookie = new Cookie(this.cookieName, token.trim());
+        cookie.setMaxAge(this.expire * 60);// 设置为有效期
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        //生成通知其他站点的js代码
         List<String> loginNotifyUrls = new ArrayList<>();
         for (ClientInfo client:clients) {
             if(StringUtils.isBlank(client.getLoginNotifyUrl()))continue;
@@ -92,7 +108,7 @@ public class SsoAuthorizeManager {
      * @param ticketInfo 票据信息
      * @return
      */
-    private String generateToken(TicketInfo ticketInfo) {
+    public String generateToken(TicketInfo ticketInfo) {
         if (ticketInfo.getExpireTime() == null) {
             Date creationTime = ticketInfo.getCreationTime();
             long expire = creationTime.getTime() + this.expire * 60 * 1000L;
@@ -103,6 +119,31 @@ public class SsoAuthorizeManager {
             return sessionStore.storeTicket(ticketInfo);
         }
         return protector.protect(ticketInfo);
+    }
+
+    /**
+     * 刷新票据信息
+     * @param request
+     * @param ticketInfo
+     */
+    public void refreshToken(HttpServletRequest request, TicketInfo ticketInfo) {
+        Check.NotNull(ticketInfo, "ticketInfo");
+
+        //先从header中获取token
+        String token = request.getHeader(this.cookieName);
+        if (StringUtils.isBlank(token)) {
+            //header中没有token,则从cookie中获取
+            Cookie[] cookies = request.getCookies();
+            if (cookies == null) return;
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(this.cookieName)) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        sessionStore.refreshTicket(token, ticketInfo, this.expire * 60 * 1000);
     }
 
 
@@ -122,35 +163,35 @@ public class SsoAuthorizeManager {
         this.loginPath = loginPath;
     }
 
-    public TicketProtector getProtector() {
+    public ITicketProtector getProtector() {
         return protector;
     }
 
-    public void setProtector(TicketProtector protector) {
+    public void setProtector(ITicketProtector protector) {
         this.protector = protector;
     }
 
-    public UserClientStore getUserClientStore() {
+    public IUserClientStore getUserClientStore() {
         return userClientStore;
     }
 
-    public void setUserClientStore(UserClientStore userClientStore) {
+    public void setUserClientStore(IUserClientStore userClientStore) {
         this.userClientStore = userClientStore;
     }
 
-    public TicketSessionStore getSessionStore() {
+    public ITicketSessionStore getSessionStore() {
         return sessionStore;
     }
 
-    public void setSessionStore(TicketSessionStore sessionStore) {
+    public void setSessionStore(ITicketSessionStore sessionStore) {
         this.sessionStore = sessionStore;
     }
 
-    public UserPermissionChecker getUserPermissionChecker() {
+    public IUserPermissionChecker getUserPermissionChecker() {
         return userPermissionChecker;
     }
 
-    public void setUserPermissionChecker(UserPermissionChecker userPermissionChecker) {
+    public void setUserPermissionChecker(IUserPermissionChecker userPermissionChecker) {
         this.userPermissionChecker = userPermissionChecker;
     }
 

@@ -33,6 +33,9 @@
         <spring.version>5.0.4.RELEASE</spring.version>
         <spring-data-redis.version>2.0.5.RELEASE</spring-data-redis.version>
 
+        <!--javax.inject版本号-->
+        <javax.inject.version>1</javax.inject.version>
+
         <!--junit版本号-->
         <junit.version>3.8.1</junit.version>
 

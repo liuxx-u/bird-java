@@ -1,6 +1,6 @@
 package com.bird.web.sso.ticket;
 
-public interface TicketSessionStore {
+public interface ITicketSessionStore {
 
     /**
      * 存储票据信息，并返回该票据的Key

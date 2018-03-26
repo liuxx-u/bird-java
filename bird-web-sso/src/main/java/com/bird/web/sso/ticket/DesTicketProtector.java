@@ -10,11 +10,9 @@ import java.io.UnsupportedEncodingException;
  * Des票据加密解密器
  * Created by liuxx on 2017/5/18.
  */
-public class DesTicketProtector implements TicketProtector {
-    private String key;
-    private String salt;
-    private String defaultKey = "bode1234";
-    private String defaultSalt = "http://user.bird.com/";
+public class DesTicketProtector implements ITicketProtector {
+    private String key = "bode1234";
+    private String salt = "http://user.bird.com/";
 
     @Override
     public String protect(TicketInfo ticket) {
@@ -52,10 +50,7 @@ public class DesTicketProtector implements TicketProtector {
     }
 
     public String getKey() {
-        if (StringUtils.isNoneEmpty(this.key)) {
-            return defaultKey;
-        }
-        return key;
+        return this.key;
     }
 
     public void setKey(String key) {
@@ -63,10 +58,7 @@ public class DesTicketProtector implements TicketProtector {
     }
 
     public String getSalt() {
-        if (StringUtils.isNoneEmpty(this.salt)) {
-            return defaultSalt;
-        }
-        return salt;
+        return this.salt;
     }
 
     public void setSalt(String salt) {

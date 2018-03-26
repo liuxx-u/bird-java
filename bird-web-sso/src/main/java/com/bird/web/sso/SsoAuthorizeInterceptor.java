@@ -2,13 +2,13 @@ package com.bird.web.sso;
 
 import com.bird.web.sso.exception.ForbiddenException;
 import com.bird.web.sso.exception.UnAuthorizedException;
-import com.bird.web.sso.permission.UserPermissionChecker;
+import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.TicketHandler;
 import com.bird.web.sso.ticket.TicketInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
-    @Autowired
+    @Inject
     private TicketHandler ticketHandler;
 
-    @Autowired
+    @Inject
     private SsoAuthorizeManager authorizeManager;
 
     @Override
@@ -44,7 +44,7 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
             if(requirePermissions.length==0)return true;
 
             boolean isCheckAll = authorize.isCheckAll();
-            UserPermissionChecker permissionChecker = authorizeManager.getUserPermissionChecker();
+            IUserPermissionChecker permissionChecker = authorizeManager.getUserPermissionChecker();
             if(!permissionChecker.hasPermissions(ticketInfo.getUserId(),requirePermissions,isCheckAll)){
                 throw new ForbiddenException("用户没有当前操作的权限.");
             }

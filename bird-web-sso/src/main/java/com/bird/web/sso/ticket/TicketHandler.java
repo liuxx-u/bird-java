@@ -2,9 +2,8 @@ package com.bird.web.sso.ticket;
 
 import com.bird.web.sso.SsoAuthorizeManager;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -12,17 +11,17 @@ import java.util.Date;
 /**
  * Created by liuxx on 2017/5/17.
  */
-@Component
 public class TicketHandler {
+    private boolean autoRefresh;
 
-    @Autowired(required = false)
-    private TicketProtector protector;
+    @Inject
+    private ITicketProtector protector;
 
-    @Autowired(required = false)
+    @Inject
     private SsoAuthorizeManager authorizeManager;
 
-    @Autowired(required = false)
-    private TicketSessionStore sessionStore;
+    @Inject
+    private ITicketSessionStore sessionStore;
 
 
     public TicketInfo getTicket(HttpServletRequest request) {
@@ -47,20 +46,26 @@ public class TicketHandler {
             ticketInfo = sessionStore.getTicket(token);
             if (ticketInfo == null) return null;
 
-            //如果超过一半的有效期，则刷新
-            Date now = new Date();
-            Date issuedTime = ticketInfo.getLastRefreshTime();
-            Date expireTime = ticketInfo.getExpireTime();
+            if(autoRefresh){
+                //如果超过一半的有效期，则刷新
+                Date now = new Date();
+                Date issuedTime = ticketInfo.getLastRefreshTime();
+                Date expireTime = ticketInfo.getExpireTime();
 
-            long t1 = now.getTime() - issuedTime.getTime();
-            long t2 = expireTime.getTime() - now.getTime();
-            if (t1 > t2) {
-                sessionStore.refreshTicket(token, ticketInfo, t1 + t2);
+                long t1 = now.getTime() - issuedTime.getTime();
+                long t2 = expireTime.getTime() - now.getTime();
+                if (t1 > t2) {
+                    sessionStore.refreshTicket(token, ticketInfo, t1 + t2);
+                }
             }
         } else {
             ticketInfo = protector.unProtect(token);
         }
 
         return ticketInfo;
+    }
+
+    public void setAutoRefresh(boolean autoRefresh) {
+        this.autoRefresh = autoRefresh;
     }
 }
