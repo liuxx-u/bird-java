@@ -24,14 +24,14 @@
         <dependency>
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
-            <version>0.10</version>
+            <version>${zkclient.version}</version>
         </dependency>
 
         <!-- 添加mybatis-plus依赖 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
-            <version>${mybatis-plus.version}</version>
+            <version>${mybatisplus.version}</version>
         </dependency>
     </dependencies>
 </project>

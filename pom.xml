@@ -31,72 +31,42 @@
 
         <!--spring版本号-->
         <spring.version>5.0.4.RELEASE</spring.version>
+        <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
         <spring-data-redis.version>2.0.5.RELEASE</spring-data-redis.version>
 
-        <!--javax.inject版本号-->
+        <!--javax版本号-->
+        <javax.version>3.1.0</javax.version>
         <javax.inject.version>1</javax.inject.version>
 
-        <!--junit版本号-->
-        <junit.version>3.8.1</junit.version>
-
-        <!-- 日志组件版本号 -->
-        <slf4j.version>1.7.25</slf4j.version>
-        <logback.version>1.1.11</logback.version>
-
-        <!--quartz组件版本号-->
-        <quartz.version>2.2.3</quartz.version>
+        <!--dubbo组件版本号-->
+        <zkclient.version>0.10</zkclient.version>
+        <dubbo-starter.version>0.1.0</dubbo-starter.version>
 
         <!--redis组件版本号-->
         <jedis.version>2.9.0</jedis.version>
 
-        <!--dubbo版本号-->
-        <dubbo.version>2.6.0</dubbo.version>
-        <zkclient.version>0.10</zkclient.version>
-        <javassist.version>3.21.0-GA</javassist.version>
-
         <!--kafka版本号-->
         <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
 
-        <!--mybatis版本号-->
-        <mybatis.version>3.4.4</mybatis.version>
-        <mybatis-spring.version>1.3.1</mybatis-spring.version>
-        <mybatis-plus.version>2.1.9</mybatis-plus.version>
-
-        <!--mssql-jdbc版本号-->
-        <mysql.version>5.1.44</mysql.version>
-
-        <!--druid版本号-->
-        <druid.version>1.0.29</druid.version>
+        <!--mybatis-plus版本号-->
+        <mybatisplus.version>2.1.9</mybatisplus.version>
+        <mybatisplus-starter.version>1.0.5</mybatisplus-starter.version>
+        <mysql-connector.version>5.1.46</mysql-connector.version>
+        <druid.version>1.0.31</druid.version>
 
         <!--json组件版本号-->
-        <jackson.version>2.9.0.pr3</jackson.version>
         <fastjson.version>1.2.32</fastjson.version>
 
-        <!--aop组件版本号-->
-        <aspectj.version>1.8.10</aspectj.version>
-
-        <!--反射组件版本号-->
-        <reflectasm.version>1.11.4-2</reflectasm.version>
-
-        <springfox.version>2.6.1</springfox.version>
-
-        <!--bean映射组件版本号-->
+        <!--dozer版本号-->
         <dozer.version>5.5.1</dozer.version>
-
-        <!--httpclient组件版本号-->
-        <httpclient.version>4.0.2</httpclient.version>
 
         <!--maven插件版本号-->
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 
         <!--其他版本号-->
-        <javax.version>3.1.0</javax.version>
-        <jstl.version>1.2</jstl.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
         <ant.version>1.10.1</ant.version>
-        <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <commons-httpclient.version>3.1</commons-httpclient.version>
     </properties>
 
     <build>
