@@ -27,7 +27,7 @@ import java.util.HashMap;
 @Configuration
 @ConditionalOnProperty(value = EventbusConstant.KAFKA.HOST_PROPERTY_NAME)
 @EnableConfigurationProperties(KafkaProperties.class)
-public class KafkaConfigure {
+public class KafkaConfigurer {
 
     @Inject
     private KafkaProperties kafkaProperties;

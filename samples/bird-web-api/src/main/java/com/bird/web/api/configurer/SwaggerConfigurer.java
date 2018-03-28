@@ -1,4 +1,4 @@
-package com.bird.web.api.configure;
+package com.bird.web.api.configurer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import springfox.documentation.spring.web.plugins.Docket;
  */
 
 @Configuration
-public class SwaggerConfigure {
+public class SwaggerConfigurer {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)

@@ -19,7 +19,7 @@ import javax.inject.Inject;
 @Configuration
 @ConditionalOnProperty(value = SsoConstant.COOKIE_NAME)
 @EnableConfigurationProperties(SsoProperties.class)
-public class SsoConfigure {
+public class SsoConfigurer {
 
     @Inject
     private SsoProperties ssoProperties;

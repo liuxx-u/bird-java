@@ -1,4 +1,4 @@
-package com.bird.web.api.configure;
+package com.bird.web.api.configurer;
 
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import org.springframework.stereotype.Component;
