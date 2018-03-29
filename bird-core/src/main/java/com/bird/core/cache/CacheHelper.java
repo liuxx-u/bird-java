@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Created by liuxx on 2017/5/16.
  */
-@Configuration
 public class CacheHelper {
     private static Logger logger = LoggerFactory.getLogger(CacheHelper.class);
     private static ICacher cacher;
