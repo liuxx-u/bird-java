@@ -1,10 +1,8 @@
 package com.bird.core.cache.redis;
 
 import com.bird.core.cache.ICacher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,14 +11,18 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by liuxx on 2017/5/16.
  */
-@Component
 public final class RedisCacher implements ICacher {
 
     @Value("${spring.redis.expiration}")
-    private Integer EXPIRE;
+    private Integer EXPIRE = 600;
 
-    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    public RedisCacher(){}
+
+    public RedisCacher(RedisTemplate<String,Object> redisTemplate){
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public final Object get(final String key) {

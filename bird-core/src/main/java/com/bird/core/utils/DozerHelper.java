@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * Created by liuxx on 2017/6/14.
  */
-@Component
 public class DozerHelper  extends DozerBeanMapper {
 
     /**
