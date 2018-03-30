@@ -5,17 +5,18 @@ package com.bird.service.common.service.dto;
  */
 public class TreeDTO extends AbstractDTO {
     private String value;
-    private String text;
+    private String label;
     private String parentValue;
+    private boolean folder;//true则强制渲染为文件夹，前端效果为：子元素为空则不渲染该节点
 
-    public TreeDTO(String value,String text,String parentValue) {
+    public TreeDTO(String value,String label,String parentValue) {
         this.value = value;
-        this.text = text;
+        this.label = label;
         this.parentValue = parentValue;
     }
 
-    public TreeDTO(String value,String text){
-        this(value,text,"0");
+    public TreeDTO(String value,String label){
+        this(value,label,"0");
     }
 
     public TreeDTO(){
@@ -30,19 +31,27 @@ public class TreeDTO extends AbstractDTO {
         this.value = value;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public String getParentValue() {
         return parentValue;
     }
 
     public void setParentValue(String parentValue) {
         this.parentValue = parentValue;
+    }
+
+    public boolean isFolder() {
+        return folder;
+    }
+
+    public void setFolder(boolean folder) {
+        this.folder = folder;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

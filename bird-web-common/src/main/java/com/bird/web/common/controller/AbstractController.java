@@ -44,6 +44,4 @@ public abstract class AbstractController implements Serializable{
         byte[] bytes = JSON.toJSONBytes(result, SerializerFeature.DisableCircularReferenceDetect);
         response.getOutputStream().write(bytes);
     }
-
-
 }
