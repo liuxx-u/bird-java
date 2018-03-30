@@ -1,7 +1,7 @@
 package com.bird.service.common.service;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.bird.core.Constants;
+import com.bird.core.Constant;
 import com.bird.core.cache.CacheHelper;
 import com.bird.core.exception.ExceptionHelper;
 import com.bird.core.utils.ClassHelper;
@@ -200,11 +200,11 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             }
         } catch (DuplicateKeyException e) {
             String msg = ExceptionHelper.getStackTraceAsString(e);
-            logger.error(Constants.Exception_Head + msg, e);
+            logger.error(Constant.Exception_Head + msg, e);
             throw new RuntimeException("已经存在相同的配置.");
         } catch (Exception e) {
             String msg = ExceptionHelper.getStackTraceAsString(e);
-            logger.error(Constants.Exception_Head + msg, e);
+            logger.error(Constant.Exception_Head + msg, e);
             throw new RuntimeException(msg);
         }
         return record;
@@ -271,7 +271,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     protected String getCacheKey(Object id) {
         String cacheName = getCacheKey();
-        return new StringBuilder(Constants.Cache.NAMESPACE).append(cacheName).append(":").append(id).toString();
+        return new StringBuilder(Constant.Cache.NAMESPACE).append(cacheName).append(":").append(id).toString();
     }
 
     /**
@@ -279,7 +279,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     protected String getLockKey(Object id) {
         String cacheName = getCacheKey();
-        return new StringBuilder(Constants.Cache.NAMESPACE).append(cacheName).append(":LOCK:").append(id).toString();
+        return new StringBuilder(Constant.Cache.NAMESPACE).append(cacheName).append(":LOCK:").append(id).toString();
     }
 
     /**
@@ -287,7 +287,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     private String getCacheKey() {
         Class<?> cls = getClass();
-        String cacheName = Constants.Cache.ClassKeyMap.get(cls);
+        String cacheName = Constant.Cache.ClassKeyMap.get(cls);
         if (StringUtils.isBlank(cacheName)) {
             CacheConfig cacheConfig = cls.getAnnotation(CacheConfig.class);
             if (cacheConfig == null || cacheConfig.cacheNames() == null || cacheConfig.cacheNames().length < 1) {
@@ -295,7 +295,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             } else {
                 cacheName = cacheConfig.cacheNames()[0];
             }
-            Constants.Cache.ClassKeyMap.put(cls, cacheName);
+            Constant.Cache.ClassKeyMap.put(cls, cacheName);
         }
         return cacheName;
     }

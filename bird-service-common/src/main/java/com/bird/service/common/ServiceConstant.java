@@ -6,7 +6,7 @@ package com.bird.service.common;
  *
  * 服务相关的公共常量
  */
-public interface ServiceConstants {
+public interface ServiceConstant {
 
     /**
      * 软删除状态
@@ -33,5 +33,17 @@ public interface ServiceConstants {
          * 数据权限缓存Key前缀
          */
         String CACHE_KEY = "data_permission:bird:";
+    }
+
+    interface Page{
+        /**
+         * 每页最大获取数量
+         */
+        int MAX_PAGESIZE = 200;
+
+        /**
+         * 默认每页显示数量
+         */
+        int DEFAULT_PAGESIZE = 15;
     }
 }

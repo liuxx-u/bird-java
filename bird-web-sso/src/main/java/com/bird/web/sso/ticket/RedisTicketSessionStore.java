@@ -1,6 +1,6 @@
 package com.bird.web.sso.ticket;
 
-import com.bird.core.Constants;
+import com.bird.core.Constant;
 import com.bird.core.cache.CacheHelper;
 
 import java.util.Date;
@@ -10,7 +10,7 @@ import java.util.UUID;
  * redis session存储器
  */
 public class RedisTicketSessionStore implements ITicketSessionStore {
-    private final String Ticket_CacheKey_Prefix = Constants.Cache.NAMESPACE + "sso.token:";
+    private final String Ticket_CacheKey_Prefix = Constant.Cache.NAMESPACE + "sso.token:";
 
     /**
      * 存储票据信息，并返回该票据的Key

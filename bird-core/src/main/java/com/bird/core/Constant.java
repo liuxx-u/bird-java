@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * 系统相关的公共常量
  */
-public interface Constants {
+public interface Constant {
     /**
      * 异常信息统一头信息<br>
      * 非常遗憾的通知您,程序发生了异常

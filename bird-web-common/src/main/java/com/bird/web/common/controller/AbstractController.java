@@ -2,7 +2,7 @@ package com.bird.web.common.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.bird.core.Constants;
+import com.bird.core.Constant;
 import com.bird.core.HttpCode;
 import com.bird.core.exception.AbstractException;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ public abstract class AbstractController implements Serializable{
     @ExceptionHandler(Exception.class)
     public void exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception ex)
             throws Exception {
-        logger.error(Constants.Exception_Head, ex);
+        logger.error(Constant.Exception_Head, ex);
         OperationResult result=new OperationResult();
         if (ex instanceof AbstractException) {
             result = OperationResult.Fail((AbstractException) ex);
