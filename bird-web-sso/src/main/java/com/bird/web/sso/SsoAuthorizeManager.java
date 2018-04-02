@@ -23,7 +23,7 @@ import java.util.List;
 public class SsoAuthorizeManager {
     static final String User_Client_CliamKey="user.clients";
     private String cookieName;
-    private Integer expire; //单位：分
+    private Integer expire = 60; //单位：分
     private String loginPath;
 
     /**
