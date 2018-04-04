@@ -121,9 +121,10 @@ public class PagedQueryParam implements Serializable {
                 }
 
                 sb.append(",");
+                this.fieldMap.put(fieldName,dbFieldName);
             }
 
-            this.select = StringUtils.stripEnd(sb.toString(),",");
+            this.select = StringUtils.stripEnd(sb.toString(), ",");
         }
 
         //如果from为空，则使用tClass的TableName

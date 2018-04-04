@@ -34,14 +34,14 @@ public class PagedQueryProvider {
 
         String sortField = "id";
         int sortDirection = ListSortDirection.DESC;//默认Id倒序
-        if (!StringUtils.isBlank(query.getSortField())) {
+        if (StringUtils.isNotBlank(query.getSortField())) {
             sortField = query.getSortField();
             sortDirection = query.getSortDirection();
         }
 
         String sql = "select " + param.getSelect() + " from " + param.getFrom();
         String whereSql = where(param);
-        if (!StringUtils.isBlank(whereSql)) {
+        if (StringUtils.isNotBlank(whereSql)) {
             sql += " where " + whereSql;
         }
         sql += " order by " + this.getDbFieldName(param, sortField) + (sortDirection == ListSortDirection.DESC ? " desc" : " asc")
@@ -52,7 +52,7 @@ public class PagedQueryProvider {
     public String queryTotalCount(PagedQueryParam param) {
         String sql = "select count(1) from " + param.getFrom();
         String whereSql = where(param);
-        if (!StringUtils.isBlank(whereSql)) {
+        if (StringUtils.isNotBlank(whereSql)) {
             sql += " where " + whereSql;
         }
         return sql;
@@ -80,6 +80,7 @@ public class PagedQueryProvider {
         for (FilterRule rule : rules) {
             String value = rule.getValue();
             if (StringUtils.isBlank(value)) continue;
+            if (!validateSqlValue(value)) continue;
 
             if (!OperateMap.containsKey(rule.getOperate())) {
                 rule.setOperate(FilterOperate.EQUAL);
@@ -113,5 +114,18 @@ public class PagedQueryProvider {
             dbFieldName = dbFieldName + "`";
         }
         return dbFieldName;
+    }
+
+    /**
+     * 验证用户输入的值是否合法
+     * @param value
+     * @return
+     */
+    private boolean validateSqlValue(String value) {
+        String[] illegals = new String[]{"'", "and", "exec", "insert", "select", "delete", "update", "count", "*", "%", "chr", "mid", "master", "truncate", "char", "declare", ";", "or", "-", "+", ","};
+        for (String str : illegals) {
+            if (value.contains(str)) return false;
+        }
+        return true;
     }
 }
