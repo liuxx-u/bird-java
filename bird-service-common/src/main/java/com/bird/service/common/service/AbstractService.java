@@ -13,6 +13,7 @@ import com.bird.service.common.mapper.TreeQueryParam;
 import com.bird.service.common.model.*;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -290,7 +291,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
         String cacheName = Constant.Cache.ClassKeyMap.get(cls);
         if (StringUtils.isBlank(cacheName)) {
             CacheConfig cacheConfig = cls.getAnnotation(CacheConfig.class);
-            if (cacheConfig == null || cacheConfig.cacheNames() == null || cacheConfig.cacheNames().length < 1) {
+            if (cacheConfig == null || ArrayUtils.isEmpty(cacheConfig.cacheNames())) {
                 cacheName = getClass().getName();
             } else {
                 cacheName = cacheConfig.cacheNames()[0];
