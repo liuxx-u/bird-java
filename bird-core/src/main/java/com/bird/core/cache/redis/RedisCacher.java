@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
  */
 public final class RedisCacher implements ICacher {
 
-    @Value("${spring.redis.expiration}")
     private Integer EXPIRE = 600;
 
     private RedisTemplate<String, Object> redisTemplate;
