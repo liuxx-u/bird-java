@@ -6,6 +6,7 @@ package com.bird.service.boot.starter.eventbus.kafka;
  */
 public class KafkaListenerProperties {
     private String groupId;
+    private String basePackages;
 
     public String getGroupId() {
         return groupId;
@@ -13,5 +14,13 @@ public class KafkaListenerProperties {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public String getBasePackages() {
+        return basePackages;
+    }
+
+    public void setBasePackages(String basePackages) {
+        this.basePackages = basePackages;
     }
 }

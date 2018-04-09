@@ -1,5 +1,6 @@
 package com.bird.service.boot.starter.eventbus.kafka;
 
+import com.bird.eventbus.handler.EventHandlerFactory;
 import com.bird.eventbus.kafka.handler.EventArgDeserializer;
 import com.bird.eventbus.kafka.handler.KafkaContainerProperties;
 import com.bird.eventbus.kafka.register.EventArgSerializer;
@@ -17,6 +18,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
+import org.springframework.kafka.listener.config.ContainerProperties;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -57,16 +59,20 @@ public class KafkaConfigurer {
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.KAFKA.LISTENER_GROUP_ID)
     public KafkaMessageListenerContainer kafkaListenerContainer() {
-        KafkaEventArgListener listener = new KafkaEventArgListener();
 
-        KafkaContainerProperties containerProperties = new KafkaContainerProperties();
+        KafkaListenerProperties listenerProperties = kafkaProperties.getListener();
+
+        //初始化EventHandlerFactory
+        EventHandlerFactory.initWithPackage(listenerProperties.getBasePackages());
+
+        KafkaEventArgListener listener = new KafkaEventArgListener();
+        ContainerProperties containerProperties = new ContainerProperties(EventHandlerFactory.getAllTopics());
         containerProperties.setMessageListener(listener);
 
 
         HashMap properties = new HashMap();
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
-        KafkaListenerProperties listenerProperties = kafkaProperties.getListener();
         properties.put("group.id", listenerProperties.getGroupId());
         properties.put("auto.offset.reset", "earliest");
         properties.put("enable.auto.commit", true);

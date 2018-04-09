@@ -1,5 +1,6 @@
 package com.bird.eventbus.handler;
 
+import com.bird.core.Check;
 import com.bird.eventbus.arg.IEventArg;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.SpringContextHolder;
@@ -20,10 +21,13 @@ public class EventHandlerFactory {
     private static Map<String, Set<Method>> eventHandlerContainer = new HashMap<>();
 
     /**
-     * 初始化事件处理容器
+     * 扫描指定包内部的事件监听方法
+      * @param packageName
      */
-    static {
-        Set<Class<?>> classes = ClassHelper.getClasses("com.bird");
+    public static void initWithPackage(String packageName){
+        Check.NotNull(packageName,"packageName");
+
+        Set<Class<?>> classes = ClassHelper.getClasses(packageName);
         if (classes != null) {
             for (Class<?> clazz : classes) {
                 for (Method method : clazz.getDeclaredMethods()) {
