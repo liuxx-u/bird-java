@@ -2,7 +2,7 @@
 
 bird-java是以dubbo为基础的分布式服务框架，专注于业务开发，提炼后台应用中的经典业务场景，大幅减少开发编码量。
 
-##技术选型
+## 技术选型
 
  - 基础框架：spring
  - 服务调度：dubbo
@@ -16,7 +16,7 @@ bird-java是以dubbo为基础的分布式服务框架，专注于业务开发，
  - 服务总线：基于Kafka自研EventBus
  - 身份认证：自研单点登录
 
-##架构图
+## 架构图
 
 ![image.png-58.5kB][1]
 
@@ -26,7 +26,7 @@ bird-java是以dubbo为基础的分布式服务框架，专注于业务开发，
  - 基础设施层：为以上各层提供服务，包括日志、工具类、任务调度等。
 
 
-##功能特性
+## 功能特性
 
 bird-java提供了许多功能特性，包括：
 
@@ -37,14 +37,14 @@ bird-java提供了许多功能特性，包括：
  5. 为web与service项目提供不同类型的starter，按配置注入对应的组件，使编码环境更加简洁。
 
 
-##项目结构
+## 项目结构
 
  ![image.png-44kB][2]
  
- service-xxx：服务，服务拆分的最小单位。
- service-xxx-api：服务定义，包括服务接口、Model、DTO、EventArg的定义。
- service-xxx-impl：服务的实现，包括服务实现、Mapper。服务部署的最小单位。
- web-xxx：web层，对外提供接口，可根据业务需要拆分为不同的web层。
+ - service-xxx：服务，服务拆分的最小单位。
+ - service-xxx-api：服务定义，包括服务接口、Model、DTO、EventArg的定义。
+ - service-xxx-impl：服务的实现，包括服务实现、Mapper。服务部署的最小单位。
+ - web-xxx：web层，对外提供接口，可根据业务需要拆分为不同的web层。
 
 
   [1]: http://static.zybuluo.com/liuxx-/a929cejt4qq3p11tj0jmdrhi/image.png
