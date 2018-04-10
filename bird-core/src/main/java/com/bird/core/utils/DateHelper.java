@@ -33,6 +33,21 @@ public final class DateHelper extends DateUtils {
     }
 
     /**
+     * 字符串转换为时间
+     * @param strDate 时间字符串
+     * @param pattern 格式
+     * @return
+     */
+    public static Date parse(String strDate, String pattern) {
+        if (StringUtils.isBlank(strDate)) return null;
+        try {
+            return new SimpleDateFormat(pattern).parse(strDate);
+        } catch (ParseException ex) {
+            return null;
+        }
+    }
+
+    /**
      * 获取当前时间的字符串值
      * @param pattern 模式
      * @return
