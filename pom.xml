@@ -56,6 +56,7 @@
 
         <!--json组件版本号-->
         <fastjson.version>1.2.32</fastjson.version>
+        <jackson.version>2.9.4</jackson.version>
 
         <!--dozer版本号-->
         <dozer.version>5.5.1</dozer.version>
