@@ -9,10 +9,8 @@ import org.springframework.stereotype.Component;
 /**
  * kafka事件注册器，向kafka队列中push消息
  */
-@Component
 public class KafkaRegister implements IEventRegister {
 
-    @Autowired(required = false)
     private KafkaTemplate<String,IEventArg> kafkaTemplate;
 
     /**
@@ -34,5 +32,9 @@ public class KafkaRegister implements IEventRegister {
      */
     private String getTopic(IEventArg eventArg){
         return eventArg.getClass().getName();
+    }
+
+    public void setKafkaTemplate(KafkaTemplate<String, IEventArg> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 }

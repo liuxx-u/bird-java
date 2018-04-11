@@ -4,6 +4,8 @@ import com.bird.eventbus.handler.EventHandlerFactory;
 import com.bird.eventbus.kafka.handler.EventArgDeserializer;
 import com.bird.eventbus.kafka.handler.KafkaContainerProperties;
 import com.bird.eventbus.kafka.register.EventArgSerializer;
+import com.bird.eventbus.kafka.register.KafkaRegister;
+import com.bird.eventbus.register.IEventRegister;
 import com.bird.service.boot.starter.ServiceConfigurer;
 import com.bird.service.boot.starter.eventbus.EventbusConstant;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -54,6 +56,14 @@ public class KafkaConfigurer {
         KafkaTemplate kafkaTemplate = new KafkaTemplate(producerFactory, true);
         kafkaTemplate.setDefaultTopic(providerProperties.getDefaultTopic());
         return kafkaTemplate;
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = EventbusConstant.KAFKA.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
+    public IEventRegister eventRegister(KafkaTemplate kafkaTemplate) {
+        KafkaRegister eventRegister = new KafkaRegister();
+        eventRegister.setKafkaTemplate(kafkaTemplate);
+        return eventRegister;
     }
 
     @Bean
