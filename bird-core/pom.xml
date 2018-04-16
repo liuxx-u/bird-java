@@ -55,6 +55,18 @@
             <artifactId>jedis</artifactId>
             <version>${jedis.version}</version>
         </dependency>
+        <!--fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <!--dozer-->
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>${dozer.version}</version>
+        </dependency>
 
         <!-- apache -->
         <dependency>
@@ -71,11 +83,6 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
             <version>${ant.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>${dozer.version}</version>
         </dependency>
 
     </dependencies>
