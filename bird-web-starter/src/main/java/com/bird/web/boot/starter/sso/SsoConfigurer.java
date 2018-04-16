@@ -75,7 +75,6 @@ public class SsoConfigurer {
     public SsoAuthorizeManager ssoAuthorizeManager(){
         SsoAuthorizeManager authorizeManager = new SsoAuthorizeManager();
         authorizeManager.setCookieName(ssoProperties.getCookieName());
-        authorizeManager.setLoginPath(ssoProperties.getLoginPath());
         authorizeManager.setExpire(ssoProperties.getExpire());
 
         return authorizeManager;

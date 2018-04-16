@@ -22,7 +22,7 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
     private TicketHandler ticketHandler;
 
     @Inject
-    private SsoAuthorizeManager authorizeManager;
+    private IUserPermissionChecker permissionChecker;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -36,16 +36,15 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
                 throw new UnAuthorizedException("用户信息已失效.");
             }
 
-            if(!checkAllowHosts(request,ticketInfo)){
+            if (!checkAllowHosts(request, ticketInfo)) {
                 throw new ForbiddenException("用户没有当前站点的登录权限.");
             }
 
             String[] requirePermissions = authorize.permissions();
-            if(requirePermissions.length==0)return true;
+            if (requirePermissions.length == 0) return true;
 
             boolean isCheckAll = authorize.isCheckAll();
-            IUserPermissionChecker permissionChecker = authorizeManager.getUserPermissionChecker();
-            if(!permissionChecker.hasPermissions(ticketInfo.getUserId(),requirePermissions,isCheckAll)){
+            if (!permissionChecker.hasPermissions(ticketInfo.getUserId(), requirePermissions, isCheckAll)) {
                 throw new ForbiddenException("用户没有当前操作的权限.");
             }
         }
@@ -54,8 +53,7 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
     }
 
 
-
-    private boolean checkAllowHosts(HttpServletRequest request,TicketInfo ticketInfo){
+    private boolean checkAllowHosts(HttpServletRequest request, TicketInfo ticketInfo) {
         return true;
     }
 }

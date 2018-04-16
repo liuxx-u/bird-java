@@ -1,6 +1,7 @@
 package com.bird.web.sso;
 
 import com.bird.core.Check;
+import com.bird.web.common.utils.CookieHelper;
 import com.bird.web.sso.client.ClientInfo;
 import com.bird.web.sso.client.IUserClientStore;
 import com.bird.web.sso.permission.IUserPermissionChecker;
@@ -21,10 +22,8 @@ import java.util.List;
  * Created by liuxx on 2017/5/18.
  */
 public class SsoAuthorizeManager {
-    static final String User_Client_CliamKey="user.clients";
     private String cookieName;
     private Integer expire = 60; //单位：分
-    private String loginPath;
 
     /**
      * 票据加密器
@@ -33,82 +32,17 @@ public class SsoAuthorizeManager {
     private ITicketProtector protector;
 
     /**
-     * 前端js执行代码生成器
-     */
-    private JavascriptCodeGenerator Javascript = new JavascriptCodeGenerator();
-
-    /**
-     * 用户-站点信息存储器
-     */
-    @Inject
-    private IUserClientStore userClientStore;
-
-    /**
      * 票据信息存储器
      */
     @Inject
     private ITicketSessionStore sessionStore;
 
     /**
-     * 用户权限检查器
-     */
-    @Inject
-    private IUserPermissionChecker userPermissionChecker;
-
-    /**
-     * 生成登录成功的前端js执行代码
-     * @param ticketInfo
-     * @param redirectUrl
-     * @return
-     */
-    public String getLoginJsCode(HttpServletResponse response, TicketInfo ticketInfo, String redirectUrl){
-        List<ClientInfo> clients = userClientStore.getUserClients(ticketInfo.getUserId());
-
-        //确保ticket信息中包含允许登录的站点信息
-        ticketInfo.setClaim(User_Client_CliamKey,clients);
-        String token = generateToken(ticketInfo);
-
-        //用户中心写入Cookie
-        Cookie cookie = new Cookie(this.cookieName, token.trim());
-        cookie.setMaxAge(this.expire * 60);// 设置为有效期
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        //生成通知其他站点的js代码
-        List<String> loginNotifyUrls = new ArrayList<>();
-        for (ClientInfo client:clients) {
-            if(StringUtils.isBlank(client.getLoginNotifyUrl()))continue;
-            loginNotifyUrls.add(client.getLoginNotifyUrl());
-        }
-        return Javascript.getLoginCode(token,loginNotifyUrls,redirectUrl);
-    }
-
-    /**
-     * 生成登录失败的前端js执行代码
-     * @param errorInfo
-     * @return
-     */
-    public String getErrorJsCode(String errorInfo){
-        return Javascript.getErrorCode(errorInfo);
-    }
-
-    /**
-     * 注销，只删除sessionStore中的数据
-     * @return
-     */
-    public void logout(String token) {
-
-        if (sessionStore != null) {
-            sessionStore.removeTicket(token);
-        }
-    }
-
-    /**
-     * 根据ticket生成token
+     * 登录，将token写入cookie
      * @param ticketInfo 票据信息
-     * @return
+     * @return token
      */
-    public String generateToken(TicketInfo ticketInfo) {
+    public String login(HttpServletResponse response,TicketInfo ticketInfo) {
         if (ticketInfo.getExpireTime() == null) {
             Date creationTime = ticketInfo.getCreationTime();
             long expire = creationTime.getTime() + this.expire * 60 * 1000L;
@@ -118,7 +52,44 @@ public class SsoAuthorizeManager {
         if (sessionStore != null) {
             return sessionStore.storeTicket(ticketInfo);
         }
-        return protector.protect(ticketInfo);
+        String token = protector.protect(ticketInfo);
+
+        //用户中心写入Cookie
+        Cookie cookie = new Cookie(this.cookieName, token.trim());
+        cookie.setMaxAge(this.expire * 60);// 设置为有效期
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return token;
+    }
+
+    /**
+     * 注销
+     * 1、清除SessionStore；2、清除Cookie
+     * @return
+     */
+    public void logout(HttpServletRequest request,HttpServletResponse response) {
+        String token = "";
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(this.cookieName)) {
+                token = cookie.getValue();
+                break;
+            }
+        }
+
+        if (!StringUtils.isEmpty(token)) {
+            //清除SessionStore
+            if (sessionStore != null) {
+                sessionStore.removeTicket(token);
+            }
+
+            //清除Cookie
+            Cookie cookie = new Cookie(this.cookieName, "");
+            cookie.setMaxAge(0);// 设置有效期为0
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
     }
 
     /**
@@ -155,14 +126,6 @@ public class SsoAuthorizeManager {
         this.cookieName = cookieName;
     }
 
-    public String getLoginPath() {
-        return loginPath;
-    }
-
-    public void setLoginPath(String loginPath) {
-        this.loginPath = loginPath;
-    }
-
     public ITicketProtector getProtector() {
         return protector;
     }
@@ -171,28 +134,12 @@ public class SsoAuthorizeManager {
         this.protector = protector;
     }
 
-    public IUserClientStore getUserClientStore() {
-        return userClientStore;
-    }
-
-    public void setUserClientStore(IUserClientStore userClientStore) {
-        this.userClientStore = userClientStore;
-    }
-
     public ITicketSessionStore getSessionStore() {
         return sessionStore;
     }
 
     public void setSessionStore(ITicketSessionStore sessionStore) {
         this.sessionStore = sessionStore;
-    }
-
-    public IUserPermissionChecker getUserPermissionChecker() {
-        return userPermissionChecker;
-    }
-
-    public void setUserPermissionChecker(IUserPermissionChecker userPermissionChecker) {
-        this.userPermissionChecker = userPermissionChecker;
     }
 
     public Integer getExpire() {
