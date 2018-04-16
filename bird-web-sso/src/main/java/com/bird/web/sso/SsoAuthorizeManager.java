@@ -55,11 +55,7 @@ public class SsoAuthorizeManager {
         String token = protector.protect(ticketInfo);
 
         //用户中心写入Cookie
-        Cookie cookie = new Cookie(this.cookieName, token.trim());
-        cookie.setMaxAge(this.expire * 60);// 设置为有效期
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
+        CookieHelper.setCookie(response, this.cookieName, StringUtils.strip(token), this.expire * 60);
         return token;
     }
 
@@ -69,14 +65,7 @@ public class SsoAuthorizeManager {
      * @return
      */
     public void logout(HttpServletRequest request,HttpServletResponse response) {
-        String token = "";
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(this.cookieName)) {
-                token = cookie.getValue();
-                break;
-            }
-        }
+        String token = CookieHelper.getCookieValue(request,this.cookieName);
 
         if (!StringUtils.isEmpty(token)) {
             //清除SessionStore
@@ -85,10 +74,7 @@ public class SsoAuthorizeManager {
             }
 
             //清除Cookie
-            Cookie cookie = new Cookie(this.cookieName, "");
-            cookie.setMaxAge(0);// 设置有效期为0
-            cookie.setPath("/");
-            response.addCookie(cookie);
+            CookieHelper.removeCookie(request,response,this.cookieName);
         }
     }
 
@@ -103,18 +89,12 @@ public class SsoAuthorizeManager {
         //先从header中获取token
         String token = request.getHeader(this.cookieName);
         if (StringUtils.isBlank(token)) {
-            //header中没有token,则从cookie中获取
-            Cookie[] cookies = request.getCookies();
-            if (cookies == null) return;
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(this.cookieName)) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
+            token = CookieHelper.getCookieValue(request,this.cookieName);
         }
 
-        sessionStore.refreshTicket(token, ticketInfo, this.expire * 60 * 1000);
+        if(StringUtils.isNotBlank(token)){
+            sessionStore.refreshTicket(token, ticketInfo, this.expire * 60 * 1000);
+        }
     }
 
 

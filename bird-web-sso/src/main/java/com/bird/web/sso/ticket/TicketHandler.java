@@ -1,5 +1,6 @@
 package com.bird.web.sso.ticket;
 
+import com.bird.web.common.utils.CookieHelper;
 import com.bird.web.sso.SsoAuthorizeManager;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,14 +31,7 @@ public class TicketHandler {
         String token = request.getHeader(cookieName);
         if (StringUtils.isBlank(token)) {
             //header中没有token,则从cookie中获取
-            Cookie[] cookies = request.getCookies();
-            if (cookies == null) return null;
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(cookieName)) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
+            token = CookieHelper.getCookieValue(request,cookieName);
         }
         if (StringUtils.isBlank(token)) return null;
 
