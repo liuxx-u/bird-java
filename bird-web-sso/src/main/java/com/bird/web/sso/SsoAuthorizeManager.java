@@ -49,10 +49,9 @@ public class SsoAuthorizeManager {
             ticketInfo.setExpireTime(new Date(expire));
         }
 
-        if (sessionStore != null) {
-            return sessionStore.storeTicket(ticketInfo);
-        }
-        String token = protector.protect(ticketInfo);
+        String token = sessionStore != null
+                ? sessionStore.storeTicket(ticketInfo)
+                : protector.protect(ticketInfo);
 
         //用户中心写入Cookie
         CookieHelper.setCookie(response, this.cookieName, StringUtils.strip(token), this.expire * 60);
@@ -65,7 +64,7 @@ public class SsoAuthorizeManager {
      * @return
      */
     public void logout(HttpServletRequest request,HttpServletResponse response) {
-        String token = CookieHelper.getCookieValue(request,this.cookieName);
+        String token = getToken(request);
 
         if (!StringUtils.isEmpty(token)) {
             //清除SessionStore
@@ -79,22 +78,32 @@ public class SsoAuthorizeManager {
     }
 
     /**
-     * 刷新票据信息
+     * 刷新票据信息，仅在sessionStore模式下可用
      * @param request
      * @param ticketInfo
      */
     public void refreshToken(HttpServletRequest request, TicketInfo ticketInfo) {
         Check.NotNull(ticketInfo, "ticketInfo");
 
+        String token = getToken(request);
+
+        if (StringUtils.isNotBlank(token) && sessionStore != null) {
+            sessionStore.refreshTicket(token, ticketInfo, this.expire * 60 * 1000);
+        }
+    }
+
+    /**
+     * 从HttpServletRequest中获取token
+     * @param request
+     * @return
+     */
+    private String getToken(HttpServletRequest request){
         //先从header中获取token
         String token = request.getHeader(this.cookieName);
         if (StringUtils.isBlank(token)) {
             token = CookieHelper.getCookieValue(request,this.cookieName);
         }
-
-        if(StringUtils.isNotBlank(token)){
-            sessionStore.refreshTicket(token, ticketInfo, this.expire * 60 * 1000);
-        }
+        return token;
     }
 
 
