@@ -2,11 +2,10 @@ package com.bird.service.boot.starter.eventbus.kafka;
 
 import com.bird.eventbus.handler.EventHandlerFactory;
 import com.bird.eventbus.kafka.handler.EventArgDeserializer;
-import com.bird.eventbus.kafka.handler.KafkaContainerProperties;
+import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
 import com.bird.eventbus.kafka.register.EventArgSerializer;
 import com.bird.eventbus.kafka.register.KafkaRegister;
 import com.bird.eventbus.register.IEventRegister;
-import com.bird.service.boot.starter.ServiceConfigurer;
 import com.bird.service.boot.starter.eventbus.EventbusConstant;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -14,12 +13,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
-import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
 import javax.inject.Inject;

@@ -6,6 +6,7 @@ import org.springframework.kafka.listener.config.ContainerProperties;
 /**
  * 继承ContainerProperties，实现系统Topics的自动查找
  */
+@Deprecated
 public class KafkaContainerProperties extends ContainerProperties {
     public KafkaContainerProperties() {
         super(EventHandlerFactory.getAllTopics());
