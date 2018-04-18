@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class ClientInfo implements Serializable {
     private String clientName;
     private String host;
-    private String loginNotifyUrl;
 
     public String getClientName() {
         return clientName;
@@ -21,13 +20,5 @@ public class ClientInfo implements Serializable {
 
     public void setHost(String host) {
         this.host = host;
-    }
-
-    public String getLoginNotifyUrl() {
-        return loginNotifyUrl;
-    }
-
-    public void setLoginNotifyUrl(String loginNotifyUrl) {
-        this.loginNotifyUrl = loginNotifyUrl;
     }
 }

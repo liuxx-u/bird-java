@@ -4,17 +4,14 @@ import com.bird.core.Check;
 import com.bird.web.common.utils.CookieHelper;
 import com.bird.web.sso.client.ClientInfo;
 import com.bird.web.sso.client.IUserClientStore;
-import com.bird.web.sso.permission.IUserPermissionChecker;
-import com.bird.web.sso.ticket.TicketInfo;
 import com.bird.web.sso.ticket.ITicketProtector;
 import com.bird.web.sso.ticket.ITicketSessionStore;
+import com.bird.web.sso.ticket.TicketInfo;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +35,12 @@ public class SsoAuthorizeManager {
     private ITicketSessionStore sessionStore;
 
     /**
+     * 站点信息储存器
+     */
+    @Inject
+    private IUserClientStore userClientStore;
+
+    /**
      * 登录，将token写入cookie
      * @param ticketInfo 票据信息
      * @return token
@@ -48,6 +51,10 @@ public class SsoAuthorizeManager {
             long expire = creationTime.getTime() + this.expire * 60 * 1000L;
             ticketInfo.setExpireTime(new Date(expire));
         }
+
+        //确保ticket信息中包含允许登录的站点信息
+        List<ClientInfo> clients = userClientStore.getUserClients(ticketInfo.getUserId());
+        ticketInfo.setClaim(IUserClientStore.CLAIM_KEY,clients);
 
         String token = sessionStore != null
                 ? sessionStore.storeTicket(ticketInfo)
