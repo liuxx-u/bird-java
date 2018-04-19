@@ -8,7 +8,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by liuxx on 2017/6/14.
+ *
+ * @author liuxx
+ * @date 2017/6/14
  */
 public class DozerHelper  extends DozerBeanMapper {
 

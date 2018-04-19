@@ -3,7 +3,9 @@ package com.bird.core.exception;
 import com.bird.core.HttpCode;
 
 /**
- * Created by liuxx on 2017/10/30.
+ *
+ * @author liuxx
+ * @date 2017/10/30
  */
 public class ArgumentException extends AbstractException {
 

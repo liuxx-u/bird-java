@@ -1,7 +1,9 @@
 package com.bird.core;
 
 /** Http请求时的自定义查询状态码，主要参考Http状态码，但并不完全对应
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public enum HttpCode {
     /** 200请求成功 */
@@ -31,7 +33,7 @@ public enum HttpCode {
 
     private final Integer value;
 
-    private HttpCode(Integer value) {
+    HttpCode(Integer value) {
         this.value = value;
     }
 
@@ -46,6 +48,7 @@ public enum HttpCode {
         return "HTTPCODE_" + this.value;
     }
 
+    @Override
     public String toString() {
         return this.value.toString();
     }

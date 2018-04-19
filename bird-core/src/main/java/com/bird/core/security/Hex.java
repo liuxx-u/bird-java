@@ -5,7 +5,9 @@ import java.io.UnsupportedEncodingException;
 /**
  * Hex encoder and decoder. The charset used for certain operation can be set,
  * the default is set in
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public class Hex {
 

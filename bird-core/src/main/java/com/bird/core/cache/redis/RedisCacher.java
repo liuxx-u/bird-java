@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public final class RedisCacher implements ICacher {
 
@@ -60,6 +62,7 @@ public final class RedisCacher implements ICacher {
      *
      * @return
      */
+    @Override
     public final Boolean expire(final String key, final int seconds) {
         return redisTemplate.expire(key, seconds, TimeUnit.SECONDS);
     }

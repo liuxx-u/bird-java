@@ -4,7 +4,9 @@ import java.security.Security;
 
 /**
  * 加密基类
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public abstract class SecurityCoder {
     private static Byte ADDFLAG = 0;

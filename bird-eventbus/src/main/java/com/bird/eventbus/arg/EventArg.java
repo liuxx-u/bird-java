@@ -3,6 +3,9 @@ package com.bird.eventbus.arg;
 
 import java.util.Date;
 
+/**
+ * @author liuxx
+ */
 public abstract class EventArg implements IEventArg{
 
     private Date eventTime;

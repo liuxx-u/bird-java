@@ -11,7 +11,9 @@ import java.math.BigDecimal;
 public final class NumberHelper extends NumberUtils {
 
     public static final BigDecimal getSafety(BigDecimal value){
-        if(value == null)return BigDecimal.ZERO;
+        if(value == null) {
+            return BigDecimal.ZERO;
+        }
         return value;
     }
 }

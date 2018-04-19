@@ -7,7 +7,9 @@ import java.security.MessageDigest;
 
 /**
  * MD加密组件
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public abstract class MDCoder extends SecurityCoder {
 

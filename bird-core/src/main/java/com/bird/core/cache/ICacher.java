@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public interface ICacher {
     Object get(final String key);

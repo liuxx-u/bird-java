@@ -10,7 +10,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * HMAC加密组件
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public abstract class HmacCoder extends SecurityCoder {
 
@@ -40,8 +42,10 @@ public abstract class HmacCoder extends SecurityCoder {
     public static byte[] encodeHmacMD5(byte[] data, byte[] key) throws Exception {
         // 还原密钥
         SecretKey secretKey = new SecretKeySpec(key, "HmacMD5");
+        // secretKey.getAlgorithm());
+
         // 实例化Mac "SslMacMD5"
-        Mac mac = Mac.getInstance("SslMacMD5");// secretKey.getAlgorithm());
+        Mac mac = Mac.getInstance("SslMacMD5");
         // 初始化Mac
         mac.init(secretKey);
         // 执行消息摘要
@@ -74,8 +78,10 @@ public abstract class HmacCoder extends SecurityCoder {
     public static byte[] encodeHmacSHA(byte[] data, byte[] key) throws Exception {
         // 还原密钥
         SecretKey secretKey = new SecretKeySpec(key, "HMacTiger");
+        // secretKey.getAlgorithm());
+
         // 实例化Mac SslMacMD5
-        Mac mac = Mac.getInstance("SslMacMD5");// secretKey.getAlgorithm());
+        Mac mac = Mac.getInstance("SslMacMD5");
         // 初始化Mac
         mac.init(secretKey);
         // 执行消息摘要

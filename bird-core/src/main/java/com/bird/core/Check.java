@@ -4,7 +4,9 @@ import com.bird.core.exception.ArgumentException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Created by liuxx on 2017/10/30.
+ *
+ * @author liuxx
+ * @date 2017/10/30
  */
 public final class Check {
 

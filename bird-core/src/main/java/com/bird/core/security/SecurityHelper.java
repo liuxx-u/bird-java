@@ -7,7 +7,9 @@ import java.security.MessageDigest;
 import java.util.Map;
 
 /**
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public final class SecurityHelper {
     private SecurityHelper() {

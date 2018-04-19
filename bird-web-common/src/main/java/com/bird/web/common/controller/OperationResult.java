@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 
 /**
+ * @author liuxx
  * Created by liuxx on 2017/7/13.
  */
 public class OperationResult<T extends Object> implements Serializable {

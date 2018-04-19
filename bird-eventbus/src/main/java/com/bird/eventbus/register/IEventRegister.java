@@ -4,6 +4,7 @@ import com.bird.eventbus.arg.IEventArg;
 
 /**
  * 事件注册器
+ * @author liuxx
  */
 public interface IEventRegister {
 

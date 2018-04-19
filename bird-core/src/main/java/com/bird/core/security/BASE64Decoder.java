@@ -36,11 +36,13 @@ import java.io.PushbackInputStream;
 public class BASE64Decoder extends CharacterDecoder {
 
     /** This class has 4 bytes per atom */
+    @Override
     protected int bytesPerAtom() {
         return (4);
     }
 
     /** Any multiple of 4 will do, 72 might be common */
+    @Override
     protected int bytesPerLine() {
         return (72);
     }
@@ -77,6 +79,7 @@ public class BASE64Decoder extends CharacterDecoder {
     /**
      103        * Decode one BASE64 atom into 1, 2, or 3 bytes of data.
      104        */
+    @Override
     protected void decodeAtom(PushbackInputStream inStream, OutputStream outStream, int rem)
             throws java.io.IOException {
         int i;

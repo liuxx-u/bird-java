@@ -22,7 +22,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public final class ClassHelper {
     private ClassHelper() {
@@ -101,7 +103,6 @@ public final class ClassHelper {
                             }
                         }
                     } catch (IOException e) {
-                        // log.error("在扫描用户定义视图时从jar包获取文件出错");
                         e.printStackTrace();
                     }
                 }
@@ -126,7 +127,6 @@ public final class ClassHelper {
         File dir = new File(packagePath);
         // 如果不存在或者 也不是目录就直接返回
         if (!dir.exists() || !dir.isDirectory()) {
-            // log.warn("用户定义包名 " + packageName + " 下没有任何文件");
             return;
         }
         // 如果存在 就获取包下的所有文件 包括目录
@@ -144,7 +144,6 @@ public final class ClassHelper {
                     // 添加到集合中去，这里用forName有一些不好，会触发static方法，没有使用classLoader的load干净
                     classes.add(Thread.currentThread().getContextClassLoader().loadClass(packageName + '.' + className));
                 } catch (ClassNotFoundException e) {
-                    // log.error("添加用户自定义视图类错误 找不到此类的.class文件");
                     e.printStackTrace();
                 }
             }
@@ -174,7 +173,7 @@ public final class ClassHelper {
                  * http://blog.csdn.net/u010156024/article/details/44875195
                  */
                 if (clazz.isAssignableFrom(cls)) {
-                    if (!clazz.equals(cls)) {//自身并不加进去
+                    if (!clazz.equals(cls)) {
                         classes.add(cls);
                     } else {
 
@@ -258,8 +257,9 @@ public final class ClassHelper {
      * @return
      */
     private static URL getClassLocationURL(final Class<?> cls) {
-        if (cls == null)
+        if (cls == null) {
             throw new IllegalArgumentException("null input: cls");
+        }
         URL result = null;
         final String clsAsResource = cls.getName().replace('.', '/').concat(".class");
         final ProtectionDomain pd = cls.getProtectionDomain();
@@ -270,10 +270,11 @@ public final class ClassHelper {
             if (result != null) {
                 if ("file".equals(result.getProtocol())) {
                     try {
-                        if (result.toExternalForm().endsWith(".jar") || result.toExternalForm().endsWith(".zip"))
+                        if (result.toExternalForm().endsWith(".jar") || result.toExternalForm().endsWith(".zip")) {
                             result = new URL("jar:".concat(result.toExternalForm()).concat("!/").concat(clsAsResource));
-                        else if (new File(result.getFile()).isDirectory())
+                        } else if (new File(result.getFile()).isDirectory()) {
                             result = new URL(result, clsAsResource);
+                        }
                     } catch (MalformedURLException ignore) {
                     }
                 }

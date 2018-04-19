@@ -6,7 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by liuxx on 2017/5/18.
+ *
+ * @author liuxx
+ * @date 2017/5/18
  */
 public final class StringHelper extends org.apache.commons.lang3.StringUtils {
     /**
@@ -129,7 +131,6 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
     public static String getDomain(String url) {
         Pattern p = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv)", Pattern.CASE_INSENSITIVE);
         // 获取完整的域名
-        // Pattern p=Pattern.compile("[^//]*?\\.(com|cn|net|org|biz|info|cc|tv)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = p.matcher(url);
         matcher.find();
         return matcher.group();

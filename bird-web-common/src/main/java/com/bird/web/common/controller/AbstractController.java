@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 /**
+ * @author liuxx
  * Created by liuxx on 2017/5/25.
  */
 public abstract class AbstractController implements Serializable{

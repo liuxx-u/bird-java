@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 事件总线
+ * @author liuxx
  */
 @Component
 public class EventBus {

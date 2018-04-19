@@ -3,7 +3,9 @@ package com.bird.core.security;
 import java.io.*;
 
 /**
- * Created by liuxx on 2017/5/16.
+ *
+ * @author liuxx
+ * @date 2017/5/16
  */
 public class BASE64Encoder {
 
@@ -36,7 +38,7 @@ public class BASE64Encoder {
     public String encode(byte[] bt) {
         int totalBits = bt.length * 8;
         int nn = totalBits % 6;
-        int curPos = 0;// process bits
+        int curPos = 0;
         StringBuilder toReturn = new StringBuilder(32);
         while (curPos < totalBits) {
             int bytePos = curPos / 8;
