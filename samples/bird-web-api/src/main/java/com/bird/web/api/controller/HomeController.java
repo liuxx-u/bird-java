@@ -32,4 +32,9 @@ public class HomeController {
     public OrganizationDTO test(){
         return organizationService.getOrganization(1L);
     }
+
+    @GetMapping("/test2")
+    public String test2(){
+        return "test2";
+    }
 }
