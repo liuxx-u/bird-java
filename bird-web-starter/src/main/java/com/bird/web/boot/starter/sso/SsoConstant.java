@@ -14,4 +14,9 @@ public interface SsoConstant {
      * 单点登录cookie的名称
      */
     String COOKIE_NAME = PREFIX+".cookieName";
+
+    /**
+     * 是否启用SessionStore的配置名
+     */
+    String USE_SESSTION_STRORE = PREFIX+".useSessionStore";
 }

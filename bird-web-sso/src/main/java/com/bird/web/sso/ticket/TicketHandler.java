@@ -3,6 +3,7 @@ package com.bird.web.sso.ticket;
 import com.bird.web.common.utils.CookieHelper;
 import com.bird.web.sso.SsoAuthorizeManager;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
@@ -15,14 +16,14 @@ import java.util.Date;
 public class TicketHandler {
     private boolean autoRefresh;
 
-    @Inject
+    @Autowired(required = false)
     private ITicketProtector protector;
 
-    @Inject
-    private SsoAuthorizeManager authorizeManager;
-
-    @Inject
+    @Autowired(required = false)
     private ITicketSessionStore sessionStore;
+
+    @Autowired
+    private SsoAuthorizeManager authorizeManager;
 
 
     public TicketInfo getTicket(HttpServletRequest request) {
@@ -31,16 +32,16 @@ public class TicketHandler {
         String token = request.getHeader(cookieName);
         if (StringUtils.isBlank(token)) {
             //header中没有token,则从cookie中获取
-            token = CookieHelper.getCookieValue(request,cookieName);
+            token = CookieHelper.getCookieValue(request, cookieName);
         }
         if (StringUtils.isBlank(token)) return null;
 
         TicketInfo ticketInfo;
-        if (sessionStore != null) {
+        if (authorizeManager.getUseSessionStore()) {
             ticketInfo = sessionStore.getTicket(token);
             if (ticketInfo == null) return null;
 
-            if(autoRefresh){
+            if (autoRefresh) {
                 //如果超过一半的有效期，则刷新
                 Date now = new Date();
                 Date issuedTime = ticketInfo.getLastRefreshTime();

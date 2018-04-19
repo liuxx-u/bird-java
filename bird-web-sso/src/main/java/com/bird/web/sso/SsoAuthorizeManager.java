@@ -8,12 +8,14 @@ import com.bird.web.sso.ticket.ITicketProtector;
 import com.bird.web.sso.ticket.ITicketSessionStore;
 import com.bird.web.sso.ticket.TicketInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by liuxx on 2017/5/18.
@@ -21,23 +23,24 @@ import java.util.List;
 public class SsoAuthorizeManager {
     private String cookieName;
     private Integer expire = 60; //单位：分
+    private Boolean useSessionStore = true;
 
     /**
      * 票据加密器
      */
-    @Inject
+    @Autowired(required = false)
     private ITicketProtector protector;
 
     /**
      * 票据信息存储器
      */
-    @Inject
+    @Autowired(required = false)
     private ITicketSessionStore sessionStore;
 
     /**
      * 站点信息储存器
      */
-    @Inject
+    @Autowired
     private IUserClientStore userClientStore;
 
     /**
@@ -54,9 +57,13 @@ public class SsoAuthorizeManager {
 
         //确保ticket信息中包含允许登录的站点信息
         List<ClientInfo> clients = userClientStore.getUserClients(ticketInfo.getUserId());
-        ticketInfo.setClaim(IUserClientStore.CLAIM_KEY,clients);
+        List<String> allowHosts = clients == null
+                ? new ArrayList<>()
+                : clients.stream().map(p -> p.getHost()).collect(Collectors.toList());
 
-        String token = sessionStore != null
+        ticketInfo.setClaim(IUserClientStore.CLAIM_KEY, allowHosts);
+
+        String token = useSessionStore
                 ? sessionStore.storeTicket(ticketInfo)
                 : protector.protect(ticketInfo);
 
@@ -144,5 +151,13 @@ public class SsoAuthorizeManager {
 
     public void setExpire(Integer expire) {
         this.expire = expire;
+    }
+
+    public Boolean getUseSessionStore() {
+        return useSessionStore;
+    }
+
+    public void setUseSessionStore(Boolean useSessionStore) {
+        this.useSessionStore = useSessionStore;
     }
 }

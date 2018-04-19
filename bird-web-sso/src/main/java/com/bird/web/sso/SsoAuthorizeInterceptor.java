@@ -1,5 +1,6 @@
 package com.bird.web.sso;
 
+import com.bird.web.sso.client.IUserClientStore;
 import com.bird.web.sso.exception.ForbiddenException;
 import com.bird.web.sso.exception.UnAuthorizedException;
 import com.bird.web.sso.permission.IUserPermissionChecker;
@@ -11,11 +12,13 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by liuxx on 2017/5/18.
+ *
+ * 权限验证拦截器
  */
-
 public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
     @Inject
@@ -52,8 +55,18 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-
+    /**
+     * 检查用户是否允许登录当前站点
+     * @param request 请求
+     * @param ticketInfo 票据信息
+     * @return
+     */
     private boolean checkAllowHosts(HttpServletRequest request, TicketInfo ticketInfo) {
+        //TODO：取消注释
+//        String host = request.getHeader("host");
+//        List<String> allowHosts = (List<String>) ticketInfo.getClaim(IUserClientStore.CLAIM_KEY);
+//        if (allowHosts == null) return false;
+//        return allowHosts.contains(host);
         return true;
     }
 }

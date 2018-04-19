@@ -28,6 +28,11 @@ public class SsoProperties {
      */
     private Integer expire = 60;
 
+    /**
+     * 是否启用SessionStore，默认启用
+     */
+    private Boolean useSessionStore = true;
+
     public String getCookieName() {
         return cookieName;
     }
@@ -58,5 +63,13 @@ public class SsoProperties {
 
     public void setAutoRefresh(Boolean autoRefresh) {
         this.autoRefresh = autoRefresh;
+    }
+
+    public Boolean getUseSessionStore() {
+        return useSessionStore;
+    }
+
+    public void setUseSessionStore(Boolean useSessionStore) {
+        this.useSessionStore = useSessionStore;
     }
 }
