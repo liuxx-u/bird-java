@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by liuxx on 2017/5/15.
+ *
+ * @author liuxx
+ * @date 2017/5/15
  */
 public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatisplus.mapper.BaseMapper<T> {
 
@@ -62,6 +64,7 @@ public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatispl
     /**
      * 通用获取树数据方法
      *
+     *@param param
      * @return
      */
     @SelectProvider(type = TreeQueryProvider.class, method = "queryTreeData")

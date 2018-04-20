@@ -7,7 +7,16 @@ package com.bird.service.common.model;
  * Model-软删除接口
  */
 public interface ISoftDelete {
+
+    /**
+     * 获取是否软删除
+     * @return
+     */
     Boolean getDelFlag();
 
+    /**
+     * 设置为删除
+     * @param delFlag
+     */
     void setDelFlag(Boolean delFlag);
 }

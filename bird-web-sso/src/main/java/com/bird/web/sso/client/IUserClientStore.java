@@ -2,6 +2,9 @@ package com.bird.web.sso.client;
 
 import java.util.List;
 
+/**
+ * @author liuxx
+ */
 public interface IUserClientStore {
 
     String CLAIM_KEY = "user.clients";

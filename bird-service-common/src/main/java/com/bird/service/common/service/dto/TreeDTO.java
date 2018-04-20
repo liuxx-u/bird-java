@@ -1,13 +1,19 @@
 package com.bird.service.common.service.dto;
 
 /**
- * Created by liuxx on 2017/10/26.
+ *
+ * @author liuxx
+ * @date 2017/10/26
  */
 public class TreeDTO extends AbstractDTO {
     private String value;
     private String label;
     private String parentValue;
-    private boolean folder;//true则强制渲染为文件夹，前端效果为：子元素为空则不渲染该节点
+
+    /**
+     * true则强制渲染为文件夹，前端效果为：子元素为空则不渲染该节点
+     */
+    private Boolean folder;
 
     public TreeDTO(String value,String label,String parentValue) {
         this.value = value;

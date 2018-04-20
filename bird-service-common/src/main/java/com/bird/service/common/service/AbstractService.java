@@ -34,7 +34,9 @@ import java.util.concurrent.TimeUnit;
  * 业务逻辑层基类
  * 继承基类后必须配置CacheConfig(cacheNames="")
  *
- * Created by liuxx on 2017/5/12.
+ *
+ * @author liuxx
+ * @date 2017/5/12
  */
 public abstract class AbstractService<M extends AbstractMapper<T>,T extends IModel> implements IService<T> {
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -53,6 +55,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @param param 筛选条件
      * @return 查询的结果
      */
+    @Override
     public PagedListResultDTO queryPagedList(PagedQueryParam param) {
         Long totalCount = mapper.queryTotalCount(param);
         List<Map> items = new ArrayList<>();
@@ -68,6 +71,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      *
      * @param param
      */
+    @Override
     @Transactional
     public void save(CommonSaveParam param) {
         Long id = param.getEntityDTO().getId();
@@ -95,6 +99,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @param param
      * @return
      */
+    @Override
     public List<TreeDTO> getTreeData(TreeQueryParam param) {
         return mapper.queryTreeData(param);
     }
@@ -104,6 +109,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      *
      * @param ids id集合
      */
+    @Override
     public List<T> getList(List<Long> ids) {
         List<T> list = new ArrayList<>();
         if (ids != null) {
@@ -131,6 +137,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @param ids id集合
      * @param cls 返回的数据类型
      */
+    @Override
     public <K> List<K> getList(List<Long> ids, Class<K> cls) {
         List<K> list = new ArrayList<>();
         if (ids != null) {
@@ -161,6 +168,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      *
      * @param id 数据id
      */
+    @Override
     @Transactional
     public void delete(Long id) {
         try {
@@ -176,6 +184,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      *
      * @param record 数据
      */
+    @Override
     @Transactional
     public T save(T record) {
         try {
@@ -224,6 +233,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      *
      * @param id
      */
+    @Override
     @Transactional
     @SuppressWarnings("unchecked")
     public T queryById(Long id) {
@@ -252,6 +262,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      *
      * @param entity 查询条件
      */
+    @Override
     public T selectOne(Wrapper<T> entity) {
         List<T> list = mapper.selectList(entity);
         if (list.size() == 0) return null;
@@ -263,6 +274,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      *
      * @param entity 查询条件
      */
+    @Override
     public List<T> selectList(Wrapper<T> entity) {
         return mapper.selectList(entity);
     }

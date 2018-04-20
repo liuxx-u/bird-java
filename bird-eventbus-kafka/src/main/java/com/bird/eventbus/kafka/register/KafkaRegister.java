@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * kafka事件注册器，向kafka队列中push消息
+ * @author liuxx
  */
 public class KafkaRegister implements IEventRegister {
 

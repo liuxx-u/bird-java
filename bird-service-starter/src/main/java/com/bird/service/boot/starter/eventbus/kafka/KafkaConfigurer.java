@@ -27,7 +27,7 @@ import java.util.HashMap;
  * @date 2018/3/23
  */
 @Configuration
-@ConditionalOnProperty(value = EventbusConstant.KAFKA.HOST_PROPERTY_NAME)
+@ConditionalOnProperty(value = EventbusConstant.Kafka.HOST_PROPERTY_NAME)
 @EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfigurer {
 
@@ -35,7 +35,7 @@ public class KafkaConfigurer {
     private KafkaProperties kafkaProperties;
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.KAFKA.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
+    @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
     public KafkaTemplate kafkaTemplate() {
         HashMap properties = new HashMap();
         properties.put("bootstrap.servers", kafkaProperties.getHost());
@@ -56,7 +56,7 @@ public class KafkaConfigurer {
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.KAFKA.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
+    @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
     public IEventRegister eventRegister(KafkaTemplate kafkaTemplate) {
         KafkaRegister eventRegister = new KafkaRegister();
         eventRegister.setKafkaTemplate(kafkaTemplate);
@@ -64,7 +64,7 @@ public class KafkaConfigurer {
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.KAFKA.LISTENER_GROUP_ID)
+    @ConditionalOnProperty(value = EventbusConstant.Kafka.LISTENER_GROUP_ID)
     public KafkaMessageListenerContainer kafkaListenerContainer() {
 
         KafkaListenerProperties listenerProperties = kafkaProperties.getListener();

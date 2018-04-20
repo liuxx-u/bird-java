@@ -3,6 +3,9 @@ package com.bird.service.common.mapper;
 import com.bird.core.Check;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * @author liuxx
+ */
 public class TreeQueryProvider {
     public String queryTreeData(TreeQueryParam param) {
         Check.NotEmpty(param.getValueField(), "valueField");

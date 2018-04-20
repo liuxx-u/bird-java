@@ -1,7 +1,9 @@
 package com.bird.service.common.service.query;
 
 /**
- * Created by liuxx on 2017/6/22.
+ *
+ * @author liuxx
+ * @date 2017/6/22
  */
 public interface FilterOperate {
     String AND = "and";

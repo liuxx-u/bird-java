@@ -10,7 +10,15 @@ import java.util.Date;
  */
 public interface IHasCreateTime {
 
+    /**
+     * 获取创建时间
+     * @return
+     */
     Date getCreateTime();
 
+    /**
+     * 设置创建时间
+     * @param createTime
+     */
     void setCreateTime(Date createTime);
 }

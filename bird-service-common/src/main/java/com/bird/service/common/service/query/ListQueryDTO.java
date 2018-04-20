@@ -7,14 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by liuxx on 2017/6/23.
+ *
+ * @author liuxx
+ * @date 2017/6/23
  */
 public class ListQueryDTO extends AbstractDTO {
     private String sortField;
     private int sortDirection;
     private List<FilterRule> filters;
-
-    private DataAuthority authority;//数据权限参数
+    /**
+     * 数据权限参数
+     */
+    private DataAuthority authority;
 
     public ListQueryDTO() {
         filters = new ArrayList<>();

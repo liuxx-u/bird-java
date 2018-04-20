@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by liuxx on 2017/7/31.
+ *
+ * @author liuxx
+ * @date 2017/7/31
  */
 public interface IService<T extends IModel> {
 

@@ -11,7 +11,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by liuxx on 2017/10/20.
+ *
+ * @author liuxx
+ * @date 2017/10/20
  */
 public class CommonSaveProvider {
     private static final List<String> STRING_TYPE_NAME = Arrays.asList("java.lang.String");

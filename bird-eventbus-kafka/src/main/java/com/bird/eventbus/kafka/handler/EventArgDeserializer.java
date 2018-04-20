@@ -7,6 +7,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.util.Map;
 
+/**
+ * @author liuxx
+ */
 public class EventArgDeserializer implements Deserializer<EventArg> {
     @Override
     public void configure(Map<String, ?> map, boolean b) {

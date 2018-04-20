@@ -76,7 +76,8 @@ public class DataAuthorityInterceptor implements Interceptor {
             String[] spans = sql.split("WHERE");
 
             int lastIndex = spans.length - 1;
-            if (lastIndex < 0) return invocation.proceed();//TODO：处理没有where子句的sql
+            //TODO：处理没有where子句的sql
+            if (lastIndex < 0) return invocation.proceed();
             spans[lastIndex] = " " + field + " in (" + join(userIds) + ") and " + spans[lastIndex];
 
             StringBuilder sb = new StringBuilder();

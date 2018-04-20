@@ -1,5 +1,10 @@
 package com.bird.web.sso.ticket;
 
+/**
+ * 定义session存储器
+ *
+ * @author liuxx
+ */
 public interface ITicketSessionStore {
 
     /**

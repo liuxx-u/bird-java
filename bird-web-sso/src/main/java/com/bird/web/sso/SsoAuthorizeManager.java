@@ -18,11 +18,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by liuxx on 2017/5/18.
+ *
+ * @author liuxx
+ * @date 2017/5/18
  */
 public class SsoAuthorizeManager {
     private String cookieName;
-    private Integer expire = 60; //单位：分
+    //单位：分
+    private Integer expire = 60;
     private Boolean useSessionStore = true;
 
     /**

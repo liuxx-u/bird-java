@@ -8,7 +8,9 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Des票据加密解密器
- * Created by liuxx on 2017/5/18.
+ *
+ * @author liuxx
+ * @date 2017/5/18
  */
 public class DesTicketProtector implements ITicketProtector {
     private String key = "bode1234";

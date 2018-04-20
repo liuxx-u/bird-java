@@ -2,6 +2,9 @@ package com.bird.service.common.mapper;
 
 import java.io.Serializable;
 
+/**
+ * @author liuxx
+ */
 public class TreeQueryParam implements Serializable {
     private String valueField;
     private String textField;

@@ -3,7 +3,9 @@ package com.bird.service.common.mapper;
 import java.io.Serializable;
 
 /**
- * Created by liuxx on 2017/11/2.
+ *
+ * @author liuxx
+ * @date 2017/11/2
  */
 public class CommonDeleteParam implements Serializable {
     private String tableName;

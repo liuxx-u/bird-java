@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by liuxx on 2017/10/11.
+ *
+ * @author liuxx
+ * @date 2017/10/11
  */
 public class PagedListResultDTO extends PagedResult<Map> {
 

@@ -5,6 +5,7 @@ import org.springframework.kafka.listener.config.ContainerProperties;
 
 /**
  * 继承ContainerProperties，实现系统Topics的自动查找
+ * @author liuxx
  */
 @Deprecated
 public class KafkaContainerProperties extends ContainerProperties {

@@ -7,7 +7,9 @@ import com.bird.service.common.service.dto.EntityDTO;
 import java.io.Serializable;
 
 /**
- * Created by liuxx on 2017/10/20.
+ *
+ * @author liuxx
+ * @date 2017/10/20
  */
 public class CommonSaveParam implements Serializable {
     public CommonSaveParam(EntityDTO entityDTO, Class<?> tClass) {

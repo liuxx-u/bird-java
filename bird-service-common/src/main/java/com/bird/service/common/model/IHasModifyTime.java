@@ -9,7 +9,16 @@ import java.util.Date;
  * Model-最后修改时间接口
  */
 public interface IHasModifyTime {
+
+    /**
+     * 获取修改时间
+     * @return
+     */
     Date getModifiedTime();
 
+    /**
+     * 设置修改时间
+     * @param modifiedTime
+     */
     void setModifiedTime(Date modifiedTime);
 }

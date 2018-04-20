@@ -1,6 +1,5 @@
 package com.bird.web.sso;
 
-import com.bird.web.sso.client.IUserClientStore;
 import com.bird.web.sso.exception.ForbiddenException;
 import com.bird.web.sso.exception.UnAuthorizedException;
 import com.bird.web.sso.permission.IUserPermissionChecker;
@@ -12,10 +11,11 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
- * Created by liuxx on 2017/5/18.
+ *
+ * @author liuxx
+ * @date 2017/5/18
  *
  * 权限验证拦截器
  */

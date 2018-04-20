@@ -2,6 +2,9 @@ package com.bird.web.sso.client;
 
 import java.io.Serializable;
 
+/**
+ * @author liuxx
+ */
 public class ClientInfo implements Serializable {
     private String clientName;
     private String host;

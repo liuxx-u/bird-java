@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
+/**
+ * @author liuxx
+ */
 public class EventArgSerializer implements Serializer<EventArg> {
     @Override
     public void configure(Map<String, ?> map, boolean b) {

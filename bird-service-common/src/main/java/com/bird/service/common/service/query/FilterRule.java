@@ -3,7 +3,9 @@ package com.bird.service.common.service.query;
 import java.io.Serializable;
 
 /**
- * Created by liuxx on 2017/6/22.
+ *
+ * @author liuxx
+ * @date 2017/6/22
  */
 public class FilterRule implements Serializable {
     private String field;

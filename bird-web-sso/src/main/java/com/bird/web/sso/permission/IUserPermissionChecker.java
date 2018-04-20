@@ -1,5 +1,10 @@
 package com.bird.web.sso.permission;
 
+/**
+ * 用户权限检查器
+ *
+ * @author liuxx
+ */
 public interface IUserPermissionChecker {
 
     /**

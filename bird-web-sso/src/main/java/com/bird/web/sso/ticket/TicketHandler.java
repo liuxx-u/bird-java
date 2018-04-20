@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
- * Created by liuxx on 2017/5/17.
+ *
+ * @author liuxx
+ * @date 2017/5/17
  */
 public class TicketHandler {
     private boolean autoRefresh;

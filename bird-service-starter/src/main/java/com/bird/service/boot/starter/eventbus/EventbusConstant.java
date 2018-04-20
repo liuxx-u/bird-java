@@ -10,7 +10,7 @@ public interface EventbusConstant {
      */
     String PREFIX = "eventbus";
 
-    interface KAFKA {
+    interface Kafka {
         /**
          * kafka 配置前缀
          */

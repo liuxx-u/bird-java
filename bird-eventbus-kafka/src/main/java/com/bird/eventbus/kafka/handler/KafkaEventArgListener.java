@@ -7,6 +7,7 @@ import org.springframework.kafka.listener.MessageListener;
 
 /**
  * kafka事件监听器
+ * @author liuxx
  */
 public class KafkaEventArgListener implements MessageListener<String,EventArg> {
 

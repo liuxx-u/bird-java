@@ -8,6 +8,7 @@ import java.util.UUID;
 
 /**
  * redis session存储器
+ * @author liuxx
  */
 public class RedisTicketSessionStore implements ITicketSessionStore {
     private final String Ticket_CacheKey_Prefix = Constant.Cache.NAMESPACE + "sso.token:";

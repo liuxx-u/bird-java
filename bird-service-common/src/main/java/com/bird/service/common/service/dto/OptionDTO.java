@@ -3,10 +3,12 @@ package com.bird.service.common.service.dto;
 import com.bird.core.NameValue;
 
 /**
- * Created by liuxx on 2017/10/20.
+ *
+ * @author liuxx
+ * @date 2017/10/20
  */
 public class OptionDTO extends NameValue {
-    private boolean disable;
+    private Boolean disable;
 
     public boolean isDisable() {
         return disable;

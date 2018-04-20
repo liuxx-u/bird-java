@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by liuxx on 2017/10/10.
+ *
+ * @author liuxx
+ * @date 2017/10/10
  */
 public class PagedQueryProvider {
     private static final Map<String, String> OperateMap;
@@ -32,8 +34,9 @@ public class PagedQueryProvider {
     public String queryPagedList(PagedQueryParam param) {
         PagedListQueryDTO query = param.getQuery();
 
+        //默认Id倒序
         String sortField = "id";
-        int sortDirection = ListSortDirection.DESC;//默认Id倒序
+        int sortDirection = ListSortDirection.DESC;
         if (StringUtils.isNotBlank(query.getSortField())) {
             sortField = query.getSortField();
             sortDirection = query.getSortDirection();

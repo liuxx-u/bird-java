@@ -10,7 +10,9 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * Created by liuxx on 2017/10/10.
+ *
+ * @author liuxx
+ * @date 2017/10/10
  */
 public class PagedQueryParam implements Serializable {
 
@@ -95,7 +97,7 @@ public class PagedQueryParam implements Serializable {
             List<Field> fields = new ArrayList<>();
 
             Class tempClass = tClass;
-            while (tempClass != null && !tempClass.getName().toLowerCase().equals("java.lang.object")) {
+            while (tempClass != null && !tempClass.getName().equals(Object.class.getName())) {
                 Field[] tempFields = tempClass.getDeclaredFields();
                 fields.addAll(Arrays.asList(tempFields));
                 tempClass = tempClass.getSuperclass();
