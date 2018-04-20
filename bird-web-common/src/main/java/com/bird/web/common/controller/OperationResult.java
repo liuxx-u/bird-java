@@ -25,11 +25,9 @@ public class OperationResult<T extends Object> implements Serializable {
     }
 
     public static OperationResult Fail(AbstractException exception) {
-        String message = StringUtils.isNotBlank(exception.getMessage())
-                ? exception.getMessage()
-                : exception.getHttpCode().msg();
+        String message = exception.getMessage();
 
-        return new OperationResult(exception.getHttpCode().value(), message);
+        return new OperationResult(exception.getCode(), message);
     }
 
     public OperationResult() {

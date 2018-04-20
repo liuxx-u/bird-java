@@ -14,7 +14,7 @@ public class ForbiddenException extends AbstractException {
     }
 
     @Override
-    public HttpCode getHttpCode() {
-        return HttpCode.FORBIDDEN;
+    public Integer getCode() {
+        return HttpCode.FORBIDDEN.value();
     }
 }

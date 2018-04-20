@@ -13,7 +13,7 @@ public class UnAuthorizedException extends AbstractException {
     }
 
     @Override
-    public HttpCode getHttpCode() {
-        return HttpCode.UNAUTHORIZED;
+    public Integer getCode() {
+        return HttpCode.UNAUTHORIZED.value();
     }
 }

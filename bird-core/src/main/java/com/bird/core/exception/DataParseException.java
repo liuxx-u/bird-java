@@ -25,8 +25,8 @@ public class DataParseException extends AbstractException {
     }
 
     @Override
-    public HttpCode getHttpCode() {
-        return HttpCode.INTERNAL_SERVER_ERROR;
+    public Integer getCode() {
+        return HttpCode.INTERNAL_SERVER_ERROR.value();
     }
 
 }

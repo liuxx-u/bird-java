@@ -14,7 +14,7 @@ public class UserFriendlyException extends AbstractException {
     }
 
     @Override
-    public HttpCode getHttpCode() {
-        return HttpCode.BAD_REQUEST;
+    public Integer getCode() {
+        return HttpCode.BAD_REQUEST.value();
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  * @author liuxx
  * @date 2018/3/23
  */
-@ConfigurationProperties(prefix = EventbusConstant.KAFKA.PREFIX)
+@ConfigurationProperties(prefix = EventbusConstant.Kafka.PREFIX)
 public class KafkaProperties {
 
     private String host;

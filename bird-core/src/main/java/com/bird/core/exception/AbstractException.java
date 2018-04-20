@@ -23,5 +23,9 @@ public abstract class AbstractException extends RuntimeException {
         super(message, ex);
     }
 
-    public abstract HttpCode getHttpCode();
+    /**
+     * 获取异常对应的业务编码
+     * @return
+     */
+    public abstract Integer getCode();
 }
