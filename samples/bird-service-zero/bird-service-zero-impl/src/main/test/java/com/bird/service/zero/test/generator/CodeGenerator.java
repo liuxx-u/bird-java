@@ -75,7 +75,7 @@ public class CodeGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setParent(PACKAGE_NAME);
-        pc.setModuleName("test");
+        pc.setModuleName(MODULE_NAME);
         mpg.setPackageInfo(pc);
 
 //        // 注入自定义配置，可以在 VM 中使用 cfg.abc
