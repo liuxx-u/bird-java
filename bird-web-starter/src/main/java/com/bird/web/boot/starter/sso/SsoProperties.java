@@ -9,9 +9,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = SsoConstant.PREFIX)
 public class SsoProperties {
     /**
-     * cookie名称，默认为sso.token
+     * cookie名称，默认为Sso-Token
      */
-    private String cookieName = "sso.token";
+    private String cookieName = "Sso-Token";
 
     /**
      * 登录地址

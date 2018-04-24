@@ -72,7 +72,7 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowedHeaders("Origin", "X-Requested-With", "Content-Type", "Accept", "sso.token")
+                .allowedHeaders("Origin", "X-Requested-With", "Content-Type", "Accept", "Sso-Token")
                 .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(false)
                 .maxAge(3600);
