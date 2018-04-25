@@ -11,6 +11,7 @@ import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.mapper.TreeQueryParam;
 import com.bird.service.common.model.*;
+import com.bird.service.common.exception.RollbackException;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
 import org.apache.commons.lang3.ArrayUtils;
@@ -72,7 +73,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @param param
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = RollbackException.class)
     public void save(CommonSaveParam param) {
         Long id = param.getEntityDTO().getId();
         if (id == null || id <= 0) {
@@ -169,7 +170,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @param id 数据id
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = RollbackException.class)
     public void delete(Long id) {
         try {
             mapper.deleteById(id);
@@ -185,7 +186,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @param record 数据
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = RollbackException.class)
     public T save(T record) {
         try {
             if (record.getId() == null || record.getId() == 0) {
@@ -234,7 +235,6 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @param id
      */
     @Override
-    @Transactional
     @SuppressWarnings("unchecked")
     public T queryById(Long id) {
         String key = getCacheKey(id);

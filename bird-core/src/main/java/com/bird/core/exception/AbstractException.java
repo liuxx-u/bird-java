@@ -1,7 +1,5 @@
 package com.bird.core.exception;
 
-import com.bird.core.HttpCode;
-
 /**
  *
  * @author liuxx

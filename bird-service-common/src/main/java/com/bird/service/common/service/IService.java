@@ -34,7 +34,6 @@ public interface IService<T extends IModel> {
      * param.getEntityDTO().getId()>0 则更新，否则新增
      * @param param
      */
-    @Transactional
     void save(CommonSaveParam param);
 
     /**
@@ -67,7 +66,6 @@ public interface IService<T extends IModel> {
      *
      * @param id 数据id
      */
-    @Transactional
     void delete(Long id);
 
     /**
@@ -76,7 +74,6 @@ public interface IService<T extends IModel> {
      * @param record 数据
      * @return
      */
-    @Transactional
     T save(T record);
 
     /**
