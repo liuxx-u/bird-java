@@ -1,15 +1,15 @@
 package com.bird.web.common.utils;
 
+import com.bird.web.common.WebConstant;
 import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 /**
  * @author liuxx
  * @date 2018/4/18
  */
 public class RequestHelper {
-
-    private static final String UNKNOWN_IP = "unknown";
 
     /**
      * 获取请求的真实ip地址
@@ -61,9 +61,25 @@ public class RequestHelper {
      * @return
      */
     private static boolean isEffectiveIp(String ip) {
-        if (StringUtils.isBlank(ip) || UNKNOWN_IP.equals(ip)) return false;
+        if (StringUtils.isBlank(ip) || WebConstant.UNKNOWN_IP.equals(ip)) return false;
 
         return true;
+    }
+
+    /**
+     * 是否是Multipart请求
+     * @param request 请求
+     * @return
+     */
+    public static boolean isMultipartContent(HttpServletRequest request) {
+        String contentType = request.getContentType();
+        if (contentType == null) {
+            return false;
+        }
+        if (contentType.toLowerCase(Locale.ENGLISH).startsWith(WebConstant.MULTIPART)) {
+            return true;
+        }
+        return false;
     }
 
 }
