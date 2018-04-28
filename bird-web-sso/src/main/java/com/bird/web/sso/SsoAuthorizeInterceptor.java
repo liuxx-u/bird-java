@@ -27,9 +27,17 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
     @Inject
     private IUserPermissionChecker permissionChecker;
 
+    /**
+     * 拦截器处理方法
+     * @param request request
+     * @param response response
+     * @param handler 跨域第一次OPTIONS请求时handler为AbstractHandlerMapping.PreFlightHandler，不拦截
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!(handler instanceof HandlerMethod)) return false;
+        if (!(handler instanceof HandlerMethod)) return true;
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         SsoAuthorize authorize = handlerMethod.getMethodAnnotation(SsoAuthorize.class);

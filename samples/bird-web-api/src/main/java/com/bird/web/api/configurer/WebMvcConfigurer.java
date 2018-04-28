@@ -56,7 +56,10 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
         return converter;
     }
 
-    //添加转换器
+    /**
+     * 添加转换器
+     * @param converters
+     */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         //将我们定义的时间格式转换器添加到转换器列表中,
