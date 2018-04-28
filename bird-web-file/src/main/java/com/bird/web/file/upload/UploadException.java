@@ -7,6 +7,10 @@ import com.bird.core.exception.AbstractException;
  * @date 2018/4/25
  */
 public class UploadException extends AbstractException {
+
+    public UploadException(String message) {
+        super(message);
+    }
     /**
      * 获取异常对应的业务编码
      *

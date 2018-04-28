@@ -1,8 +1,6 @@
 package com.bird.web.file.upload.handler;
 
-
-import com.bird.web.file.FileItem;
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liuxx
@@ -14,8 +12,8 @@ public interface IFileHandler {
 
     /**
      * 文件处理
-     * @param files 文件信息
+     * @param file 文件信息
      * @return
      */
-    List<FileItem> handle(List<FileItem> files);
+    void handle(MultipartFile file);
 }

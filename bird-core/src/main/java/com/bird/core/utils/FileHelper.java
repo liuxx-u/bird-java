@@ -26,6 +26,26 @@ public class FileHelper extends FileUtils {
     private static Logger log = LoggerFactory.getLogger(FileHelper.class);
 
     /**
+     * 获取文件后缀名
+     * @param fileName
+     * @return
+     */
+    public static String getSuffix(String fileName) {
+        return StringUtils.isBlank(fileName) ? null : fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    /**
+     * 获取文件后缀名
+     * @param file
+     * @return
+     */
+    public static String getSuffix(File file){
+        if(file == null) return null;
+        String fileName = file.getName();
+        return getSuffix(fileName);
+    }
+
+    /**
      * 复制单个文件，如果目标文件存在，则不覆盖
      * @param srcFileName 待复制的文件名
      * @param descFileName 目标文件名

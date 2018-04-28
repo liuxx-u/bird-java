@@ -1,11 +1,13 @@
 package com.bird.web.file.upload;
 
-import com.bird.web.common.utils.RequestHelper;
-import org.apache.commons.fileupload.FileUploadBase;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
+import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuxx
@@ -13,24 +15,10 @@ import java.io.InputStream;
  */
 public class ServletUploadContext implements IUploadContext {
 
-    private final HttpServletRequest request;
+    private final MultipartHttpServletRequest request;
 
-    public ServletUploadContext(HttpServletRequest request){this.request = request;}
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getCharacterEncoding() {
-        return this.getCharacterEncoding();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getContentType() {
-        return this.getContentType();
+    public ServletUploadContext(@NonNull MultipartHttpServletRequest request) {
+        this.request = request;
     }
 
     /**
@@ -40,9 +28,9 @@ public class ServletUploadContext implements IUploadContext {
     public long getContentLength() {
         long size;
         try {
-            size = Long.parseLong(request.getHeader(FileUploadBase.CONTENT_LENGTH));
+            size = Long.parseLong(request.getHeader(HttpHeaders.CONTENT_LENGTH));
         } catch (NumberFormatException e) {
-            size = request.getContentLength();
+            size = request.getContentLengthLong();
         }
         return size;
     }
@@ -51,15 +39,63 @@ public class ServletUploadContext implements IUploadContext {
      * {@inheritDoc}
      */
     @Override
-    public InputStream getInputStream() throws IOException {
-        return request.getInputStream();
+    public String getHeader(String name) {
+        return request.getHeader(name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isMultipartContent() {
-        return RequestHelper.isMultipartContent(request);
+    public String getParameter(String name) {
+        return request.getParameter(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Enumeration<String> getParameterNames() {
+        return request.getParameterNames();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        return request.getParameterMap();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterator<String> getFileNames() {
+        return request.getFileNames();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MultipartFile getFile(String name) {
+        return request.getFile(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<MultipartFile> getFiles(String name) {
+        return request.getFiles(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, MultipartFile> getFileMap() {
+        return request.getFileMap();
     }
 }

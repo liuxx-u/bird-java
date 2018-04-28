@@ -26,11 +26,11 @@ public class UploadResult implements Serializable {
         this.path = path;
     }
 
-    public static UploadResult Success(String path){
+    public static UploadResult success(String path){
         return new UploadResult(true,"上传成功",path);
     }
 
-    public static UploadResult Fail(String message){
+    public static UploadResult fail(String message){
         return new UploadResult(false,message,null);
     }
 
