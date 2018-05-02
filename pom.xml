@@ -50,8 +50,7 @@
         <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
 
         <!--mybatis-plus版本号-->
-        <mybatisplus.version>2.1.9</mybatisplus.version>
-        <mybatisplus-starter.version>1.0.5</mybatisplus-starter.version>
+        <mybatisplus.version>2.2.0</mybatisplus.version>
         <mysql-connector.version>5.1.46</mysql-connector.version>
         <druid.version>1.0.31</druid.version>
 
