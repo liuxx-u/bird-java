@@ -1,8 +1,6 @@
-package com.bird.web.common.controller;
+package com.bird.core;
 
-import com.bird.core.HttpCode;
 import com.bird.core.exception.AbstractException;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 

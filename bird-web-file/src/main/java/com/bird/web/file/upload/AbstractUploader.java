@@ -86,10 +86,10 @@ public abstract class AbstractUploader {
             if (validator != null) {
                 if (listenerEnable) uploadListener.beforeValidate(file, context);
                 ValidateResult validateResult = validator.validate(file);
-                if(!validateResult.isSuccess()){
+                if (validateResult != null && !validateResult.isSuccess()) {
                     return UploadResult.fail(validateResult.getErrorInfo());
                 }
-                if(listenerEnable)uploadListener.afterValidate(file,context,validateResult);
+                if (listenerEnable) uploadListener.afterValidate(file, context, validateResult);
             }
 
             //文件处理
@@ -103,6 +103,7 @@ public abstract class AbstractUploader {
 
             //文件存储
             String url = storage.save(file, context);
+
             return UploadResult.success(url);
         }
 

@@ -44,7 +44,7 @@ public class HomeController {
     public UploadResult upload(HttpServletRequest request) throws IOException{
 
         SimpleDiskFileStorage storage = new SimpleDiskFileStorage();
-        storage.setPath("D:/upload");
+        storage.setDir("D:/upload");
         storage.setUrlPrefix("http://localhost:8080/");
 
         ServletUploader uploader = new ServletUploader();

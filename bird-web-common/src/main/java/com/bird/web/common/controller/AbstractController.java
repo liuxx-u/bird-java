@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bird.core.Constant;
 import com.bird.core.HttpCode;
+import com.bird.core.OperationResult;
 import com.bird.core.exception.AbstractException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
