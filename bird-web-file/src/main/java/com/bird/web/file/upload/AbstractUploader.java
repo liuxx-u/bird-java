@@ -102,9 +102,11 @@ public abstract class AbstractUploader {
             }
 
             //文件存储
+            if (listenerEnable) uploadListener.beforeStorage(file, context);
             String url = storage.save(file, context);
-
-            return UploadResult.success(url);
+            UploadResult result = UploadResult.success(url);
+            if (listenerEnable) uploadListener.afterStorage(file, context, result);
+            return result;
         }
 
         return null;

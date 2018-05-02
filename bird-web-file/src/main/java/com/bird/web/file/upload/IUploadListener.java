@@ -52,5 +52,5 @@ public interface IUploadListener {
      * @param file 文件
      * @param context 上下文信息
      */
-    void afterStorage(MultipartFile file,IUploadContext context);
+    void afterStorage(MultipartFile file,IUploadContext context,UploadResult result);
 }

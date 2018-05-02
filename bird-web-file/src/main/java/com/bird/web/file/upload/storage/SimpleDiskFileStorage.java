@@ -5,6 +5,7 @@ import com.bird.core.utils.FileHelper;
 import com.bird.web.file.upload.IUploadContext;
 import com.bird.web.file.upload.UploadException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
@@ -44,17 +45,23 @@ public class SimpleDiskFileStorage implements IFileStorage {
         if (StringUtils.isBlank(this.dir)) {
             throw new UploadException("文件保存路径不存在");
         }
+        if (StringUtils.isBlank(urlPrefix)) {
+            urlPrefix = String.format("http://%s/", context.getHeader(HttpHeaders.HOST));
+        }
 
-        String newFileName =getNewFileName(file,context);
+        String newFileName = getNewFileName(file, context);
         String additionalPath = getSafePath(StringUtils.stripStart(getAdditionalPath(file, context), SEPARATOR));
         String saveDir = getSafePath(this.dir) + additionalPath;
         File dir = new File(saveDir);
         if (!dir.exists()) {
             dir.mkdirs();
         }
+        if (!dir.canWrite()) {
+            throw new IOException("上传目录没有写权限");
+        }
 
         byte[] bytes = file.getBytes();
-        BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream( saveDir + newFileName));
+        BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(saveDir + newFileName));
         buffStream.write(bytes);
         buffStream.close();
 
@@ -107,7 +114,7 @@ public class SimpleDiskFileStorage implements IFileStorage {
         return this.dir;
     }
 
-    public void setPath(String dir) {
+    public void setDir(String dir) {
         this.dir = dir;
     }
 
