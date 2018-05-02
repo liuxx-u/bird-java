@@ -45,19 +45,19 @@ public class TreeDTO extends AbstractDTO {
         this.parentValue = parentValue;
     }
 
-    public boolean isFolder() {
-        return folder;
-    }
-
-    public void setFolder(boolean folder) {
-        this.folder = folder;
-    }
-
     public String getLabel() {
         return label;
     }
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public Boolean getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Boolean folder) {
+        this.folder = folder;
     }
 }
