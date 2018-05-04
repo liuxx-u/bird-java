@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.enums.FieldFill;
  */
 public abstract class AbstractModel extends AbstractPureModel implements ISoftDelete,IHasCreateTime,IHasModifyTime {
     @TableLogic
+    @TableField(fill = FieldFill.INSERT)
     private Boolean delFlag;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

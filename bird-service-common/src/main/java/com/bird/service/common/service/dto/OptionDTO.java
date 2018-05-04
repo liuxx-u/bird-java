@@ -10,11 +10,11 @@ import com.bird.core.NameValue;
 public class OptionDTO extends NameValue {
     private Boolean disable;
 
-    public boolean isDisable() {
+    public Boolean getDisable() {
         return disable;
     }
 
-    public void setDisable(boolean disable) {
+    public void setDisable(Boolean disable) {
         this.disable = disable;
     }
 }

@@ -14,6 +14,7 @@ import java.util.Date;
 public class AuditMetaObjectHandler extends MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
+        setFieldValByName("delFlag", false, metaObject);
         setFieldValByName("createTime", new Date(), metaObject);
     }
 
