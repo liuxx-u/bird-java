@@ -1,11 +1,16 @@
 package com.bird.web.api.configurer;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bird.web.common.interceptor.IpAddressInterceptor;
 import com.bird.web.sso.SsoAuthorizeInterceptor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -43,16 +48,24 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
     }
 
     /**
-     * 注入时间格式转换器
+     * 注入JSON序列化工具
      * @return
      */
     @Bean
-    public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-        converter.setObjectMapper(mapper);
+    public FastJsonHttpMessageConverter fastJsonHttpMessageConverter() {
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        converter.setSupportedMediaTypes(ImmutableList.of(MediaType.TEXT_HTML,MediaType.APPLICATION_JSON));
+
+        FastJsonConfig config = new FastJsonConfig();
+        config.setSerializerFeatures(
+                SerializerFeature.QuoteFieldNames
+                ,SerializerFeature.WriteDateUseDateFormat
+                ,SerializerFeature.WriteNullStringAsEmpty
+                ,SerializerFeature.WriteNullListAsEmpty
+                ,SerializerFeature.WriteNullNumberAsZero
+                ,SerializerFeature.WriteNullBooleanAsFalse
+                ,SerializerFeature.PrettyFormat);
+        converter.setFastJsonConfig(config);
         return converter;
     }
 
@@ -62,9 +75,7 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        //将我们定义的时间格式转换器添加到转换器列表中,
-        //这样jackson格式化时候但凡遇到Date类型就会转换成我们定义的格式
-        converters.add(jackson2HttpMessageConverter());
+        converters.add(fastJsonHttpMessageConverter());
     }
 
     /**
