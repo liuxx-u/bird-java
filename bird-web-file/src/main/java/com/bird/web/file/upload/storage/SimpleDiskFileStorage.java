@@ -36,12 +36,15 @@ public class SimpleDiskFileStorage implements IFileStorage {
     private String urlPrefix;
 
     /**
-     * 文件流保存
+     * 文件保存
      *
-     * @param file 文件
+     * @param file    上传的文件
+     * @param bytes   处理后的文件数据
+     * @param context 上下文信息
+     * @return 上传成功后的URL地址
      */
     @Override
-    public String save(MultipartFile file, IUploadContext context) throws UploadException, IOException {
+    public String save(MultipartFile file,byte[] bytes, IUploadContext context) throws UploadException, IOException {
         if (StringUtils.isBlank(this.dir)) {
             throw new UploadException("文件保存路径不存在");
         }
@@ -60,7 +63,6 @@ public class SimpleDiskFileStorage implements IFileStorage {
             throw new IOException("上传目录没有写权限");
         }
 
-        byte[] bytes = file.getBytes();
         BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(saveDir + newFileName));
         buffStream.write(bytes);
         buffStream.close();

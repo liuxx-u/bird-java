@@ -3,11 +3,11 @@ package com.bird.core.utils;
 import com.bird.core.Position;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author liuxx
@@ -293,30 +293,41 @@ public class ImageHelper {
      * @param text 水印文字
      * @param font 水印的字体
      * @param color 水印的颜色
-     * @param x 修正值
-     * @param y 修正值
+     * @param position 水印位置
      * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
      */
-    public static void mark(String srcPath, String targetPath,String text, Font font , Color color,int x,int y, float alpha) {
+    public static void mark(String srcPath, String targetPath,String text, Font font ,Color color,Position position, float alpha) {
         if (font == null) font = DEFAULT_FONT;
         if (alpha < 0 || alpha > 1) {
             alpha = DEFAULT_ALPHA;
         }
         try {
             Image srcImg = ImageIO.read(new File(srcPath));
-            int width = srcImg.getWidth(null);
-            int height = srcImg.getHeight(null);
+            int srcWidth = srcImg.getWidth(null);
+            int srcHeight = srcImg.getHeight(null);
 
-            BufferedImage targetImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            Graphics2D g = targetImg.createGraphics();
-            g.drawImage(srcImg, 0, 0, width, height, null);
-            g.setFont(font);
-            g.setColor(color);
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-            // 在指定坐标绘制水印文字
-            g.drawString(text, (width - (getLength(text) * font.getSize())) / 2 + x, (height - font.getSize()) / 2 + y);
-            g.dispose();
-            ImageIO.write(targetImg, "JPEG", new File(targetPath));
+            int markWidth = getLength(text) * font.getSize();
+            int markHeight = font.getSize();
+
+            Point markPoint = getMarkPoint(srcWidth, srcHeight, markWidth, markHeight, position);
+            if (markPoint != null) {
+                BufferedImage targetImg = new BufferedImage(srcWidth, srcHeight, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = targetImg.createGraphics();
+                g.drawImage(srcImg, 0, 0, srcWidth, srcHeight, null);
+                g.setFont(font);
+                g.setColor(color);
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
+                //g.drawString()方法的x,y是指左下角的坐标
+                int y = markPoint.y + markHeight;
+                //处理文字底部超出的情况
+                if(y == srcHeight) {
+                    y -= 5;
+                }
+                g.drawString(text, markPoint.x, y);
+                g.dispose();
+                ImageIO.write(targetImg, "JPEG", new File(targetPath));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -328,9 +339,10 @@ public class ImageHelper {
      * @param srcPath 源图像地址
      * @param markPath 水印图片地址
      * @param targetPath 目标图像地址
+     * @param position 水印位置
      * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
      */
-    public static void mark(String srcPath, String markPath, String targetPath, float alpha) {
+    public static void mark(String srcPath, String markPath, String targetPath,Position position, float alpha) {
         if (alpha < 0 || alpha > 1) {
             alpha = DEFAULT_ALPHA;
         }
@@ -339,24 +351,103 @@ public class ImageHelper {
             int srcWidth = srcImg.getWidth(null);
             int srcHeight = srcImg.getHeight(null);
 
-            BufferedImage targetImg = new BufferedImage(srcWidth, srcHeight,BufferedImage.TYPE_INT_RGB);
-            Graphics2D g = targetImg.createGraphics();
-            g.drawImage(srcImg, 0, 0, srcWidth, srcHeight, null);
-
             // 水印文件
             Image markImg = ImageIO.read(new File(markPath));
             int markWidth = markImg.getWidth(null);
             int markHeight = markImg.getHeight(null);
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP,alpha));
 
-            int x = srcWidth - markWidth;
-            int y = srcHeight - markHeight;
-            g.drawImage(markImg, x,y, markWidth, markHeight, null);
+            Point markPoint = getMarkPoint(srcWidth, srcHeight, markWidth, markHeight, position);
+            if (markPoint != null) {
+                BufferedImage targetImg = new BufferedImage(srcWidth, srcHeight, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = targetImg.createGraphics();
+                g.drawImage(srcImg, 0, 0, srcWidth, srcHeight, null);
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
+                g.drawImage(markImg, markPoint.x, markPoint.y, markWidth, markHeight, null);
 
-            g.dispose();
-            ImageIO.write(targetImg,  "JPEG", new File(targetPath));
+                g.dispose();
+                ImageIO.write(targetImg, "JPEG", new File(targetPath));
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 给图片流添加水印
+     * @param srcStream 源图像流
+     * @param markStream 水印文件流
+     * @param position 水印位置
+     * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+     * @return 输出流
+     */
+    public static OutputStream mark(InputStream srcStream, InputStream markStream, Position position, float alpha){
+        if (alpha < 0 || alpha > 1) {
+            alpha = DEFAULT_ALPHA;
+        }
+        OutputStream targetStream = new ByteArrayOutputStream();
+        try {
+            Image srcImg = ImageIO.read(srcStream);
+            int srcWidth = srcImg.getWidth(null);
+            int srcHeight = srcImg.getHeight(null);
+
+            // 水印文件
+            Image markImg = ImageIO.read(markStream);
+            int markWidth = markImg.getWidth(null);
+            int markHeight = markImg.getHeight(null);
+
+            Point markPoint = getMarkPoint(srcWidth, srcHeight, markWidth, markHeight, position);
+            if (markPoint != null) {
+                BufferedImage targetImg = new BufferedImage(srcWidth, srcHeight, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = targetImg.createGraphics();
+                g.drawImage(srcImg, 0, 0, srcWidth, srcHeight, null);
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
+                g.drawImage(markImg, markPoint.x, markPoint.y, markWidth, markHeight, null);
+                g.dispose();
+
+                ImageIO.write(targetImg, "JPEG", targetStream);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return targetStream;
+    }
+
+    /**
+     * 计算水印位置（获取水印左上角坐标）
+     * @param srcWidth 原图宽度
+     * @param srcHeight 原图高度
+     * @param markWidth 水印宽度
+     * @param markHeight 水印高度
+     * @param position 水印位置
+     * @return 水印位置
+     */
+    private static Point getMarkPoint(int srcWidth,int srcHeight,int markWidth,int markHeight,Position position) {
+        if (srcWidth <= 0 || srcHeight <= 0 || markWidth <= 0 || markHeight <= 0) {
+            return null;
+        }
+        switch (position) {
+            case LEFT_TOP:
+                return new Point(0, 0);
+            case LEFT_MIDDLE:
+                return new Point(0, (srcHeight - markHeight) / 2);
+            case LEFT_BOTTOM:
+                return new Point(0, srcHeight - markHeight);
+            case MIDDLE_TOP:
+                return new Point((srcWidth - markWidth) / 2, 0);
+            case MIDDLE_MIDDLE:
+                return new Point((srcWidth - markWidth) / 2, (srcHeight - markHeight) / 2);
+            case MIDDLE_BOTTOM:
+                return new Point((srcWidth - markWidth) / 2, srcHeight - markHeight);
+            case RIGHT_TOP:
+                return new Point(srcWidth - markWidth, 0);
+            case RIGHT_MIDDLE:
+                return new Point(srcWidth - markWidth, (srcHeight - markHeight) / 2);
+            case RIGHT_BOTTOM:
+                return new Point(srcWidth - markWidth, srcHeight - markHeight);
+            default:
+                return null;
         }
     }
 

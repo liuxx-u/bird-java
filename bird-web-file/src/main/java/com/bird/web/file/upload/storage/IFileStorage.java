@@ -16,9 +16,11 @@ public interface IFileStorage {
 
     /**
      * 文件保存
-     * @param file 保存的文件
+     *
+     * @param file    上传的文件
+     * @param bytes   处理后的文件数据
      * @param context 上下文信息
      * @return 上传成功后的URL地址
      */
-    String save(MultipartFile file, IUploadContext context) throws UploadException,IOException;
+    String save(MultipartFile file, byte[] bytes, IUploadContext context) throws UploadException, IOException;
 }

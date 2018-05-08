@@ -95,15 +95,18 @@ public abstract class AbstractUploader {
             //文件处理
             String suffix = FileHelper.getSuffix(file.getOriginalFilename());
             Object handlers = MapUtils.getObject(fileHandlerMap, suffix);
+            byte[] bytes = file.getBytes();
             if (handlers != null) {
                 if (listenerEnable) uploadListener.beforeHandle(file, context);
-                ((List<IFileHandler>) handlers).forEach(handler -> handler.handle(file));
+                for (IFileHandler handler : (List<IFileHandler>) handlers) {
+                    bytes = handler.handle(bytes);
+                }
                 if (listenerEnable) uploadListener.afterHandle(file, context);
             }
 
             //文件存储
             if (listenerEnable) uploadListener.beforeStorage(file, context);
-            String url = storage.save(file, context);
+            String url = storage.save(file, bytes, context);
             UploadResult result = UploadResult.success(url);
             if (listenerEnable) uploadListener.afterStorage(file, context, result);
             return result;

@@ -1,7 +1,5 @@
 package com.bird.web.file.upload.handler;
 
-import org.springframework.web.multipart.MultipartFile;
-
 /**
  * @author liuxx
  * @date 2018/4/25
@@ -12,8 +10,8 @@ public interface IFileHandler {
 
     /**
      * 文件处理
-     * @param file 文件信息
-     * @return
+     * @param bytes 文件信息
+     * @return 处理完成的文件信息
      */
-    void handle(MultipartFile file);
+    byte[] handle(byte[] bytes);
 }
