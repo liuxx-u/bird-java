@@ -86,7 +86,8 @@ public class ImageHelper {
      * @param fillEmpty 比例不对时是否需要补白
      */
     public static void scale(String srcPath, String targetPath, int width, int height, boolean fillEmpty) {
-        if (width <= 0 || height <= 0) return;
+        //目标宽高不能同时为0
+        if (width <= 0 && height <= 0) return;
         try {
             BufferedImage srcImg = ImageIO.read(new File(srcPath));
             int srcWidth = srcImg.getWidth();
@@ -95,12 +96,13 @@ public class ImageHelper {
             int targetHeight = height;
 
             // 使用较长的边作为缩放基准
-            if (srcWidth >= srcHeight) {
+            if (srcWidth >= srcHeight || targetHeight <= 0) {
                 targetHeight = (int) (Integer.valueOf(width).doubleValue() / srcWidth * srcHeight);
-            } else {
-                targetWidth = (int)(Integer.valueOf(height).doubleValue() / srcHeight * srcWidth);
             }
-            BufferedImage targetImg = new BufferedImage(targetWidth,targetHeight,BufferedImage.TYPE_INT_RGB);
+            if (srcWidth < srcHeight || targetWidth <= 0) {
+                targetWidth = (int) (Integer.valueOf(height).doubleValue() / srcHeight * srcWidth);
+            }
+            BufferedImage targetImg = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
             Graphics g = targetImg.getGraphics();
             g.drawImage(srcImg.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT), 0, 0, null);
             g.dispose();
