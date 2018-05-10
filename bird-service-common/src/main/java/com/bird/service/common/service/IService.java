@@ -1,14 +1,13 @@
 package com.bird.service.common.service;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.bird.core.exception.AbstractException;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.mapper.TreeQueryParam;
-import com.bird.service.common.model.AbstractModel;
 import com.bird.service.common.model.IModel;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,21 +26,21 @@ public interface IService<T extends IModel> {
      * @param param 筛选条件
      * @return 查询的结果
      */
-    PagedListResultDTO queryPagedList(PagedQueryParam param);
+    PagedListResultDTO queryPagedList(PagedQueryParam param) throws AbstractException;
 
     /**
      * 以DTO为根据的通用保存方法
      * param.getEntityDTO().getId()>0 则更新，否则新增
      * @param param
      */
-    void save(CommonSaveParam param);
+    void save(CommonSaveParam param) throws AbstractException;
 
     /**
      * 定义通用的 获取树数据方法
      * @param param
      * @return
      */
-    List<TreeDTO> getTreeData(TreeQueryParam param);
+    List<TreeDTO> getTreeData(TreeQueryParam param) throws AbstractException;
 
     /**
      * 根据id集合获取数据
@@ -49,7 +48,7 @@ public interface IService<T extends IModel> {
      * @param ids id集合
      * @return
      */
-    List<T> getList(List<Long> ids);
+    List<T> getList(List<Long> ids) throws AbstractException;
 
     /**
      * 根据id集合获取指定类型的数据
@@ -59,14 +58,14 @@ public interface IService<T extends IModel> {
      * @param <K>
      * @return
      */
-    <K> List<K> getList(List<Long> ids, Class<K> cls);
+    <K> List<K> getList(List<Long> ids, Class<K> cls) throws AbstractException;
 
     /**
      * 物理删除
      *
      * @param id 数据id
      */
-    void delete(Long id);
+    void delete(Long id) throws AbstractException;
 
     /**
      * 保存，包括新增与编辑
@@ -74,7 +73,7 @@ public interface IService<T extends IModel> {
      * @param record 数据
      * @return
      */
-    T save(T record);
+    T save(T record) throws AbstractException;
 
     /**
      * 根据id查询数据并缓存
@@ -82,7 +81,7 @@ public interface IService<T extends IModel> {
      * @param id
      * @return
      */
-    T queryById(Long id);
+    T queryById(Long id) throws AbstractException;
 
     /**
      * 查询符合条件的第一条数据
@@ -90,7 +89,7 @@ public interface IService<T extends IModel> {
      * @param entity 查询条件
      * @return
      */
-    T selectOne(Wrapper<T> entity);
+    T selectOne(Wrapper<T> entity) throws AbstractException;
 
     /**
      * 查询符合条件的数据集合
@@ -98,5 +97,5 @@ public interface IService<T extends IModel> {
      * @param entity 查询条件
      * @return
      */
-    List<T> selectList(Wrapper<T> entity);
+    List<T> selectList(Wrapper<T> entity) throws AbstractException;
 }

@@ -1,5 +1,6 @@
 package com.bird.service.common.service.query;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.bird.service.common.mapper.permission.DataAuthority;
 import com.bird.service.common.service.dto.AbstractDTO;
 
@@ -18,6 +19,7 @@ public class ListQueryDTO extends AbstractDTO {
     /**
      * 数据权限参数
      */
+    @JSONField(serialize=false)
     private DataAuthority authority;
 
     public ListQueryDTO() {
