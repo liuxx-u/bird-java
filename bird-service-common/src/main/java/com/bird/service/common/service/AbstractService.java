@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.bird.core.Constant;
 import com.bird.core.cache.CacheHelper;
 import com.bird.core.exception.ExceptionHelper;
+import com.bird.core.session.BirdSession;
+import com.bird.core.session.SessionContext;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.common.exception.RollbackException;
@@ -47,6 +49,26 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
 
     @Autowired
     protected DozerHelper dozer;
+
+    /**
+     * 从线程中获取当前登录用户的票据信息
+     * @return
+     */
+    protected BirdSession getSession(){
+        return SessionContext.getSession();
+    }
+
+    /**
+     * 从线程中获取当前登录用户的userId
+     *
+     * @return
+     */
+    protected Long getUserId() {
+        BirdSession session = getSession();
+        if (session == null) return 0L;
+        if (session.getUserId() == null || StringUtils.isBlank(session.getUserId().toString())) return 0L;
+        return Long.valueOf(session.getUserId().toString());
+    }
 
     /**
      * 定义通用的查询接口（支持查询、分页、排序）

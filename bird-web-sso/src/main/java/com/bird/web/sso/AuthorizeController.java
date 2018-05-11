@@ -1,10 +1,9 @@
 package com.bird.web.sso;
 
 import com.bird.core.session.BirdSession;
+import com.bird.core.session.SessionContext;
 import com.bird.web.common.controller.AbstractController;
 import com.bird.web.common.session.IServletSessionResolvor;
-import com.bird.web.sso.ticket.TicketHandler;
-import com.bird.web.sso.ticket.TicketInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,16 +15,27 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class AuthorizeController extends AbstractController {
 
-    @Autowired
+    @Autowired(required = false)
     private IServletSessionResolvor sessionResolvor;
 
     /**
-     * 获取当前登录用户的票据信息
+     * 从线程中获取当前登录用户的票据信息
+     * @return
+     */
+    protected BirdSession getSession(){
+        return SessionContext.getSession();
+    }
+
+    /**
+     * 从Http请求中获取当前登录用户的票据信息
      *
      * @param request 请求
      * @return
      */
     protected BirdSession getSession(HttpServletRequest request) {
+        if(sessionResolvor == null){
+            sessionResolvor = new SsoSessionResolvor();
+        }
         return sessionResolvor.resolve(request);
     }
 

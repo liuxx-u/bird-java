@@ -33,5 +33,16 @@
             <artifactId>bird-web-sso</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.bird</groupId>
+            <artifactId>bird-dubbo</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>0.1.0</version>
+        </dependency>
     </dependencies>
 </project>

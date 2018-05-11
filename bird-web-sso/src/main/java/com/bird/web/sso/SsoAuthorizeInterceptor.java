@@ -1,11 +1,12 @@
 package com.bird.web.sso;
 
+import com.bird.core.session.BirdSession;
+import com.bird.core.session.SessionContext;
 import com.bird.web.sso.exception.ForbiddenException;
 import com.bird.web.sso.exception.UnAuthorizedException;
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.TicketHandler;
 import com.bird.web.sso.ticket.TicketInfo;
-import com.sun.jmx.snmp.ThreadContext;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -30,9 +31,10 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * 拦截器处理方法
-     * @param request request
+     *
+     * @param request  request
      * @param response response
-     * @param handler 跨域第一次OPTIONS请求时handler为AbstractHandlerMapping.PreFlightHandler，不拦截
+     * @param handler  跨域第一次OPTIONS请求时handler为AbstractHandlerMapping.PreFlightHandler，不拦截
      * @return
      * @throws Exception
      */
@@ -40,7 +42,7 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) return true;
         TicketInfo ticketInfo = ticketHandler.getTicket(request);
-        request.setAttribute(SsoAuthorizeManager.TICKET_ATTRIBUTE_KEY, ticketInfo);
+        this.initializeRequest(request, ticketInfo);
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         SsoAuthorize authorize = handlerMethod.getMethodAnnotation(SsoAuthorize.class);
@@ -67,7 +69,8 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * 检查用户是否允许登录当前站点
-     * @param request 请求
+     *
+     * @param request    请求
      * @param ticketInfo 票据信息
      * @return
      */
@@ -78,5 +81,19 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 //        if (allowHosts == null) return false;
 //        return allowHosts.contains(host);
         return true;
+    }
+
+    private void initializeRequest(HttpServletRequest request, TicketInfo ticketInfo) {
+        if (ticketInfo == null) return;
+
+        BirdSession session = new BirdSession();
+        session.setUserId(ticketInfo.getUserId());
+        session.setTenantId(ticketInfo.getTenantId());
+        session.setName(ticketInfo.getName());
+        session.setClaims(ticketInfo.getClaims());
+
+        SessionContext.setSession(session);
+        request.setAttribute(SsoSessionResolvor.SESSION_ATTRIBUTE_KEY, session);
+        request.setAttribute(SsoAuthorizeManager.TICKET_ATTRIBUTE_KEY, ticketInfo);
     }
 }

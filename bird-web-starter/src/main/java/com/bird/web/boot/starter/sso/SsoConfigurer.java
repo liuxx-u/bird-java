@@ -7,7 +7,6 @@ import com.bird.web.sso.client.IUserClientStore;
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -62,8 +61,8 @@ public class SsoConfigurer {
      * 注入默认的票据加密器
      * @return
      */
-    @Bean
     @ConditionalOnProperty(value = SsoConstant.USE_SESSTION_STRORE,havingValue = "false")
+    @Bean
     @ConditionalOnMissingBean
     public ITicketProtector ticketProtector(){
         return new DesTicketProtector();
