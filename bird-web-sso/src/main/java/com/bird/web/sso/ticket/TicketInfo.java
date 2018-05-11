@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class TicketInfo implements Serializable {
     private String userId;
+    private String tenantId;
     private String name;
     private Date creationTime;
     private Date lastRefreshTime;
@@ -78,6 +79,14 @@ public class TicketInfo implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getName() {

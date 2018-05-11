@@ -1,6 +1,8 @@
 package com.bird.web.boot.starter.sso;
 
+import com.bird.web.common.session.IServletSessionResolvor;
 import com.bird.web.sso.SsoAuthorizeManager;
+import com.bird.web.sso.SsoSessionResolvor;
 import com.bird.web.sso.client.IUserClientStore;
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.*;
@@ -60,8 +62,8 @@ public class SsoConfigurer {
      * 注入默认的票据加密器
      * @return
      */
-    @ConditionalOnProperty(value = SsoConstant.USE_SESSTION_STRORE,havingValue = "false")
     @Bean
+    @ConditionalOnProperty(value = SsoConstant.USE_SESSTION_STRORE,havingValue = "false")
     @ConditionalOnMissingBean
     public ITicketProtector ticketProtector(){
         return new DesTicketProtector();
@@ -82,5 +84,11 @@ public class SsoConfigurer {
         authorizeManager.setUseSessionStore(ssoProperties.getUseSessionStore());
 
         return authorizeManager;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public IServletSessionResolvor servletSessionResolvor(){
+        return new SsoSessionResolvor();
     }
 }
