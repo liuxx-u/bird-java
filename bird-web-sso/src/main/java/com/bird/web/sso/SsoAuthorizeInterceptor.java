@@ -5,6 +5,7 @@ import com.bird.web.sso.exception.UnAuthorizedException;
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.TicketHandler;
 import com.bird.web.sso.ticket.TicketInfo;
+import com.sun.jmx.snmp.ThreadContext;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -38,11 +39,12 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) return true;
+        TicketInfo ticketInfo = ticketHandler.getTicket(request);
+        request.setAttribute(SsoAuthorizeManager.TICKET_ATTRIBUTE_KEY, ticketInfo);
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         SsoAuthorize authorize = handlerMethod.getMethodAnnotation(SsoAuthorize.class);
         if (authorize != null) {
-            TicketInfo ticketInfo = ticketHandler.getTicket(request);
             if (ticketInfo == null) {
                 throw new UnAuthorizedException("用户信息已失效.");
             }

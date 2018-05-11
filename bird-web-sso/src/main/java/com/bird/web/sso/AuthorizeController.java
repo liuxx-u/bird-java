@@ -14,13 +14,22 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class AuthorizeController extends AbstractController {
     @Autowired
-    protected TicketHandler ticketHandler;
+    protected SsoAuthorizeManager authorizeManager;
 
-    /** 获取当前用户Id */
+    /**
+     * 获取当前登录用户的票据信息
+     * @param request 请求
+     * @return
+     */
     protected TicketInfo getUser(HttpServletRequest request) {
-        return ticketHandler.getTicket(request);
+        return authorizeManager.getTicket(request);
     }
 
+    /**
+     * 获取当前登录用户的userId
+     * @param request 请求
+     * @return
+     */
     protected Long getUserId(HttpServletRequest request) {
         TicketInfo ticketInfo = getUser(request);
         if (ticketInfo == null) return 0L;

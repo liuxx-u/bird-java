@@ -23,8 +23,12 @@ import java.util.stream.Collectors;
  * @date 2017/5/18
  */
 public class SsoAuthorizeManager {
+    public static final String TICKET_ATTRIBUTE_KEY = "sso-ticket";
+
     private String cookieName;
-    //单位：分
+    /**
+     * 有效时间,单位：分
+     */
     private Integer expire = 60;
     private Boolean useSessionStore = true;
 
@@ -45,6 +49,17 @@ public class SsoAuthorizeManager {
      */
     @Autowired
     private IUserClientStore userClientStore;
+
+    /**
+     * 获取请求中的票据信息
+     * @param request
+     * @return
+     */
+    public TicketInfo getTicket(HttpServletRequest request){
+        Object ticket = request.getAttribute(TICKET_ATTRIBUTE_KEY);
+        if(ticket == null)return null;
+        return (TicketInfo)ticket;
+    }
 
     /**
      * 登录，将token写入cookie
