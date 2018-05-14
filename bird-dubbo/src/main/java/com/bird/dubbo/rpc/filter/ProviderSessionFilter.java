@@ -22,6 +22,8 @@ public class ProviderSessionFilter implements Filter {
 
         Result result = invoker.invoke(invocation);
 
+        //调用完成之后清除session
+        SessionContext.removeSession();
         return result;
     }
 }

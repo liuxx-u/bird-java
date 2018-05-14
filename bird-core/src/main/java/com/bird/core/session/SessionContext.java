@@ -31,7 +31,7 @@ public class SessionContext {
      * 移除session信息
      * @param session
      */
-    public static void removeSession(BirdSession session){
+    public static void removeSession(){
         LOCAL.remove();
     }
 }
