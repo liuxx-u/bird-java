@@ -14,7 +14,9 @@ import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.mapper.TreeQueryParam;
 import com.bird.service.common.model.IModel;
+import com.bird.service.common.service.dto.EntityDTO;
 import com.bird.service.common.service.dto.TreeDTO;
+import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -71,12 +73,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 定义通用的查询接口（支持查询、分页、排序）
-     * 支持灵活组装查询数据源
-     * 支持灵活控制返回的字段
-     *
-     * @param param 筛选条件
-     * @return 查询的结果
+     * {@inheritDoc}
      */
     @Override
     public PagedListResultDTO queryPagedList(PagedQueryParam param) {
@@ -89,10 +86,16 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 以DTO为根据的通用保存方法
-     * param.getEntityDTO().getId()>0 则更新，否则新增
-     *
-     * @param param
+     * {@inheritDoc}
+     */
+    @Override
+    public PagedListResultDTO queryPagedList(PagedListQueryDTO queryDTO, Class cls){
+        PagedQueryParam param = new PagedQueryParam(queryDTO,cls);
+        return this.queryPagedList(param);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     @Transactional(rollbackFor = RollbackException.class)
@@ -117,10 +120,16 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 通用的获取树数据方法
-     *
-     * @param param
-     * @return
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(EntityDTO dto, Class cls){
+        CommonSaveParam param = new CommonSaveParam(dto,cls);
+        this.save(param);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     public List<TreeDTO> getTreeData(TreeQueryParam param) {
@@ -128,9 +137,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 根据id集合获取数据
-     *
-     * @param ids id集合
+     * {@inheritDoc}
      */
     @Override
     public List<T> getList(List<Long> ids) {
@@ -155,10 +162,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 根据id集合获取指定类型的数据
-     *
-     * @param ids id集合
-     * @param cls 返回的数据类型
+     * {@inheritDoc}
      */
     @Override
     public <K> List<K> getList(List<Long> ids, Class<K> cls) {
@@ -187,9 +191,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 物理删除
-     *
-     * @param id 数据id
+     * {@inheritDoc}
      */
     @Override
     @Transactional(rollbackFor = RollbackException.class)
@@ -203,9 +205,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 保存，包括新增与编辑
-     *
-     * @param record 数据
+     * {@inheritDoc}
      */
     @Override
     @Transactional(rollbackFor = RollbackException.class)
@@ -252,9 +252,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 根据id查询数据并缓存
-     *
-     * @param id
+     * {@inheritDoc}
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -280,9 +278,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 查询符合条件的第一条数据
-     *
-     * @param entity 查询条件
+     * {@inheritDoc}
      */
     @Override
     public T selectOne(Wrapper<T> entity) {
@@ -292,9 +288,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     }
 
     /**
-     * 查询符合条件的数据集合
-     *
-     * @param entity 查询条件
+     * {@inheritDoc}
      */
     @Override
     public List<T> selectList(Wrapper<T> entity) {
