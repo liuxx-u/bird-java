@@ -56,9 +56,8 @@ public interface IService<T extends IModel> {
      * param.getEntityDTO().getId()>0 则更新，否则新增
      *
      * @param dto 数据
-     * @param cls DTO类型
      */
-    void save(EntityDTO dto, Class cls) throws AbstractException;
+    void save(EntityDTO dto) throws AbstractException;
 
     /**
      * 定义通用的 获取树数据方法

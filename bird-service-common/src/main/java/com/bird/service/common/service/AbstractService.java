@@ -123,8 +123,8 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * {@inheritDoc}
      */
     @Override
-    public void save(EntityDTO dto, Class cls){
-        CommonSaveParam param = new CommonSaveParam(dto,cls);
+    public void save(EntityDTO dto){
+        CommonSaveParam param = new CommonSaveParam(dto,dto.getClass());
         this.save(param);
     }
 
