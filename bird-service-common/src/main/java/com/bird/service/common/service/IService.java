@@ -49,7 +49,7 @@ public interface IService<T extends IModel> {
      *
      * @param param
      */
-    void save(CommonSaveParam param) throws AbstractException;
+    Long save(CommonSaveParam param) throws AbstractException;
 
     /**
      * 以DTO为根据的通用保存方法
@@ -57,7 +57,7 @@ public interface IService<T extends IModel> {
      *
      * @param dto 数据
      */
-    void save(EntityDTO dto) throws AbstractException;
+    Long save(EntityDTO dto) throws AbstractException;
 
     /**
      * 定义通用的 获取树数据方法

@@ -99,10 +99,11 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     @Override
     @Transactional(rollbackFor = RollbackException.class)
-    public void save(CommonSaveParam param) {
+    public Long save(CommonSaveParam param) {
         Long id = param.getEntityDTO().getId();
         if (id == null || id <= 0) {
             mapper.insertDto(param);
+            return param.getEntityDTO().getId();
         } else {
             String lockKey = getLockKey(id);
             if (CacheHelper.getLock(lockKey)) {
@@ -111,10 +112,11 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
                     CacheHelper.getCache().del(getCacheKey(id));
                 } finally {
                     CacheHelper.unlock(lockKey);
+                    return id;
                 }
             } else {
                 sleep(20);
-                save(param);
+                return save(param);
             }
         }
     }
@@ -123,9 +125,9 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * {@inheritDoc}
      */
     @Override
-    public void save(EntityDTO dto){
+    public Long save(EntityDTO dto){
         CommonSaveParam param = new CommonSaveParam(dto,dto.getClass());
-        this.save(param);
+        return this.save(param);
     }
 
     /**

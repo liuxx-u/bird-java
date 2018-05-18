@@ -2,10 +2,7 @@ package com.bird.service.common.mapper;
 
 import com.bird.service.common.model.IModel;
 import com.bird.service.common.service.dto.TreeDTO;
-import org.apache.ibatis.annotations.DeleteProvider;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -43,6 +40,7 @@ public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatispl
      * @param param
      */
     @InsertProvider(type = CommonSaveProvider.class, method = "insert")
+    @SelectKey(statement="SELECT LAST_INSERT_ID()", keyProperty="entityDTO.id", before=false, resultType=Long.class)
     void insertDto(CommonSaveParam param);
 
     /**
