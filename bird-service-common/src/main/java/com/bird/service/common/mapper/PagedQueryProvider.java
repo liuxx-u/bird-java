@@ -107,16 +107,9 @@ public class PagedQueryProvider {
     }
 
     private String getDbFieldName(PagedQueryParam param, String fieldName) {
+        fieldName = String.format("'%s'",fieldName);
         Map<String, String> fieldMap = param.getFieldMap();
-        String dbFieldName = fieldMap.getOrDefault(fieldName, fieldName);
-
-        if (!StringUtils.startsWith(dbFieldName, "`")) {
-            dbFieldName = "`" + dbFieldName;
-        }
-        if (!StringUtils.endsWith(dbFieldName, "`")) {
-            dbFieldName = dbFieldName + "`";
-        }
-        return dbFieldName;
+        return fieldMap.getOrDefault(fieldName, fieldName);
     }
 
     /**

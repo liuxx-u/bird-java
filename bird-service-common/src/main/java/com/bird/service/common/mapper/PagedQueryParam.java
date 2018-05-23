@@ -44,8 +44,6 @@ public class PagedQueryParam implements Serializable {
         this.where = where;
 
         this.tClass = tClass;
-        this.fieldMap = new HashMap<>();
-
         initWithClass();
     }
 
@@ -82,48 +80,38 @@ public class PagedQueryParam implements Serializable {
     /**
      * fieldName与dbFieldName哈希表
      */
-    private Map<String,String> fieldMap;
+    private Map<String,String> fieldMap = new HashMap<>();
 
     /**
      * 根据Class名称初始化select与from
-     * 如果select不为空，selectSql = select + tClass反射得到的select
+     * 如果select为空，selectSql = tClass反射得到的select
      */
     private void initWithClass() {
         if (this.tClass == null) return;
 
-
         if (StringUtils.isBlank(this.select)) {
-            StringBuilder sb = new StringBuilder();
-            List<Field> fields = new ArrayList<>();
-
             Class tempClass = tClass;
+            StringBuilder sb = new StringBuilder();
+
             while (tempClass != null && !tempClass.getName().equals(Object.class.getName())) {
                 Field[] tempFields = tempClass.getDeclaredFields();
-                fields.addAll(Arrays.asList(tempFields));
+                for (Field field : tempFields) {
+                    TableField tableField = field.getAnnotation(TableField.class);
+                    if (tableField != null && !tableField.exist()) continue;
+
+                    String fieldName = String.format("'%s'",field.getName());
+                    String dbFieldName = getDbFieldName(field);
+                    this.fieldMap.putIfAbsent(fieldName, dbFieldName);
+                }
+
                 tempClass = tempClass.getSuperclass();
             }
 
-            for (Field field : fields) {
-                TableField tableField = field.getAnnotation(TableField.class);
-                if (tableField != null && !tableField.exist()) continue;
-
-                String fieldName = field.getName();
-                String dbFieldName = tableField == null ? fieldName : tableField.value();
-                if (!StringUtils.startsWith(dbFieldName, "`")) {
-                    sb.append("`");
-                }
-                sb.append(dbFieldName);
-                if (!StringUtils.endsWith(dbFieldName, "`")) {
-                    sb.append("`");
-                }
-
-                if (!fieldName.equals(dbFieldName)) {
-                    sb.append(" AS ");
-                    sb.append(fieldName);
-                }
-
+            for(Map.Entry<String, String> entry : this.fieldMap.entrySet()){
+                sb.append(entry.getValue());
+                sb.append(" AS ");
+                sb.append(entry.getKey());
                 sb.append(",");
-                this.fieldMap.put(fieldName,dbFieldName);
             }
 
             this.select = StringUtils.stripEnd(sb.toString(), ",");
@@ -137,6 +125,18 @@ public class PagedQueryParam implements Serializable {
                 this.from = tableName.value();
             }
         }
+    }
+
+    private String getDbFieldName(Field field) {
+        TableField tableField = field.getAnnotation(TableField.class);
+        String dbFieldName = tableField == null ? field.getName() : tableField.value();
+        if (!StringUtils.startsWith(dbFieldName, "`")) {
+            dbFieldName = "`" + dbFieldName;
+        }
+        if (!StringUtils.endsWith(dbFieldName, "`")) {
+            dbFieldName += "`";
+        }
+        return dbFieldName;
     }
 
     /**
