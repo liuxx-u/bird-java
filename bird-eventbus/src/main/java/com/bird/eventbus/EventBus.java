@@ -1,6 +1,7 @@
 package com.bird.eventbus;
 
 import com.bird.eventbus.arg.IEventArg;
+import com.bird.eventbus.handler.EventHandlerFactory;
 import com.bird.eventbus.register.IEventRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,8 @@ public class EventBus {
     private IEventRegister eventRegister;
 
     /**
-     * 向EventBus中推消息
+     * 向EventBus中推送消息
+     * @param eventArg
      */
     public void push(IEventArg eventArg) {
         if (eventRegister == null) {
@@ -24,5 +26,13 @@ public class EventBus {
             return;
         }
         eventRegister.regist(eventArg);
+    }
+
+    /**
+     * 局部事件消费，事件只在本服务内被消费
+     * @param eventArg
+     */
+    public void pushLocal(IEventArg eventArg){
+        EventHandlerFactory.handleEvent(eventArg);
     }
 }
