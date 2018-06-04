@@ -62,16 +62,16 @@ public final class DateHelper extends DateUtils {
      * 比较两个时间相差多少秒
      *
      */
-    public static long getDiffSecond(Date d1, Date d2) {
-        return Math.abs((d2.getTime() - d1.getTime()) / 1000);
+    public static long getDiffSecond(Date start, Date end) {
+        return (end.getTime() - start.getTime()) / 1000;
     }
 
     /**
      * 比较两个时间相差多少分钟
      *
      */
-    public static long getDiffMinute(Date d1, Date d2) {
-        long diffSeconds = getDiffSecond(d1, d2);
+    public static long getDiffMinute(Date start, Date end) {
+        long diffSeconds = getDiffSecond(start, end);
         return diffSeconds/60;
     }
 
@@ -79,9 +79,9 @@ public final class DateHelper extends DateUtils {
      * 比较两个时间相差多少天
      *
      */
-    public static long getDiffDay(Date d1, Date d2) {
-        long between = Math.abs((d2.getTime() - d1.getTime()) / 1000);
-        long day = between / 60 / 60 / 24;
+    public static long getDiffDay(Date start, Date end) {
+        long diffSeconds = getDiffSecond(start, end);
+        long day = diffSeconds / 60 / 60 / 24;
         return (long) Math.floor(day);
     }
 
