@@ -14,10 +14,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -340,10 +337,14 @@ public final class ClassHelper {
                         Method setter = property.getWriteMethod();
                         Object oldValue = getter.invoke(oldBean);
                         Object newValue = getter.invoke(newBean);
+
+                        List<String> specialTypes = Arrays.asList("int","long","boolean","float","double","short");
                         if (newValue != null) {
                             if (oldValue == null) {
                                 setter.invoke(object, newValue);
                             } else if (oldValue != null && !newValue.equals(oldValue)) {
+                                setter.invoke(object, newValue);
+                            } else if (specialTypes.contains(property.getPropertyType().getName())) {
                                 setter.invoke(object, newValue);
                             }
                         }

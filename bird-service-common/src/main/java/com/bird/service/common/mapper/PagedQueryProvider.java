@@ -118,7 +118,7 @@ public class PagedQueryProvider {
      * @return
      */
     private boolean validateSqlValue(String value) {
-        String[] illegals = new String[]{"'", "and", "exec", "insert", "select", "delete", "update", "count", "*", "%", "chr", "mid", "master", "truncate", "char", "declare", ";", "or", "-", "+", ","};
+        String[] illegals = new String[]{"'", "and", "exec", "insert", "select", "delete", "update", "count", "*", "%", "chr", "mid", "master", "truncate", "char", "declare", ";", "or", "+", ","};
         for (String str : illegals) {
             if (value.contains(str)) return false;
         }

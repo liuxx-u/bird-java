@@ -79,10 +79,14 @@ public final class DateHelper extends DateUtils {
      * 比较两个时间相差多少天
      *
      */
-    public static long getDiffDay(Date start, Date end) {
+    public static int getDiffDay(Date start, Date end) {
+        start = getDayBegin(start);
+        end = getDayBegin(end);
+        if (start == null || end == null) return 0;
+
         long diffSeconds = getDiffSecond(start, end);
         long day = diffSeconds / 60 / 60 / 24;
-        return (long) Math.floor(day);
+        return (int) Math.floor(day);
     }
 
     /**
