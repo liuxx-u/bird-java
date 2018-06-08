@@ -66,6 +66,9 @@
         <!--okhttp版本号-->
         <okhttp.version>3.10.0</okhttp.version>
 
+        <!--poi版本号-->
+        <poi.version>3.17</poi.version>
+
         <!--maven插件版本号-->
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 

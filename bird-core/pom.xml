@@ -74,6 +74,13 @@
             <version>${okhttp.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!--poi-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- apache -->
         <dependency>
