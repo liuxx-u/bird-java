@@ -18,7 +18,7 @@ public final class Check {
      */
     public static final void NotNull(Object object, String name) {
         if (object.equals(null)) {
-            throw new ArgumentException(name + "can not be null.");
+            throw new ArgumentException(name + " can not be null.");
         }
     }
 
@@ -30,7 +30,7 @@ public final class Check {
      */
     public static final void NotEmpty(String value, String name) {
         if (StringUtils.isBlank(value)) {
-            throw new ArgumentException(name + "can not be null.");
+            throw new ArgumentException(name + " can not be null.");
         }
     }
 
@@ -43,7 +43,7 @@ public final class Check {
      */
     public static final void GreaterThan(Number value, Number target, String name) {
         if (value == null || value.doubleValue() <= target.doubleValue()) {
-            throw new ArgumentException(name + "must greater than" + target);
+            throw new ArgumentException(name + " must greater than " + target);
         }
     }
 
@@ -56,7 +56,7 @@ public final class Check {
      */
     public static final void LessThan(Number value, Number target, String name) {
         if (value == null || value.doubleValue() >= target.doubleValue()) {
-            throw new ArgumentException(name + "must less than" + target);
+            throw new ArgumentException(name + " must less than " + target);
         }
     }
 }

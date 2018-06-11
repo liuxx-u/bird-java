@@ -1,5 +1,7 @@
 package com.bird.dubbo.rpc.filter;
 
+import com.alibaba.dubbo.common.Constants;
+import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.alibaba.fastjson.JSON;
 import com.bird.core.session.BirdSession;
@@ -11,6 +13,7 @@ import com.bird.core.session.SessionContext;
  *
  * dubbo提供者拦截器,用于从RpcContext中生成Session
  */
+@Activate(group = Constants.PROVIDER)
 public class ProviderSessionFilter implements Filter {
 
     @Override

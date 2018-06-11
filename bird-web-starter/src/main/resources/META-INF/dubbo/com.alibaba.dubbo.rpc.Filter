@@ -1,1 +1,1 @@
-consumerSessionFilter=com.bird.dubbo.rpc.filter.ConsumerSessionFilter
+consumerSession=com.bird.dubbo.rpc.filter.ConsumerSessionFilter
