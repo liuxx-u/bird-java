@@ -16,6 +16,11 @@ import java.util.List;
  * @date 2017/10/20
  */
 public class CommonSaveProvider {
+    /**
+     * 不允许修改的列
+     */
+    private static final List<String> STATIC_FIELDS = Arrays.asList("`id`","`createTime`","`modifiedTime`");
+
     private static final List<String> STRING_TYPE_NAME = Arrays.asList("java.lang.String");
     private static final List<String> NUMBER_TYPE_NAME = Arrays.asList("java.lang.Integer", "java.lang.Long", "java.math.BigDecimal", "int", "long");
     private static final List<String> BOOLEAN_TYPE_NAME = Arrays.asList("java.lang.Boolean", "boolean");
@@ -24,23 +29,36 @@ public class CommonSaveProvider {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public String insert(CommonSaveParam param) {
-        StringBuilder sb = new StringBuilder("insert into ");
-        sb.append(param.getTableName());
-        sb.append(" (");
+        String tableName = formatName(param.getTableName());
+
+        StringBuilder sb = new StringBuilder("insert into ")
+                .append(tableName)
+                .append(" (");
+
         Field[] fields = param.gettClass().getDeclaredFields();
 
         StringBuilder valueBuilder = new StringBuilder();
         for (Field field : fields) {
             TableField tableField = field.getAnnotation(TableField.class);
             if (tableField != null && !tableField.exist()) continue;
-            String fieldName = tableField == null ? field.getName() : tableField.value();
 
-            if (fieldName == "id" || fieldName == "createTime" || fieldName == "modifiedTime") continue;
+            String fieldName = tableField == null ? field.getName() : tableField.value();
+            //处理适用于多表的DTO
+            if (fieldName.indexOf(".") > 0) {
+                String[] arr = fieldName.split("\\.");
+                if (!StringUtils.equals(formatName(arr[arr.length - 2]), tableName)) continue;
+
+                fieldName = arr[arr.length - 1];
+            }
+
+            fieldName = formatName(fieldName);
+            if (STATIC_FIELDS.contains(fieldName)) continue;
+
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
             if (fieldValue == "" || fieldValue == "''") continue;
 
-            sb.append(getDbFieldName(fieldName) + ",");
-            valueBuilder.append(fieldValue + ",");
+            sb.append(fieldName).append(",");
+            valueBuilder.append(fieldValue).append(",");
         }
         String createTime = "'" + dateFormat.format(new Date()) + "'";
         sb.append("createTime) values (" + valueBuilder.toString() + createTime + ")");
@@ -51,20 +69,30 @@ public class CommonSaveProvider {
         Long id = param.getEntityDTO().getId();
         if (id == null || id <= 0) return "";
 
-        StringBuilder sb = new StringBuilder("update ");
-        sb.append(param.getTableName());
-        sb.append(" set ");
+        String tableName = formatName(param.getTableName());
+
+        StringBuilder sb = new StringBuilder("update ")
+                .append(tableName)
+                .append(" set ");
 
         Field[] fields = param.gettClass().getDeclaredFields();
         for (Field field : fields) {
             TableField tableField = field.getAnnotation(TableField.class);
             if (tableField != null && !tableField.exist()) continue;
             String fieldName = tableField == null ? field.getName() : tableField.value();
+            //处理适用于多表的DTO
+            if (fieldName.indexOf(".") > 0) {
+                String[] arr = fieldName.split("\\.");
+                if (!StringUtils.equals(formatName(arr[arr.length - 2]), tableName)) continue;
 
-            if (fieldName == "id" || fieldName == "createTime" || fieldName == "modifiedTime") continue;
+                fieldName = arr[arr.length - 1];
+            }
+
+            fieldName = formatName(fieldName);
+            if (STATIC_FIELDS.contains(fieldName)) continue;
+
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
-            sb.append(getDbFieldName(fieldName) + " = " + fieldValue);
-            sb.append(",");
+            sb.append(fieldName).append(" = ").append(fieldValue).append(",");
         }
         String modifiedTime = "'" + dateFormat.format(new Date()) + "'";
         sb.append("modifiedTime = " + modifiedTime);
@@ -101,13 +129,13 @@ public class CommonSaveProvider {
         return "";
     }
 
-    private String getDbFieldName(String fieldName) {
-        String dbFieldName = fieldName;
+    private String formatName(String dbFieldName) {
+
         if (!StringUtils.startsWith(dbFieldName, "`")) {
             dbFieldName = "`" + dbFieldName;
         }
         if (!StringUtils.endsWith(dbFieldName, "`")) {
-            dbFieldName = dbFieldName + "`";
+            dbFieldName += "`";
         }
         return dbFieldName;
     }
