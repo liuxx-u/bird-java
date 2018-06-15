@@ -43,6 +43,13 @@ public class BirdExceptionFilter implements Filter {
                     if (!(exception instanceof RuntimeException) && (exception instanceof Exception)) {
                         return result;
                     }
+
+                    // directly throw if it's bird exception, print ERROR message in server's log.
+                    if (exception instanceof AbstractException) {
+                        logger.error(exception.getMessage(), exception);
+                        return result;
+                    }
+
                     // directly throw if the exception appears in the signature
                     try {
                         Method method = invoker.getInterface().getMethod(invocation.getMethodName(), invocation.getParameterTypes());
@@ -74,11 +81,6 @@ public class BirdExceptionFilter implements Filter {
                     }
                     // directly throw if it's dubbo exception
                     if (exception instanceof RpcException) {
-                        return result;
-                    }
-
-                    // directly throw if it's bird exception
-                    if(exception instanceof AbstractException){
                         return result;
                     }
 

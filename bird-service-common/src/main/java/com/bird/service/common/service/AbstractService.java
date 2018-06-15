@@ -223,8 +223,9 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
                         T update = ClassHelper.getDiff(org, record);
                         update.setId(record.getId());
                         mapper.updateById(update);
-                        record = mapper.selectById(record.getId());
-                        CacheHelper.getCache().set(getCacheKey(record.getId()), record);
+
+                        record = mapper.selectById(update.getId());
+                        CacheHelper.getCache().set(getCacheKey(update.getId()), record);
                     } finally {
                         CacheHelper.unlock(lockKey);
                     }
@@ -239,7 +240,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             throw new RuntimeException("已经存在相同的配置.");
         } catch (Exception e) {
             String msg = ExceptionHelper.getStackTraceAsString(e);
-            logger.error(Constant.Exception_Head + msg, e);
+            logger.error(msg, e);
             throw new RuntimeException(msg);
         }
         return record;
