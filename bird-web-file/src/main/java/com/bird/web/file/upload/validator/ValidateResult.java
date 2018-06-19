@@ -3,6 +3,8 @@ package com.bird.web.file.upload.validator;
 import java.io.Serializable;
 
 /**
+ * 验证结果
+ *
  * @author liuxx
  * @date 2018/4/28
  */

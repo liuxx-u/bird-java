@@ -3,6 +3,8 @@ package com.bird.web.file.upload.validator;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * 定义 文件验证器
+ *
  * @author liuxx
  * @date 2018/4/27
  */

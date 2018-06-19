@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 文件上传结果
+ *
  * @author liuxx
  * @date 2018/4/25
  */

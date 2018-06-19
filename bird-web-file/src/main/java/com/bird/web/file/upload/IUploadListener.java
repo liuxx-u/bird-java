@@ -4,6 +4,8 @@ import com.bird.web.file.upload.validator.ValidateResult;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * 文件上传监听器
+ *
  * @author liuxx
  * @date 2018/4/27
  *

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 上传请求上下文
+ *
  * @author liuxx
  * @date 2018/4/26
  */

@@ -7,10 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 /**
+ * 文件存储器
+ *
  * @author liuxx
  * @date 2018/4/25
- *
- * 文件存储器
  */
 public interface IFileStorage {
 

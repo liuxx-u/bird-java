@@ -3,6 +3,8 @@ package com.bird.web.file.upload;
 import com.bird.core.exception.AbstractException;
 
 /**
+ * 定义文件上传异常
+ *
  * @author liuxx
  * @date 2018/4/25
  */

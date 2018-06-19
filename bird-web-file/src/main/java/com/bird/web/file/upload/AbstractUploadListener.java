@@ -4,6 +4,7 @@ import com.bird.web.file.upload.validator.ValidateResult;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * 定义抽象的文件上传监听器基类
  * @author liuxx
  * @date 2018/5/2
  */
