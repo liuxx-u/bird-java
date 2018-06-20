@@ -9,11 +9,13 @@ import java.lang.annotation.Target;
  * 平台单点登陆权限切面
  * Created by liuxx on 2017/5/17.
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SsoAuthorize {
 
     String[] permissions() default {};
 
     boolean isCheckAll() default false;
+
+    boolean anonymous() default false;
 }

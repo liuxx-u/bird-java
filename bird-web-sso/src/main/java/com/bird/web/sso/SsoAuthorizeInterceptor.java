@@ -13,6 +13,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -45,25 +48,38 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
         this.initializeRequest(request, ticketInfo);
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-        SsoAuthorize authorize = handlerMethod.getMethodAnnotation(SsoAuthorize.class);
-        if (authorize != null) {
+        SsoAuthorize methodAuthorize = handlerMethod.getMethodAnnotation(SsoAuthorize.class);
+        if (methodAuthorize != null && methodAuthorize.anonymous()) return true;
+
+        Class clazz = handlerMethod.getBeanType();
+        SsoAuthorize typeAuthorize = (SsoAuthorize) clazz.getDeclaredAnnotation(SsoAuthorize.class);
+        if (typeAuthorize != null && typeAuthorize.anonymous()) return true;
+
+        if (methodAuthorize != null || typeAuthorize != null) {
             if (ticketInfo == null) {
                 throw new UnAuthorizedException("用户信息已失效.");
             }
-
             if (!checkAllowHosts(request, ticketInfo)) {
                 throw new ForbiddenException("用户没有当前站点的登录权限.");
             }
+            if (methodAuthorize == null || methodAuthorize.permissions().length == 0) return true;
 
-            String[] requirePermissions = authorize.permissions();
-            if (requirePermissions.length == 0) return true;
+            List<String> permissions = new ArrayList<>();
+            if (typeAuthorize == null || typeAuthorize.permissions().length == 0) {
+                permissions = Arrays.asList(methodAuthorize.permissions());
+            } else {
+                for (String typePermission : typeAuthorize.permissions()) {
+                    for (String methodPermission : methodAuthorize.permissions()) {
+                        permissions.add(typePermission + methodPermission);
+                    }
+                }
+            }
 
-            boolean isCheckAll = authorize.isCheckAll();
-            if (!permissionChecker.hasPermissions(ticketInfo.getUserId(), requirePermissions, isCheckAll)) {
+            boolean isCheckAll = methodAuthorize.isCheckAll();
+            if (!permissionChecker.hasPermissions(ticketInfo.getUserId(), permissions.toArray(new String[permissions.size()]), isCheckAll)) {
                 throw new ForbiddenException("用户没有当前操作的权限.");
             }
         }
-
         return true;
     }
 
