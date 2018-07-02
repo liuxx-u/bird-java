@@ -225,7 +225,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
                         mapper.updateById(update);
 
                         record = mapper.selectById(update.getId());
-                        CacheHelper.getCache().set(getCacheKey(update.getId()), record);
+                        CacheHelper.getCache().del(getCacheKey(update.getId()));
                     } finally {
                         CacheHelper.unlock(lockKey);
                     }
