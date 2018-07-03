@@ -57,10 +57,10 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
         if (methodAuthorize != null || typeAuthorize != null) {
             if (ticketInfo == null) {
-                throw new UnAuthorizedException("用户信息已失效.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"用户信息已失效");
             }
             if (!checkAllowHosts(request, ticketInfo)) {
-                throw new ForbiddenException("用户没有当前站点的登录权限.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"用户没有当前站点的登录权限");
             }
             if (methodAuthorize == null || methodAuthorize.permissions().length == 0) return true;
 
@@ -77,7 +77,7 @@ public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
             boolean isCheckAll = methodAuthorize.isCheckAll();
             if (!permissionChecker.hasPermissions(ticketInfo.getUserId(), permissions.toArray(new String[permissions.size()]), isCheckAll)) {
-                throw new ForbiddenException("用户没有当前操作的权限.");
+                response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"用户没有当前操作的权限");
             }
         }
         return true;
