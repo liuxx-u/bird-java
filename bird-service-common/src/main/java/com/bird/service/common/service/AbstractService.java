@@ -108,8 +108,8 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             String lockKey = getLockKey(id);
             if (CacheHelper.getLock(lockKey)) {
                 try {
-                    mapper.updateDto(param);
                     CacheHelper.getCache().del(getCacheKey(id));
+                    mapper.updateDto(param);
                 } finally {
                     CacheHelper.unlock(lockKey);
                     return id;
@@ -220,12 +220,11 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
                 String lockKey = getLockKey(record.getId());
                 if (CacheHelper.getLock(lockKey)) {
                     try {
+                        CacheHelper.getCache().del(getCacheKey(record.getId()));
+
                         T update = ClassHelper.getDiff(org, record);
                         update.setId(record.getId());
                         mapper.updateById(update);
-
-                        record = mapper.selectById(update.getId());
-                        CacheHelper.getCache().del(getCacheKey(update.getId()));
                     } finally {
                         CacheHelper.unlock(lockKey);
                     }
