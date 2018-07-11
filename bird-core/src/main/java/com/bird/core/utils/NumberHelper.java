@@ -64,4 +64,30 @@ public final class NumberHelper extends NumberUtils {
         }
         return value;
     }
+
+    /**
+     * 获取Integer,value为null时，返回0
+     *
+     * @param value
+     * @return
+     */
+    public static final Integer getSafety(Integer value){
+        if(value == null){
+            return 0;
+        }
+        return value;
+    }
+
+    /**
+     * 获取Long,value为null时，返回0
+     *
+     * @param value
+     * @return
+     */
+    public static final Long getSafety(Long value){
+        if(value == null){
+            return 0L;
+        }
+        return value;
+    }
 }
