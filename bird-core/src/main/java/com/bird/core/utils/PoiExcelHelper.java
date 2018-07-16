@@ -150,7 +150,7 @@ public class PoiExcelHelper {
             if (CollectionUtils.isEmpty(headKeys)) return null;
 
             int max = sheet.getLastRowNum();
-            for (int i = sheet.getFirstRowNum() + 1; i <= max; i++) {
+            for (int i = headerIndex + 1; i <= max; i++) {
                 Map<String, Object> line = readLine(sheet.getRow(i), headKeys, evaluator);
                 if (line == null) continue;
                 result.add(line);
