@@ -2,8 +2,6 @@ package com.bird.web.sso;
 
 import com.bird.core.session.BirdSession;
 import com.bird.core.session.SessionContext;
-import com.bird.web.sso.exception.ForbiddenException;
-import com.bird.web.sso.exception.UnAuthorizedException;
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.TicketHandler;
 import com.bird.web.sso.ticket.TicketInfo;

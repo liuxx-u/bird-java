@@ -19,7 +19,7 @@ public class CacheKeyGenerator implements KeyGenerator {
     @Override
     public Object generate(Object target, Method method, Object... params) {
         Class<?> cls = target.getClass();
-        String cachePrefix = Constant.Cache.ClassKeyMap.get(cls);
+        String cachePrefix = Constant.Cache.CLASSKEY_MAP.get(cls);
         if (StringUtils.isBlank(cachePrefix)) {
             CacheConfig cacheConfig = cls.getAnnotation(CacheConfig.class);
             if (cacheConfig == null || ArrayUtils.isEmpty(cacheConfig.cacheNames())) {
@@ -27,7 +27,7 @@ public class CacheKeyGenerator implements KeyGenerator {
             } else {
                 cachePrefix = cacheConfig.cacheNames()[0];
             }
-            Constant.Cache.ClassKeyMap.put(cls, cachePrefix);
+            Constant.Cache.CLASSKEY_MAP.put(cls, cachePrefix);
         }
 
         String cacheName;

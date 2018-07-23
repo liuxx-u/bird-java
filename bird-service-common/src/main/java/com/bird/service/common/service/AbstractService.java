@@ -235,7 +235,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             }
         } catch (DuplicateKeyException e) {
             String msg = ExceptionHelper.getStackTraceAsString(e);
-            logger.error(Constant.Exception_Head + msg, e);
+            logger.error(Constant.EXCEPTION_HEAD + msg, e);
             throw new RuntimeException("已经存在相同的配置.");
         } catch (Exception e) {
             String msg = ExceptionHelper.getStackTraceAsString(e);
@@ -318,7 +318,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     private String getCacheKey() {
         Class<?> cls = getClass();
-        String cacheName = Constant.Cache.ClassKeyMap.get(cls);
+        String cacheName = Constant.Cache.CLASSKEY_MAP.get(cls);
         if (StringUtils.isBlank(cacheName)) {
             CacheConfig cacheConfig = cls.getAnnotation(CacheConfig.class);
             if (cacheConfig == null || ArrayUtils.isEmpty(cacheConfig.cacheNames())) {
@@ -326,7 +326,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             } else {
                 cacheName = cacheConfig.cacheNames()[0];
             }
-            Constant.Cache.ClassKeyMap.put(cls, cacheName);
+            Constant.Cache.CLASSKEY_MAP.put(cls, cacheName);
         }
         return cacheName;
     }

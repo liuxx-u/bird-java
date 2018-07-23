@@ -11,17 +11,16 @@ import java.util.Map;
  */
 public interface Constant {
     /**
-     * 异常信息统一头信息<br>
-     * 非常遗憾的通知您,程序发生了异常
+     * 异常信息统一头信息
      */
-    String Exception_Head = "OH,MY GOD! SOME ERRORS OCCURED! AS FOLLOWS :";
+    String EXCEPTION_HEAD = "OH,MY GOD! SOME ERRORS OCCURED! AS FOLLOWS :";
 
     interface Cache{
 
         /**
          * 类名与缓存键值Hash表
          */
-        Map<Class<?>, String> ClassKeyMap = new HashMap<>();
+        Map<Class<?>, String> CLASSKEY_MAP = new HashMap<>();
 
         /** 缓存命名空间 */
         String NAMESPACE = "bird:";

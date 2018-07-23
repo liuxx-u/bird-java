@@ -1,7 +1,6 @@
 package com.bird.core.cache.redis;
 
 import com.bird.core.cache.ICacher;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
@@ -53,8 +52,8 @@ public final class RedisCacher implements ICacher {
     }
 
     @Override
-    public final void del(final String key) {
-        redisTemplate.delete(key);
+    public final Boolean del(final String key) {
+        return redisTemplate.delete(key);
     }
 
     /**

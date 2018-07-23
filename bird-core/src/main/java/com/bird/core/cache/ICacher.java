@@ -19,7 +19,7 @@ public interface ICacher {
 
     Boolean exists(final String key);
 
-    void del(final String key);
+    Boolean del(final String key);
 
     Boolean expire(final String key, final int seconds);
 

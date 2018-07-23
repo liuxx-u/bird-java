@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * ip地址检查拦截器
+ *
  * @author liuxx
  * @date 2018/4/18
- * <p>
- * ip地址检查拦截器
  */
 public class IpAddressInterceptor extends HandlerInterceptorAdapter {
 
