@@ -1,34 +1,45 @@
 package com.bird.eventbus.handler;
 
 import com.bird.core.Check;
-import com.bird.eventbus.arg.IEventArg;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.SpringContextHolder;
-import org.apache.commons.lang3.StringUtils;
+import com.bird.eventbus.arg.IEventArg;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-
-import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liuxx
  */
 @Component
 public class EventHandlerFactory {
-
+    /**
+     * 日志记录器
+     */
+    private static Logger logger = LoggerFactory.getLogger(EventHandlerFactory.class);
+    /**
+     * topic与处理方法映射关系
+     */
     private static Map<String, Set<Method>> eventHandlerContainer = new HashMap<>();
 
     /**
      * 扫描指定包内部的事件监听方法
-      * @param packageName
+     *
+     * @param packageName
      */
-    public static void initWithPackage(String packageName){
-        Check.NotNull(packageName,"packageName");
+    public static void initWithPackage(String packageName) {
+        Check.NotNull(packageName, "packageName");
 
         Set<Class<?>> classes = ClassHelper.getClasses(packageName);
         if (classes != null) {
@@ -78,16 +89,34 @@ public class EventHandlerFactory {
     public static void handleEvent(IEventArg eventArg) {
         String eventKey = eventArg.getClass().getName();
         Set<Method> methods = eventHandlerContainer.getOrDefault(eventKey, null);
-
         if (methods == null) return;
+
+
+        ExecutorService poolExecutor = new ScheduledThreadPoolExecutor(methods.size(), new BasicThreadFactory.Builder().build());
         for (Method method : methods) {
+
             Object instance = SpringContextHolder.getBean(method.getDeclaringClass());
             if (instance == null) continue;
-            try {
-                method.invoke(instance, eventArg);
-            } catch (InvocationTargetException ex) {
-            } catch (IllegalAccessException ex) {
-            }
+            poolExecutor.execute(() -> {
+                try {
+                    method.invoke(instance, eventArg);
+                } catch (IllegalAccessException e) {
+                    logger.error(instance.getClass().getName() + "不能实例化");
+                } catch (InvocationTargetException e) {
+                    Throwable targetException = e.getTargetException();
+                    if (targetException == null) {
+                        logger.error("事件消费失败");
+                    } else {
+                        logger.error("事件消费失败，msg:" + targetException.getMessage(), targetException);
+                    }
+                }
+            });
+        }
+        poolExecutor.shutdown();
+        try {
+            poolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
+            logger.error("awaitTermination", "", e);
         }
     }
 }
