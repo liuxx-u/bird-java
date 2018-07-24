@@ -21,6 +21,7 @@ import com.bird.service.common.service.query.PagedListResultDTO;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -148,14 +149,14 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             for (int i = 0; i < ids.size(); i++) {
                 list.add(null);
             }
-            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            ExecutorService poolExecutor = new ScheduledThreadPoolExecutor(10,new BasicThreadFactory.Builder().build());
             for (int i = 0; i < ids.size(); i++) {
                 final int index = i;
-                executorService.execute(() -> list.set(index, queryById(ids.get(index))));
+                poolExecutor.execute(() -> list.set(index, queryById(ids.get(index))));
             }
-            executorService.shutdown();
+            poolExecutor.shutdown();
             try {
-                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+                poolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
             } catch (InterruptedException e) {
                 logger.error("awaitTermination", "", e);
             }
@@ -173,18 +174,18 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             for (int i = 0; i < ids.size(); i++) {
                 list.add(null);
             }
-            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            ExecutorService poolExecutor = new ScheduledThreadPoolExecutor(10,new BasicThreadFactory.Builder().build());
             for (int i = 0; i < ids.size(); i++) {
                 final int index = i;
-                executorService.execute(() -> {
+                poolExecutor.execute(() -> {
                     T t = queryById(ids.get(index));
                     K k = dozer.map(t, cls);
                     list.set(index, k);
                 });
             }
-            executorService.shutdown();
+            poolExecutor.shutdown();
             try {
-                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+                poolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
             } catch (InterruptedException e) {
                 logger.error("awaitTermination", "", e);
             }
