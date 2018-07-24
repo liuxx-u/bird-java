@@ -35,6 +35,11 @@
 			<artifactId>bird-service-zero-api</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.bird</groupId>
+			<artifactId>bird-service-cms-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.bird</groupId>
@@ -46,12 +51,6 @@
 			<groupId>com.bird</groupId>
 			<artifactId>bird-web-starter</artifactId>
 			<version>1.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba.boot</groupId>
-			<artifactId>dubbo-spring-boot-starter</artifactId>
-			<version>0.1.0</version>
 		</dependency>
 
 		<dependency>

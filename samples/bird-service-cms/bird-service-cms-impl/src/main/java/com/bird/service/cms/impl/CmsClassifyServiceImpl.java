@@ -1,18 +1,24 @@
 package com.bird.service.cms.impl;
 
 import com.bird.core.Check;
+import com.bird.core.exception.UserFriendlyException;
 import com.bird.eventbus.EventBus;
 import com.bird.eventbus.handler.EventHandler;
 import com.bird.service.cms.CmsClassifyService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.cms.mapper.CmsClassifyMapper;
 import com.bird.service.cms.model.CmsClassify;
+import com.bird.service.common.exception.RollbackException;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.service.AbstractService;
 import com.bird.service.zero.event.TestEventArg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @CacheConfig(cacheNames = "cms_classify")
@@ -59,7 +65,15 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
     }
 
     @EventHandler
+    @Transactional(rollbackFor = RollbackException.class)
     public void HandleEvent(TestEventArg eventArg) {
-        System.out.println("notify cms======");
+        CmsClassify classify = new CmsClassify();
+        classify.setName("test");
+        classify.setParentId(0L);
+
+        save(classify);
+
+        throw new UserFriendlyException("error");
+//        System.out.println("notify cms======");
     }
 }

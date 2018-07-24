@@ -22,14 +22,6 @@ public class OrganizationDTO extends EntityDTO {
         this.name = name;
     }
 
-    public long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(long parentId) {
-        this.parentId = parentId;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -52,5 +44,13 @@ public class OrganizationDTO extends EntityDTO {
 
     public void setOrderNo(Integer orderNo) {
         this.orderNo = orderNo;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

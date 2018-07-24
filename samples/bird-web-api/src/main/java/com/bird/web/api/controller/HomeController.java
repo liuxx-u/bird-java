@@ -1,9 +1,12 @@
 package com.bird.web.api.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.bird.service.cms.CmsClassifyService;
+import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.zero.DicTypeService;
 import com.bird.service.zero.OrganizationService;
 import com.bird.service.zero.dto.OrganizationDTO;
+import com.bird.web.common.controller.AbstractController;
 import com.bird.web.file.upload.ServletUploader;
 import com.bird.web.file.upload.UploadResult;
 import com.bird.web.file.upload.storage.IFileStorage;
@@ -24,20 +27,14 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/")
-public class HomeController {
-
-    @Inject
-    private SsoAuthorizeManager authorizeManager;
+public class HomeController extends AbstractController {
 
     @Reference
-    private DicTypeService dicTypeService;
-
-    @Reference
-    private OrganizationService organizationService;
+    private CmsClassifyService classifyService;
 
     @GetMapping("/test")
-    public OrganizationDTO test(){
-        return organizationService.getOrganization(1L);
+    public CmsClassifyDTO test(){
+        return classifyService.getClassify(1L);
     }
 
     @PostMapping("/upload")
