@@ -8,6 +8,7 @@ import com.bird.core.exception.AbstractException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,18 @@ import java.io.Serializable;
 public abstract class AbstractController implements Serializable {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * 当前的请求
+     */
+    @Autowired
+    protected HttpServletRequest request;
+
+    /**
+     * 当前的响应
+     */
+    @Autowired
+    protected HttpServletResponse response;
 
     /**
      * 异常处理
