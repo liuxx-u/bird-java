@@ -17,9 +17,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Service
 @CacheConfig(cacheNames = "cms_classify")
 @com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsClassifyService")
@@ -73,7 +70,6 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
 
         save(classify);
 
-        throw new UserFriendlyException("error");
-//        System.out.println("notify cms======");
+        System.out.println("notify cms======");
     }
 }
