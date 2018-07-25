@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
@@ -37,7 +38,7 @@ public class KafkaConfigurer {
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
     public KafkaTemplate kafkaTemplate() {
-        HashMap properties = new HashMap();
+        HashMap properties = new HashMap(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
         KafkaProviderProperties providerProperties = kafkaProperties.getProvider();
@@ -75,14 +76,14 @@ public class KafkaConfigurer {
         KafkaEventArgListener listener = new KafkaEventArgListener();
         ContainerProperties containerProperties = new ContainerProperties(EventHandlerFactory.getAllTopics());
         containerProperties.setMessageListener(listener);
+        containerProperties.setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);
 
-
-        HashMap properties = new HashMap();
+        HashMap properties = new HashMap(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
         properties.put("group.id", listenerProperties.getGroupId());
         properties.put("auto.offset.reset", "earliest");
-        properties.put("enable.auto.commit", true);
+        properties.put("enable.auto.commit", false);
         properties.put("auto.commit.interval.ms", 1000);
         properties.put("session.timeout.ms", 15000);
         properties.put("key.deserializer", StringDeserializer.class);

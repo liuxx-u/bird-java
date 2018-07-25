@@ -4,11 +4,11 @@ import com.bird.core.Check;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.SpringContextHolder;
 import com.bird.eventbus.arg.IEventArg;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -89,34 +89,52 @@ public class EventHandlerFactory {
     public static void handleEvent(IEventArg eventArg) {
         String eventKey = eventArg.getClass().getName();
         Set<Method> methods = eventHandlerContainer.getOrDefault(eventKey, null);
-        if (methods == null) return;
-
-
-        ExecutorService poolExecutor = new ScheduledThreadPoolExecutor(methods.size(), new BasicThreadFactory.Builder().build());
-        for (Method method : methods) {
-
-            Object instance = SpringContextHolder.getBean(method.getDeclaringClass());
-            if (instance == null) continue;
-            poolExecutor.execute(() -> {
-                try {
-                    method.invoke(instance, eventArg);
-                } catch (IllegalAccessException e) {
-                    logger.error(instance.getClass().getName() + "不能实例化");
-                } catch (InvocationTargetException e) {
-                    Throwable targetException = e.getTargetException();
-                    if (targetException == null) {
-                        logger.error("事件消费失败");
-                    } else {
-                        logger.error("事件消费失败，msg:" + targetException.getMessage(), targetException);
-                    }
-                }
-            });
+        if (CollectionUtils.isEmpty(methods)) {
+            logger.warn("topic为：" + eventKey + "的事件处理程序不存在.");
+            return;
         }
-        poolExecutor.shutdown();
+
+        if (methods.size() == 1) {
+            for (Method method : methods) {
+                invokeMethod(method, eventArg);
+            }
+        } else {
+            ExecutorService poolExecutor = new ScheduledThreadPoolExecutor(methods.size(), new BasicThreadFactory.Builder().build());
+            for (Method method : methods) {
+                poolExecutor.execute(() -> invokeMethod(method, eventArg));
+            }
+            poolExecutor.shutdown();
+            try {
+                poolExecutor.awaitTermination(30, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+                logger.error("awaitTermination", "", e);
+            }
+        }
+    }
+
+    /**
+     * 执行事件方法
+     *
+     * @param method
+     */
+    private static void invokeMethod(Method method, IEventArg eventArg) {
+        Class typeClass = method.getDeclaringClass();
+        Object instance = SpringContextHolder.getBean(typeClass);
+        if (instance == null) {
+            logger.warn("事件消费者：%s未注入spring容器.", typeClass.getName());
+            return;
+        }
         try {
-            poolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-        } catch (InterruptedException e) {
-            logger.error("awaitTermination", "", e);
+            method.invoke(instance, eventArg);
+        } catch (IllegalAccessException e) {
+            logger.error("%s不能实例化.", typeClass.getName());
+        } catch (InvocationTargetException e) {
+            Throwable targetException = e.getTargetException();
+            if (targetException == null) {
+                logger.error("事件消费失败", e);
+            } else {
+                logger.error(String.format("事件消费失败,事件处理器:%s,message:%s", typeClass.getName(), targetException.getMessage()), targetException);
+            }
         }
     }
 }
