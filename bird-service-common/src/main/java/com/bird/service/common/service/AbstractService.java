@@ -156,7 +156,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             }
             poolExecutor.shutdown();
             try {
-                poolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+                poolExecutor.awaitTermination(30, TimeUnit.MINUTES);
             } catch (InterruptedException e) {
                 logger.error("awaitTermination", "", e);
             }
@@ -185,7 +185,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
             }
             poolExecutor.shutdown();
             try {
-                poolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+                poolExecutor.awaitTermination(30, TimeUnit.MINUTES);
             } catch (InterruptedException e) {
                 logger.error("awaitTermination", "", e);
             }

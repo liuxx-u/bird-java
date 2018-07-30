@@ -23,27 +23,23 @@
     </modules>
 
     <properties>
-        <basedir>src/main</basedir>
-
-        <!-- 开发阶段配置文件位置-->
-        <system.config.path>classpath:system.properties</system.config.path>
-
         <!-- 编码 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!--spring版本号-->
-        <spring.version>5.0.4.RELEASE</spring.version>
-        <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
-        <spring-data-redis.version>2.0.5.RELEASE</spring-data-redis.version>
+        <spring.version>5.0.7.RELEASE</spring.version>
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+        <spring-data-redis.version>2.0.9.RELEASE</spring-data-redis.version>
 
         <!--javax版本号-->
         <javax.version>3.1.0</javax.version>
         <javax.inject.version>1</javax.inject.version>
 
         <!--dubbo组件版本号-->
-        <dubbo.version>2.5.10</dubbo.version>
+        <dubbo.version>2.6.2</dubbo.version>
         <zkclient.version>0.10</zkclient.version>
-        <dubbo-starter.version>0.1.0</dubbo-starter.version>
+        <dubbo-starter.version>0.2.0</dubbo-starter.version>
 
         <!--redis组件版本号-->
         <jedis.version>2.9.0</jedis.version>
