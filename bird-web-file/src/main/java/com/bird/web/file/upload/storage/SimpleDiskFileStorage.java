@@ -63,9 +63,15 @@ public class SimpleDiskFileStorage implements IFileStorage {
             throw new IOException("上传目录没有写权限");
         }
 
-        BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(saveDir + newFileName));
-        buffStream.write(bytes);
-        buffStream.close();
+        BufferedOutputStream buffStream = null;
+        try {
+            buffStream = new BufferedOutputStream(new FileOutputStream(saveDir + newFileName));
+            buffStream.write(bytes);
+        } finally {
+            if (buffStream != null) {
+                buffStream.close();
+            }
+        }
 
         return getSafePath(this.urlPrefix) + additionalPath + newFileName;
     }
