@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Service
 @CacheConfig(cacheNames = "cms_content")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsContentService")
+@com.alibaba.dubbo.config.annotation.Service
 public class CmsContentServiceImpl extends AbstractService<CmsContentMapper,CmsContent> implements CmsContentService {
 
     /**

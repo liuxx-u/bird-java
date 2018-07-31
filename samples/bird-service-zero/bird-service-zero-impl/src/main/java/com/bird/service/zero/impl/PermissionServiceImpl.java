@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @CacheConfig(cacheNames = "zero_permission")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.PermissionService")
+@com.alibaba.dubbo.config.annotation.Service
 public class PermissionServiceImpl extends AbstractService<PermissionMapper,Permission> implements PermissionService {
 
     /**

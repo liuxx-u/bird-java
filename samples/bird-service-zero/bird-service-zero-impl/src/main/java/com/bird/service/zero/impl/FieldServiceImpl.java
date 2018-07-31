@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @CacheConfig(cacheNames = "zero_form_field")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.FieldService")
+@com.alibaba.dubbo.config.annotation.Service
 public class FieldServiceImpl extends AbstractService<FieldMapper,Field> implements FieldService {
 }

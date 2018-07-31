@@ -8,7 +8,6 @@ import com.bird.service.zero.dto.OrganizationDTO;
 import com.bird.service.zero.mapper.OrganizationMapper;
 import com.bird.service.zero.model.Organization;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @CacheConfig(cacheNames = "crm_sharehold_structure")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.OrganizationService")
+@com.alibaba.dubbo.config.annotation.Service
 public class OrganizationServiceImpl extends AbstractService<OrganizationMapper,Organization> implements OrganizationService {
 
     /**

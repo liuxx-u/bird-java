@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @CacheConfig(cacheNames = "zero_module")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.ModuleService")
+@com.alibaba.dubbo.config.annotation.Service
 public class ModuleServiceImpl extends AbstractService<ModuleMapper,Module> implements ModuleService {
 
     /**

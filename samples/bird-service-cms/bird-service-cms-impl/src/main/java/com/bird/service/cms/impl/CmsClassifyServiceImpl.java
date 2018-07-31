@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @CacheConfig(cacheNames = "cms_classify")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.cms.CmsClassifyService")
+@com.alibaba.dubbo.config.annotation.Service
 public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,CmsClassify> implements CmsClassifyService {
 
     @Autowired
@@ -32,12 +32,21 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
      * @return
      */
     @Override
+    @Transactional(rollbackFor = RollbackException.class)
     public CmsClassifyDTO getClassify(Long id) {
 
 //        Check.GreaterThan(id, 0L, "id");
 //        CmsClassify classify = queryById(id);
 
         eventBus.push(new TestEventArg());
+
+//        CmsClassify classify = new CmsClassify();
+//        classify.setName("test");
+//        classify.setParentId(0L);
+//
+//        save(classify);
+//        throw new UserFriendlyException("error");
+
         return new CmsClassifyDTO();
 //        return dozer.map(classify, CmsClassifyDTO.class);
     }
@@ -64,11 +73,11 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
     @EventHandler
     @Transactional(rollbackFor = RollbackException.class)
     public void HandleEvent(TestEventArg eventArg) {
-        CmsClassify classify = new CmsClassify();
-        classify.setName("test");
-        classify.setParentId(0L);
-
-        save(classify);
+//        CmsClassify classify = new CmsClassify();
+//        classify.setName("test");
+//        classify.setParentId(0L);
+//
+//        save(classify);
 
         System.out.println("notify cms======");
     }

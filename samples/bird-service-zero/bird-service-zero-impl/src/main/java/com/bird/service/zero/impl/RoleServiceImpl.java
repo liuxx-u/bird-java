@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @CacheConfig(cacheNames = "zero_role")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.RoleService")
+@com.alibaba.dubbo.config.annotation.Service
 public class RoleServiceImpl extends AbstractService<RoleMapper,Role> implements RoleService {
 
     /**

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @CacheConfig(cacheNames = "zero_form")
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "com.bird.service.zero.FormService")
+@com.alibaba.dubbo.config.annotation.Service
 public class FormServiceImpl extends AbstractService<FormMapper,Form> implements FormService {
 
     /**
