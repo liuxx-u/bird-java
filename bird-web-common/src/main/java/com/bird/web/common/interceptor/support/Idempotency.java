@@ -14,4 +14,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Idempotency {
+
+    /**
+     * 是否强制验证请求头
+     * @return
+     */
+    boolean force() default false;
 }
