@@ -99,7 +99,7 @@ public class PagedQueryParam implements Serializable {
                     TableField tableField = field.getAnnotation(TableField.class);
                     if (tableField != null && !tableField.exist()) continue;
 
-                    String fieldName = String.format("'%s'",field.getName());
+                    String fieldName = String.format("`%s`",field.getName());
                     String dbFieldName = getDbFieldName(field);
                     this.fieldMap.putIfAbsent(fieldName, dbFieldName);
                 }

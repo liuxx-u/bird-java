@@ -81,7 +81,7 @@ public class PagedQueryProvider {
         }
 
         for (FilterRule rule : rules) {
-            String value = rule.getValue();
+            String value = StringUtils.strip(rule.getValue());
             if (StringUtils.isBlank(value)) continue;
             if (!validateSqlValue(value)) continue;
 
@@ -107,7 +107,7 @@ public class PagedQueryProvider {
     }
 
     private String getDbFieldName(PagedQueryParam param, String fieldName) {
-        fieldName = String.format("'%s'",fieldName);
+        fieldName = String.format("`%s`",fieldName);
         Map<String, String> fieldMap = param.getFieldMap();
         return fieldMap.getOrDefault(fieldName, fieldName);
     }

@@ -18,6 +18,7 @@ import com.bird.service.common.service.dto.EntityDTO;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -286,8 +287,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     @Override
     public T selectOne(Wrapper<T> entity) {
         List<T> list = mapper.selectList(entity);
-        if (list.size() == 0) return null;
-        return list.get(0);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
