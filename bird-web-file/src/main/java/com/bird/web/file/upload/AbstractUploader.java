@@ -27,25 +27,21 @@ public abstract class AbstractUploader {
     /**
      * 文件上传监听器
      */
-    @Autowired(required = false)
     private IUploadListener uploadListener;
 
     /**
      * 文件验证器
      */
-    @Autowired(required = false)
     protected IFileValidator validator;
 
     /**
      * 文件处理器
      */
-    @Autowired(required = false)
     protected Map<String, List<IFileHandler>> fileHandlerMap;
 
     /**
      * 文件存储器
      */
-    @Autowired
     protected IFileStorage storage;
 
     /**
