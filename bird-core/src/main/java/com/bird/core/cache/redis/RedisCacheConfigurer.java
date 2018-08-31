@@ -2,6 +2,7 @@ package com.bird.core.cache.redis;
 
 import com.bird.core.Constant;
 import com.bird.core.cache.CacheKeyGenerator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -27,13 +28,16 @@ import java.time.Duration;
 @EnableCaching
 public class RedisCacheConfigurer extends CachingConfigurerSupport {
 
+    @Value("${spring.application.name:bird}")
+    private String cachePrefix;
+
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheWriter cacheWriter = RedisCacheWriter.lockingRedisCacheWriter(connectionFactory);
 
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))
-                .prefixKeysWith(Constant.Cache.NAMESPACE)
+                .prefixKeysWith(cachePrefix + ":")
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         return new RedisCacheManager(cacheWriter, cacheConfiguration);
@@ -62,4 +66,6 @@ public class RedisCacheConfigurer extends CachingConfigurerSupport {
     public KeyGenerator keyGenerator() {
         return new CacheKeyGenerator();
     }
+
+
 }

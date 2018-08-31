@@ -56,7 +56,7 @@ public class RedisTicketSessionStore implements ITicketSessionStore {
     public void refreshTicket(String key, TicketInfo ticketInfo,long expire) {
         ticketInfo.setLastRefreshTime(new Date());
 
-        Date expireDate = new Date(new Date().getTime() + expire);
+        Date expireDate = new Date(System.currentTimeMillis() + expire);
         ticketInfo.setExpireTime(expireDate);
 
         String cacheKey = Ticket_CacheKey_Prefix + key;

@@ -26,6 +26,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,9 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
 
     @Autowired
     protected DozerHelper dozer;
+
+    @Value("${spring.application.name:bird}")
+    private String cachePrefix;
 
     /**
      * 从线程中获取当前登录用户的票据信息
@@ -303,7 +307,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     protected String getCacheKey(Object id) {
         String cacheName = getCacheKey();
-        return new StringBuilder(Constant.Cache.NAMESPACE).append(cacheName).append(":").append(id).toString();
+        return new StringBuilder(cachePrefix).append(":").append(cacheName).append(":").append(id).toString();
     }
 
     /**
@@ -311,7 +315,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     protected String getLockKey(Object id) {
         String cacheName = getCacheKey();
-        return new StringBuilder(Constant.Cache.NAMESPACE).append(cacheName).append(":LOCK:").append(id).toString();
+        return new StringBuilder(cachePrefix).append(":").append(cacheName).append(":LOCK:").append(id).toString();
     }
 
     /**
