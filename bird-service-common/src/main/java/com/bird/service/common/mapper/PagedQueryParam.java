@@ -1,13 +1,11 @@
 package com.bird.service.common.mapper;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.bird.service.common.service.query.PagedListQueryDTO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -16,35 +14,36 @@ import java.util.*;
  */
 public class PagedQueryParam implements Serializable {
 
-    public PagedQueryParam() {
-        this.filterSoftDelete = true;
-    }
+    private static ConcurrentHashMap<String, QueryDescriptor> CLASS_QUERY_DESCRIPTOR_MAP = new ConcurrentHashMap<>();
 
+    /**
+     * 简单构造，适用与单表查询
+     *
+     * @param query  查询条件
+     * @param tClass 对应DTO类
+     */
     public PagedQueryParam(PagedListQueryDTO query, Class<?> tClass) {
-        this(query,tClass,null,null,null);
-        this.filterSoftDelete = true;
-    }
+        this(query, tClass, null, null);
 
-    public PagedQueryParam(PagedListQueryDTO query,String select,String from,String where) {
-        this(query, null, select, from, where);
+        this.filterSoftDelete = true;
     }
 
     /**
-     * 构造方法
-     * @param query 查询条件
+     * 复杂构造，适用于多表查询
+     *
+     * @param query  查询条件
      * @param tClass 映射的Class
-     * @param select
-     * @param from
-     * @param where
+     * @param from   from语句
+     * @param where  where语句
      */
-    public PagedQueryParam(PagedListQueryDTO query,Class<?> tClass,String select,String from,String where) {
+    public PagedQueryParam(PagedListQueryDTO query, Class<?> tClass, String from, String where) {
         this.query = query;
-        this.select = select;
         this.from = from;
         this.where = where;
 
-        this.tClass = tClass;
-        initWithClass();
+        if (tClass != null) {
+            this.queryDescriptor = CLASS_QUERY_DESCRIPTOR_MAP.computeIfAbsent(tClass.getName(), className -> QueryDescriptor.parseClass(tClass));
+        }
     }
 
     /**
@@ -53,14 +52,9 @@ public class PagedQueryParam implements Serializable {
     private PagedListQueryDTO query;
 
     /**
-     * 查询数据源
+     * 自定义的查询数据源，主要用于多表关联
      */
     private String from;
-
-    /**
-     * 查询字段
-     */
-    private String select;
 
     /**
      * 自定义的where条件
@@ -68,136 +62,62 @@ public class PagedQueryParam implements Serializable {
     private String where;
 
     /**
-     * 返回数据目标类型
+     * DTO对应的查询描述符
      */
-    private Class<?> tClass;
+    private QueryDescriptor queryDescriptor;
 
     /**
-     * 是否过滤软删除的数据（使用tClass时默认为true）
+     * 是否过滤软删除的数据（简单构造-单表时默认为true）
      */
     private boolean filterSoftDelete;
 
-    /**
-     * fieldName与dbFieldName哈希表
-     */
-    private Map<String,String> fieldMap = new HashMap<>();
+    String getDbFieldName(String field){
+        return this.queryDescriptor.getDbFieldName(field);
+    }
 
-    /**
-     * 根据Class名称初始化select与from
-     * 如果select为空，selectSql = tClass反射得到的select
-     */
-    private void initWithClass() {
-        if (this.tClass == null) return;
+    String getSelect() {
+        return this.queryDescriptor == null ? "" : this.queryDescriptor.getSelect();
+    }
 
-        if (StringUtils.isBlank(this.select)) {
-            Class tempClass = tClass;
-            StringBuilder sb = new StringBuilder();
+    String getFrom() {
+        if (StringUtils.isNotBlank(this.from)) return this.from;
+        else if (this.queryDescriptor != null) return this.queryDescriptor.getFrom();
+        else return null;
+    }
 
-            while (tempClass != null && !tempClass.getName().equals(Object.class.getName())) {
-                Field[] tempFields = tempClass.getDeclaredFields();
-                for (Field field : tempFields) {
-                    TableField tableField = field.getAnnotation(TableField.class);
-                    if (tableField != null && !tableField.exist()) continue;
-
-                    String fieldName = String.format("`%s`",field.getName());
-                    String dbFieldName = getDbFieldName(field);
-                    this.fieldMap.putIfAbsent(fieldName, dbFieldName);
-                }
-
-                tempClass = tempClass.getSuperclass();
-            }
-
-            for(Map.Entry<String, String> entry : this.fieldMap.entrySet()){
-                sb.append(entry.getValue());
-                sb.append(" AS ");
-                sb.append(entry.getKey());
-                sb.append(",");
-            }
-
-            this.select = StringUtils.stripEnd(sb.toString(), ",");
-        }
-
-        //如果from为空，则使用tClass的TableName
-        if (StringUtils.isBlank(this.from)) {
-
-            TableName tableName = this.tClass.getAnnotation(TableName.class);
-            if (tableName != null) {
-                this.from = tableName.value();
+    String getWhere() {
+        if (this.queryDescriptor == null || this.query == null || CollectionUtils.isEmpty(this.query.getFilters()))
+            return this.where;
+        else {
+            String queryWhere = this.queryDescriptor.formatRules(this.query.getFilters());
+            if (StringUtils.isNotBlank(this.where)) {
+                return this.where + " and " + queryWhere;
+            } else {
+                return queryWhere;
             }
         }
     }
 
-    private String getDbFieldName(Field field) {
-        TableField tableField = field.getAnnotation(TableField.class);
-        String dbFieldName = tableField == null ? field.getName() : tableField.value();
-        if (!StringUtils.startsWith(dbFieldName, "`")) {
-            dbFieldName = "`" + dbFieldName;
-        }
-        if (!StringUtils.endsWith(dbFieldName, "`")) {
-            dbFieldName += "`";
-        }
-        return dbFieldName;
+    boolean isFilterSoftDelete() {
+        return filterSoftDelete;
     }
 
-    /**
-     * 获取通用查询条件
-     * @return
-     */
     public PagedListQueryDTO getQuery() {
         return query;
     }
-
     public void setQuery(PagedListQueryDTO query) {
         this.query = query;
-    }
-
-    /**
-     * 获取查询数据源
-     *
-     * @return
-     */
-    public String getFrom() {
-        return from;
     }
 
     public void setFrom(String from) {
         this.from = from;
     }
 
-    /**
-     * 获取查询字段，默认查询实体包含的所有字段
-     *
-     * @return
-     */
-    public String getSelect() {
-        return select;
-    }
-
-    public void setSelect(String select) {
-        this.select = select;
-    }
-
-    /**
-     * 获取自定义where条件
-     * @return
-     */
-    public String getWhere() {
-        return where;
-    }
-
     public void setWhere(String where) {
         this.where = where;
     }
 
-    public boolean isFilterSoftDelete() {
-        return filterSoftDelete;
-    }
-
     public void setFilterSoftDelete(boolean filterSoftDelete) {
         this.filterSoftDelete = filterSoftDelete;
-    }
-
-    public Map<String,String> getFieldMap() {
-        return this.fieldMap;
     }
 }

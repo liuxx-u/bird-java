@@ -52,14 +52,6 @@ public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatispl
     void updateDto(CommonSaveParam param);
 
     /**
-     * 通用删除方法
-     *
-     * @param param
-     */
-    @DeleteProvider(type = CommonDeleteProvider.class, method = "delete")
-    void deleteDto(CommonDeleteParam param);
-
-    /**
      * 通用获取树数据方法
      *
      *@param param
