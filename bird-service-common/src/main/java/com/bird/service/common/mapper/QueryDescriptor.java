@@ -6,6 +6,7 @@ import com.bird.service.common.service.query.FilterOperate;
 import com.bird.service.common.service.query.FilterRule;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author liuxx
  * @date 2018/9/28
  */
-class QueryDescriptor {
+class QueryDescriptor implements Serializable {
 
     private static final Map<String, String> OPERATE_MAP = new HashMap<String, String>() {{
         put(FilterOperate.EQUAL, "=");
@@ -40,7 +41,6 @@ class QueryDescriptor {
     }
 
     static QueryDescriptor parseClass(Class<?> tClass) {
-        String select = "", from = "";
         Map<String, String> fieldMap = new HashMap<>(16);
 
         if (tClass == null) return null;
@@ -53,7 +53,7 @@ class QueryDescriptor {
                 TableField tableField = field.getAnnotation(TableField.class);
                 if (tableField != null && !tableField.exist()) continue;
 
-                String fieldName = String.format("`%s`", field.getName());
+                String fieldName = StringUtils.wrapIfMissing(field.getName(),'`');
                 String dbFieldName = getDbFieldName(field);
                 fieldMap.putIfAbsent(fieldName, dbFieldName);
             }
@@ -68,9 +68,9 @@ class QueryDescriptor {
             sb.append(",");
         }
 
-        select = StringUtils.stripEnd(sb.toString(), ",");
+        String select = StringUtils.stripEnd(sb.toString(), ",");
 
-        //如果from为空，则使用tClass的TableName
+        String from = "";
         TableName tableName = tClass.getAnnotation(TableName.class);
         if (tableName != null) {
             from = tableName.value();
@@ -81,13 +81,7 @@ class QueryDescriptor {
     private static String getDbFieldName(Field field) {
         TableField tableField = field.getAnnotation(TableField.class);
         String dbFieldName = tableField == null ? field.getName() : tableField.value();
-        if (!StringUtils.startsWith(dbFieldName, "`")) {
-            dbFieldName = "`" + dbFieldName;
-        }
-        if (!StringUtils.endsWith(dbFieldName, "`")) {
-            dbFieldName += "`";
-        }
-        return dbFieldName;
+        return StringUtils.wrapIfMissing(dbFieldName, '`');
     }
 
     String formatRules(List<FilterRule> rules) {
@@ -107,12 +101,18 @@ class QueryDescriptor {
                 sb.append(" and ");
             }
 
-            if (rule.getOperate().equals(FilterOperate.STARTWITH)) {
-                value = value + "%";
-            } else if (rule.getOperate().equals(FilterOperate.ENDWITH)) {
-                value = "%" + value;
-            } else if (rule.getOperate().equals(FilterOperate.CONTAINS)) {
-                value = "%" + value + "%";
+            switch (rule.getOperate()) {
+                case FilterOperate.STARTWITH:
+                    value = value + "%";
+                    break;
+                case FilterOperate.ENDWITH:
+                    value = "%" + value;
+                    break;
+                case FilterOperate.CONTAINS:
+                    value = "%" + value + "%";
+                    break;
+                default:
+                    break;
             }
 
             sb.append(this.getDbFieldName(field)).append(OPERATE_MAP.get(rule.getOperate())).append(" '").append(value).append("'");
@@ -134,7 +134,7 @@ class QueryDescriptor {
         String emptyField = "''";
         if (StringUtils.isBlank(field)) return emptyField;
 
-        String fieldName = String.format("`%s`", field);
+        String fieldName = StringUtils.wrapIfMissing(field, '`');
         return this.fieldMap.getOrDefault(fieldName, fieldName);
     }
 }

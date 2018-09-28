@@ -29,7 +29,7 @@ public class PagedQueryParam implements Serializable {
     }
 
     /**
-     * 复杂构造，适用于多表查询
+     * 复杂构造，适用于：1、自定义查询条件；2、多表联合查询
      *
      * @param query  查询条件
      * @param tClass 映射的Class
@@ -90,11 +90,8 @@ public class PagedQueryParam implements Serializable {
             return this.where;
         else {
             String queryWhere = this.queryDescriptor.formatRules(this.query.getFilters());
-            if (StringUtils.isNotBlank(this.where)) {
-                return this.where + " and " + queryWhere;
-            } else {
-                return queryWhere;
-            }
+            if (StringUtils.isBlank(queryWhere)) return this.where;
+            else return StringUtils.isBlank(this.where) ? queryWhere : this.where + " and " + queryWhere;
         }
     }
 
