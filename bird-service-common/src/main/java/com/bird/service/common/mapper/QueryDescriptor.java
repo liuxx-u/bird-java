@@ -2,6 +2,7 @@ package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.bird.service.common.service.query.FilterGroup;
 import com.bird.service.common.service.query.FilterOperate;
 import com.bird.service.common.service.query.FilterRule;
 import org.apache.commons.lang3.StringUtils;
@@ -16,9 +17,11 @@ import java.util.Map;
  * @author liuxx
  * @date 2018/9/28
  */
-class QueryDescriptor implements Serializable {
+public class QueryDescriptor implements Serializable {
 
     private static final Map<String, String> OPERATE_MAP = new HashMap<String, String>() {{
+        put(FilterOperate.AND, "and");
+        put(FilterOperate.OR, "or");
         put(FilterOperate.EQUAL, "=");
         put(FilterOperate.NOTEQUAL, "!=");
         put(FilterOperate.LESS, "<");
@@ -28,6 +31,7 @@ class QueryDescriptor implements Serializable {
         put(FilterOperate.STARTWITH, "like");
         put(FilterOperate.ENDWITH, "like");
         put(FilterOperate.CONTAINS, "like");
+        put(FilterOperate.IN, "in");
     }};
 
     private String select;
@@ -40,7 +44,7 @@ class QueryDescriptor implements Serializable {
         this.fieldMap = fieldMap;
     }
 
-    static QueryDescriptor parseClass(Class<?> tClass) {
+    public static QueryDescriptor parseClass(Class<?> tClass) {
         Map<String, String> fieldMap = new HashMap<>(16);
 
         if (tClass == null) return null;
@@ -53,7 +57,7 @@ class QueryDescriptor implements Serializable {
                 TableField tableField = field.getAnnotation(TableField.class);
                 if (tableField != null && !tableField.exist()) continue;
 
-                String fieldName = StringUtils.wrapIfMissing(field.getName(),'`');
+                String fieldName = StringUtils.wrapIfMissing(field.getName(), '`');
                 String dbFieldName = getDbFieldName(field);
                 fieldMap.putIfAbsent(fieldName, dbFieldName);
             }
@@ -84,7 +88,42 @@ class QueryDescriptor implements Serializable {
         return StringUtils.wrapIfMissing(dbFieldName, '`');
     }
 
-    String formatRules(List<FilterRule> rules) {
+    String getSelect() {
+        return select;
+    }
+
+    String getFrom() {
+        return from;
+    }
+
+    String getDbFieldName(String field) {
+        String emptyField = "''";
+        if (StringUtils.isBlank(field)) return emptyField;
+
+        String fieldName = StringUtils.wrapIfMissing(field, '`');
+        return this.fieldMap.getOrDefault(fieldName, fieldName);
+    }
+
+    public String formatFilters(FilterGroup group) {
+        if (group == null) return null;
+
+        String where = formatRules(group.getRules());
+        String groupWhere = formatFilters(group.getGroup());
+
+        if (StringUtils.isBlank(groupWhere)) return where;
+        else if (StringUtils.isBlank(where)) return groupWhere;
+        else {
+            StringBuilder sb = new StringBuilder();
+            String operate = StringUtils.isBlank(group.getOperate())
+                    ? FilterOperate.AND :
+                    OPERATE_MAP.getOrDefault(group.getOperate().toLowerCase(), FilterOperate.AND);
+
+            sb.append("(").append(where).append(") ").append(operate).append(" (").append(groupWhere).append(")");
+            return sb.toString();
+        }
+    }
+
+    private String formatRules(List<FilterRule> rules) {
         StringBuilder sb = new StringBuilder();
 
         boolean isStart = true;
@@ -111,30 +150,19 @@ class QueryDescriptor implements Serializable {
                 case FilterOperate.CONTAINS:
                     value = "%" + value + "%";
                     break;
+                case FilterOperate.IN:
+                    value = String.format("(%s)", StringUtils.strip(value,","));
+                    break;
                 default:
                     break;
             }
+            if (!StringUtils.equals(rule.getOperate(), FilterOperate.IN)) {
+                value = StringUtils.wrapIfMissing(value, "'");
+            }
 
-            sb.append(this.getDbFieldName(field)).append(OPERATE_MAP.get(rule.getOperate())).append(" '").append(value).append("'");
+            sb.append(this.getDbFieldName(field)).append(" ").append(OPERATE_MAP.get(rule.getOperate().toLowerCase())).append(" ").append(value);
             isStart = false;
         }
         return sb.toString();
-    }
-
-
-    String getSelect() {
-        return select;
-    }
-
-    String getFrom() {
-        return from;
-    }
-
-    String getDbFieldName(String field) {
-        String emptyField = "''";
-        if (StringUtils.isBlank(field)) return emptyField;
-
-        String fieldName = StringUtils.wrapIfMissing(field, '`');
-        return this.fieldMap.getOrDefault(fieldName, fieldName);
     }
 }

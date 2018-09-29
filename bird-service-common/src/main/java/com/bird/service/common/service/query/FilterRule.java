@@ -3,7 +3,7 @@ package com.bird.service.common.service.query;
 import java.io.Serializable;
 
 /**
- *
+ * 筛选条件
  * @author liuxx
  * @date 2017/6/22
  */

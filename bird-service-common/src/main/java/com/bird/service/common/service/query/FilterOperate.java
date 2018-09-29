@@ -21,4 +21,6 @@ public interface FilterOperate {
     String STARTWITH = "startswith";
     String ENDWITH = "endwith";
     String CONTAINS = "contains";
+
+    String IN = "in";
 }
