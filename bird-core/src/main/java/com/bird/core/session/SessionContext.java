@@ -7,7 +7,7 @@ package com.bird.core.session;
  * session上下文
  */
 public class SessionContext {
-    private static final ThreadLocal<BirdSession> LOCAL = ThreadLocal.withInitial(() -> new BirdSession());
+    private static final ThreadLocal<BirdSession> LOCAL = ThreadLocal.withInitial(BirdSession::new);
 
     private SessionContext(){}
 

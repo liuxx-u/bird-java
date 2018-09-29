@@ -41,12 +41,9 @@ public abstract class AuthorizeController extends AbstractController {
 
     /**
      * 获取当前登录用户的userId
-     *
-     * @param request 请求
-     * @return
      */
-    protected Long getUserId(HttpServletRequest request) {
-        BirdSession session = getSession(request);
+    protected Long getUserId() {
+        BirdSession session = getSession(super.request);
         if (session == null) return 0L;
         if (session.getUserId() == null || StringUtils.isBlank(session.getUserId().toString())) return 0L;
         return Long.valueOf(session.getUserId().toString());

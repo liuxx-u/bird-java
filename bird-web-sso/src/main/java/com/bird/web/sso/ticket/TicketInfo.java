@@ -26,7 +26,7 @@ public class TicketInfo implements Serializable {
         creationTime = new Date();
         lastRefreshTime = new Date();
 
-        claims = new HashMap();
+        claims = new HashMap<>();
     }
 
     /**
@@ -97,11 +97,11 @@ public class TicketInfo implements Serializable {
         this.name = name;
     }
 
-    public Map getClaims() {
+    public Map<String,Object> getClaims() {
         return claims;
     }
 
-    public void setClaims(Map claims) {
+    public void setClaims(Map<String,Object> claims) {
         this.claims = claims;
     }
 

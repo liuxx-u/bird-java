@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SsoSessionResolvor extends AbstractServletSessionResolvor {
 
-    public static final String SESSION_ATTRIBUTE_KEY = "sso-session";
+    static final String SESSION_ATTRIBUTE_KEY = "sso-session";
 
     @Override
     public BirdSession resolve(HttpServletRequest request) {
