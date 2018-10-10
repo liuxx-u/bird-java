@@ -1,11 +1,15 @@
 package com.bird.service.common.mapper;
 
+import com.bird.core.session.BirdSession;
+import com.bird.core.session.SessionContext;
 import com.bird.core.utils.SpringContextHolder;
 import com.bird.service.common.mapper.permission.IDataRuleProvider;
+import com.bird.service.common.mapper.permission.IDataRuleStore;
 import com.bird.service.common.service.query.FilterGroup;
 import com.bird.service.common.service.query.FilterRule;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,19 +90,29 @@ public class PagedQueryParam implements Serializable {
      */
     private FilterGroup filterGroup;
 
-    public PagedQueryParam withDataRule(String key) {
+    public PagedQueryParam withDataRule(String... tables) {
+        if (ArrayUtils.isEmpty(tables)) return this;
         try {
-            IDataRuleProvider provider = SpringContextHolder.getBean(IDataRuleProvider.class);
-            this.filterGroup = provider.filter(key);
+            IDataRuleStore store = SpringContextHolder.getBean(IDataRuleStore.class);
+
+            BirdSession session = SessionContext.getSession();
+            if (session != null && session.getUserId() != null) {
+                Long userId = Long.parseLong(session.getUserId().toString());
+                this.filterGroup = store.get(userId, tables);
+            } else {
+                logger.error("当前用户未登录");
+            }
         } catch (NoSuchBeanDefinitionException exception) {
-            logger.error("IDataRuleProvider未注入，自定义查询规则无效");
+            logger.error("IDataRuleStore未注入，数据权限规则无效", exception);
+        } catch (NumberFormatException ex) {
+            logger.error("当前用户未登录", ex);
         }
         return this;
     }
 
     public PagedQueryParam withDataRule(IDataRuleProvider provider) {
         if (provider != null) {
-            this.filterGroup = provider.filter(null);
+            this.filterGroup = provider.filter();
         }
         return this;
     }
@@ -130,7 +144,7 @@ public class PagedQueryParam implements Serializable {
 
             String queryWhere = this.queryDescriptor.formatFilters(group);
             if (StringUtils.isBlank(queryWhere)) return this.where;
-            else return StringUtils.isBlank(this.where) ? queryWhere : "(" +this.where + ") and " + queryWhere;
+            else return StringUtils.isBlank(this.where) ? queryWhere : "(" + this.where + ") and " + queryWhere;
         }
     }
 

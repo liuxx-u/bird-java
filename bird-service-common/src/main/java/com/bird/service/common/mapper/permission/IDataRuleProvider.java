@@ -11,8 +11,7 @@ public interface IDataRuleProvider {
 
     /**
      * 根据字段名筛选数据
-     * @param key 标识
      * @return 筛选规则组
      */
-    FilterGroup filter(String key);
+    FilterGroup filter();
 }

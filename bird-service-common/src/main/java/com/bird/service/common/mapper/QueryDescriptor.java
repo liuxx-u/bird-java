@@ -82,7 +82,7 @@ public class QueryDescriptor implements Serializable {
         return new QueryDescriptor(select, from, fieldMap);
     }
 
-    private static String getDbFieldName(Field field) {
+    public static String getDbFieldName(Field field) {
         TableField tableField = field.getAnnotation(TableField.class);
         String dbFieldName = tableField == null ? field.getName() : tableField.value();
         return StringUtils.wrapIfMissing(dbFieldName, '`');
