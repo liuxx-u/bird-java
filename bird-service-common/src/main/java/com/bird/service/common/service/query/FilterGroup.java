@@ -22,20 +22,20 @@ public class FilterGroup implements Serializable {
     /**
      * 连接的组
      */
-    private FilterGroup group;
+    private List<FilterGroup> groups;
 
     public FilterGroup(List<FilterRule> rules) {
         this.rules = rules;
     }
 
-    public void and(FilterGroup group){
+    public void and(List<FilterGroup> groups){
         this.operate = FilterOperate.AND;
-        this.group = group;
+        this.groups = groups;
     }
 
-    public void or(FilterGroup group){
+    public void or(List<FilterGroup> groups){
         this.operate = FilterOperate.OR;
-        this.group = group;
+        this.groups = groups;
     }
 
     public List<FilterRule> getRules() {
@@ -46,7 +46,7 @@ public class FilterGroup implements Serializable {
         return operate;
     }
 
-    public FilterGroup getGroup() {
-        return group;
+    public List<FilterGroup> getGroups() {
+        return groups;
     }
 }

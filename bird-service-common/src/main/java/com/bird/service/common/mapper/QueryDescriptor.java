@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.bird.service.common.service.query.FilterGroup;
 import com.bird.service.common.service.query.FilterOperate;
 import com.bird.service.common.service.query.FilterRule;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -98,7 +99,9 @@ public class QueryDescriptor implements Serializable {
 
     String getDbFieldName(String field) {
         String emptyField = "''";
+        String dbDelimiter = ".";
         if (StringUtils.isBlank(field)) return emptyField;
+        if (field.indexOf(dbDelimiter) > 0) return field;
 
         String fieldName = StringUtils.wrapIfMissing(field, '`');
         return this.fieldMap.getOrDefault(fieldName, fieldName);
@@ -108,7 +111,22 @@ public class QueryDescriptor implements Serializable {
         if (group == null) return null;
 
         String where = formatRules(group.getRules());
-        String groupWhere = formatFilters(group.getGroup());
+
+        boolean isStart = true;
+        StringBuilder groupBuilder = new StringBuilder();
+        if (CollectionUtils.isNotEmpty(group.getGroups())) {
+            for (FilterGroup innerGroup : group.getGroups()) {
+                String innerWhere = this.formatFilters(innerGroup);
+                if (StringUtils.isNotBlank(innerWhere)) {
+                    if (!isStart) {
+                        groupBuilder.append(" and ");
+                    }
+                    groupBuilder.append(innerWhere);
+                    isStart = false;
+                }
+            }
+        }
+        String groupWhere = groupBuilder.toString();
 
         if (StringUtils.isBlank(groupWhere)) return where;
         else if (StringUtils.isBlank(where)) return groupWhere;
@@ -118,7 +136,7 @@ public class QueryDescriptor implements Serializable {
                     ? FilterOperate.AND :
                     OPERATE_MAP.getOrDefault(group.getOperate().toLowerCase(), FilterOperate.AND);
 
-            sb.append("(").append(where).append(") ").append(operate).append(" (").append(groupWhere).append(")");
+            sb.append("(").append(where).append(" ").append(operate).append(" ").append(groupWhere).append(")");
             return sb.toString();
         }
     }
@@ -151,7 +169,7 @@ public class QueryDescriptor implements Serializable {
                     value = "%" + value + "%";
                     break;
                 case FilterOperate.IN:
-                    value = String.format("(%s)", StringUtils.strip(value,","));
+                    value = String.format("(%s)", StringUtils.strip(value, ","));
                     break;
                 default:
                     break;
@@ -163,6 +181,7 @@ public class QueryDescriptor implements Serializable {
             sb.append(this.getDbFieldName(field)).append(" ").append(OPERATE_MAP.get(rule.getOperate().toLowerCase())).append(" ").append(value);
             isStart = false;
         }
-        return sb.toString();
+        String where = sb.toString();
+        return StringUtils.isNotBlank(where) ? "(" + where + ")" : where;
     }
 }

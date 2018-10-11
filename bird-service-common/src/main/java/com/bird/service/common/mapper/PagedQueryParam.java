@@ -17,6 +17,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -140,7 +142,7 @@ public class PagedQueryParam implements Serializable {
                     : this.query.getFilters();
 
             FilterGroup group = new FilterGroup(queryRules);
-            group.and(this.filterGroup);
+            group.and(Collections.singletonList(this.filterGroup));
 
             String queryWhere = this.queryDescriptor.formatFilters(group);
             if (StringUtils.isBlank(queryWhere)) return this.where;

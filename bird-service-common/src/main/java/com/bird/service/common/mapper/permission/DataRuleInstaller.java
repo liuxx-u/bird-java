@@ -65,10 +65,14 @@ public class DataRuleInstaller {
                     ruleInfo.setFieldName(field.getName());
                     ruleInfo.setDbFieldName(QueryDescriptor.getDbFieldName(field));
                     ruleInfo.setName(dataRule.name());
-                    ruleInfo.setSourceProvider(dataRule.provider().getName());
                     ruleInfo.setSourceStrategy(String.valueOf(dataRule.strategy().getKey()));
-                    ruleInfo.setSourceUrl(dataRule.url());
                     ruleInfo.setTableName(StringUtils.wrapIfMissing(tableName.value(),"`"));
+                    if(RuleSourceStrategy.CHOICE.equals(dataRule.strategy())){
+                        ruleInfo.setSourceUrl(dataRule.url());
+                    }
+                    if(RuleSourceStrategy.SYSTEM.equals(dataRule.strategy())){
+                        ruleInfo.setSourceProvider(dataRule.provider().getName());
+                    }
 
                     ruleInfos.add(ruleInfo);
                 }
