@@ -18,7 +18,7 @@ public class EventBus {
 
     /**
      * 向EventBus中推送消息
-     * @param eventArg
+     * @param eventArg 事件
      */
     public void push(IEventArg eventArg) {
         if (eventRegister == null) {
@@ -30,7 +30,7 @@ public class EventBus {
 
     /**
      * 局部事件消费，事件只在本服务内被消费
-     * @param eventArg
+     * @param eventArg 事件
      */
     public void pushLocal(IEventArg eventArg){
         EventHandlerFactory.handleEvent(eventArg);

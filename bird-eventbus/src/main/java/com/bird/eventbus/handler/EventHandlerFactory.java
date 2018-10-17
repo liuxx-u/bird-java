@@ -8,6 +8,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,7 +41,7 @@ public class EventHandlerFactory {
     /**
      * 扫描指定包内部的事件监听方法
      *
-     * @param packageName
+     * @param packageName 包名
      */
     public static void initWithPackage(String packageName) {
         Check.NotNull(packageName, "packageName");
@@ -61,7 +62,7 @@ public class EventHandlerFactory {
                     if (!EVENT_HANDLER_CONTAINER.containsKey(argClassName)) {
                         EVENT_HANDLER_CONTAINER.put(argClassName, new HashSet<>());
                     }
-                    Set eventHandlers = EVENT_HANDLER_CONTAINER.get(argClassName);
+                    Set<Method> eventHandlers = EVENT_HANDLER_CONTAINER.get(argClassName);
                     eventHandlers.add(method);
                     EVENT_HANDLER_CONTAINER.put(argClassName, eventHandlers);
                 }
@@ -72,7 +73,7 @@ public class EventHandlerFactory {
     /**
      * 获取当前程序所有事件的名称
      *
-     * @return
+     * @return 事件名称集合
      */
     public static String[] getAllTopics() {
         Set<String> keys = EVENT_HANDLER_CONTAINER.keySet();
@@ -86,8 +87,7 @@ public class EventHandlerFactory {
     /**
      * 事件消费
      *
-     * @param eventArg
-     * @return
+     * @param eventArg 事件
      */
 
     public static void handleEvent(IEventArg eventArg) {
@@ -152,13 +152,11 @@ public class EventHandlerFactory {
      */
     private static boolean tryInvokeMethod(Method method, IEventArg eventArg) {
         Class typeClass = method.getDeclaringClass();
-        Object instance = SpringContextHolder.getBean(typeClass);
-        if (instance == null) {
-            LOGGER.warn("事件消费者：%s未注入spring容器.", typeClass.getName());
-            return true;
-        }
         try {
+            Object instance = SpringContextHolder.getBean(typeClass);
             method.invoke(instance, eventArg);
+        } catch (NoSuchBeanDefinitionException e) {
+            LOGGER.warn("事件消费者：%s未注入spring容器.", typeClass.getName(), e);
         } catch (IllegalAccessException e) {
             LOGGER.error("%s不能实例化.", typeClass.getName());
         } catch (InvocationTargetException e) {

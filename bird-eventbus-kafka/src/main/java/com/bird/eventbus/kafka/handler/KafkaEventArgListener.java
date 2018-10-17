@@ -25,7 +25,11 @@ public class KafkaEventArgListener implements AcknowledgingMessageListener<Strin
 
         if (data == null) return;
 
+        //超过24小时的事件，不进行处理
         EventArg value = data.value();
-        EventHandlerFactory.handleEvent(value);
+        Integer span = 24 * 60 * 60 * 1000;
+        if (System.currentTimeMillis() - value.getEventTime().getTime() <= span) {
+            EventHandlerFactory.handleEvent(value);
+        }
     }
 }
