@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,15 +19,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 文件操作工具类
- * 实现文件的创建、删除、复制、压缩、解压以及目录的创建、删除、复制、压缩解压等功能
- * @author liuyunhong
+ * 实现文件的创建、删除、复制、压缩、解压以及目录的创建、删除、复制、压缩等功能
+ * @author liuxx
  */
 public class FileHelper extends FileUtils {
 
+    private static final int BUFFER_SIZE = 2 * 1024;
     private static Logger log = LoggerFactory.getLogger(FileHelper.class);
 
     /**
      * 获取文件后缀名
+     *
      * @param fileName
      * @return
      */
@@ -36,18 +39,20 @@ public class FileHelper extends FileUtils {
 
     /**
      * 获取文件后缀名
+     *
      * @param file
      * @return
      */
-    public static String getSuffix(File file){
-        if(file == null) return null;
+    public static String getSuffix(File file) {
+        if (file == null) return null;
         String fileName = file.getName();
         return getSuffix(fileName);
     }
 
     /**
      * 复制单个文件，如果目标文件存在，则不覆盖
-     * @param srcFileName 待复制的文件名
+     *
+     * @param srcFileName  待复制的文件名
      * @param descFileName 目标文件名
      * @return 如果复制成功，则返回true，否则返回false
      */
@@ -57,12 +62,13 @@ public class FileHelper extends FileUtils {
 
     /**
      * 复制单个文件
-     * @param srcFileName 待复制的文件名
+     *
+     * @param srcFileName  待复制的文件名
      * @param descFileName 目标文件名
-     * @param coverlay 如果目标文件已存在，是否覆盖
+     * @param coverlay     如果目标文件已存在，是否覆盖
      * @return 如果复制成功，则返回true，否则返回false
      */
-    public static boolean copyFileCover(String srcFileName,String descFileName, boolean coverlay) {
+    public static boolean copyFileCover(String srcFileName, String descFileName, boolean coverlay) {
         File srcFile = new File(srcFileName);
         // 判断源文件是否存在
         if (!srcFile.exists()) {
@@ -143,22 +149,24 @@ public class FileHelper extends FileUtils {
 
     /**
      * 复制整个目录的内容，如果目标目录存在，则不覆盖
-     * @param srcDirName 源目录名
+     *
+     * @param srcDirName  源目录名
      * @param descDirName 目标目录名
      * @return 如果复制成功返回true，否则返回false
      */
     public static boolean copyDirectory(String srcDirName, String descDirName) {
-        return FileHelper.copyDirectoryCover(srcDirName, descDirName,false);
+        return FileHelper.copyDirectoryCover(srcDirName, descDirName, false);
     }
 
     /**
      * 复制整个目录的内容
-     * @param srcDirName 源目录名
+     *
+     * @param srcDirName  源目录名
      * @param descDirName 目标目录名
-     * @param coverlay 如果目标目录存在，是否覆盖
+     * @param coverlay    如果目标目录存在，是否覆盖
      * @return 如果复制成功返回true，否则返回false
      */
-    public static boolean copyDirectoryCover(String srcDirName,String descDirName, boolean coverlay) {
+    public static boolean copyDirectoryCover(String srcDirName, String descDirName, boolean coverlay) {
         File srcDir = new File(srcDirName);
         // 判断源目录是否存在
         if (!srcDir.exists()) {
@@ -205,7 +213,7 @@ public class FileHelper extends FileUtils {
         for (int i = 0; i < files.length; i++) {
             // 如果是一个单个文件，则直接复制
             if (files[i].isFile()) {
-                flag = FileHelper.copyFile(files[i].getAbsolutePath(),descDirName + files[i].getName());
+                flag = FileHelper.copyFile(files[i].getAbsolutePath(), descDirName + files[i].getName());
                 // 如果拷贝文件失败，则退出循环
                 if (!flag) {
                     break;
@@ -231,7 +239,6 @@ public class FileHelper extends FileUtils {
     }
 
     /**
-     *
      * 删除文件，可以删除单个文件或文件夹
      *
      * @param fileName 被删除的文件名
@@ -252,7 +259,6 @@ public class FileHelper extends FileUtils {
     }
 
     /**
-     *
      * 删除单个文件
      *
      * @param fileName 被删除的文件名
@@ -275,7 +281,6 @@ public class FileHelper extends FileUtils {
     }
 
     /**
-     *
      * 删除目录及目录下的文件
      *
      * @param dirName 被删除的目录所在的文件路径
@@ -331,6 +336,7 @@ public class FileHelper extends FileUtils {
 
     /**
      * 创建单个文件
+     *
      * @param descFileName 文件名，包含路径
      * @return 如果创建成功，则返回true，否则返回false
      */
@@ -371,6 +377,7 @@ public class FileHelper extends FileUtils {
 
     /**
      * 创建目录
+     *
      * @param descDirName 目录名,包含路径
      * @return 如果创建成功，则返回true，否则返回false
      */
@@ -397,6 +404,7 @@ public class FileHelper extends FileUtils {
 
     /**
      * 写入文件
+     *
      * @param fileName 要写入的文件
      */
     public static void writeToFile(String fileName, String content, boolean append) {
@@ -410,6 +418,7 @@ public class FileHelper extends FileUtils {
 
     /**
      * 写入文件
+     *
      * @param fileName 要写入的文件
      */
     public static void writeToFile(String fileName, String content, String encoding, boolean append) {
@@ -422,208 +431,138 @@ public class FileHelper extends FileUtils {
     }
 
     /**
-     * 压缩文件或目录
-     * @param srcDirName 压缩的根目录
-     * @param fileName 根目录下的待压缩的文件名或文件夹名，其中*或""表示跟目录下的全部文件
-     * @param descFileName 目标zip文件
+     * 压缩成ZIP 方法1
+     *
+     * @param srcDir           压缩文件夹路径
+     * @param out              压缩文件输出流
+     * @param KeepDirStructure 是否保留原来的目录结构,true:保留目录结构;
+     *                         false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
+     * @throws RuntimeException 压缩失败会抛出运行时异常
      */
-    public static void zipFiles(String srcDirName, String fileName,
-                                String descFileName) {
-        // 判断目录是否存在
-        if (srcDirName == null) {
-            log.debug("文件压缩失败，目录 " + srcDirName + " 不存在!");
-            return;
-        }
-        File fileDir = new File(srcDirName);
-        if (!fileDir.exists() || !fileDir.isDirectory()) {
-            log.debug("文件压缩失败，目录 " + srcDirName + " 不存在!");
-            return;
-        }
-        String dirPath = fileDir.getAbsolutePath();
-        File descFile = new File(descFileName);
+    public static void toZip(String srcDir, OutputStream out, boolean KeepDirStructure) throws RuntimeException {
+        long start = System.currentTimeMillis();
+        ZipOutputStream zos = null;
         try {
-            ZipOutputStream zouts = new ZipOutputStream(new FileOutputStream(descFile));
-            if ("*".equals(fileName) || "".equals(fileName)) {
-                FileHelper.zipDirectoryToZipFile(dirPath, fileDir, zouts);
-            } else {
-                File file = new File(fileDir, fileName);
-                if (file.isFile()) {
-                    FileHelper.zipFilesToZipFile(dirPath, file, zouts);
-                } else {
-                    FileHelper.zipDirectoryToZipFile(dirPath, file, zouts);
-                }
-            }
-            zouts.close();
-            log.debug(descFileName + " 文件压缩成功!");
+            zos = new ZipOutputStream(out);
+            File sourceFile = new File(srcDir);
+            compress(sourceFile, zos, sourceFile.getName(), KeepDirStructure);
+            long end = System.currentTimeMillis();
+            log.info("压缩完成，耗时：" + (end - start) + " ms");
         } catch (Exception e) {
-            log.debug("文件压缩失败：" + e.getMessage());
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * 解压缩ZIP文件，将ZIP文件里的内容解压到descFileName目录下
-     * @param zipFileName 需要解压的ZIP文件
-     * @param descFileName 目标文件
-     */
-    public static boolean unZipFiles(String zipFileName, String descFileName) {
-        String descFileNames = descFileName;
-        if (!descFileNames.endsWith(File.separator)) {
-            descFileNames = descFileNames + File.separator;
-        }
-        try {
-            // 根据ZIP文件创建ZipFile对象
-            ZipFile zipFile = new ZipFile(zipFileName);
-            ZipEntry entry = null;
-            String entryName = null;
-            String descFileDir = null;
-            byte[] buf = new byte[4096];
-            int readByte = 0;
-            // 获取ZIP文件里所有的entry
-            @SuppressWarnings("rawtypes")
-            Enumeration enums = zipFile.getEntries();
-            // 遍历所有entry
-            while (enums.hasMoreElements()) {
-                entry = (ZipEntry) enums.nextElement();
-                // 获得entry的名字
-                entryName = entry.getName();
-                descFileDir = descFileNames + entryName;
-                if (entry.isDirectory()) {
-                    // 如果entry是一个目录，则创建目录
-                    new File(descFileDir).mkdirs();
-                    continue;
-                } else {
-                    // 如果entry是一个文件，则创建父目录
-                    new File(descFileDir).getParentFile().mkdirs();
-                }
-                File file = new File(descFileDir);
-                // 打开文件输出流
-                OutputStream os = new FileOutputStream(file);
-                // 从ZipFile对象中打开entry的输入流
-                InputStream is = zipFile.getInputStream(entry);
-                while ((readByte = is.read(buf)) != -1) {
-                    os.write(buf, 0, readByte);
-                }
-                os.close();
-                is.close();
-            }
-            zipFile.close();
-            log.debug("文件解压成功!");
-            return true;
-        } catch (Exception e) {
-            log.debug("文件解压失败：" + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * 将目录压缩到ZIP输出流
-     * @param dirPath 目录路径
-     * @param fileDir 文件信息
-     * @param zouts 输出流
-     */
-    public static void zipDirectoryToZipFile(String dirPath, File fileDir,ZipOutputStream zouts) {
-        if (fileDir.isDirectory()) {
-            File[] files = fileDir.listFiles();
-            // 空的文件夹
-            if (files.length == 0) {
-                // 目录信息
-                ZipEntry entry = new ZipEntry(getEntryName(dirPath, fileDir));
+            throw new RuntimeException("zip error from FileHelper", e);
+        } finally {
+            if (zos != null) {
                 try {
-                    zouts.putNextEntry(entry);
-                    zouts.closeEntry();
-                } catch (Exception e) {
+                    zos.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return;
             }
-
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isFile()) {
-                    // 如果是文件，则调用文件压缩方法
-                    FileHelper.zipFilesToZipFile(dirPath, files[i], zouts);
-                } else {
-                    // 如果是目录，则递归调用
-                    FileHelper.zipDirectoryToZipFile(dirPath, files[i],zouts);
-                }
-            }
-
         }
-
     }
 
     /**
-     * 将文件压缩到ZIP输出流
-     * @param dirPath 目录路径
-     * @param file 文件
-     * @param zouts 输出流
+     * 压缩成ZIP 方法
+     *
+     * @param srcFiles 需要压缩的文件列表
+     * @param out      压缩文件输出流
+     * @throws RuntimeException 压缩失败会抛出运行时异常
      */
-    public static void zipFilesToZipFile(String dirPath, File file,ZipOutputStream zouts) {
-        FileInputStream fin = null;
-        ZipEntry entry = null;
-        // 创建复制缓冲区
-        byte[] buf = new byte[4096];
-        int readByte = 0;
-        if (file.isFile()) {
-            try {
-                // 创建一个文件输入流
-                fin = new FileInputStream(file);
-                // 创建一个ZipEntry
-                entry = new ZipEntry(getEntryName(dirPath, file));
-                // 存储信息到压缩文件
-                zouts.putNextEntry(entry);
-                // 复制字节到压缩文件
-                while ((readByte = fin.read(buf)) != -1) {
-                    zouts.write(buf, 0, readByte);
+    public static void toZip(List<File> srcFiles, OutputStream out) throws RuntimeException {
+        long start = System.currentTimeMillis();
+        ZipOutputStream zos = null;
+        try {
+            zos = new ZipOutputStream(out);
+            for (File srcFile : srcFiles) {
+                byte[] buf = new byte[BUFFER_SIZE];
+                zos.putNextEntry(new ZipEntry(srcFile.getName()));
+                int len;
+                FileInputStream in = new FileInputStream(srcFile);
+                while ((len = in.read(buf)) != -1) {
+                    zos.write(buf, 0, len);
                 }
-                zouts.closeEntry();
-                fin.close();
-                System.out
-                        .println("添加文件 " + file.getAbsolutePath() + " 到zip文件中!");
-            } catch (Exception e) {
-                e.printStackTrace();
+                zos.closeEntry();
+                in.close();
+            }
+            long end = System.currentTimeMillis();
+            log.info("压缩完成，耗时：" + (end - start) + " ms");
+        } catch (Exception e) {
+            throw new RuntimeException("zip error from FileHelper", e);
+        } finally {
+            if (zos != null) {
+                try {
+                    zos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
     }
 
     /**
-     * 获取待压缩文件在ZIP文件中entry的名字，即相对于跟目录的相对路径名
-     * @param dirPath 目录名
-     * @param file entry文件名
-     * @return
+     * 递归压缩方法
+     *
+     * @param sourceFile       源文件
+     * @param zos              zip输出流
+     * @param name             压缩后的名称
+     * @param KeepDirStructure 是否保留原来的目录结构,true:保留目录结构;
+     *                         false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
+     * @throws Exception
      */
-    private static String getEntryName(String dirPath, File file) {
-        String dirPaths = dirPath;
-        if (!dirPaths.endsWith(File.separator)) {
-            dirPaths = dirPaths + File.separator;
+    private static void compress(File sourceFile, ZipOutputStream zos, String name, boolean KeepDirStructure) throws Exception {
+        byte[] buf = new byte[BUFFER_SIZE];
+        if (sourceFile.isFile()) {
+            // 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
+            zos.putNextEntry(new ZipEntry(name));
+            // copy文件到zip输出流中
+            int len;
+            FileInputStream in = new FileInputStream(sourceFile);
+            while ((len = in.read(buf)) != -1) {
+                zos.write(buf, 0, len);
+            }
+            // Complete the entry
+            zos.closeEntry();
+            in.close();
+        } else {
+            File[] listFiles = sourceFile.listFiles();
+            if (listFiles == null || listFiles.length == 0) {
+                // 需要保留原来的文件结构时,需要对空文件夹进行处理
+                if (KeepDirStructure) {
+                    // 空文件夹的处理
+                    zos.putNextEntry(new ZipEntry(name + "/"));
+                    // 没有文件，不需要文件的copy
+                    zos.closeEntry();
+                }
+            } else {
+                for (File file : listFiles) {
+                    // 判断是否需要保留原来的文件结构
+                    if (KeepDirStructure) {
+                        // 注意：file.getName()前面需要带上父文件夹的名字加一斜杠,
+                        // 不然最后压缩包中就不能保留原来的文件结构,即：所有文件都跑到压缩包根目录下了
+                        compress(file, zos, name + "/" + file.getName(), KeepDirStructure);
+                    } else {
+                        compress(file, zos, file.getName(), KeepDirStructure);
+                    }
+                }
+            }
         }
-        String filePath = file.getAbsolutePath();
-        // 对于目录，必须在entry名字后面加上"/"，表示它将以目录项存储
-        if (file.isDirectory()) {
-            filePath += "/";
-        }
-        int index = filePath.indexOf(dirPaths);
-
-        return filePath.substring(index + dirPaths.length());
     }
 
     /**
      * 修复路径，将 \\ 或 / 等替换为 File.separator
+     *
      * @param path
      * @return
      */
-    public static String path(String path){
+    public static String path(String path) {
         String p = StringUtils.replace(path, "\\", "/");
         p = StringUtils.join(StringUtils.split(p, "/"), "/");
-        if (!StringUtils.startsWithAny(p, "/") && StringUtils.startsWithAny(path, "\\", "/")){
+        if (!StringUtils.startsWithAny(p, "/") && StringUtils.startsWithAny(path, "\\", "/")) {
             p += "/";
         }
-        if (!StringUtils.endsWithAny(p, "/") && StringUtils.endsWithAny(path, "\\", "/")){
+        if (!StringUtils.endsWithAny(p, "/") && StringUtils.endsWithAny(path, "\\", "/")) {
             p = p + "/";
         }
         return p;
     }
-
 }
