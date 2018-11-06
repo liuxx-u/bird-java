@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bird</groupId>
     <artifactId>bird-core</artifactId>
     <version>1.0.0</version>
     <build>
