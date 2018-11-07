@@ -29,10 +29,18 @@ public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatispl
      * 查询通用查询的中数量
      *
      * @param param 筛选条件
-     * @return
+     * @return 总条数
      */
     @SelectProvider(type = PagedQueryProvider.class, method = "queryTotalCount")
     Long queryTotalCount(PagedQueryParam param);
+
+    /**
+     * 查询 通用查询中的合计信息
+     * @param param 筛选条件
+     * @return 合计信息
+     */
+    @SelectProvider(type = PagedQueryProvider.class, method = "queryPagedSum")
+    Map<String,Number> queryPagedSum(PagedQueryParam param);
 
     /**
      * 通用新增方法
@@ -46,7 +54,7 @@ public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatispl
     /**
      * 通用更新方法
      *
-     * @param param
+     * @param param 保存参数
      */
     @UpdateProvider(type = CommonSaveProvider.class, method = "update")
     void updateDto(CommonSaveParam param);
@@ -54,8 +62,8 @@ public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatispl
     /**
      * 通用获取树数据方法
      *
-     *@param param
-     * @return
+     *@param param tree参数
+     * @return tree
      */
     @SelectProvider(type = TreeQueryProvider.class, method = "queryTreeData")
     List<TreeDTO> queryTreeData(TreeQueryParam param);

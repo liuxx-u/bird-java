@@ -16,6 +16,7 @@ public class ListQueryDTO extends AbstractDTO {
     private String sortField;
     private int sortDirection;
     private List<FilterRule> filters;
+    private List<String> sumFields;
     /**
      * 数据权限参数
      */
@@ -24,6 +25,7 @@ public class ListQueryDTO extends AbstractDTO {
 
     public ListQueryDTO() {
         filters = new ArrayList<>();
+        sumFields = new ArrayList<>();
     }
 
     public String getSortField() {
@@ -56,5 +58,13 @@ public class ListQueryDTO extends AbstractDTO {
 
     public void setAuthority(DataAuthority authority) {
         this.authority = authority;
+    }
+
+    public List<String> getSumFields() {
+        return sumFields;
+    }
+
+    public void setSumFields(List<String> sumFields) {
+        this.sumFields = sumFields;
     }
 }

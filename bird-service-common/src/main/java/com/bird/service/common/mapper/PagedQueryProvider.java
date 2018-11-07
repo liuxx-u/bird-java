@@ -4,6 +4,8 @@ import com.bird.service.common.service.query.ListSortDirection;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 /**
  *
  * @author liuxx
@@ -39,6 +41,21 @@ public class PagedQueryProvider {
             sql += " where " + whereSql;
         }
         return sql;
+    }
+
+    public String queryPagedSum(PagedQueryParam param) {
+        PagedListQueryDTO query = param.getQuery();
+
+        StringBuilder sb = new StringBuilder("select count(1) as totalCount");
+        for (String field : query.getSumFields()) {
+            sb.append(",").append("sum(").append(param.getDbFieldName(field)).append(") as ").append(field);
+        }
+        sb.append(" from ").append(param.getFrom());
+        String whereSql = where(param);
+        if (StringUtils.isNotBlank(whereSql)) {
+            sb.append(" where ").append(whereSql);
+        }
+        return sb.toString();
     }
 
     private String where(PagedQueryParam param) {

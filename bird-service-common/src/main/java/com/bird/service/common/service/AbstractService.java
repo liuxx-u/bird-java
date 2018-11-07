@@ -83,12 +83,14 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     @Override
     public PagedListResultDTO queryPagedList(PagedQueryParam param) {
-        Long totalCount = mapper.queryTotalCount(param);
+        Map<String, Number> sum = mapper.queryPagedSum(param);
+        Long totalCount = sum.getOrDefault("totalCount", 0L).longValue();
         List<Map> items = new ArrayList<>();
         if (totalCount > 0) {
             items = mapper.queryPagedList(param);
+
         }
-        return new PagedListResultDTO(totalCount, items);
+        return new PagedListResultDTO(totalCount, items, sum);
     }
 
     /**

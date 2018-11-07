@@ -17,4 +17,8 @@ public class PagedListResultDTO extends PagedResult<Map> {
     public PagedListResultDTO(Long totalCount, List<Map> items) {
         super(totalCount, items);
     }
+
+    public PagedListResultDTO(Long totalCount, List<Map> items, Map<String, Number> sum) {
+        super(totalCount, items, sum);
+    }
 }
