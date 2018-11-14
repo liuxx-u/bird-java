@@ -1,24 +1,19 @@
 package com.bird.web.api.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.bird.core.OperationResult;
 import com.bird.service.cms.CmsClassifyService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
-import com.bird.service.zero.DicTypeService;
-import com.bird.service.zero.OrganizationService;
-import com.bird.service.zero.dto.OrganizationDTO;
+import com.bird.service.common.service.query.PagedListQueryDTO;
+import com.bird.service.common.service.query.PagedListResultDTO;
 import com.bird.web.common.controller.AbstractController;
 import com.bird.web.file.upload.ServletUploader;
 import com.bird.web.file.upload.UploadResult;
-import com.bird.web.file.upload.storage.IFileStorage;
 import com.bird.web.file.upload.storage.SimpleDiskFileStorage;
-import com.bird.web.sso.SsoAuthorizeManager;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -48,5 +43,13 @@ public class HomeController extends AbstractController {
         uploader.setStorage(storage);
 
         return uploader.upload(request);
+    }
+
+    @PostMapping("/getPaged")
+    @ApiOperation(value = "获取分页")
+    public OperationResult<PagedListResultDTO> getPaged(@RequestBody PagedListQueryDTO query) {
+
+        PagedListResultDTO result = classifyService.queryPagedList(query, CmsClassifyDTO.class);
+        return OperationResult.Success("获取成功", result);
     }
 }

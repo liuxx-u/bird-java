@@ -10,7 +10,10 @@ import com.bird.service.cms.mapper.CmsClassifyMapper;
 import com.bird.service.cms.model.CmsClassify;
 import com.bird.service.common.exception.RollbackException;
 import com.bird.service.common.mapper.CommonSaveParam;
+import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.service.AbstractService;
+import com.bird.service.common.service.query.PagedListQueryDTO;
+import com.bird.service.common.service.query.PagedListResultDTO;
 import com.bird.service.zero.event.TestEventArg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -25,6 +28,12 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
     @Autowired
     private EventBus eventBus;
 
+    @Override
+    public PagedListResultDTO queryPagedList(PagedListQueryDTO queryDTO, Class cls) {
+        PagedQueryParam param = new PagedQueryParam(queryDTO,cls).withDataRule();
+        return super.queryPagedList(param);
+    }
+
     /**
      * 获取分类
      *
@@ -38,7 +47,7 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
 //        Check.GreaterThan(id, 0L, "id");
 //        CmsClassify classify = queryById(id);
 
-        eventBus.push(new TestEventArg());
+//        eventBus.push(new TestEventArg());
 
 //        CmsClassify classify = new CmsClassify();
 //        classify.setName("test");

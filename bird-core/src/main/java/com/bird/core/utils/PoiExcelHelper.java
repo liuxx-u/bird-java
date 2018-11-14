@@ -201,7 +201,6 @@ public class PoiExcelHelper {
             }
 
             wb.write(out);
-            wb.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -20,6 +20,7 @@
         <module>samples</module>
         <module>bird-web-file</module>
         <module>bird-dubbo</module>
+        <module>bird-gateway</module>
     </modules>
 
     <properties>
@@ -73,6 +74,34 @@
         <commons-io.version>2.6</commons-io.version>
         <ant.version>1.10.1</ant.version>
     </properties>
+
+    <dependencies>
+        <!--spring-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!--fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <!-- apache -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

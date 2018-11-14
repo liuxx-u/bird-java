@@ -6,13 +6,12 @@ import com.bird.web.sso.SsoSessionResolvor;
 import com.bird.web.sso.client.IUserClientStore;
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.inject.Inject;
 
 /**
  * @author liuxx
@@ -23,7 +22,7 @@ import javax.inject.Inject;
 @EnableConfigurationProperties(SsoProperties.class)
 public class SsoConfigurer {
 
-    @Inject
+    @Autowired
     private SsoProperties ssoProperties;
 
     /**

@@ -9,6 +9,7 @@ import com.bird.eventbus.register.IEventRegister;
 import com.bird.service.boot.starter.eventbus.EventbusConstant;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,6 @@ import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 
 /**
@@ -32,13 +32,13 @@ import java.util.HashMap;
 @EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaConfigurer {
 
-    @Inject
+    @Autowired
     private KafkaProperties kafkaProperties;
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
     public KafkaTemplate kafkaTemplate() {
-        HashMap properties = new HashMap(8);
+        HashMap<String,Object> properties = new HashMap<>(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
         KafkaProviderProperties providerProperties = kafkaProperties.getProvider();
@@ -78,7 +78,7 @@ public class KafkaConfigurer {
         containerProperties.setMessageListener(listener);
         containerProperties.setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);
 
-        HashMap properties = new HashMap(8);
+        HashMap<String,Object> properties = new HashMap<>(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
         properties.put("group.id", listenerProperties.getGroupId());

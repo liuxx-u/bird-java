@@ -2,8 +2,8 @@ package com.bird.web.common.interceptor;
 
 import com.bird.web.common.interceptor.support.IIpAddressChecker;
 import com.bird.web.common.utils.RequestHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class IpAddressInterceptor extends HandlerInterceptorAdapter {
 
-    @Inject
+    @Autowired
     private IIpAddressChecker ipChecker;
 
     @Override

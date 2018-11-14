@@ -5,10 +5,10 @@ import com.bird.core.session.SessionContext;
 import com.bird.web.sso.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.TicketHandler;
 import com.bird.web.sso.ticket.TicketInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ import java.util.List;
  */
 public class SsoAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
-    @Inject
+    @Autowired
     private TicketHandler ticketHandler;
 
-    @Inject
+    @Autowired
     private IUserPermissionChecker permissionChecker;
 
     /**

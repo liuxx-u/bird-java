@@ -2,13 +2,12 @@ package com.bird.service.boot.starter.permission;
 
 import com.bird.service.common.mapper.permission.DataRuleInstaller;
 import com.bird.service.common.mapper.permission.IDataRuleStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.inject.Inject;
 
 /**
  * @author liuxx
@@ -21,7 +20,7 @@ public class DataRuleConfigurer {
 
     private final DataRuleProperties properties;
 
-    @Inject
+    @Autowired
     public DataRuleConfigurer(DataRuleProperties properties) {
         this.properties = properties;
     }

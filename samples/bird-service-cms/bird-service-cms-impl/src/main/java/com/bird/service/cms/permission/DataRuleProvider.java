@@ -21,12 +21,18 @@ public class DataRuleProvider implements IDataRuleProvider {
         rules.add(new FilterRule("id", FilterOperate.IN,"3,59"));
         rules.add(new FilterRule("name",FilterOperate.CONTAINS,"2"));
 
-        FilterGroup group = new FilterGroup(new ArrayList<>());
-        FilterGroup group1 = new FilterGroup(rules);
-        FilterGroup group2 = new FilterGroup(rules);
+        FilterGroup group = new FilterGroup(rules);
+        List<FilterGroup> groups1 = new ArrayList<>();
+        List<FilterGroup> groups2 = new ArrayList<>();
 
-        group1.or(group2);
-        group.and(group1);
+        groups1.add(new FilterGroup(rules));
+        groups2.add(new FilterGroup(rules));
+
+        FilterGroup group1 = new FilterGroup(new ArrayList<>());
+        group1.or(groups2);
+
+        groups1.add(group1);
+        group.and(groups1);
 
         return group;
     }
