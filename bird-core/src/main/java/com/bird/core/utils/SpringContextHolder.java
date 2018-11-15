@@ -3,14 +3,17 @@ package com.bird.core.utils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * 以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候取出ApplicaitonContext.
@@ -46,6 +49,14 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     public static <T> T getBean(Class<T> requiredType) {
         assertContextInjected();
         return applicationContext.getBean(requiredType);
+    }
+
+    /**
+     * 从静态变量applicationContext中取得指定类型所有的Bean
+     */
+    public static  <T> Map<String, T> getBeansOfType(@Nullable Class<T> type) throws BeansException{
+        assertContextInjected();
+        return applicationContext.getBeansOfType(type);
     }
 
     /**

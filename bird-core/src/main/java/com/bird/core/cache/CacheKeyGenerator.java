@@ -45,11 +45,7 @@ public class CacheKeyGenerator implements KeyGenerator {
             cacheName = method.getName();
         }
 
-        StringBuilder sbKey = new StringBuilder(cachePrefix)
-                .append(":").append(cacheName)
-                .append(":").append(generateKey(params));
-
-        return sbKey.toString();
+        return cachePrefix + ":" + cacheName + ":" + generateKey(params);
     }
 
     private String generateKey(Object... params) {

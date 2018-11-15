@@ -2,6 +2,7 @@ package com.bird.service.cms;
 
 import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
 import com.alibaba.fastjson.JSON;
+import com.bird.core.initialize.InitializeExecutor;
 import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.common.mapper.QueryDescriptor;
 import com.bird.service.common.service.query.FilterGroup;
@@ -25,8 +26,6 @@ public class Bootstrap {
 		System.out.println("=================================");
 		System.out.println("[CMS服务]启动完成!!!");
 		System.out.println("=================================");
-
-
 
 		List<FilterRule> rules = new ArrayList<>();
 		rules.add(new FilterRule("id", FilterOperate.IN,"3,59"));

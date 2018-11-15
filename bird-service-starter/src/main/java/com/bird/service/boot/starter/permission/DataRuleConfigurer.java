@@ -1,6 +1,6 @@
 package com.bird.service.boot.starter.permission;
 
-import com.bird.service.common.mapper.permission.DataRuleInstaller;
+import com.bird.service.common.mapper.permission.DataRuleInitializePipe;
 import com.bird.service.common.mapper.permission.IDataRuleStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -33,7 +33,7 @@ public class DataRuleConfigurer {
     }
 
     @Bean
-    public DataRuleInstaller dataRuleInstaller(){
-        return new DataRuleInstaller(properties.getBasePackages());
+    public DataRuleInitializePipe dataRuleInitializePipe(){
+        return new DataRuleInitializePipe(properties.getBasePackages());
     }
 }

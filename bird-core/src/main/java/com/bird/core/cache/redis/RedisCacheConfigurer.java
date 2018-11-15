@@ -1,6 +1,5 @@
 package com.bird.core.cache.redis;
 
-import com.bird.core.Constant;
 import com.bird.core.cache.CacheKeyGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
