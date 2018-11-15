@@ -10,14 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-web-sso</artifactId>
-    <version>1.0.0</version>
+    <version>${project.parent.version}</version>
 
     <dependencies>
         <!--项目依赖-->
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-web-common</artifactId>
-            <version>1.0.0</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -9,16 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bird</groupId>
     <artifactId>bird-service-common</artifactId>
-    <version>1.0.0</version>
+    <version>${project.parent.version}</version>
 
     <dependencies>
         <!--项目依赖-->
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-core</artifactId>
-            <version>1.0.0</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
