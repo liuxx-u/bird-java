@@ -1,6 +1,8 @@
 package com.bird.service.boot.starter.eventbus.kafka;
 
 import com.bird.service.boot.starter.eventbus.EventbusConstant;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -8,6 +10,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  * @author liuxx
  * @date 2018/3/23
  */
+@Getter
+@Setter
 @ConfigurationProperties(prefix = EventbusConstant.Kafka.PREFIX)
 public class KafkaProperties {
 
@@ -18,28 +22,4 @@ public class KafkaProperties {
 
     @NestedConfigurationProperty
     private KafkaListenerProperties listener;
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public KafkaProviderProperties getProvider() {
-        return provider;
-    }
-
-    public void setProvider(KafkaProviderProperties provider) {
-        this.provider = provider;
-    }
-
-    public KafkaListenerProperties getListener() {
-        return listener;
-    }
-
-    public void setListener(KafkaListenerProperties listener) {
-        this.listener = listener;
-    }
 }

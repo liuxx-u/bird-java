@@ -47,7 +47,49 @@ public class ImageHelper {
      * 默认的透明度
      */
     private static final float DEFAULT_ALPHA = 0.5F;
-    
+
+
+
+    /**
+     * 程序入口：用于测试
+     * @param args
+     */
+    public static void main(String[] args) {
+        // 1-缩放图像：
+        // 方法一：按比例缩放
+//        ImageHelper.scale("d:/test.png", "d:/test_scale.jpg", 0.5);//测试OK
+        // 方法二：按高度和宽度缩放
+//        ImageHelper.scale("d:/test.png", "d:/test_scale_1.jpg", 200, 100, false);//测试OK
+
+
+//        // 2-切割图像：
+//        // 方法一：按指定起点坐标和宽高切割
+//        ImageHelper.cut("d:/test.png", "d:/test_cut_01.jpg", 100, 100, 500, 500 );//测试OK
+//        // 方法二：指定切片的行数和列数
+//        ImageHelper.split("d:/test.png", "d:/", 19, 19 );//测试OK
+//        // 方法三：指定切片的宽度和高度
+//        ImageHelper.split2("d:/test.png", "d:/", 300, 300 );//测试OK
+//
+//
+//        // 3-图像类型转换：
+//        ImageHelper.convert("d:/test.png", "d:/test_convert.gif","GIF");//测试OK
+//
+//
+//        // 4-彩色转黑白：
+//        ImageHelper.gray("d:/test.png", "d:/test_gray.jpg");//测试OK
+//
+//
+//        // 5-给图片添加文字水印：
+//        // 方法一：
+//        ImageHelper.pressText("我是水印文字","e:/abc.jpg","e:/abc_pressText.jpg","宋体", Font.BOLD,Color.white,80, 0, 0, 0.5f);//测试OK
+//        // 方法二：
+//        ImageHelper.mark("d:/test.png", "d:/test_mark.jpg","通汇诚泰", new Font("黑体",Font.PLAIN,24),Color.RED,Position.RIGHT_BOTTOM, 0.5f);//测试OK
+//
+//        // 6-给图片添加图片水印：
+//        ImageHelper.mark("d:/test.png", "d:/mark.png","d:/test_mark.jpg",Position.RIGHT_BOTTOM,  0.5f);//测试OK
+    }
+
+
     /**
      * 缩放图像（按比例缩放）
      * @param srcPath 源图像文件地址

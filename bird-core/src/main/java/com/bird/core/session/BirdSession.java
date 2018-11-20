@@ -1,5 +1,7 @@
 package com.bird.core.session;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -12,6 +14,8 @@ import java.util.Map;
  *
  * session的抽象,用于统一web层与dubbo服务层的session信息
  */
+@Getter
+@Setter
 public class BirdSession implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -42,37 +46,5 @@ public class BirdSession implements Serializable {
     public Object getClaim(String key) {
         if (StringUtils.isBlank(key)) return null;
         return this.claims.get(key);
-    }
-
-    public Serializable getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Serializable userId) {
-        this.userId = userId;
-    }
-
-    public Serializable getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Serializable tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Map<String, Object> getClaims() {
-        return claims;
-    }
-
-    public void setClaims(Map<String, Object> claims) {
-        this.claims = claims;
     }
 }

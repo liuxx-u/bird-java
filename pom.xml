@@ -10,16 +10,16 @@
 
     <modules>
         <module>bird-core</module>
+        <module>bird-dubbo</module>
         <module>bird-eventbus</module>
         <module>bird-eventbus-kafka</module>
         <module>bird-service-common</module>
         <module>bird-service-starter</module>
         <module>bird-web-sso</module>
+        <module>bird-web-file</module>
         <module>bird-web-common</module>
         <module>bird-web-starter</module>
         <module>samples</module>
-        <module>bird-web-file</module>
-        <module>bird-dubbo</module>
     </modules>
 
     <properties>
@@ -27,48 +27,25 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!--spring版本号-->
+        <!-- 版本号 -->
         <spring.version>5.0.7.RELEASE</spring.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <spring-data-redis.version>2.0.9.RELEASE</spring-data-redis.version>
-
-        <!--javax版本号-->
         <javax.version>3.1.0</javax.version>
-        <javax.inject.version>1</javax.inject.version>
-
-        <!--dubbo组件版本号-->
         <dubbo.version>2.6.2</dubbo.version>
         <zkclient.version>0.10</zkclient.version>
         <dubbo-starter.version>0.2.0</dubbo-starter.version>
-
-        <!--redis组件版本号-->
         <jedis.version>2.9.0</jedis.version>
-
-        <!--kafka版本号-->
         <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
-
-        <!--mybatis-plus版本号-->
         <mybatisplus.version>2.2.0</mybatisplus.version>
         <mysql-connector.version>5.1.46</mysql-connector.version>
         <druid.version>1.0.31</druid.version>
-
-        <!--json组件版本号-->
         <fastjson.version>1.2.47</fastjson.version>
-        <jackson.version>2.9.4</jackson.version>
-
-        <!--dozer版本号-->
         <dozer.version>5.5.1</dozer.version>
-
-        <!--okhttp版本号-->
         <okhttp.version>3.10.0</okhttp.version>
-
-        <!--poi版本号-->
         <poi.version>3.17</poi.version>
-
-        <!--maven插件版本号-->
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
-
-        <!--其他版本号-->
+        <lombok.version>1.16.20</lombok.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
         <ant.version>1.10.1</ant.version>
@@ -100,6 +77,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

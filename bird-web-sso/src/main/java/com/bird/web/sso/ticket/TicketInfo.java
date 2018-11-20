@@ -1,5 +1,7 @@
 package com.bird.web.sso.ticket;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -13,6 +15,8 @@ import java.util.Map;
  * @author liuxx
  * @date 2017/5/17
  */
+@Getter
+@Setter
 public class TicketInfo implements Serializable {
     private String userId;
     private String tenantId;
@@ -70,62 +74,5 @@ public class TicketInfo implements Serializable {
     public void removeClaim(String key){
         if(StringUtils.isBlank(key))return;
         this.claims.remove(key);
-    }
-
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Map<String,Object> getClaims() {
-        return claims;
-    }
-
-    public void setClaims(Map<String,Object> claims) {
-        this.claims = claims;
-    }
-
-    public Date getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(Date creationTime) {
-        this.creationTime = creationTime;
-    }
-
-    public Date getLastRefreshTime() {
-        return lastRefreshTime;
-    }
-
-    public void setLastRefreshTime(Date lastRefreshTime) {
-        this.lastRefreshTime = lastRefreshTime;
-    }
-
-    public Date getExpireTime() {
-        return expireTime;
-    }
-
-    public void setExpireTime(Date expireTime) {
-        this.expireTime = expireTime;
     }
 }

@@ -2,6 +2,8 @@ package com.bird.service.zero.dto;
 
 import com.bird.service.common.service.dto.AbstractDTO;
 import com.bird.service.common.service.dto.OptionDTO;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.List;
 /**
  * Created by liuxx on 2017/11/20.
  */
+@Getter
+@Setter
 public class DicDTO extends AbstractDTO {
     private Long id;
     private String placeholder;
@@ -17,38 +21,5 @@ public class DicDTO extends AbstractDTO {
 
     public DicDTO() {
         options = new ArrayList<>();
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPlaceholder() {
-        return placeholder;
-    }
-
-    public void setPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
-    }
-
-    public String getDefaultCode() {
-        return defaultCode;
-    }
-
-    public void setDefaultCode(String defaultCode) {
-        this.defaultCode = defaultCode;
-    }
-
-    public List<OptionDTO> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<OptionDTO> options) {
-        this.options = options;
     }
 }

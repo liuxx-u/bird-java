@@ -3,6 +3,8 @@ package com.bird.service.common.service.query;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.bird.service.common.mapper.permission.DataAuthority;
 import com.bird.service.common.service.dto.AbstractDTO;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  * @author liuxx
  * @date 2017/6/23
  */
+@Getter
+@Setter
 public class ListQueryDTO extends AbstractDTO {
     private String sortField;
     private int sortDirection;
@@ -26,45 +30,5 @@ public class ListQueryDTO extends AbstractDTO {
     public ListQueryDTO() {
         filters = new ArrayList<>();
         sumFields = new ArrayList<>();
-    }
-
-    public String getSortField() {
-        return sortField;
-    }
-
-    public void setSortField(String sortField) {
-        this.sortField = sortField;
-    }
-
-    public int getSortDirection() {
-        return sortDirection;
-    }
-
-    public void setSortDirection(int sortDirection) {
-        this.sortDirection = sortDirection;
-    }
-
-    public List<FilterRule> getFilters() {
-        return filters;
-    }
-
-    public void setFilters(List<FilterRule> filters) {
-        this.filters = filters;
-    }
-
-    public DataAuthority getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(DataAuthority authority) {
-        this.authority = authority;
-    }
-
-    public List<String> getSumFields() {
-        return sumFields;
-    }
-
-    public void setSumFields(List<String> sumFields) {
-        this.sumFields = sumFields;
     }
 }

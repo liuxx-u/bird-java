@@ -1,11 +1,15 @@
 package com.bird.web.boot.starter.sso;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author liuxx
  * @date 2018/3/24
  */
+@Getter
+@Setter
 @ConfigurationProperties(prefix = SsoConstant.PREFIX)
 public class SsoProperties {
     /**
@@ -32,44 +36,4 @@ public class SsoProperties {
      * 是否启用SessionStore，默认启用
      */
     private Boolean useSessionStore = true;
-
-    public String getCookieName() {
-        return cookieName;
-    }
-
-    public void setCookieName(String cookieName) {
-        this.cookieName = cookieName;
-    }
-
-    public String getLoginPath() {
-        return loginPath;
-    }
-
-    public void setLoginPath(String loginPath) {
-        this.loginPath = loginPath;
-    }
-
-    public Integer getExpire() {
-        return expire;
-    }
-
-    public void setExpire(Integer expire) {
-        this.expire = expire;
-    }
-
-    public Boolean getAutoRefresh() {
-        return autoRefresh;
-    }
-
-    public void setAutoRefresh(Boolean autoRefresh) {
-        this.autoRefresh = autoRefresh;
-    }
-
-    public Boolean getUseSessionStore() {
-        return useSessionStore;
-    }
-
-    public void setUseSessionStore(Boolean useSessionStore) {
-        this.useSessionStore = useSessionStore;
-    }
 }

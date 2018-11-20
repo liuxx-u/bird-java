@@ -1,5 +1,8 @@
 package com.bird.web.file.upload;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,8 @@ import java.util.List;
  * @author liuxx
  * @date 2018/4/25
  */
+@Getter
+@Setter
 public class UploadResult implements Serializable {
     private boolean success;
     private String message;
@@ -34,37 +39,5 @@ public class UploadResult implements Serializable {
 
     public static UploadResult fail(String message){
         return new UploadResult(false,message,null);
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean sucess) {
-        this.success = sucess;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public List<String> getPaths() {
-        return paths;
-    }
-
-    public void setPaths(List<String> paths) {
-        this.paths = paths;
     }
 }

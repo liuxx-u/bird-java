@@ -1,27 +1,16 @@
 package com.bird.service.common.service.query;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author liuxx
  * @date 2017/6/23
  */
+@Getter
+@Setter
 public class PagedListQueryDTO extends ListQueryDTO {
     private int pageIndex;
     private int pageSize;
-
-    public int getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
 }

@@ -4,8 +4,6 @@ import com.bird.service.common.service.query.ListSortDirection;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
-
 /**
  *
  * @author liuxx

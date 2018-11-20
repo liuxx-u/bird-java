@@ -1,5 +1,8 @@
 package com.bird.web.file.upload.validator;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +11,8 @@ import java.io.Serializable;
  * @author liuxx
  * @date 2018/4/28
  */
+@Getter
+@Setter
 public class ValidateResult implements Serializable {
     private boolean success;
     private String errorInfo;
@@ -24,22 +29,6 @@ public class ValidateResult implements Serializable {
 
     public ValidateResult(boolean success,String errorInfo){
         this.success = success;
-        this.errorInfo = errorInfo;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getErrorInfo() {
-        return errorInfo;
-    }
-
-    public void setErrorInfo(String errorInfo) {
         this.errorInfo = errorInfo;
     }
 }

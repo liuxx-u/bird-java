@@ -1,10 +1,15 @@
 package com.bird.service.common.service.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author liuxx
  * @date 2017/10/26
  */
+@Getter
+@Setter
 public class TreeDTO extends AbstractDTO {
     private String value;
     private String label;
@@ -27,37 +32,5 @@ public class TreeDTO extends AbstractDTO {
 
     public TreeDTO(){
         this("","");
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getParentValue() {
-        return parentValue;
-    }
-
-    public void setParentValue(String parentValue) {
-        this.parentValue = parentValue;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public Boolean getFolder() {
-        return folder;
-    }
-
-    public void setFolder(Boolean folder) {
-        this.folder = folder;
     }
 }

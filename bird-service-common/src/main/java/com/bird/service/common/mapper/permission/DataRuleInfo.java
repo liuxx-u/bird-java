@@ -1,5 +1,7 @@
 package com.bird.service.common.mapper.permission;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.Serializable;
@@ -10,6 +12,8 @@ import java.io.Serializable;
  * @author liuxx
  * @date 2018/10/10
  */
+@Getter
+@Setter
 public class DataRuleInfo implements Serializable {
     /**
      * 应用名
@@ -60,77 +64,5 @@ public class DataRuleInfo implements Serializable {
 
         DataRuleInfo other = (DataRuleInfo) obj;
         return EqualsBuilder.reflectionEquals(this, other);
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
-    public String getDbFieldName() {
-        return dbFieldName;
-    }
-
-    public void setDbFieldName(String dbFieldName) {
-        this.dbFieldName = dbFieldName;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getSourceStrategy() {
-        return sourceStrategy;
-    }
-
-    public void setSourceStrategy(String sourceStrategy) {
-        this.sourceStrategy = sourceStrategy;
-    }
-
-    public String getSourceProvider() {
-        return sourceProvider;
-    }
-
-    public void setSourceProvider(String sourceProvider) {
-        this.sourceProvider = sourceProvider;
-    }
-
-    public String getSourceUrl() {
-        return sourceUrl;
-    }
-
-    public void setSourceUrl(String sourceUrl) {
-        this.sourceUrl = sourceUrl;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
     }
 }

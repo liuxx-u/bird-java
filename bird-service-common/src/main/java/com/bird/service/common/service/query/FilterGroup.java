@@ -1,5 +1,7 @@
 package com.bird.service.common.service.query;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
  * @author liuxx
  * @date 2018/9/29
  */
+@Getter
 public class FilterGroup implements Serializable {
     /**
      * 组内筛选条件
@@ -36,17 +39,5 @@ public class FilterGroup implements Serializable {
     public void or(List<FilterGroup> groups){
         this.operate = FilterOperate.OR;
         this.groups = groups;
-    }
-
-    public List<FilterRule> getRules() {
-        return rules;
-    }
-
-    public String getOperate() {
-        return operate;
-    }
-
-    public List<FilterGroup> getGroups() {
-        return groups;
     }
 }

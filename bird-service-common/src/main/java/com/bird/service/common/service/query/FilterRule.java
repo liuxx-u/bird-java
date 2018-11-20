@@ -1,5 +1,8 @@
 package com.bird.service.common.service.query;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -7,6 +10,8 @@ import java.io.Serializable;
  * @author liuxx
  * @date 2017/6/22
  */
+@Getter
+@Setter
 public class FilterRule implements Serializable {
     private String field;
     private String operate;
@@ -22,30 +27,5 @@ public class FilterRule implements Serializable {
 
     public FilterRule(String key,String value) {
         this(key, FilterOperate.EQUAL, value);
-    }
-
-
-    public String getField() {
-        return field;
-    }
-
-    public void setField(String field) {
-        this.field = field;
-    }
-
-    public String getOperate() {
-        return operate;
-    }
-
-    public void setOperate(String operator) {
-        this.operate = operator;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }
