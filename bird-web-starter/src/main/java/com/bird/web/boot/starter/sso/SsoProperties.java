@@ -30,7 +30,7 @@ public class SsoProperties {
     /**
      * 过期时间（单位：分）
      */
-    private Integer expire = 60;
+    private Integer expire = 24 * 60;
 
     /**
      * 是否启用SessionStore，默认启用

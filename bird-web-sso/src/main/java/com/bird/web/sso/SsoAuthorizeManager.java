@@ -77,7 +77,7 @@ public class SsoAuthorizeManager {
         List<ClientInfo> clients = userClientStore.getUserClients(ticketInfo.getUserId());
         List<String> allowHosts = clients == null
                 ? new ArrayList<>()
-                : clients.stream().map(p -> p.getHost()).collect(Collectors.toList());
+                : clients.stream().map(ClientInfo::getHost).collect(Collectors.toList());
 
         ticketInfo.setClaim(IUserClientStore.CLAIM_KEY, allowHosts);
 
