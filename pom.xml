@@ -20,6 +20,7 @@
         <module>bird-web-common</module>
         <module>bird-web-starter</module>
         <module>samples</module>
+        <module>bird-gateway</module>
     </modules>
 
     <properties>
@@ -63,6 +64,11 @@
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <!--fastjson-->
         <dependency>
@@ -78,6 +84,7 @@
             <version>${commons-lang3.version}</version>
         </dependency>
 
+        <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
