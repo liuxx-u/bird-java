@@ -42,7 +42,7 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
         this.zkClient = zkClient;
     }
 
-    public static RouteDefinition getRouteDefinition(String path){
+    public static RouteDefinition getRouteDefinition(String path) {
         return ROUTE_MAP.get(path);
     }
 
@@ -94,27 +94,28 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
         modules.stream().forEach(module -> {
             String modulePath = ZkPathConstants.buildModulePath(module);
             ModuleZkDTO data = zkClient.readData(modulePath);
-            Optional.ofNullable(data).ifPresent(d -> {
-                if (!StringUtils.equals(module, d.getPath())) {
-                    log.warn("module path[" + d.getPath() + "] does not match zookeeper node path.");
-                } else {
-                    this.expandModules(d);
-                    this.loadModuleRoute(modulePath);
-                }
-            });
+            if (data == null) {
+                data = new ModuleZkDTO();
+                data.setPath(module);
+            } else if (!StringUtils.equals(module, data.getPath())) {
+                log.warn("module path[" + data.getPath() + "] does not match zookeeper node path.");
+            }
+            this.expandModules(data);
+            this.loadModuleRoute(modulePath);
         });
     }
 
     /**
      * 展开模块及其子模块
+     *
      * @param module module
      */
-    private void expandModules(ModuleZkDTO module){
-        if(module == null)return;
+    private void expandModules(ModuleZkDTO module) {
+        if (module == null) return;
 
-        MODULE_MAP.put(module.getPath(),module);
-        if(!CollectionUtils.isEmpty(module.getChildren())){
-            for(ModuleZkDTO child : module.getChildren()){
+        MODULE_MAP.put(module.getPath(), module);
+        if (!CollectionUtils.isEmpty(module.getChildren())) {
+            for (ModuleZkDTO child : module.getChildren()) {
                 expandModules(child);
             }
         }
@@ -122,17 +123,19 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
 
     /**
      * 从zookeeper加载模块下的路由信息
+     *
      * @param zkModulePath zkModulePath
      */
-    private void loadModuleRoute(String zkModulePath){
+    private void loadModuleRoute(String zkModulePath) {
         List<String> routes = zkClient.getChildren(zkModulePath);
-        routes.stream().forEach(route->{
-            String zkRoutePath = ZkPathConstants.buildZkPath(zkModulePath,route);
+        routes.stream().forEach(route -> {
+            String zkRoutePath = ZkPathConstants.buildZkPath(zkModulePath, route);
             RouteDefinition routeDefinition = zkClient.readData(zkRoutePath);
-            Optional.ofNullable(routeDefinition).ifPresent(d->{
-                String path = ZkPathConstants.formatZkRoutePath(zkRoutePath);
-                path = path.substring(ZkPathConstants.ROUTE_PARENT.length(),path.length());
-                ROUTE_MAP.put(path,d);
+            Optional.ofNullable(routeDefinition).ifPresent(d -> {
+                String path = "/" + d.getModule() + "/" + d.getPath();
+                path = path.replaceAll("[/]+", "/");
+                path = StringUtils.removeEnd(path, "/");
+                ROUTE_MAP.put(path, d);
             });
         });
     }

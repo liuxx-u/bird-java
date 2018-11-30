@@ -1,6 +1,7 @@
 package com.bird.service.boot.starter;
 
 import com.bird.core.BirdConfigurer;
+import com.bird.dubbo.gateway.route.RouteInitializePipe;
 import com.bird.eventbus.EventBus;
 import com.bird.service.common.mapper.permission.DataAuthorityInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +24,10 @@ public class ServiceConfigurer {
     @Bean
     public DataAuthorityInterceptor dataAuthorityInterceptor(){
         return new DataAuthorityInterceptor();
+    }
+
+    @Bean
+    public RouteInitializePipe routeInitializePipe(){
+        return new RouteInitializePipe();
     }
 }

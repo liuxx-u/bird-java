@@ -35,9 +35,9 @@ public class ZookeeperConfigurer {
      */
     @Bean
     public ZkClient zkClient() {
-        return new ZkClient(env.getProperty("spring.zookeeper.url"),
-                Integer.parseInt(Objects.requireNonNull(env.getProperty("spring.zookeeper.sessionTimeout"))),
-                Integer.parseInt(Objects.requireNonNull(env.getProperty("spring.zookeeper.connectionTimeout"))),
-                ZkSerializerFactory.of(env.getProperty("spring.zookeeper.serializer")));
+        return new ZkClient(env.getProperty("gateway.zookeeper.url"),
+                Integer.parseInt(Objects.requireNonNull(env.getProperty("gateway.zookeeper.sessionTimeout"))),
+                Integer.parseInt(Objects.requireNonNull(env.getProperty("gateway.zookeeper.connectionTimeout"))),
+                ZkSerializerFactory.of(env.getProperty("gateway.zookeeper.serializer")));
     }
 }

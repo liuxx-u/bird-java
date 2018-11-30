@@ -19,6 +19,11 @@
             <artifactId>bird-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.bird</groupId>
+            <artifactId>bird-dubbo</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.101tec</groupId>

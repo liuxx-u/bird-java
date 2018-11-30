@@ -1,5 +1,7 @@
 package com.bird.dubbo.gateway.route;
 
+import com.bird.gateway.common.dto.zk.RouteDefinition;
+
 import java.util.List;
 
 /**
@@ -14,5 +16,5 @@ public interface IRouteDefinitionRegistry {
      * 注册
      * @param routeDefinitions 网关定义
      */
-    void register(List<DubboRouteDefinition> routeDefinitions);
+    void register(String model,List<RouteDefinition> routeDefinitions);
 }

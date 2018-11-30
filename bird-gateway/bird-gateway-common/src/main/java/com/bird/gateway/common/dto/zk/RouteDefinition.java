@@ -1,6 +1,8 @@
 package com.bird.gateway.common.dto.zk;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
 import java.io.Serializable;
@@ -10,8 +12,14 @@ import java.io.Serializable;
  * @date 2018/11/27
  */
 @Data
+@ToString
+@EqualsAndHashCode
 public class RouteDefinition implements Serializable {
 
+    /**
+     * 模块
+     */
+    private String module;
     /**
      * 路径
      */
@@ -35,7 +43,7 @@ public class RouteDefinition implements Serializable {
     /**
      * 是否检查全部权限
      */
-    private Boolean isCheckAll;
+    private Boolean checkAll;
     /**
      * 转发方式
      */

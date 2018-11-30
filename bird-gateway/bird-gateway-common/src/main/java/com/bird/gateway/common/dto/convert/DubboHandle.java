@@ -45,6 +45,11 @@ public class DubboHandle extends HystrixHandle implements Serializable {
     private Integer retries;
 
     /**
+     * timeout
+     */
+    private Integer timeout;
+
+    /**
      * {@linkplain com.bird.gateway.common.enums.LoadBalanceEnum}
      */
     private String loadBalance;
