@@ -18,6 +18,8 @@ public class CommonErrorCode {
      */
     public static final int SUCCESSFUL = 200;
 
+    public static final int UNAUTHORIZED = 401;
+
     /**
      * The constant PARAMS_ERROR.
      */

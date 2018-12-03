@@ -2,12 +2,13 @@ package com.bird.gateway.web.pipe;
 
 import com.alibaba.fastjson.JSON;
 import com.bird.gateway.common.constant.Constants;
-import com.bird.gateway.common.dto.zk.RouteDefinition;
+import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.result.JsonResult;
 import com.bird.gateway.web.request.RequestDTO;
 import com.bird.gateway.web.zookeeper.ZookeeperCacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -51,7 +52,7 @@ public abstract class AbstractPipe implements IPipe {
             return jsonResult(exchange, JsonResult.error("请求路径不存在."));
         }
         RouteDefinition routeDefinition = ZookeeperCacheManager.getRouteDefinition(request.getPath());
-        if (routeDefinition == null || !routeDefinition.getEnabled()) {
+        if (routeDefinition == null || BooleanUtils.isNotTrue(routeDefinition.getEnabled())) {
             return jsonResult(exchange, JsonResult.error("api不存在或已被禁用."));
         }
 

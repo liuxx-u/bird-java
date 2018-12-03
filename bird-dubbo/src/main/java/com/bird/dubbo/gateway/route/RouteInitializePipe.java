@@ -5,7 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.bird.core.initialize.IInitializePipe;
 import com.bird.core.utils.StringHelper;
 import com.bird.gateway.common.dto.convert.DubboHandle;
-import com.bird.gateway.common.dto.zk.RouteDefinition;
+import com.bird.gateway.common.route.IRouteDefinitionRegistry;
+import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.enums.RpcTypeEnum;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -99,6 +100,7 @@ public class RouteInitializePipe implements IInitializePipe {
 
             RouteDefinition definition = new RouteDefinition();
             definition.setModule(application);
+            definition.setGroup(typePath);
             definition.setPath(typePath + methodPath);
             definition.setDesc(methodRoute.desc());
             definition.setPermissions(StringUtils.join(permissions, ","));

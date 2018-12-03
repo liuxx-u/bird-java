@@ -26,11 +26,6 @@ public interface Constants {
     String CLIENT_RESPONSE_RESULT_TYPE = "webHandlerClientResponseResultType";
 
     /**
-     * The constant DUBBO_RPC_PARAMS.
-     */
-    String DUBBO_RPC_PARAMS = "dubbo_rpc_params";
-
-    /**
      * The constant MODULE.
      */
     String MODULE = "module";

@@ -3,7 +3,7 @@ package com.bird.gateway.web.pipe.rpc.dubbo;
 import com.alibaba.fastjson.JSON;
 import com.bird.gateway.common.constant.Constants;
 import com.bird.gateway.common.dto.convert.DubboHandle;
-import com.bird.gateway.common.dto.zk.RouteDefinition;
+import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.ResultEnum;
 import com.bird.gateway.web.pipe.AbstractPipe;

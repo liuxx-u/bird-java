@@ -1,7 +1,7 @@
 package com.bird.gateway.web.pipe.after;
 
 import com.bird.gateway.common.constant.Constants;
-import com.bird.gateway.common.dto.zk.RouteDefinition;
+import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
 import com.bird.gateway.common.enums.ResultEnum;

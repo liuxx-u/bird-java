@@ -1,4 +1,4 @@
-package com.bird.gateway.common.dto.zk;
+package com.bird.gateway.common.route;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +20,10 @@ public class RouteDefinition implements Serializable {
      * 模块
      */
     private String module;
+    /**
+     * 组
+     */
+    private String group;
     /**
      * 路径
      */

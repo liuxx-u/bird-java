@@ -6,6 +6,7 @@ import com.bird.gateway.web.handler.GatewayHandlerMapping;
 import com.bird.gateway.web.handler.GatewayWebHandler;
 import com.bird.gateway.web.pipe.IChainPipe;
 import com.bird.gateway.web.pipe.after.ResultPipe;
+import com.bird.gateway.web.pipe.before.AuthorizePipe;
 import com.bird.gateway.web.pipe.before.PrePipe;
 import com.bird.gateway.web.pipe.rpc.RpcPipe;
 import com.bird.gateway.web.pipe.rpc.dubbo.DubboPipe;
@@ -46,8 +47,8 @@ public class GatewayWebConfigurer {
      * @return ZookeeperCacheManager {@linkplain ZookeeperCacheManager}
      */
     @Bean
-    public ZookeeperCacheManager zookeeperCacheManager(ZkClient zkClient){
-        return new ZookeeperCacheManager(zkClient);
+    public ZookeeperCacheManager zookeeperCacheManager(ZkClient zkClient,ZkRouteDataListener zkRouteDataListener){
+        return new ZookeeperCacheManager(zkClient,zkRouteDataListener);
     }
 
     @Bean
@@ -73,6 +74,16 @@ public class GatewayWebConfigurer {
     @Bean
     public IChainPipe prePipe() {
         return new PrePipe();
+    }
+
+    /**
+     * init authorize pipe.
+     *
+     * @return {@linkplain AuthorizePipe}
+     */
+    @Bean
+    public IChainPipe authorizePipe(){
+        return new AuthorizePipe();
     }
 
     /**

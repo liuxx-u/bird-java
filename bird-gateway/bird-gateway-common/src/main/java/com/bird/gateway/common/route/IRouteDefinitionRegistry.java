@@ -1,6 +1,6 @@
-package com.bird.dubbo.gateway.route;
+package com.bird.gateway.common.route;
 
-import com.bird.gateway.common.dto.zk.RouteDefinition;
+import com.bird.gateway.common.route.RouteDefinition;
 
 import java.util.List;
 

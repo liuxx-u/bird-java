@@ -1,6 +1,7 @@
 package com.bird.gateway.web.pipe.rpc.dubbo;
 
 import com.alibaba.dubbo.config.ApplicationConfig;
+import com.alibaba.dubbo.config.ConsumerConfig;
 import com.alibaba.dubbo.config.ReferenceConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
 import com.alibaba.dubbo.config.utils.ReferenceConfigCache;
@@ -111,10 +112,11 @@ public class DubboProxyService {
         ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
         reference.setGeneric(true);
 
-        final ApplicationConfig applicationConfig = cacheApplication(dubboHandle.getAppName());
+        final ApplicationConfig applicationConfig = cacheApplication(dubboHandle);
         reference.setApplication(applicationConfig);
 
-        reference.setRegistry(cacheRegistry(dubboHandle.getAppName(), dubboHandle.getRegistry()));
+        reference.setRegistry(cacheRegistry(dubboHandle));
+        reference.setConsumer(getConsumer(dubboHandle));
 
         reference.setInterface(dubboHandle.getInterfaceName());
         if (StringUtils.isNoneBlank(dubboHandle.getVersion())) {
@@ -132,10 +134,12 @@ public class DubboProxyService {
 
         Optional.ofNullable(dubboHandle.getTimeout()).ifPresent(reference::setTimeout);
         Optional.ofNullable(dubboHandle.getRetries()).ifPresent(reference::setRetries);
+
         return reference;
     }
 
-    private ApplicationConfig cacheApplication(final String appName) {
+    private ApplicationConfig cacheApplication(final DubboHandle dubboHandle) {
+        String appName = dubboHandle.getAppName();
         ApplicationConfig applicationConfig = APPLICATION_CONFIG_MAP.get(appName);
         if (Objects.isNull(applicationConfig)) {
             applicationConfig = new ApplicationConfig(appName);
@@ -144,12 +148,27 @@ public class DubboProxyService {
         return applicationConfig;
     }
 
-    private RegistryConfig cacheRegistry(final String appName, final String registry) {
+    private RegistryConfig cacheRegistry(final DubboHandle dubboHandle) {
+        String appName = dubboHandle.getAppName();
+        String registry = dubboHandle.getRegistry();
         RegistryConfig registryConfig = REGISTRY_CONFIG_MAP.get(appName);
         if (Objects.isNull(registryConfig)) {
             registryConfig = new RegistryConfig(registry);
             REGISTRY_CONFIG_MAP.put(appName, registryConfig);
         }
         return registryConfig;
+    }
+
+    private ConsumerConfig getConsumer(final DubboHandle dubboHandle){
+        String appName = dubboHandle.getAppName();
+        Integer timeout = dubboHandle.getTimeout();
+
+        ConsumerConfig consumerConfig = new ConsumerConfig();
+        consumerConfig.setTimeout(timeout);
+        consumerConfig.setRetries(0);
+        consumerConfig.setLoadbalance("leastactive");
+        consumerConfig.setCluster("failfast");
+        consumerConfig.setFilter("consumerSession");
+        return consumerConfig;
     }
 }
