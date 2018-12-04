@@ -1,6 +1,8 @@
 package com.bird.gateway.web.pipe;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.bird.gateway.common.constant.Constants;
 import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.result.JsonResult;
@@ -25,6 +27,12 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 @RequiredArgsConstructor
 public abstract class AbstractPipe implements IPipe {
+
+    private static SimplePropertyPreFilter JSON_FILTER = new SimplePropertyPreFilter();
+    static {
+        JSON_FILTER.getExcludes().add("class");
+    }
+
     /**
      * this is Template Method child has Implement your own logic.
      *
@@ -71,6 +79,12 @@ public abstract class AbstractPipe implements IPipe {
 
         return response.writeWith(Mono.just(exchange.getResponse()
                         .bufferFactory()
-                        .wrap(Objects.requireNonNull(JSON.toJSONString(result)).getBytes())));
+                        .wrap(Objects.requireNonNull(JSON.toJSONString(result,JSON_FILTER
+                                , SerializerFeature.PrettyFormat
+                                , SerializerFeature.QuoteFieldNames
+                                , SerializerFeature.WriteDateUseDateFormat
+                                , SerializerFeature.WriteNullStringAsEmpty
+                                , SerializerFeature.WriteNullNumberAsZero
+                                , SerializerFeature.WriteNullBooleanAsFalse)).getBytes())));
     }
 }
