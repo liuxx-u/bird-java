@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.bird.core.Constant;
 import com.bird.core.cache.CacheHelper;
 import com.bird.core.exception.ExceptionHelper;
-import com.bird.core.session.BirdSession;
-import com.bird.core.session.SessionContext;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.DozerHelper;
 import com.bird.service.common.exception.RollbackException;
@@ -23,8 +21,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -46,8 +42,8 @@ import java.util.concurrent.TimeUnit;
  * @author liuxx
  * @date 2017/5/12
  */
-public abstract class AbstractService<M extends AbstractMapper<T>,T extends IModel> implements IService<T> {
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+@SuppressWarnings("all")
+public abstract class AbstractService<M extends AbstractMapper<T>,T extends IModel> extends AbstractPureService implements IService<T> {
 
     @Autowired
     protected M mapper;
@@ -57,26 +53,6 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
 
     @Value("${spring.application.name:bird}")
     private String cachePrefix;
-
-    /**
-     * 从线程中获取当前登录用户的票据信息
-     * @return
-     */
-    protected BirdSession getSession(){
-        return SessionContext.getSession();
-    }
-
-    /**
-     * 从线程中获取当前登录用户的userId
-     *
-     * @return
-     */
-    protected Long getUserId() {
-        BirdSession session = getSession();
-        if (session == null) return 0L;
-        if (session.getUserId() == null || StringUtils.isBlank(session.getUserId().toString())) return 0L;
-        return Long.valueOf(session.getUserId().toString());
-    }
 
     /**
      * {@inheritDoc}

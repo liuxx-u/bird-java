@@ -28,6 +28,7 @@ public class PagedQueryProvider {
             sql += " where " + whereSql;
         }
         sql += " order by " + param.getDbFieldName(sortField) + (sortDirection == ListSortDirection.DESC ? " desc" : " asc")
+                + "," + param.getDbFieldName("id") + " desc"
                 + " limit " + (query.getPageIndex() - 1) * query.getPageSize() + "," + query.getPageSize();
         return sql;
     }
