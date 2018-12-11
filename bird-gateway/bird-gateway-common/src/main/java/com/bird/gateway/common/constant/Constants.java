@@ -11,6 +11,11 @@ public interface Constants {
     String REQUESTDTO = "requestDTO";
 
     /**
+     * The constant ROUTE_DEFINITION.
+     */
+    String ROUTE_DEFINITION="route_definition";
+
+    /**
      * The constant CLIENT_RESPONSE_ATTR.
      */
     String CLIENT_RESPONSE_ATTR = "webHandlerClientResponse";

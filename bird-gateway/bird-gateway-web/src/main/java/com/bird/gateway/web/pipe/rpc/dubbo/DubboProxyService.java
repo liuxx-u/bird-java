@@ -9,6 +9,7 @@ import com.alibaba.dubbo.rpc.service.GenericException;
 import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.Feature;
 import com.bird.gateway.common.dto.convert.DubboHandle;
 import com.bird.gateway.common.exception.GatewayException;
 import com.bird.gateway.common.utils.ByteBuffUtils;
@@ -25,6 +26,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author liuxx
@@ -99,12 +102,10 @@ public class DubboProxyService {
         }
 
         AtomicReference<String> json = new AtomicReference<>("");
-        DataBufferUtils.join(exchange.getRequest().getBody()).map(dataBuffer -> {
-            json.set(ByteBuffUtils.byteBufferToString(dataBuffer.asByteBuffer()));
-            return Mono.empty();
-        }).subscribe();
-        param.put("body", JSON.parse(json.get()));
+        DataBufferUtils.join(exchange.getRequest().getBody())
+                .subscribe(dataBuffer -> json.set(ByteBuffUtils.byteBufferToString(dataBuffer.asByteBuffer())));
 
+        param.put("body", GenericJsonDeserializer.parse(json.get()));
         return param;
     }
 

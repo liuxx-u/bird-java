@@ -53,13 +53,7 @@ public abstract class AbstractPipe implements IPipe {
      */
     @Override
     public Mono<Void> execute(ServerWebExchange exchange, PipeChain chain) {
-        RequestDTO request = exchange.getAttribute(Constants.REQUESTDTO);
-
-
-        if (Objects.isNull(request) || StringUtils.isBlank(request.getPath())) {
-            return jsonResult(exchange, JsonResult.error("请求路径不存在."));
-        }
-        RouteDefinition routeDefinition = ZookeeperCacheManager.getRouteDefinition(request.getPath());
+        RouteDefinition routeDefinition = exchange.getAttribute(Constants.ROUTE_DEFINITION);
         if (routeDefinition == null || BooleanUtils.isNotTrue(routeDefinition.getEnabled())) {
             return jsonResult(exchange, JsonResult.error("api不存在或已被禁用."));
         }

@@ -23,7 +23,7 @@ public class ByteBuffUtils {
             Charset charset = Charset.forName("UTF-8");
             CharsetDecoder decoder = charset.newDecoder();
             charBuffer = decoder.decode(buffer);
-            buffer.flip();
+//            buffer.flip();
             return charBuffer.toString();
         } catch (Exception ex) {
             ex.printStackTrace();

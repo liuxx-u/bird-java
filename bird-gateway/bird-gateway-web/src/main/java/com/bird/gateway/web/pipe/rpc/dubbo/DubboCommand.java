@@ -47,7 +47,9 @@ public class DubboCommand extends HystrixObservableCommand<Void> {
 
     private Mono<Void> doRpcInvoke() {
         final Object result = dubboProxyService.genericInvoker(exchange, dubboHandle);
-        exchange.getAttributes().put(Constants.DUBBO_RPC_RESULT, result);
+        if(result != null){
+            exchange.getAttributes().put(Constants.DUBBO_RPC_RESULT, result);
+        }
         exchange.getAttributes().put(Constants.CLIENT_RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
         return chain.execute(exchange);
     }
