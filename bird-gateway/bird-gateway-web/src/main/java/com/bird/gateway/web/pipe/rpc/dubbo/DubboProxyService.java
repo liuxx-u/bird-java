@@ -10,6 +10,7 @@ import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
+import com.bird.core.exception.UserFriendlyException;
 import com.bird.gateway.common.dto.convert.DubboHandle;
 import com.bird.gateway.common.exception.GatewayException;
 import com.bird.gateway.common.utils.ByteBuffUtils;
@@ -72,7 +73,11 @@ public class DubboProxyService {
             return genericService.$invoke(dubboHandle.getMethodName(), pair.getLeft(), pair.getRight());
         } catch (GenericException e) {
             log.error(e.getExceptionMessage());
-            throw new GatewayException(e.getMessage());
+            if (StringUtils.equals(e.getExceptionClass(), UserFriendlyException.class.getName())) {
+                throw new UserFriendlyException(e.getExceptionMessage());
+            } else {
+                throw new GatewayException(e.getMessage());
+            }
         }
     }
 

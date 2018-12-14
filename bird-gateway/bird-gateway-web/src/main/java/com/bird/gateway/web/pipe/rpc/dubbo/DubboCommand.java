@@ -1,6 +1,7 @@
 package com.bird.gateway.web.pipe.rpc.dubbo;
 
 import com.alibaba.fastjson.JSON;
+import com.bird.core.exception.UserFriendlyException;
 import com.bird.gateway.common.constant.Constants;
 import com.bird.gateway.common.dto.convert.DubboHandle;
 import com.bird.gateway.common.enums.ResultEnum;
@@ -60,11 +61,15 @@ public class DubboCommand extends HystrixObservableCommand<Void> {
     }
 
     private Mono<Void> doFallback() {
-        if (isFailedExecution()) {
-            log.error("dubbo rpc have error:" + getExecutionException().getMessage());
+        String msg = Constants.ERROR_RESULT;
+        if (isFailedExecution() && getExecutionException() != null) {
+            String exception = getExecutionException().toString();
+            if(exception.startsWith(UserFriendlyException.class.getName())){
+                msg = getExecutionException().getMessage();
+            }
         }
         exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-        final JsonResult error = JsonResult.error(Constants.DUBBO_ERROR_RESULT);
+        final JsonResult error = JsonResult.error(msg);
         return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
                 .bufferFactory().wrap(Objects.requireNonNull(JSON.toJSONString(error)).getBytes())));
     }

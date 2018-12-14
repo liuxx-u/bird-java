@@ -101,24 +101,14 @@ public interface Constants {
     String REWRITE_URI = "rewrite_uri";
 
     /**
-     * The constant HTTP_ERROR_RESULT.
+     * The constant ERROR_RESULT.
      */
-    String HTTP_ERROR_RESULT = "this is bad request or fuse ing please try again later";
-
-    /**
-     * The constant DUBBO_ERROR_RESULT.
-     */
-    String DUBBO_ERROR_RESULT = "dubbo rpc have error or fuse ing please check your param and  try again later";
-
-    /**
-     * The constant SPRING_CLOUD_ERROR_RESULT.
-     */
-    String SPRING_CLOUD_ERROR_RESULT = "spring cloud rpc have error or fuse ing please check your param and  try again later";
+    String ERROR_RESULT = "系统走神了,请稍候再试.";
 
     /**
      * The constant TIMEOUT_RESULT.
      */
-    String TIMEOUT_RESULT = "this request is time out  Please try again later";
+    String TIMEOUT_RESULT = "请求超时，请稍后重试.";
 
     /**
      * The constant UPSTREAM_NOT_FIND.

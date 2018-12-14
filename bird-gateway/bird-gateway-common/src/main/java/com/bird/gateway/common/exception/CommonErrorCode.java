@@ -21,11 +21,6 @@ public class CommonErrorCode {
     public static final int UNAUTHORIZED = 401;
 
     /**
-     * The constant PARAMS_ERROR.
-     */
-    public static final int PARAMS_ERROR = 10000002;
-
-    /**
      * getErrorMsg.
      *
      * @param code code
