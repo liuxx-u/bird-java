@@ -32,7 +32,7 @@
         <!-- 版本号 -->
         <spring.version>5.0.7.RELEASE</spring.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
-        <spring-data-redis.version>2.0.9.RELEASE</spring-data-redis.version>
+        <spring-data-redis.version>2.0.8.RELEASE</spring-data-redis.version>
         <javax.version>3.1.0</javax.version>
         <dubbo.version>2.6.2</dubbo.version>
         <zkclient.version>0.10</zkclient.version>

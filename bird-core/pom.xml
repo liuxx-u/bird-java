@@ -11,19 +11,12 @@
 
     <artifactId>bird-core</artifactId>
     <version>${project.parent.version}</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -31,7 +24,6 @@
             <artifactId>spring-data-redis</artifactId>
             <version>${spring-data-redis.version}</version>
         </dependency>
-        <!--javax.inject组件-->
         <!--redis组件-->
         <dependency>
             <groupId>redis.clients</groupId>
@@ -71,4 +63,18 @@
             <version>${ant.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
