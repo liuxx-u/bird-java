@@ -9,26 +9,21 @@ import com.alibaba.dubbo.rpc.service.GenericException;
 import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.parser.Feature;
 import com.bird.core.exception.UserFriendlyException;
+import com.bird.gateway.common.constant.Constants;
 import com.bird.gateway.common.dto.convert.DubboHandle;
 import com.bird.gateway.common.exception.GatewayException;
-import com.bird.gateway.common.utils.ByteBuffUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author liuxx
@@ -106,11 +101,16 @@ public class DubboProxyService {
             param.put(key, pathParams.getFirst(key));
         }
 
-        AtomicReference<String> json = new AtomicReference<>("");
-        DataBufferUtils.join(exchange.getRequest().getBody())
-                .subscribe(dataBuffer -> json.set(ByteBuffUtils.byteBufferToString(dataBuffer.asByteBuffer())));
-
-        param.put("body", GenericJsonDeserializer.parse(json.get()));
+        String base64 = exchange.getRequest().getHeaders().getFirst(Constants.DUBBO_PARAM_HEADER);
+        if(StringUtils.isNotBlank(base64)){
+            String body = null ;
+            try {
+                body = new String(Base64.getDecoder().decode(base64),"utf-8");
+                param.put("body", GenericJsonDeserializer.parse(body));
+            } catch (UnsupportedEncodingException e) {
+                log.error("dubbo参数解析失败");
+            }
+        }
         return param;
     }
 

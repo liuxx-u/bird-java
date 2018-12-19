@@ -16,9 +16,9 @@ public interface Constants {
     String ROUTE_DEFINITION="route_definition";
 
     /**
-     * The constant CLIENT_RESPONSE_ATTR.
+     * The constant DUBBO_PARAM_HEADER.
      */
-    String CLIENT_RESPONSE_ATTR = "webHandlerClientResponse";
+    String DUBBO_PARAM_HEADER = "dubbo-param";
 
     /**
      * The constant DUBBO_RPC_RESULT.
@@ -31,39 +31,9 @@ public interface Constants {
     String CLIENT_RESPONSE_RESULT_TYPE = "webHandlerClientResponseResultType";
 
     /**
-     * The constant MODULE.
-     */
-    String MODULE = "module";
-
-    /**
-     * The constant METHOD.
-     */
-    String METHOD = "method";
-
-    /**
-     * The constant CONTENT.
-     */
-    String CONTENT = "content";
-
-    /**
      * The constant APP_KEY.
      */
     String APP_KEY = "appKey";
-
-    /**
-     * The constant EXT_INFO.
-     */
-    String EXT_INFO = "extInfo";
-
-    /**
-     * The constant HTTP_METHOD.
-     */
-    String HTTP_METHOD = "httpMethod";
-
-    /**
-     * The constant RPC_TYPE.
-     */
-    String RPC_TYPE = "rpcType";
 
     /**
      * The constant SIGN.
@@ -76,59 +46,9 @@ public interface Constants {
     String TIMESTAMP = "timestamp";
 
     /**
-     * The constant RETRY.
-     */
-    int RETRY = 3;
-
-    /**
-     * The constant SOUL_DISRUPTOR_THREAD_NAME.
-     */
-    String SOUL_DISRUPTOR_THREAD_NAME = "soul-disruptor";
-
-    /**
-     * The constant SOUL_THREAD_NAME.
-     */
-    String SOUL_THREAD_NAME = "soul-thread";
-
-    /**
-     * The constant REJECT_MSG.
-     */
-    String REJECT_MSG = " You are forbidden to visit";
-
-    /**
-     * The constant REWRITE_URI.
-     */
-    String REWRITE_URI = "rewrite_uri";
-
-    /**
      * The constant ERROR_RESULT.
      */
     String ERROR_RESULT = "系统走神了,请稍候再试.";
-
-    /**
-     * The constant TIMEOUT_RESULT.
-     */
-    String TIMEOUT_RESULT = "请求超时，请稍后重试.";
-
-    /**
-     * The constant UPSTREAM_NOT_FIND.
-     */
-    String UPSTREAM_NOT_FIND = "this can not rule upstream please check you config!";
-
-    /**
-     * The constant TOO_MANY_REQUESTS.
-     */
-    String TOO_MANY_REQUESTS = "the request is too fast please try again later";
-
-    /**
-     * The constant SIGN_IS_NOT_PASS.
-     */
-    String SIGN_IS_NOT_PASS = "sign is not pass,Please check you sign algorithm!";
-
-    /**
-     * The constant LINE_SEPARATOR.
-     */
-    String LINE_SEPARATOR = System.getProperty("line.separator");
 
     /**
      * hystrix withExecutionIsolationSemaphoreMaxConcurrentRequests.
@@ -154,9 +74,4 @@ public interface Constants {
      * The constant TIME_OUT.
      */
     int TIME_OUT = 3000;
-
-    /**
-     * The constant COLONS.
-     */
-    String COLONS = ":";
 }

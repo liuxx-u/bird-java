@@ -1,14 +1,13 @@
 package com.bird.gateway.web.pipe.before;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bird.gateway.common.constant.Constants;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
 import com.bird.gateway.common.result.JsonResult;
 import com.bird.gateway.common.route.RouteDefinition;
-import com.bird.gateway.web.pipe.PipeChain;
 import com.bird.gateway.web.pipe.IChainPipe;
+import com.bird.gateway.web.pipe.PipeChain;
 import com.bird.gateway.web.request.RequestDTO;
 import com.bird.gateway.web.zookeeper.ZookeeperCacheManager;
 import org.apache.commons.lang3.BooleanUtils;

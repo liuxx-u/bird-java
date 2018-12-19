@@ -23,7 +23,6 @@ final class GenericJsonDeserializer {
     private static final String TIME_SUFFIX = " 00:00:00";
 
     static Object parse(String json) {
-
         Object obj = JSON.parse(json);
         if (obj == null) return null;
         else if (obj instanceof JSONObject) return parseObject(obj);
