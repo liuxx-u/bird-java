@@ -51,6 +51,7 @@
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
         <ant.version>1.10.1</ant.version>
+        <aspectj.version>1.8.13</aspectj.version>
     </properties>
 
     <dependencies>
