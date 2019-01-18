@@ -1,7 +1,6 @@
 package com.bird.eventbus;
 
 import com.bird.eventbus.arg.IEventArg;
-import com.bird.eventbus.handler.EventHandlerFactory;
 import com.bird.eventbus.register.IEventRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +32,5 @@ public class EventBus {
      * @param eventArg 事件
      */
     public void pushLocal(IEventArg eventArg){
-        EventHandlerFactory.handleEvent(eventArg);
     }
 }
