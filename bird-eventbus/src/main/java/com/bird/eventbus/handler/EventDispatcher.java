@@ -10,6 +10,8 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.annotation.PostConstruct;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,7 +53,10 @@ public class EventDispatcher {
             return thread;
         });
         executor.execute(new EventConsumer());
+    }
 
+    @PostConstruct
+    public void initHandlerStoreThread() {
         if (handlerStore != null) {
             ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(2, (new BasicThreadFactory.Builder()).build());
             poolExecutor.scheduleAtFixedRate(new EventHandleStoreConsumer(), 0, 10, TimeUnit.SECONDS);
@@ -194,9 +199,13 @@ public class EventDispatcher {
                 Object instance = SpringContextHolder.getBean(typeClass);
                 method.invoke(instance, eventArg);
                 consumerResult.setSuccess(true);
+            } catch (InvocationTargetException e) {
+                consumerResult.setSuccess(false);
+                consumerResult.setMessage(e.getTargetException().getMessage());
+                log.error("事件消费失败", e);
             } catch (Exception e) {
                 consumerResult.setSuccess(false);
-                consumerResult.setMessage(e.getMessage());
+                consumerResult.setMessage(e.getLocalizedMessage());
                 log.error("事件消费失败", e);
             }
 
