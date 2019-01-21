@@ -13,6 +13,7 @@
         <module>bird-dubbo</module>
         <module>bird-eventbus</module>
         <module>bird-eventbus-kafka</module>
+        <module>bird-eventbus-rabbit</module>
         <module>bird-service-common</module>
         <module>bird-service-starter</module>
         <module>bird-web-sso</module>
@@ -30,7 +31,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- 版本号 -->
-        <spring.version>5.0.7.RELEASE</spring.version>
+        <spring.version>5.1.1.RELEASE</spring.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <spring-data-redis.version>2.0.8.RELEASE</spring-data-redis.version>
         <javax.version>3.1.0</javax.version>

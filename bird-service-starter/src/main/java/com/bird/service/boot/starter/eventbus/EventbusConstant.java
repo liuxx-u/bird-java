@@ -27,8 +27,26 @@ public interface EventbusConstant {
         String PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME = PREFIX + ".provider.defaultTopic";
 
         /**
-         * kafka 消费者的groupId
+         * kafka 扫描消费者 路径
          */
-        String LISTENER_GROUP_ID = PREFIX + ".listener.groupId";
+        String LISTENER_PACKAGES = PREFIX + ".listener.basePackages";
+    }
+
+    interface Rabbit {
+        /**
+         * rabbit 配置前缀
+         */
+        String PREFIX = EventbusConstant.PREFIX + ".rabbit";
+
+        /**
+         * kafka broker地址
+         */
+        String ADDRESS_PROPERTY_NAME = PREFIX + ".address";
+
+        /**
+         * kafka 扫描消费者 路径
+         */
+        String LISTENER_PACKAGES = PREFIX + ".listenerPackages";
+
     }
 }

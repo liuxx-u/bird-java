@@ -66,7 +66,7 @@ public class KafkaConfigurer {
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.Kafka.LISTENER_GROUP_ID)
+    @ConditionalOnProperty(value = EventbusConstant.Kafka.LISTENER_PACKAGES)
     public EventDispatcher eventDispatcher(){
         EventDispatcher dispatcher = new EventDispatcher();
         dispatcher.initWithPackage(kafkaProperties.getListener().getBasePackages());
@@ -74,7 +74,7 @@ public class KafkaConfigurer {
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.Kafka.LISTENER_GROUP_ID)
+    @ConditionalOnProperty(value = EventbusConstant.Kafka.LISTENER_PACKAGES)
     public KafkaMessageListenerContainer kafkaListenerContainer(EventDispatcher eventDispatcher) {
 
         KafkaEventArgListener listener = new KafkaEventArgListener(eventDispatcher);

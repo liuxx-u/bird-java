@@ -42,10 +42,14 @@ public class EventRegisterResult implements Serializable {
      */
     private Date createTime;
 
-    public EventRegisterResult(IEventArg eventArg){
+    public EventRegisterResult() {
+        this.createTime = new Date();
+    }
+
+    public EventRegisterResult(IEventArg eventArg) {
+        this();
         this.eventId = eventArg.getEventId();
         this.event = eventArg.getClass().getName();
         this.eventJson = JSON.toJSONString(eventArg);
-        this.createTime = new Date();
     }
 }

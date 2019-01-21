@@ -29,6 +29,11 @@
             <artifactId>bird-eventbus-kafka</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.bird</groupId>
+            <artifactId>bird-eventbus-rabbit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.bird</groupId>

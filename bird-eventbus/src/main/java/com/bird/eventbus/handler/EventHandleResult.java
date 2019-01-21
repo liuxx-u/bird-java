@@ -47,13 +47,16 @@ public class EventHandleResult implements Serializable {
      */
     private List<ConsumerResult> items;
 
+    public EventHandleResult(){
+        receiveTime = new Date();
+        items = new ArrayList<>();
+    }
+
     public EventHandleResult(IEventArg eventArg){
+        this();
         this.eventId = eventArg.getEventId();
         this.event = eventArg.getClass().getName();
         this.eventJson = JSON.toJSONString(eventArg);
-
-        receiveTime = new Date();
-        items = new ArrayList<>();
     }
 
     /**
