@@ -17,6 +17,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.Charset;
 import java.util.Objects;
 
 /**
@@ -79,6 +80,6 @@ public abstract class AbstractPipe implements IPipe {
                                 , SerializerFeature.WriteDateUseDateFormat
                                 , SerializerFeature.WriteNullStringAsEmpty
                                 , SerializerFeature.WriteNullNumberAsZero
-                                , SerializerFeature.WriteNullBooleanAsFalse)).getBytes())));
+                                , SerializerFeature.WriteNullBooleanAsFalse)).getBytes(Charset.forName("utf8")))));
     }
 }
