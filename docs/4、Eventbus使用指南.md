@@ -92,6 +92,7 @@ public class TestService {
 
 ```
 在`Kafka`中，将使用`TestEventArg`的类名作为`topic`，传递消息；
+
 在`RabbitMQ`中，将使用`TestEventArg`的类名作为`exchange`，消费者的服务名作为`queue`，使用`fanout`模式传递消息；
 
 注意：`@EventHandler`标记的消费者方法只能接收一个参数，即`EventArg`及其子类的参数。
@@ -101,6 +102,7 @@ public class TestService {
 框架提供了两个接口，分别是：
 
 1、保存消息发送结果的`com.bird.eventbus.register.IEventRegisterStore`；
+
 2、保存消息消费结果的`com.bird.eventbus.handler.IEventHandlerStore`；
 
 业务服务实现这两个接口，并注入到Spring容器中，Eventbus会在发送消息、消费消息时调用对应组件保存记录。
