@@ -26,9 +26,14 @@ public interface Constants {
     String DUBBO_RPC_RESULT = "dubbo_rpc_result";
 
     /**
+     * The constant HTTP_RPC_RESULT.
+     */
+    String HTTP_RPC_RESULT = "http_rpc_result";
+
+    /**
      * The constant CLIENT_RESPONSE_RESULT_TYPE.
      */
-    String CLIENT_RESPONSE_RESULT_TYPE = "webHandlerClientResponseResultType";
+    String RESPONSE_RESULT_TYPE = "response_result_type";
 
     /**
      * The constant APP_KEY.

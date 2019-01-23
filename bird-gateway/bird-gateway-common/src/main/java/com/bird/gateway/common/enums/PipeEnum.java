@@ -38,35 +38,31 @@ public enum PipeEnum {
      */
     RATE_LIMIT(40, "rate_limit"),
 
-    /**
-     * RPC pipe enum.
-     */
-    RPC(50,"rpc"),
-
-    /**
-     * Rewrite pipe enum.
-     */
-    REWRITE(51, "rewrite"),
-
-    /**
-     * Redirect pipe enum.
-     */
-    REDIRECT(52, "redirect"),
 
     /**
      * Divide pipe enum.
      */
-    DIVIDE(53, "divide"),
+    DIVIDE(50, "divide"),
+
+    /**
+     * RPC pipe enum.
+     */
+    RPC(60,"rpc"),
+
+    /**
+     * Rewrite pipe enum.
+     */
+    HTTP(61, "rewrite"),
 
     /**
      * Dubbo pipe enum.
      */
-    DUBBO(54, "dubbo"),
+    DUBBO(62, "dubbo"),
 
     /**
      * springCloud pipe enum.
      */
-    SPRING_CLOUD(55, "springCloud"),
+    SPRING_CLOUD(63, "springCloud"),
 
     /**
      * Monitor pipe enum.

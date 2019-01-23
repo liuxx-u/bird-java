@@ -36,8 +36,9 @@ final class GenericJsonDeserializer {
     }
 
     private static Object parseObject(Object obj) {
-        JSONObject jsonObject = (JSONObject) obj;
+        if(!(obj instanceof JSONObject))return obj;
 
+        JSONObject jsonObject = (JSONObject) obj;
         for (String key : jsonObject.keySet()) {
             Object value = jsonObject.get(key);
             if (value == null) continue;

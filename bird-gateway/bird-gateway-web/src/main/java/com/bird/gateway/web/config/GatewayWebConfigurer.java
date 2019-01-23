@@ -92,8 +92,8 @@ public class GatewayWebConfigurer {
      * @return {@linkplain RpcPipe}
      */
     @Bean
-    public IChainPipe rpcPipe(DubboPipe dubboPipe){
-        return new RpcPipe(dubboPipe);
+    public IChainPipe rpcPipe(){
+        return new RpcPipe();
     }
 
     /**

@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 import rx.Observable;
 import rx.RxReactiveStreams;
 
+import java.nio.charset.Charset;
 import java.util.Objects;
 
 /**
@@ -51,7 +52,7 @@ public class DubboCommand extends HystrixObservableCommand<Void> {
         if(result != null){
             exchange.getAttributes().put(Constants.DUBBO_RPC_RESULT, result);
         }
-        exchange.getAttributes().put(Constants.CLIENT_RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
+        exchange.getAttributes().put(Constants.RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
         return chain.execute(exchange);
     }
 
@@ -66,11 +67,13 @@ public class DubboCommand extends HystrixObservableCommand<Void> {
             String exception = getExecutionException().toString();
             if(exception.startsWith(UserFriendlyException.class.getName())){
                 msg = getExecutionException().getMessage();
+            }else {
+                log.error(exception);
             }
         }
         exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
         final JsonResult error = JsonResult.error(msg);
         return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
-                .bufferFactory().wrap(Objects.requireNonNull(JSON.toJSONString(error)).getBytes())));
+                .bufferFactory().wrap(Objects.requireNonNull(JSON.toJSONString(error)).getBytes(Charset.forName("utf8")))));
     }
 }

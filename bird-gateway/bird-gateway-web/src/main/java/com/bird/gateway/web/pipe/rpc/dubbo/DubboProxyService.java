@@ -45,7 +45,7 @@ public class DubboProxyService {
      * @param paramMap    request paramMap.
      * @param dubboHandle dubboHandle.
      * @return rpc result.
-     * @throws SoulException exception for rpc.
+     * @throws GatewayException exception for rpc.
      */
     public Object genericInvoker(ServerWebExchange exchange, final DubboHandle dubboHandle) throws GatewayException {
         ReferenceConfig<GenericService> reference = buildReferenceConfig(dubboHandle);

@@ -50,7 +50,7 @@ public class DubboPipe extends AbstractPipe {
             }
         }).doOnError(throwable -> {
             throwable.printStackTrace();
-            exchange.getAttributes().put(Constants.CLIENT_RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
+            exchange.getAttributes().put(Constants.RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
             chain.execute(exchange);
         }).then();
     }

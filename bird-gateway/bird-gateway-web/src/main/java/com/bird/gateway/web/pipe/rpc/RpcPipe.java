@@ -8,8 +8,10 @@ import com.bird.gateway.common.result.JsonResult;
 import com.bird.gateway.web.pipe.AbstractPipe;
 import com.bird.gateway.web.pipe.IChainPipe;
 import com.bird.gateway.web.pipe.PipeChain;
+import com.bird.gateway.web.pipe.rpc.cloud.SpringCloudPipe;
 import com.bird.gateway.web.pipe.rpc.dubbo.DubboPipe;
 import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -21,11 +23,11 @@ import java.util.Objects;
  */
 public class RpcPipe extends AbstractPipe implements IChainPipe {
 
-    private final DubboPipe dubboPipe;
+    @Autowired(required = false)
+    private DubboPipe dubboPipe;
 
-    public RpcPipe(DubboPipe dubboPipe) {
-        this.dubboPipe = dubboPipe;
-    }
+    @Autowired(required = false)
+    private SpringCloudPipe springCloudPipe;
 
     @Override
     protected Mono<Void> doExecute(ServerWebExchange exchange, PipeChain chain, RouteDefinition routeDefinition) {
@@ -38,6 +40,8 @@ public class RpcPipe extends AbstractPipe implements IChainPipe {
 
         if (RpcTypeEnum.DUBBO.getName().equals(rpcTypeEnum.getName())) {
             return dubboPipe.execute(exchange, chain);
+        }else if(RpcTypeEnum.SPRING_CLOUD.getName().equals(rpcTypeEnum.getName())){
+            return springCloudPipe.execute(exchange, chain);
         }else {
             return chain.execute(exchange);
         }
