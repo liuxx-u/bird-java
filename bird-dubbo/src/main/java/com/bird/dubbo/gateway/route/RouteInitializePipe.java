@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -78,11 +77,6 @@ public class RouteInitializePipe implements IInitializePipe {
 
         Service service = clazz.getAnnotation(Service.class);
         if (service == null) return;
-
-        String crudClass = "";
-        if (!StringUtils.equals(typeRoute.crudClass().getName(), Serializable.class.getName())) {
-            crudClass = typeRoute.crudClass().getName();
-        }
         String typePath = this.getTypeRoutePath(typeRoute, clazz.getSimpleName());
 
         Method[] methods = clazz.getDeclaredMethods();
@@ -106,7 +100,7 @@ public class RouteInitializePipe implements IInitializePipe {
             definition.setPermissions(StringUtils.join(permissions, ","));
             definition.setCheckAll(methodRoute.isCheckAll());
             definition.setAnonymous(methodRoute.anonymous());
-            definition.setEnabled(false);
+            definition.setEnabled(true);
             definition.setRpcType(RpcTypeEnum.DUBBO.getName());
 
             DubboHandle handle = new DubboHandle();

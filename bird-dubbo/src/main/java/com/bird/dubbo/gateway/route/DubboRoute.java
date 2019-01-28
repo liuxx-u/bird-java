@@ -1,6 +1,5 @@
 package com.bird.dubbo.gateway.route;
 
-import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,12 +26,6 @@ public @interface DubboRoute {
      * @return 网关描述信息
      */
     String desc() default "";
-
-    /**
-     * crud对应的dto类名，设置后自动生成crud配置
-     * @return dto类名
-     */
-    Class<? extends Serializable> crudClass() default Serializable.class;
 
     /**
      * 所需权限名

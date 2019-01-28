@@ -24,8 +24,6 @@ public class ConsumerSessionFilter implements Filter {
             RpcContext.getContext().setAttachment("dubbo-session", JSON.toJSONString(session));
         }
 
-        Result result = invoker.invoke(invocation);
-
-        return result;
+        return invoker.invoke(invocation);
     }
 }
