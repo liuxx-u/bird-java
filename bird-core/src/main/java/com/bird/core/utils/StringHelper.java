@@ -125,7 +125,7 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
      * @return
      */
     public static String getDomain(String url) {
-         Pattern p = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv)", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv)", Pattern.CASE_INSENSITIVE);
         // 获取完整的域名
         Matcher matcher = p.matcher(url);
         matcher.find();
@@ -153,8 +153,8 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 转为小写驼峰命名法
-     * @param str
-     * @return
+     * @param str str
+     * @return camelCase
      */
     public static String toCamelCase(String str) {
         if (StringUtils.isBlank(str)) {
@@ -168,8 +168,8 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 转为大写驼峰命名法
-     * @param str
-     * @return
+     * @param str str
+     * @return pascalCase
      */
     public static String toPascalCase(String str) {
         if (StringUtils.isBlank(str)) {
@@ -179,5 +179,26 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
             return str.toUpperCase();
         }
         return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    /**
+     * 模糊（中间字符转*号）
+     * @param str str
+     * @param left left length
+     * @param right right length
+     * @return result
+     */
+    public static String vague(String str,int left,int right){
+        if (StringUtils.isBlank(str)) return str;
+
+        if (left < 0) left = 0;
+        if (right < 0) right = 0;
+
+        int leftIndex = left >= str.length() ? str.length() : left;
+        int rightIndex = str.length() - right;
+        if (rightIndex < 0) rightIndex = 0;
+
+        return str.substring(0, leftIndex) + "****" + str.substring(rightIndex, str.length());
+
     }
 }
