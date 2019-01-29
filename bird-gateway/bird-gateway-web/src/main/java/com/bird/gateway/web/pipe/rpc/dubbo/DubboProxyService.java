@@ -39,6 +39,8 @@ public class DubboProxyService {
 
     private static final Map<String, ApplicationConfig> APPLICATION_CONFIG_MAP = Maps.newConcurrentMap();
 
+    private static final Map<DubboHandle,ReferenceConfig<GenericService>> REFERENCE_CONFIG_MAP = Maps.newConcurrentMap();
+
     /**
      * dubbo rpc invoke.
      *
@@ -56,7 +58,10 @@ public class DubboProxyService {
         try {
             genericService = referenceConfigCache.get(reference);
         } catch (Exception ex) {
+            REFERENCE_CONFIG_MAP.remove(dubboHandle);
+            reference.destroy();
             referenceConfigCache.destroy(reference);
+
             log.error(dubboHandle.getInterfaceName() + "服务连接失败");
             throw new GatewayException(ex.getMessage());
         }
@@ -115,31 +120,36 @@ public class DubboProxyService {
     }
 
     private ReferenceConfig<GenericService> buildReferenceConfig(final DubboHandle dubboHandle) {
-        ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
-        reference.setGeneric(true);
+        ReferenceConfig<GenericService> reference = REFERENCE_CONFIG_MAP.get(dubboHandle);
+        if (Objects.isNull(reference)) {
+            reference = new ReferenceConfig<>();
+            reference.setGeneric(true);
 
-        final ApplicationConfig applicationConfig = cacheApplication(dubboHandle);
-        reference.setApplication(applicationConfig);
+            final ApplicationConfig applicationConfig = cacheApplication(dubboHandle);
+            reference.setApplication(applicationConfig);
 
-        reference.setRegistry(cacheRegistry(dubboHandle));
-        reference.setConsumer(getConsumer(dubboHandle));
+            reference.setRegistry(cacheRegistry(dubboHandle));
+            reference.setConsumer(getConsumer(dubboHandle));
 
-        reference.setInterface(dubboHandle.getInterfaceName());
-        if (StringUtils.isNoneBlank(dubboHandle.getVersion())) {
-            reference.setVersion(dubboHandle.getVersion());
-        }
-        if (StringUtils.isNoneBlank(dubboHandle.getProtocol())) {
-            reference.setProtocol(dubboHandle.getProtocol());
-        }
-        if (StringUtils.isNoneBlank(dubboHandle.getGroup())) {
-            reference.setGroup(dubboHandle.getGroup());
-        }
-        if (StringUtils.isNoneBlank(dubboHandle.getLoadBalance())) {
-            reference.setLoadbalance(dubboHandle.getLoadBalance());
-        }
+            reference.setInterface(dubboHandle.getInterfaceName());
+            if (StringUtils.isNoneBlank(dubboHandle.getVersion())) {
+                reference.setVersion(dubboHandle.getVersion());
+            }
+            if (StringUtils.isNoneBlank(dubboHandle.getProtocol())) {
+                reference.setProtocol(dubboHandle.getProtocol());
+            }
+            if (StringUtils.isNoneBlank(dubboHandle.getGroup())) {
+                reference.setGroup(dubboHandle.getGroup());
+            }
+            if (StringUtils.isNoneBlank(dubboHandle.getLoadBalance())) {
+                reference.setLoadbalance(dubboHandle.getLoadBalance());
+            }
 
-        Optional.ofNullable(dubboHandle.getTimeout()).ifPresent(reference::setTimeout);
-        Optional.ofNullable(dubboHandle.getRetries()).ifPresent(reference::setRetries);
+            Optional.ofNullable(dubboHandle.getTimeout()).ifPresent(reference::setTimeout);
+            Optional.ofNullable(dubboHandle.getRetries()).ifPresent(reference::setRetries);
+
+            REFERENCE_CONFIG_MAP.put(dubboHandle, reference);
+        }
 
         return reference;
     }

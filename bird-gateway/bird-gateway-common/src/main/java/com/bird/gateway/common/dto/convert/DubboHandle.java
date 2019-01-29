@@ -1,5 +1,6 @@
 package com.bird.gateway.common.dto.convert;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(callSuper = false)
 public class DubboHandle extends HystrixHandle implements Serializable {
     /**
      * zookeeper url is required.
