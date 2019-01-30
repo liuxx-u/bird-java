@@ -37,8 +37,11 @@ bird-java提供了许多功能特性，包括：
 
 [4、Eventbus使用指南][4]
 
+[5、网关使用指南][5]
+
 
   [1]: https://github.com/liuxx001/bird-java/blob/master/docs/1%E3%80%81%E9%80%9A%E7%94%A8%E6%9F%A5%E8%AF%A2%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.md
   [2]: https://github.com/liuxx001/bird-java/blob/master/docs/2%E3%80%81%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.md
   [3]: https://github.com/liuxx001/bird-java/blob/master/docs/3%E3%80%81%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md
   [4]: https://github.com/liuxx001/bird-java/blob/master/docs/4%E3%80%81Eventbus%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.md
+  [5]: https://github.com/liuxx001/bird-java/blob/master/docs/5%E3%80%81%E7%BD%91%E5%85%B3%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.md
