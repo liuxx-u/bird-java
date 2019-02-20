@@ -34,4 +34,16 @@ public abstract class AbstractPureService {
         if (session.getUserId() == null || StringUtils.isBlank(session.getUserId().toString())) return 0L;
         return Long.valueOf(session.getUserId().toString());
     }
+
+    /**
+     * 从线程中获取当前登录用户的tenantId
+     *
+     * @return
+     */
+    protected Long getTenantId() {
+        BirdSession session = getSession();
+        if (session == null) return 0L;
+        if (session.getTenantId() == null || StringUtils.isBlank(session.getTenantId().toString())) return 0L;
+        return Long.valueOf(session.getTenantId().toString());
+    }
 }
