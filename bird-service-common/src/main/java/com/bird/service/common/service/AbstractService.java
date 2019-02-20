@@ -6,6 +6,7 @@ import com.bird.core.cache.CacheHelper;
 import com.bird.core.exception.ExceptionHelper;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.DozerHelper;
+import com.bird.core.utils.NumberHelper;
 import com.bird.service.common.exception.RollbackException;
 import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.common.mapper.CommonSaveParam;
@@ -243,6 +244,10 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     @Override
     @SuppressWarnings("unchecked")
     public T queryById(Long id) {
+        if(NumberHelper.isNotPositive(id)){
+            return null;
+        }
+
         String key = getCacheKey(id);
         T record = (T) CacheHelper.getCache().get(key);
         if (record == null) {
