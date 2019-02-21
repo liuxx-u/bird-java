@@ -30,21 +30,35 @@ public class PagedQueryProvider {
     }
 
     public String queryTotalCount(PagedQueryParam param) {
-        return  "select count(1) from " + param.getFrom() + this.getTailSql(param);
+        return "select count(1) from " + param.getFrom() + this.getTailSql(param);
     }
 
     public String queryPagedSum(PagedQueryParam param) {
-        PagedListQueryDTO query = param.getQuery();
+        StringBuilder sumSql = this.getSumSql(param, true);
+        sumSql.append(" from ").append(param.getFrom()).append(this.getTailSql(param));
 
-        StringBuilder sb = new StringBuilder("select count(1) as totalCount");
-        for (String field : query.getSumFields()) {
-            sb.append(",").append("sum(").append(param.getDbFieldName(field)).append(") as ").append(field);
+        if (StringUtils.containsIgnoreCase(param.getAppendSql(), "group by")) {
+            StringBuilder groupSumSql = this.getSumSql(param, false);
+            groupSumSql.append(" from (").append(sumSql.toString()).append(") as temp");
+            return groupSumSql.toString();
         }
-        sb.append(" from ").append(param.getFrom()).append(this.getTailSql(param));
-        return sb.toString();
+
+        return sumSql.toString();
     }
 
-    private String getTailSql(PagedQueryParam param){
+    private StringBuilder getSumSql(PagedQueryParam param, Boolean useAlias) {
+        StringBuilder sb = new StringBuilder("select count(1) as totalCount");
+        for (String field : param.getQuery().getSumFields()) {
+            sb.append(",")
+                    .append("sum(")
+                    .append(useAlias ? param.getDbFieldName(field) : field)
+                    .append(") as ")
+                    .append(field);
+        }
+        return sb;
+    }
+
+    private String getTailSql(PagedQueryParam param) {
         return where(param) + param.getAppendSql();
     }
 
@@ -56,7 +70,7 @@ public class PagedQueryProvider {
             where = param.isFilterSoftDelete() ? " delFlag = 0 and (" + where + ")" : where;
         }
 
-        if(StringUtils.isNotBlank(where)){
+        if (StringUtils.isNotBlank(where)) {
             where = " where " + where;
         }
         return where;
