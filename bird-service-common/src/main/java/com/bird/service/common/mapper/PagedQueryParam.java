@@ -78,6 +78,11 @@ public class PagedQueryParam implements Serializable {
     private String where;
 
     /**
+     * 附加Sql语句
+     */
+    private StringBuilder appendSql = new StringBuilder(" ");
+
+    /**
      * DTO对应的查询描述符
      */
     private QueryDescriptor queryDescriptor;
@@ -119,6 +124,13 @@ public class PagedQueryParam implements Serializable {
         return this;
     }
 
+    public PagedQueryParam appendSql(String sql){
+        if(StringUtils.isNotBlank(sql)){
+            this.appendSql.append(sql);
+        }
+        return this;
+    }
+
     String getDbFieldName(String field) {
         return this.queryDescriptor.getDbFieldName(field);
     }
@@ -148,6 +160,10 @@ public class PagedQueryParam implements Serializable {
             if (StringUtils.isBlank(queryWhere)) return this.where;
             else return StringUtils.isBlank(this.where) ? queryWhere : "(" + this.where + ") and " + queryWhere;
         }
+    }
+
+    String getAppendSql(){
+        return this.appendSql.toString();
     }
 
     boolean isFilterSoftDelete() {

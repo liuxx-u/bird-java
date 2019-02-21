@@ -22,11 +22,7 @@ public class PagedQueryProvider {
             sortDirection = query.getSortDirection();
         }
 
-        String sql = "select " + param.getSelect() + " from " + param.getFrom();
-        String whereSql = where(param);
-        if (StringUtils.isNotBlank(whereSql)) {
-            sql += " where " + whereSql;
-        }
+        String sql = "select " + param.getSelect() + " from " + param.getFrom() + this.getTailSql(param);
         sql += " order by " + param.getDbFieldName(sortField) + (sortDirection == ListSortDirection.DESC ? " desc" : " asc")
                 + "," + param.getDbFieldName("id") + " desc"
                 + " limit " + (query.getPageIndex() - 1) * query.getPageSize() + "," + query.getPageSize();
@@ -34,12 +30,7 @@ public class PagedQueryProvider {
     }
 
     public String queryTotalCount(PagedQueryParam param) {
-        String sql = "select count(1) from " + param.getFrom();
-        String whereSql = where(param);
-        if (StringUtils.isNotBlank(whereSql)) {
-            sql += " where " + whereSql;
-        }
-        return sql;
+        return  "select count(1) from " + param.getFrom() + this.getTailSql(param);
     }
 
     public String queryPagedSum(PagedQueryParam param) {
@@ -49,20 +40,25 @@ public class PagedQueryProvider {
         for (String field : query.getSumFields()) {
             sb.append(",").append("sum(").append(param.getDbFieldName(field)).append(") as ").append(field);
         }
-        sb.append(" from ").append(param.getFrom());
-        String whereSql = where(param);
-        if (StringUtils.isNotBlank(whereSql)) {
-            sb.append(" where ").append(whereSql);
-        }
+        sb.append(" from ").append(param.getFrom()).append(this.getTailSql(param));
         return sb.toString();
+    }
+
+    private String getTailSql(PagedQueryParam param){
+        return where(param) + param.getAppendSql();
     }
 
     private String where(PagedQueryParam param) {
         String where = param.getWhere();
         if (StringUtils.isBlank(where)) {
-            return param.isFilterSoftDelete() ? " delFlag = 0 " : "";
+            where = param.isFilterSoftDelete() ? " delFlag = 0 " : "";
         } else {
-            return param.isFilterSoftDelete() ? " delFlag = 0 and (" + where + ")" : where;
+            where = param.isFilterSoftDelete() ? " delFlag = 0 and (" + where + ")" : where;
         }
+
+        if(StringUtils.isNotBlank(where)){
+            where = " where " + where;
+        }
+        return where;
     }
 }
