@@ -12,6 +12,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.Charset;
 import java.util.Objects;
 
 /**
@@ -37,7 +38,7 @@ public class ParamWebFilter extends AbstractWebFilter {
         response.setStatusCode(HttpStatus.BAD_REQUEST);
         final JsonResult result = JsonResult.error("api不存在或请求方式有误.");
         return response.writeWith(Mono.just(response.bufferFactory()
-                .wrap(JSON.toJSONString(result).getBytes())));
+                .wrap(JSON.toJSONString(result).getBytes(Charset.forName("utf8")))));
     }
 
     private Boolean verify(final RequestDTO requestDTO) {

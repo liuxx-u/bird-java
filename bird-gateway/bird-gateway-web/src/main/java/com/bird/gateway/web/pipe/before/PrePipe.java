@@ -17,6 +17,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.Charset;
 import java.util.Objects;
 
 /**
@@ -80,7 +81,7 @@ public class PrePipe implements IChainPipe {
 
         return response.writeWith(Mono.just(exchange.getResponse()
                 .bufferFactory()
-                .wrap(Objects.requireNonNull(JSON.toJSONString(result)).getBytes())));
+                .wrap(Objects.requireNonNull(JSON.toJSONString(result)).getBytes(Charset.forName("utf8")))));
     }
 }
 
