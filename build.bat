@@ -1,1 +1,1 @@
-mvn clean compile install
+mvn clean compile install -DskipTests
