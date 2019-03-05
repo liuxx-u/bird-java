@@ -31,19 +31,26 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
      */
     @Override
     public TicketInfo getTicket(String token) {
+        Integer retryCount = 3;
         String url = server + GET_TICKET_URL + token;
         List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch", "Connection", "Keep-Alive");
-        try {
-            HttpClient.HttpResult result = HttpClient.httpGet(url, headers, null, HttpClient.DEFAULT_CONTENT_TYPE);
-            if (HttpURLConnection.HTTP_OK != result.code) {
-                throw new IOException("Error while requesting: " + url + "'. Server returned: " + result.code);
-            }
-            return JSONObject.parseObject(result.content, TicketInfo.class);
 
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-            return null;
-        }
+        TicketInfo ticketInfo;
+        do {
+            try {
+                HttpClient.HttpResult result = HttpClient.httpGet(url, headers, null, HttpClient.DEFAULT_CONTENT_TYPE);
+                if (HttpURLConnection.HTTP_OK != result.code) {
+                    throw new IOException("Error while requesting: " + url + "'. Server returned: " + result.code);
+                }
+                ticketInfo = JSONObject.parseObject(result.content, TicketInfo.class);
+
+            } catch (Exception ex) {
+                log.error(ex.getMessage(), ex);
+                ticketInfo = null;
+            }
+        } while (ticketInfo == null && retryCount-- > 0);
+
+        return ticketInfo;
     }
 
     @Override
