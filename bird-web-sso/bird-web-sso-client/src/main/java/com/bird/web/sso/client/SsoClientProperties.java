@@ -25,10 +25,10 @@ public class SsoClientProperties extends SsoProperties {
     /**
      * 连接sso服务器超时时间
      */
-    private Integer ctimeout = 50000;
+    private Integer ctimeout = 30000;
 
     /**
      * 读取sso内容超时时间
      */
-    private Integer rtimeout = 30000;
+    private Integer rtimeout = 50000;
 }
