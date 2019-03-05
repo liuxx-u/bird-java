@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.bird.web.boot.starter.WebConfigurer,\
-  com.bird.web.boot.starter.sso.SsoConfigurer
+  com.bird.web.boot.starter.WebConfigurer
