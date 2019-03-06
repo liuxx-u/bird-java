@@ -5,6 +5,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bird.core.HttpCode;
 import com.bird.core.OperationResult;
 import com.bird.core.exception.AbstractException;
+import com.bird.core.session.BirdSession;
+import com.bird.core.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,21 @@ public abstract class AbstractController {
      */
     @Autowired
     protected HttpServletResponse response;
+
+    /**
+     * 从线程中获取当前登录用户的票据信息
+     * @return
+     */
+    protected BirdSession getSession(){
+        return SessionContext.getSession();
+    }
+
+    /**
+     * 从线程中获取当前登录用户的userId
+     */
+    protected Long getUserId() {
+        return SessionContext.getUserId();
+    }
 
     /**
      * 异常处理

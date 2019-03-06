@@ -35,6 +35,7 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
         String url = server + GET_TICKET_URL + token;
         List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch", "Connection", "Keep-Alive");
 
+        int resCode = 0;
         TicketInfo ticketInfo;
         do {
             try {
@@ -42,13 +43,13 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
                 if (HttpURLConnection.HTTP_OK != result.code) {
                     throw new IOException("Error while requesting: " + url + "'. Server returned: " + result.code);
                 }
+                resCode = result.code;
                 ticketInfo = JSONObject.parseObject(result.content, TicketInfo.class);
-
             } catch (Exception ex) {
                 log.error(ex.getMessage(), ex);
                 ticketInfo = null;
             }
-        } while (ticketInfo == null && retryCount-- > 0);
+        } while (HttpURLConnection.HTTP_OK != resCode && retryCount-- > 0);
 
         return ticketInfo;
     }
