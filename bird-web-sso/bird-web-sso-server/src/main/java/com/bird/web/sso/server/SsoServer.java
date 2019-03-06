@@ -15,6 +15,7 @@ import java.util.Date;
  * @author liuxx
  * @date 2019/3/1
  */
+@Slf4j
 public class SsoServer {
 
     private SsoServerProperties serverProperties;
@@ -104,12 +105,33 @@ public class SsoServer {
     }
 
     /**
+     * 刷新票据
+     * @param token token
+     * @param ticketInfo ticketInfo
+     */
+    public void refreshTicket(String token, TicketInfo ticketInfo) {
+        if (StringUtils.isBlank(token) || ticketInfo == null || !serverProperties.getUseSessionStore()) return;
+
+        TicketInfo curTicket = sessionStore.getTicket(token);
+        if (curTicket == null) {
+            log.warn("试图刷新一个不存在的票据信息，token：" + token);
+            return;
+        }
+        if(StringUtils.equals(curTicket.getUserId(),curTicket.getUserId())){
+            log.warn("刷新的票据信息UserId不正确，token：" + token);
+            return;
+        }
+
+        sessionStore.refreshTicket(token,ticketInfo,serverProperties.getExpire() * 60 * 1000L);
+    }
+
+    /**
      * 从HttpServletRequest中获取token
      *
      * @param request
      * @return
      */
-    private String getToken(HttpServletRequest request) {
+    public String getToken(HttpServletRequest request) {
         //先从header中获取token
         String token = request.getHeader(serverProperties.getCookieName());
         if (StringUtils.isBlank(token)) {

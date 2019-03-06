@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,10 +37,18 @@ public class SsoClient {
      * @return
      */
     public TicketInfo getTicket(HttpServletRequest request) {
-
         String token = this.getToken(request);
-        if (StringUtils.isBlank(token)) return null;
+        return this.getTicket(token);
+    }
 
+    /**
+     * 根据token获取票据信息
+     *
+     * @param token
+     * @return
+     */
+    public TicketInfo getTicket(String token) {
+        if (StringUtils.isBlank(token)) return null;
 
         try {
             return cache.get(token, () -> ticketHandler.getTicket(token));
