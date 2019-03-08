@@ -2,9 +2,7 @@ package com.bird.web.sso.server.controller;
 
 import com.bird.web.sso.server.SsoServer;
 import com.bird.web.sso.ticket.TicketInfo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author liuxx
@@ -16,17 +14,29 @@ public class TicketController {
 
     private SsoServer ssoServer;
 
-    public TicketController(SsoServer ssoServer){
+    public TicketController(SsoServer ssoServer) {
         this.ssoServer = ssoServer;
     }
 
     /**
      * 根据token获取票据信息
+     *
      * @param token token
      * @return 票据信息
      */
     @GetMapping("/get")
-    public TicketInfo get(String token){
+    public TicketInfo get(String token) {
         return ssoServer.getTicket(token);
+    }
+
+    /**
+     * 刷新票据
+     *
+     * @param token      token
+     * @param ticketInfo 新的票据信息
+     */
+    @PostMapping("/refresh")
+    public void refresh(String token, @RequestBody TicketInfo ticketInfo) {
+        ssoServer.refreshTicket(token, ticketInfo);
     }
 }

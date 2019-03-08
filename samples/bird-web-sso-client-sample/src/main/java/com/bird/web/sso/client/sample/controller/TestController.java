@@ -22,4 +22,23 @@ public class TestController {
     public TicketInfo getTicket(HttpServletRequest request){
         return ssoClient.getTicket(request);
     }
+
+    @GetMapping("/refresh")
+    public String refreshTicket(HttpServletRequest request){
+
+        TicketInfo ticketInfo = new TicketInfo();
+        ticketInfo.setUserId("17");
+        ticketInfo.setName("new Ticket");
+        ticketInfo.setClaim("mmkkk","yyyyy");
+
+        ssoClient.refreshTicket(request,ticketInfo);
+        return "xxx";
+    }
+
+    @GetMapping("/remove")
+    public String removeTicket(HttpServletRequest request){
+
+        ssoClient.removeTicketCache(request);
+        return "yyy";
+    }
 }
