@@ -28,11 +28,6 @@
             <artifactId>bird-web-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-web-sso</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.bird</groupId>

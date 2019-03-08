@@ -4,22 +4,17 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bird.web.common.interceptor.IpAddressInterceptor;
-import com.bird.web.sso.SsoAuthorizeInterceptor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -28,15 +23,6 @@ import java.util.List;
  */
 @Configuration
 public class WebMvcConfigurer extends WebMvcConfigurationSupport {
-
-    /**
-     * 注入单点登录权限拦截器
-     * @return
-     */
-    @Bean
-    public HandlerInterceptor getSsoAuthorizeInterceptor(){
-        return new SsoAuthorizeInterceptor();
-    }
 
     /**
      * 注入ip地址检查拦截器
@@ -98,10 +84,6 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
-        registry.addInterceptor(getSsoAuthorizeInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/*.ico","/static/**","/*/api-docs","/swagger**","/webjars/**","/configuration/**");
 
         registry.addInterceptor(getIpAddressInterceptor())
                 .addPathPatterns("/**")
