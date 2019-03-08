@@ -136,12 +136,12 @@ public class SsoServer {
             log.warn("试图刷新一个不存在的票据信息，token：" + token);
             return;
         }
-        if(StringUtils.equals(curTicket.getUserId(),curTicket.getUserId())){
+        if (!StringUtils.equals(curTicket.getUserId(), ticketInfo.getUserId())) {
             log.warn("刷新的票据信息UserId不正确，token：" + token);
             return;
         }
 
-        sessionStore.refreshTicket(token,ticketInfo,serverProperties.getExpire() * 60 * 1000L);
+        sessionStore.refreshTicket(token, ticketInfo, serverProperties.getExpire() * 60 * 1000L);
         //触发事件
         this.postEvent(new SsoServerRefreshTicketEvent(token, curTicket, false, ticketInfo));
     }

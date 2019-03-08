@@ -3,13 +3,22 @@ package com.bird.web.sso.client.remote;
 import com.google.common.net.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -20,39 +29,27 @@ import java.util.zip.GZIPInputStream;
 public class HttpClient {
 
     static final String DEFAULT_CONTENT_TYPE = "UTF-8";
-    private static final int CONNECT_TIME_OUT_MILLIS = Integer.getInteger("bird.sso.client.ctimeout", 3000);
-    private static final int READ_TIME_OUT_MILLIS = Integer.getInteger("bird.sso.client.rtimeout", 50000);
+
+    private static final int TIME_OUT_MILLIS = 10000;
+    private static final int CONNECT_TIME_OUT_MILLIS = 5000;
 
     public static HttpResult httpGet(String url, List<String> headers, Map<String, String> paramValues, String encoding) {
-        return request(url, headers, paramValues, encoding, "GET");
-    }
 
-    public static HttpResult request(String url, List<String> headers, Map<String, String> paramValues, String encoding, String method) {
         HttpURLConnection conn = null;
         try {
             String encodedContent = encodingParams(paramValues, encoding);
             url += (null == encodedContent) ? "" : ("?" + encodedContent);
 
             conn = (HttpURLConnection) new URL(url).openConnection();
-
             conn.setConnectTimeout(CONNECT_TIME_OUT_MILLIS);
-            conn.setReadTimeout(READ_TIME_OUT_MILLIS);
-            conn.setRequestMethod(method);
+            conn.setReadTimeout(TIME_OUT_MILLIS);
+            conn.setRequestMethod("GET");
             setHeaders(conn, headers, encoding);
             conn.connect();
 
-            log.debug("Request from server: " + url);
             return getResult(conn);
         } catch (Exception e) {
-            try {
-                if (conn != null) {
-                    log.warn("failed to request " + conn.getURL() + " from " + InetAddress.getByName(conn.getURL().getHost()).getHostAddress());
-                }
-            } catch (Exception e1) {
-                log.error("NA", "failed to request ", e1);
-            }
-
-            return new HttpResult(500, e.toString(), Collections.emptyMap());
+            return new HttpResult(500, e.toString(), Collections.<String, String>emptyMap());
         } finally {
             if (conn != null) {
                 conn.disconnect();
@@ -60,12 +57,38 @@ public class HttpClient {
         }
     }
 
+    public static HttpResult httpPost(String url, Map<String, String> headers, String content) {
+        try {
+            HttpClientBuilder builder = HttpClients.custom();
+            builder.setConnectionTimeToLive(500, TimeUnit.MILLISECONDS);
+
+            CloseableHttpClient httpClient = builder.build();
+            HttpPost httpost = new HttpPost(url);
+
+            if(headers != null){
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    httpost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+
+            httpost.setEntity(new StringEntity(content, ContentType.create("application/json", DEFAULT_CONTENT_TYPE)));
+            HttpResponse response = httpClient.execute(httpost);
+            HttpEntity entity = response.getEntity();
+
+            Reader reader = new InputStreamReader(entity.getContent(), DEFAULT_CONTENT_TYPE);
+            CharArrayWriter sw = new CharArrayWriter();
+            copy(reader, sw);
+            return new HttpResult(response.getStatusLine().getStatusCode(), sw.toString(), Collections.emptyMap());
+        } catch (Exception e) {
+            return new HttpResult(500, e.toString(), Collections.emptyMap());
+        }
+    }
+
     private static HttpResult getResult(HttpURLConnection conn) throws IOException {
         int respCode = conn.getResponseCode();
 
         InputStream inputStream;
-        if (HttpURLConnection.HTTP_OK == respCode
-                || HttpURLConnection.HTTP_NOT_MODIFIED == respCode) {
+        if (HttpURLConnection.HTTP_OK == respCode || HttpURLConnection.HTTP_NOT_MODIFIED == respCode) {
             inputStream = conn.getInputStream();
         } else {
             inputStream = conn.getErrorStream();
@@ -166,10 +189,6 @@ public class HttpClient {
             this.code = code;
             this.content = content;
             this.respHeaders = respHeaders;
-        }
-
-        public String getHeader(String name) {
-            return respHeaders.get(name);
         }
     }
 }

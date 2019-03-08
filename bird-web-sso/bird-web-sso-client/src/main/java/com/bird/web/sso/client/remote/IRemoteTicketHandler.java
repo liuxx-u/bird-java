@@ -18,10 +18,10 @@ public interface IRemoteTicketHandler {
     TicketInfo getTicket(String token);
 
     /**
-     * 移除票据信息
+     * 刷新服务端票据信息
      *
      * @param token token
-     * @param notifyAll 是否通知所有客户端
+     * @param ticketInfo 新的票据信息
      */
-    void removeTicket(String token, Boolean notifyAll);
+    Boolean refreshTicket(String token, TicketInfo ticketInfo);
 }
