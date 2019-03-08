@@ -1,11 +1,17 @@
 package com.bird.web.sso.server;
 
+import com.bird.web.sso.event.SsoEvent;
+import com.bird.web.sso.server.event.SsoServerLoginEvent;
+import com.bird.web.sso.server.event.SsoServerLogoutEvent;
+import com.bird.web.sso.server.event.SsoServerRefreshTicketEvent;
 import com.bird.web.sso.server.ticket.ITicketProtector;
 import com.bird.web.sso.server.ticket.ITicketSessionStore;
 import com.bird.web.sso.ticket.TicketInfo;
 import com.bird.web.sso.utils.CookieHelper;
+import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +28,9 @@ public class SsoServer {
 
     private ITicketSessionStore sessionStore;
     private ITicketProtector protector;
+
+    @Autowired(required = false)
+    private EventBus eventBus;
 
     public SsoServer(SsoServerProperties serverProperties, ITicketSessionStore sessionStore) {
         this.serverProperties = serverProperties;
@@ -51,6 +60,8 @@ public class SsoServer {
 
         //用户中心写入Cookie
         CookieHelper.setCookie(response, serverProperties.getCookieName(), StringUtils.strip(token), serverProperties.getExpire() * 60);
+        //触发事件
+        this.postEvent(new SsoServerLoginEvent(token,ticketInfo));
         return token;
     }
 
@@ -64,6 +75,10 @@ public class SsoServer {
         String token = getToken(request);
 
         if (!StringUtils.isEmpty(token)) {
+            TicketInfo ticketInfo = serverProperties.getUseSessionStore()
+                    ? sessionStore.getTicket(token)
+                    : protector.unProtect(token);
+
             //清除SessionStore
             if (sessionStore != null) {
                 sessionStore.removeTicket(token);
@@ -71,6 +86,8 @@ public class SsoServer {
 
             //清除Cookie
             CookieHelper.removeCookie(request, response, serverProperties.getCookieName());
+            //触发事件
+            this.postEvent(new SsoServerLogoutEvent(token, ticketInfo));
         }
     }
 
@@ -94,8 +111,10 @@ public class SsoServer {
                 long t1 = now.getTime() - issuedTime.getTime();
                 long t2 = expireTime.getTime() - now.getTime();
                 if (t1 > t2) {
+                    TicketInfo origin = ticketInfo.clone();
                     ticketInfo = sessionStore.refreshTicket(token, ticketInfo, t1 + t2);
-                    //todo : throw event
+                    //触发事件
+                    this.postEvent(new SsoServerRefreshTicketEvent(token, origin, true, ticketInfo));
                 }
             }
         } else {
@@ -123,6 +142,8 @@ public class SsoServer {
         }
 
         sessionStore.refreshTicket(token,ticketInfo,serverProperties.getExpire() * 60 * 1000L);
+        //触发事件
+        this.postEvent(new SsoServerRefreshTicketEvent(token, curTicket, false, ticketInfo));
     }
 
     /**
@@ -138,5 +159,14 @@ public class SsoServer {
             token = CookieHelper.getCookieValue(request, serverProperties.getCookieName());
         }
         return token;
+    }
+
+    /**
+     * 触发事件
+     * @param event
+     */
+    private void postEvent(SsoEvent event){
+        if(eventBus == null || event == null)return;
+        eventBus.post(event);
     }
 }
