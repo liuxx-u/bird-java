@@ -31,13 +31,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- 版本号 -->
-        <spring.version>5.1.1.RELEASE</spring.version>
+        <spring.version>5.0.10.RELEASE</spring.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <spring-data-redis.version>2.0.8.RELEASE</spring-data-redis.version>
         <javax.version>3.1.0</javax.version>
         <dubbo.version>2.6.2</dubbo.version>
         <zkclient.version>0.10</zkclient.version>
-        <dubbo-starter.version>0.2.0</dubbo-starter.version>
         <jedis.version>2.9.0</jedis.version>
         <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
         <mybatisplus.version>2.2.0</mybatisplus.version>
