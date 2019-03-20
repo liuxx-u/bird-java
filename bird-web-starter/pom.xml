@@ -29,15 +29,5 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-dubbo</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.boot</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-            <version>${dubbo-starter.version}</version>
-        </dependency>
     </dependencies>
 </project>
