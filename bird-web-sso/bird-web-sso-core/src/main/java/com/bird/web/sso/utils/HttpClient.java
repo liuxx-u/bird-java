@@ -1,4 +1,4 @@
-package com.bird.web.sso.client.remote;
+package com.bird.web.sso.utils;
 
 import com.google.common.net.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +28,10 @@ import java.util.zip.GZIPInputStream;
 @Slf4j
 public class HttpClient {
 
-    static final String DEFAULT_CONTENT_TYPE = "UTF-8";
-
     private static final int TIME_OUT_MILLIS = 10000;
     private static final int CONNECT_TIME_OUT_MILLIS = 5000;
+
+    public static final String DEFAULT_CONTENT_TYPE = "UTF-8";
 
     public static HttpResult httpGet(String url, List<String> headers, Map<String, String> paramValues, String encoding) {
 
@@ -181,9 +181,9 @@ public class HttpClient {
 
 
     public static class HttpResult {
-        final int code;
-        final String content;
-        final Map<String, String> respHeaders;
+        public final int code;
+        public final String content;
+        public final Map<String, String> respHeaders;
 
         HttpResult(int code, String content, Map<String, String> respHeaders) {
             this.code = code;

@@ -21,12 +21,13 @@ public class TicketController {
     /**
      * 根据token获取票据信息
      *
+     * @param clientHost 客户端
      * @param token token
      * @return 票据信息
      */
     @GetMapping("/get")
-    public TicketInfo get(String token) {
-        return ssoServer.getTicket(token);
+    public TicketInfo get(String clientHost, String token) {
+        return ssoServer.getTicket(clientHost, token);
     }
 
     /**

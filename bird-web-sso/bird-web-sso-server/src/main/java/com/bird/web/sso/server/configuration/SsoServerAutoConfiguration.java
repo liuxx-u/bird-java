@@ -3,15 +3,16 @@ package com.bird.web.sso.server.configuration;
 import com.bird.web.sso.SsoConstant;
 import com.bird.web.sso.event.ISsoEventListener;
 import com.bird.web.sso.server.SsoServer;
+import com.bird.web.sso.server.client.CacheClientStore;
+import com.bird.web.sso.server.client.IClientStore;
 import com.bird.web.sso.server.controller.TicketController;
 import com.bird.web.sso.server.ticket.CacheTicketSessionStore;
-import com.bird.web.sso.server.ticket.DesTicketProtector;
+import com.bird.web.sso.server.ticket.JwtTicketProtector;
 import com.bird.web.sso.server.ticket.ITicketProtector;
 import com.bird.web.sso.server.ticket.ITicketSessionStore;
 import com.bird.web.sso.server.SsoServerProperties;
 import com.google.common.eventbus.EventBus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -45,28 +46,34 @@ public class SsoServerAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnProperty(value = SsoConstant.SERVER_USE_SESSION_STORE, havingValue = "false")
     public ITicketProtector ticketProtector() {
-        return new DesTicketProtector();
+        return new JwtTicketProtector();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public IClientStore clientStore() {
+        return new CacheClientStore(serverProperties().getExpire());
     }
 
     @Bean
     public SsoServer ssoServer(SsoServerProperties serverProperties) {
         if (serverProperties.getUseSessionStore()) {
-            return new SsoServer(serverProperties, ticketSessionStore());
+            return new SsoServer(serverProperties, clientStore(), ticketSessionStore());
         } else {
-            return new SsoServer(serverProperties, ticketProtector());
+            return new SsoServer(serverProperties, clientStore(), ticketProtector());
         }
     }
 
     @Bean
-    public TicketController ticketController(SsoServer ssoServer){
+    public TicketController ticketController(SsoServer ssoServer) {
         return new TicketController(ssoServer);
     }
 
     @Bean
     @ConditionalOnBean(ISsoEventListener.class)
-    public EventBus eventBus(List<ISsoEventListener> listeners){
+    public EventBus eventBus(List<ISsoEventListener> listeners) {
         EventBus eventBus = new EventBus();
-        for (ISsoEventListener listener:listeners) {
+        for (ISsoEventListener listener : listeners) {
             eventBus.register(listener);
         }
         return eventBus;

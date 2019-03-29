@@ -2,8 +2,10 @@ package com.bird.web.sso.client.remote;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bird.web.sso.client.SsoClientProperties;
 import com.bird.web.sso.client.event.SsoClientFetchTicketEvent;
 import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.utils.HttpClient;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,15 +23,15 @@ import java.util.List;
 @Slf4j
 public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
 
-    private String server;
-    private final static String GET_TICKET_URL = "/sso/server/ticket/get?token=";
-    private final static String REFRESH_TICKET_URL = "/sso/server/ticket/refresh?token=";
+    private SsoClientProperties clientProperties;
+    private final static String GET_TICKET_URL = "/sso/server/ticket/get";
+    private final static String REFRESH_TICKET_URL = "/sso/server/ticket/refresh";
 
     @Autowired(required = false)
     private EventBus eventBus;
 
-    public DefaultRemoteTicketHandler(String server) {
-        this.server = server;
+    public DefaultRemoteTicketHandler(SsoClientProperties clientProperties) {
+        this.clientProperties = clientProperties;
     }
 
     /**
@@ -40,11 +42,11 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
      */
     @Override
     public TicketInfo getTicket(String token) {
-        if(StringUtils.isBlank(token)) return null;
+        if (StringUtils.isBlank(token)) return null;
 
         Integer retryCount = 3;
-        String url = server + GET_TICKET_URL + token;
-        List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch", "Connection", "Keep-Alive");
+        String url = clientProperties.getServer() + GET_TICKET_URL + "?token=" + token + "&clientHost=" + clientProperties.getHost();
+        List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch");
 
         int resCode = 0;
         TicketInfo ticketInfo;
@@ -62,8 +64,8 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
                 log.error(ex.getMessage(), ex);
                 ticketInfo = null;
                 fetchTicketEvent.fail(ex.getMessage());
-            }finally {
-                if(eventBus != null){
+            } finally {
+                if (eventBus != null) {
                     eventBus.post(fetchTicketEvent);
                 }
             }
@@ -74,15 +76,16 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
 
     /**
      * 刷新服务端票据信息
-     * @param token token
+     *
+     * @param token      token
      * @param ticketInfo 新的票据信息
      */
     @Override
     public Boolean refreshTicket(String token, TicketInfo ticketInfo) {
-        if(StringUtils.isBlank(token) || ticketInfo == null) return false;
+        if (StringUtils.isBlank(token) || ticketInfo == null) return false;
 
         Integer retryCount = 3;
-        String url = server + REFRESH_TICKET_URL + token;
+        String url = clientProperties.getServer() + REFRESH_TICKET_URL + "?token=" + token;
 
         int resCode = 0;
         do {

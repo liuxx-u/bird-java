@@ -18,7 +18,7 @@ public class TestController {
     @Autowired
     private SsoClient ssoClient;
 
-    @GetMapping("/test")
+    @GetMapping("/get")
     public TicketInfo getTicket(HttpServletRequest request){
         return ssoClient.getTicket(request);
     }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -18,13 +19,18 @@ public class HomeController {
     @Autowired
     private SsoServer ssoServer;
 
-    @GetMapping("/test")
-    public void test(HttpServletResponse response){
+    @GetMapping("/login")
+    public void login(HttpServletResponse response){
         TicketInfo ticketInfo = new TicketInfo();
         ticketInfo.setUserId("17");
         ticketInfo.setName("test");
         ticketInfo.setClaim("xx","yyy");
 
         ssoServer.login(response,ticketInfo);
+    }
+
+    @GetMapping("/logout")
+    public void logout(HttpServletRequest request,HttpServletResponse response){
+        ssoServer.logout(request,response);
     }
 }

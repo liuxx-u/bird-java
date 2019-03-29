@@ -3,6 +3,7 @@ package com.bird.web.sso.client.configuration;
 import com.bird.web.sso.SsoConstant;
 import com.bird.web.sso.client.SsoClient;
 import com.bird.web.sso.client.SsoClientProperties;
+import com.bird.web.sso.client.controller.TicketController;
 import com.bird.web.sso.client.remote.DefaultRemoteTicketHandler;
 import com.bird.web.sso.client.remote.IRemoteTicketHandler;
 import com.bird.web.sso.event.ISsoEventListener;
@@ -34,12 +35,17 @@ public class SsoClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public IRemoteTicketHandler remoteTicketHandler(SsoClientProperties clientProperties){
-        return new DefaultRemoteTicketHandler(clientProperties.getServer());
+        return new DefaultRemoteTicketHandler(clientProperties);
     }
 
     @Bean
     public SsoClient ssoClient(SsoClientProperties clientProperties,IRemoteTicketHandler remoteTicketHandler){
         return new SsoClient(clientProperties,remoteTicketHandler);
+    }
+
+    @Bean
+    public TicketController ticketController(SsoClient ssoClient){
+        return new TicketController(ssoClient);
     }
 
     @Bean

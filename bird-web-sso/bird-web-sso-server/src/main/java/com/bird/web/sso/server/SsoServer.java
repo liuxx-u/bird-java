@@ -1,6 +1,7 @@
 package com.bird.web.sso.server;
 
 import com.bird.web.sso.event.SsoEvent;
+import com.bird.web.sso.server.client.IClientStore;
 import com.bird.web.sso.server.event.SsoServerLoginEvent;
 import com.bird.web.sso.server.event.SsoServerLogoutEvent;
 import com.bird.web.sso.server.event.SsoServerRefreshTicketEvent;
@@ -8,14 +9,22 @@ import com.bird.web.sso.server.ticket.ITicketProtector;
 import com.bird.web.sso.server.ticket.ITicketSessionStore;
 import com.bird.web.sso.ticket.TicketInfo;
 import com.bird.web.sso.utils.CookieHelper;
+import com.bird.web.sso.utils.HttpClient;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author liuxx
@@ -24,21 +33,28 @@ import java.util.Date;
 @Slf4j
 public class SsoServer {
 
+    private final static String REMOVE_CLIENT_TICKET_URL = "/sso/client/ticket/removeCache?token=";
+
     private SsoServerProperties serverProperties;
 
+    private IClientStore clientStore;
     private ITicketSessionStore sessionStore;
     private ITicketProtector protector;
 
     @Autowired(required = false)
     private EventBus eventBus;
 
-    public SsoServer(SsoServerProperties serverProperties, ITicketSessionStore sessionStore) {
+    private ExecutorService executorService = Executors.newCachedThreadPool();
+
+    public SsoServer(SsoServerProperties serverProperties, IClientStore clientStore, ITicketSessionStore sessionStore) {
         this.serverProperties = serverProperties;
+        this.clientStore = clientStore;
         this.sessionStore = sessionStore;
     }
 
-    public SsoServer(SsoServerProperties serverProperties, ITicketProtector protector) {
+    public SsoServer(SsoServerProperties serverProperties, IClientStore clientStore, ITicketProtector protector) {
         this.serverProperties = serverProperties;
+        this.clientStore = clientStore;
         this.protector = protector;
     }
 
@@ -61,7 +77,7 @@ public class SsoServer {
         //用户中心写入Cookie
         CookieHelper.setCookie(response, serverProperties.getCookieName(), StringUtils.strip(token), serverProperties.getExpire() * 60);
         //触发事件
-        this.postEvent(new SsoServerLoginEvent(token,ticketInfo));
+        this.postEvent(new SsoServerLoginEvent(token, ticketInfo));
         return token;
     }
 
@@ -83,9 +99,10 @@ public class SsoServer {
             if (sessionStore != null) {
                 sessionStore.removeTicket(token);
             }
-
             //清除Cookie
             CookieHelper.removeCookie(request, response, serverProperties.getCookieName());
+            //通知客户端，移除缓存
+            executorService.execute(() -> this.removeClientCache(token));
             //触发事件
             this.postEvent(new SsoServerLogoutEvent(token, ticketInfo));
         }
@@ -93,11 +110,13 @@ public class SsoServer {
 
     /**
      * 根据token获取票据信息
+     *
      * @param token token
      * @return 票据
      */
-    public TicketInfo getTicket(String token) {
-        if (StringUtils.isBlank(token)) return null;
+    public TicketInfo getTicket(String clientHost, String token) {
+        if (StringUtils.isBlank(clientHost) || StringUtils.isBlank(token)) return null;
+        clientStore.store(token, clientHost);
 
         TicketInfo ticketInfo;
         if (serverProperties.getUseSessionStore()) {
@@ -125,7 +144,8 @@ public class SsoServer {
 
     /**
      * 刷新票据
-     * @param token token
+     *
+     * @param token      token
      * @param ticketInfo ticketInfo
      */
     public void refreshTicket(String token, TicketInfo ticketInfo) {
@@ -163,10 +183,41 @@ public class SsoServer {
 
     /**
      * 触发事件
+     *
      * @param event
      */
-    private void postEvent(SsoEvent event){
-        if(eventBus == null || event == null)return;
+    private void postEvent(SsoEvent event) {
+        if (eventBus == null || event == null) return;
         eventBus.post(event);
+    }
+
+    /**
+     * 移除客户端token对应的Ticket缓存
+     */
+    private void removeClientCache(String token) {
+        List<String> clientHosts = clientStore.getAll(token);
+        if (CollectionUtils.isEmpty(clientHosts)) return;
+
+        for (String clientHost : clientHosts) {
+            Integer retryCount = 3;
+            String url = clientHost + REMOVE_CLIENT_TICKET_URL + token;
+            List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch");
+            int resCode = 0;
+            do {
+                try {
+                    HttpClient.HttpResult result = HttpClient.httpGet(url, headers, null, HttpClient.DEFAULT_CONTENT_TYPE);
+                    if (HttpURLConnection.HTTP_OK != result.code) {
+                        throw new IOException("Error while requesting: " + url + "'. Server returned: " + result.code);
+                    }
+                    resCode = result.code;
+
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            } while (HttpURLConnection.HTTP_OK != resCode && retryCount-- > 0);
+        }
+
+        //移除client缓存
+        clientStore.remove(token);
     }
 }
