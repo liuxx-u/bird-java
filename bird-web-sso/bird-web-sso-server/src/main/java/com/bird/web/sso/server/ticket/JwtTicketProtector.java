@@ -6,7 +6,7 @@ import com.bird.web.sso.ticket.TicketInfo;
  * @author liuxx
  * @date 2019/3/5
  */
-public class DesTicketProtector implements ITicketProtector {
+public class JwtTicketProtector implements ITicketProtector {
     @Override
     public String protect(TicketInfo ticket) {
         return null;
