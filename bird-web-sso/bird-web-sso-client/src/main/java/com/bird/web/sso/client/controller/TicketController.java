@@ -26,7 +26,7 @@ public class TicketController {
      * @return 票据信息
      */
     @GetMapping("/removeCache")
-    public String get(String token) {
+    public String removeCache(String token) {
         ssoClient.removeTicketCache(token);
         return "success";
     }

@@ -128,7 +128,7 @@ public class SsoClient {
      * @param request request
      * @return token
      */
-    private String getToken(HttpServletRequest request) {
+    public String getToken(HttpServletRequest request) {
         String token = request.getHeader(clientProperties.getCookieName());
         if (StringUtils.isBlank(token)) {
             //header中没有token,则从cookie中获取
