@@ -3,10 +3,12 @@ package com.bird.core.utils;
 import com.bird.core.exception.DataParseException;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -349,8 +351,9 @@ public final class ClassHelper {
                     }
                 }
                 return object;
-            } catch (Exception e) {
-                throw new DataParseException(e);
+            } catch (IllegalAccessException | IntrospectionException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
+                return null;
             }
         }
     }
