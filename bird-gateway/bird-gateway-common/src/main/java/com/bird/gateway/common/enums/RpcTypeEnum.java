@@ -30,17 +30,7 @@ public enum RpcTypeEnum {
     /**
      * springCloud rpc type enum.
      */
-    SPRING_CLOUD("springCloud", true),
-
-    /**
-     * motan.
-     */
-    MOTAN("motan", false),
-
-    /**
-     * grpc.
-     */
-    GRPC("grpc", false);
+    SPRING_CLOUD("springCloud", true);
 
 
     private final String name;
