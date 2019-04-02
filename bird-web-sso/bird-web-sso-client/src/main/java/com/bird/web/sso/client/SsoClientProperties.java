@@ -13,6 +13,11 @@ import lombok.Setter;
 public class SsoClientProperties extends SsoProperties {
 
     /**
+     * 是否是webflux环境
+     */
+    private Boolean webflux;
+
+    /**
      * 客户端主机地址
      */
     private String host;
