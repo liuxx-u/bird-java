@@ -35,4 +35,9 @@ public interface SsoConstant {
      * sso 客户端Cookie名称
      */
     String CLIENT_COOKIE_NAME = PREFIX_CLIENT+".cookieName";
+
+    /**
+     * sso 客户端是否webflux的配置
+     */
+    String CLIENT_WEBFLUX = PREFIX_CLIENT + ".webflux";
 }

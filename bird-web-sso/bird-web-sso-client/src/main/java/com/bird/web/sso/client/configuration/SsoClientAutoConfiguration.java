@@ -28,32 +28,34 @@ public class SsoClientAutoConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = SsoConstant.PREFIX_CLIENT)
-    public SsoClientProperties clientProperties(){
+    public SsoClientProperties clientProperties() {
         return new SsoClientProperties();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public IRemoteTicketHandler remoteTicketHandler(SsoClientProperties clientProperties){
+    public IRemoteTicketHandler remoteTicketHandler(SsoClientProperties clientProperties) {
         return new DefaultRemoteTicketHandler(clientProperties);
     }
 
     @Bean
-    public SsoClient ssoClient(SsoClientProperties clientProperties,IRemoteTicketHandler remoteTicketHandler){
-        return new SsoClient(clientProperties,remoteTicketHandler);
+    @ConditionalOnProperty(value = SsoConstant.CLIENT_WEBFLUX, havingValue = "false", matchIfMissing = true)
+    public SsoClient ssoClient(SsoClientProperties clientProperties, IRemoteTicketHandler remoteTicketHandler) {
+        return new SsoClient(clientProperties, remoteTicketHandler);
     }
 
     @Bean
-    public TicketController ticketController(SsoClient ssoClient){
+    @ConditionalOnProperty(value = SsoConstant.CLIENT_WEBFLUX, havingValue = "false", matchIfMissing = true)
+    public TicketController ticketController(SsoClient ssoClient) {
         return new TicketController(ssoClient);
     }
 
     @Bean
     @ConditionalOnBean(ISsoEventListener.class)
     @ConditionalOnMissingBean
-    public EventBus eventBus(List<ISsoEventListener> listeners){
+    public EventBus eventBus(List<ISsoEventListener> listeners) {
         EventBus eventBus = new EventBus();
-        for (ISsoEventListener listener:listeners) {
+        for (ISsoEventListener listener : listeners) {
             eventBus.register(listener);
         }
         return eventBus;

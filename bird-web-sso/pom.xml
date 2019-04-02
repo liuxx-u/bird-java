@@ -16,5 +16,6 @@
         <module>bird-web-sso-core</module>
         <module>bird-web-sso-server</module>
         <module>bird-web-sso-client</module>
+        <module>bird-web-sso-client-webflux</module>
     </modules>
 </project>
