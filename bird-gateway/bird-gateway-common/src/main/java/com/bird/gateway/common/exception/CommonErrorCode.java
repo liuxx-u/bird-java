@@ -1,7 +1,5 @@
 package com.bird.gateway.common.exception;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * @author liuxx
  * @date 2018/11/28
@@ -9,28 +7,17 @@ import org.apache.commons.lang3.StringUtils;
 public class CommonErrorCode {
 
     /**
-     * The constant ERROR.
+     * 错误 异常码
      */
     public static final int ERROR = -2;
 
     /**
-     * The constant SUCCESSFUL.
+     * 成功 操作码
      */
     public static final int SUCCESSFUL = 200;
 
-    public static final int UNAUTHORIZED = 401;
-
     /**
-     * getErrorMsg.
-     *
-     * @param code code
-     * @return msg error msg
+     * 未登录 异常码
      */
-    public static String getErrorMsg(final int code) {
-        String msg = System.getProperty(String.valueOf(code));
-        if (StringUtils.isBlank(msg)) {
-            return " code [" + code + "] not match msg.";
-        }
-        return msg;
-    }
+    public static final int UNAUTHORIZED = 401;
 }

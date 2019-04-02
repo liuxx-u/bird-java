@@ -1,7 +1,5 @@
 package com.bird.gateway.common.route;
 
-import com.bird.gateway.common.route.RouteDefinition;
-
 import java.util.List;
 
 /**
