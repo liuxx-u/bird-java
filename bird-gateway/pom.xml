@@ -11,7 +11,6 @@
 
     <artifactId>bird-gateway</artifactId>
     <packaging>pom</packaging>
-    <version>${bird.version}</version>
     <modules>
         <module>bird-gateway-common</module>
         <module>bird-gateway-web</module>

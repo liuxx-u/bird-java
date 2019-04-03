@@ -11,7 +11,7 @@
 
     <artifactId>bird-service-zero</artifactId>
     <packaging>pom</packaging>
-    <version>${bird.version}</version>
+    <version>1.0.0</version>
 
     <modules>
         <module>bird-service-zero-api</module>
