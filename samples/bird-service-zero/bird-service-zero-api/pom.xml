@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-service-zero-api</artifactId>
-    <version>${bird.version}</version>
+    <version>1.0.0</version>
 
     <dependencies>
         <!--项目依赖-->
