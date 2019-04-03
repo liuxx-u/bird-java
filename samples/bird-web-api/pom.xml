@@ -78,12 +78,12 @@
 		<repository>
 			<id>releases</id>
 			<name>Internal Releases</name>
-			<url>http://10.10.116.15:8089/nexus/content/repositories/releases</url>
+			<url>http://10.10.116.15:8089/repository/maven-releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
 			<name>Internal Snapshots</name>
-			<url>http://10.10.116.15:8089/nexus/content/repositories/snapshots</url>
+			<url>http://10.10.116.15:8089/repository/maven-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
