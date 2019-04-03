@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-service-starter</artifactId>
-    <version>${project.parent.version}</version>
+    <version>${bird.version}</version>
 
     <dependencies>
         <dependency>
@@ -22,17 +22,17 @@
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-service-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-eventbus-kafka</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-eventbus-rabbit</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
 
         <dependency>

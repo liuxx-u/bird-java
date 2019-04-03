@@ -31,6 +31,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- 版本号 -->
+        <bird.version>1.0.0</bird.version>
         <spring.version>5.0.10.RELEASE</spring.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <spring-data-redis.version>2.0.8.RELEASE</spring-data-redis.version>
@@ -89,7 +90,6 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -101,6 +101,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
         </plugins>

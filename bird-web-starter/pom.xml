@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-web-starter</artifactId>
-    <version>${project.parent.version}</version>
+    <version>${bird.version}</version>
 
     <dependencies>
         <dependency>
@@ -21,12 +21,12 @@
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-core</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-web-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
 
     </dependencies>
