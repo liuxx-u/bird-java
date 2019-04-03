@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-dubbo</artifactId>
-    <version>${project.parent.version}</version>
+    <version>${bird.version}</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,12 +22,12 @@
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-core</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-gateway-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

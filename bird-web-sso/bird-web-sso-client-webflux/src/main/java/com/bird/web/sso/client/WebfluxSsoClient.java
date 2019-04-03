@@ -4,7 +4,6 @@ import com.bird.web.sso.client.event.SsoClientClearCacheEvent;
 import com.bird.web.sso.client.remote.IRemoteTicketHandler;
 import com.bird.web.sso.event.SsoEvent;
 import com.bird.web.sso.ticket.TicketInfo;
-import com.bird.web.sso.utils.CookieHelper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.eventbus.EventBus;

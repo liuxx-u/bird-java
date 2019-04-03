@@ -10,13 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-eventbus</artifactId>
-    <version>${project.parent.version}</version>
+    <version>${bird.version}</version>
 
     <dependencies>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-core</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${bird.version}</version>
         </dependency>
     </dependencies>
 </project>

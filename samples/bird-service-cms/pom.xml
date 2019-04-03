@@ -11,7 +11,7 @@
 
     <artifactId>bird-service-cms</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>${bird.version}</version>
     <modules>
         <module>bird-service-cms-api</module>
         <module>bird-service-cms-impl</module>
