@@ -1,14 +1,12 @@
 package com.bird.service.cms.impl;
 
 import com.bird.core.Check;
-import com.bird.core.exception.UserFriendlyException;
 import com.bird.eventbus.EventBus;
 import com.bird.eventbus.handler.EventHandler;
 import com.bird.service.cms.CmsClassifyService;
 import com.bird.service.cms.dto.CmsClassifyDTO;
 import com.bird.service.cms.mapper.CmsClassifyMapper;
 import com.bird.service.cms.model.CmsClassify;
-import com.bird.service.common.exception.RollbackException;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.service.AbstractService;
@@ -41,7 +39,6 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
      * @return
      */
     @Override
-    @Transactional(rollbackFor = RollbackException.class)
     public CmsClassifyDTO getClassify(Long id) {
 
 //        Check.GreaterThan(id, 0L, "id");
@@ -80,7 +77,7 @@ public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,Cm
     }
 
     @EventHandler
-    @Transactional(rollbackFor = RollbackException.class)
+    @Transactional(rollbackFor = Exception.class)
     public void HandleEvent(TestEventArg eventArg) {
 //        CmsClassify classify = new CmsClassify();
 //        classify.setName("test");

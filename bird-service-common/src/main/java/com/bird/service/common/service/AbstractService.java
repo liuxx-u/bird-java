@@ -7,7 +7,6 @@ import com.bird.core.exception.ExceptionHelper;
 import com.bird.core.utils.ClassHelper;
 import com.bird.core.utils.DozerHelper;
 import com.bird.core.utils.NumberHelper;
-import com.bird.service.common.exception.RollbackException;
 import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
@@ -21,7 +20,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -31,9 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 业务逻辑层基类
@@ -83,7 +78,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = RollbackException.class)
+    @Transactional(rollbackFor = Exception.class)
     public Long save(CommonSaveParam param) {
         Long id = param.getEntityDTO().getId();
         if (id == null || id <= 0) {
@@ -129,21 +124,8 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
     @Override
     public List<T> getList(List<Long> ids) {
         List<T> list = new ArrayList<>();
-        if (ids != null) {
-            for (int i = 0; i < ids.size(); i++) {
-                list.add(null);
-            }
-            ExecutorService poolExecutor = new ScheduledThreadPoolExecutor(10,new BasicThreadFactory.Builder().build());
-            for (int i = 0; i < ids.size(); i++) {
-                final int index = i;
-                poolExecutor.execute(() -> list.set(index, queryById(ids.get(index))));
-            }
-            poolExecutor.shutdown();
-            try {
-                poolExecutor.awaitTermination(30, TimeUnit.MINUTES);
-            } catch (InterruptedException e) {
-                logger.error("awaitTermination", "", e);
-            }
+        if(CollectionUtils.isNotEmpty(ids)){
+            list = mapper.selectBatchIds(ids);
         }
         return list;
     }
@@ -153,35 +135,19 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      */
     @Override
     public <K> List<K> getList(List<Long> ids, Class<K> cls) {
-        List<K> list = new ArrayList<>();
-        if (ids != null) {
-            for (int i = 0; i < ids.size(); i++) {
-                list.add(null);
-            }
-            ExecutorService poolExecutor = new ScheduledThreadPoolExecutor(10,new BasicThreadFactory.Builder().build());
-            for (int i = 0; i < ids.size(); i++) {
-                final int index = i;
-                poolExecutor.execute(() -> {
-                    T t = queryById(ids.get(index));
-                    K k = dozer.map(t, cls);
-                    list.set(index, k);
-                });
-            }
-            poolExecutor.shutdown();
-            try {
-                poolExecutor.awaitTermination(30, TimeUnit.MINUTES);
-            } catch (InterruptedException e) {
-                logger.error("awaitTermination", "", e);
-            }
+        List<T> list = getList(ids);
+        List<K> list2 = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(list)){
+            list2 = dozer.mapList(list,cls);
         }
-        return list;
+        return list2;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = RollbackException.class)
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         try {
             mapper.deleteById(id);
@@ -195,7 +161,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = RollbackException.class)
+    @Transactional(rollbackFor = Exception.class)
     public T save(T record) {
         try {
             if (record.getId() == null || record.getId() == 0) {
