@@ -139,3 +139,5 @@ public class SsoClientAuthorizeInterceptor extends HandlerInterceptorAdapter {
 ### 4.2 权限支持
 
 SSO客户端不提供具体的权限设计，甚至不对外部系统提供默认的拦截器，只提供了`SsoClient`获取SSO服务器的票据信息，业务系统可根据自身需求实现请求的拦截与权限验证。示例参考上文的拦截器代码
+
+[1]: http://static.zybuluo.com/liuxx-/ulcdanjb8p1l1uchw4smgctd/image.png
