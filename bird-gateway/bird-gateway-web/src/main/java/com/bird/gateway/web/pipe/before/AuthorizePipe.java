@@ -2,6 +2,7 @@ package com.bird.gateway.web.pipe.before;
 
 import com.bird.core.session.BirdSession;
 import com.bird.core.session.SessionContext;
+import com.bird.gateway.common.enums.RpcTypeEnum;
 import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
@@ -27,18 +28,19 @@ public class AuthorizePipe extends AbstractPipe implements IChainPipe {
 
     @Override
     protected Mono<Void> doExecute(ServerWebExchange exchange, PipeChain chain, RouteDefinition routeDefinition) {
-        if(BooleanUtils.isTrue(routeDefinition.getAnonymous())){
-            return chain.execute(exchange);
-        }
-
         BirdSession session = authorizeManager.parseSession(exchange);
-        if(session == null){
-            return jsonResult(exchange,JsonResult.error(CommonErrorCode.UNAUTHORIZED,"需登录后才能访问"));
-        }
 
-        String[] permissions = StringUtils.split(routeDefinition.getPermissions(),",");
-        if(!authorizeManager.checkPermissions(session,permissions,BooleanUtils.isTrue(routeDefinition.getCheckAll()))){
-            return jsonResult(exchange,JsonResult.error(CommonErrorCode.UNAUTHORIZED,"当前用户权限不足"));
+        if(StringUtils.equalsIgnoreCase(routeDefinition.getRpcType(), RpcTypeEnum.DUBBO.getName())){
+            if(BooleanUtils.isNotTrue(routeDefinition.getAnonymous())){
+                if(session == null){
+                    return jsonResult(exchange,JsonResult.error(CommonErrorCode.UNAUTHORIZED,"需登录后才能访问"));
+                }else {
+                    String[] permissions = StringUtils.split(routeDefinition.getPermissions(),",");
+                    if(!authorizeManager.checkPermissions(session,permissions,BooleanUtils.isTrue(routeDefinition.getCheckAll()))){
+                        return jsonResult(exchange,JsonResult.error(CommonErrorCode.UNAUTHORIZED,"当前用户权限不足"));
+                    }
+                }
+            }
         }
 
         SessionContext.setSession(session);
