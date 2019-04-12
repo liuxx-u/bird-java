@@ -1,6 +1,5 @@
 package com.bird.gateway.common.enums;
 
-import com.bird.gateway.common.exception.GatewayException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

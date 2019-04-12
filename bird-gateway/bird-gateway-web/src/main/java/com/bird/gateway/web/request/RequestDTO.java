@@ -18,60 +18,52 @@ import java.util.Optional;
 public class RequestDTO implements Serializable {
 
     /**
-     * is module data.
+     * 服务名
      */
     private String module;
 
     /**
-     * is path with module
+     * 总路径
      */
     private String path;
 
     /**
-     *  httpMethod now we only support "get","post" .
-     * {@linkplain  HttpMethodEnum}
+     * 不带服务名的子路径
+     */
+    private String subPath;
+
+    /**
+     * RPC方式
+     */
+    private String rpcType;
+
+    /**
+     * 请求方式，仅支持GET、POST
      */
     private String httpMethod;
 
     /**
-     * this is sign .
-     */
-    private String sign;
-
-    /**
-     * timestamp .
-     */
-    private String timestamp;
-
-    /**
-     * appKey .
-     */
-    private String appKey;
-
-    /**
-     * ServerHttpRequest transform RequestDTO .
+     * 从ServerHttpRequest 解析请求信息 .
      *
-     * @param request {@linkplain ServerHttpRequest}
-     * @return RequestDTO request dto
+     * @param httpRequest {@linkplain ServerHttpRequest}
+     * @return request dto
      */
-    public static RequestDTO transform(final ServerHttpRequest request) {
-        final String path = request.getPath().value();
+    public static RequestDTO transform(final ServerHttpRequest httpRequest) {
+        final String path = httpRequest.getPath().value();
         Optional<String> module = Arrays.stream(path.split("/")).filter(StringUtils::isNotBlank).findFirst();
+        final String rpcType = httpRequest.getHeaders().getFirst(Constants.RPC_TYPE);
+        final String httpMethod = httpRequest.getMethod() == null ? HttpMethodEnum.POST.getName() : httpRequest.getMethod().name();
 
-        final String appKey = request.getHeaders().getFirst(Constants.APP_KEY);
-        final String httpMethod = request.getMethod().name();
-        final String sign = request.getHeaders().getFirst(Constants.SIGN);
-        final String timestamp = request.getHeaders().getFirst(Constants.TIMESTAMP);
+        RequestDTO request = new RequestDTO();
+        module.ifPresent(p -> {
+            request.setModule(p);
+            request.setSubPath(path.substring(p.length() + 1));
+        });
+        request.setPath(path);
+        request.setHttpMethod(httpMethod);
+        request.setRpcType(rpcType);
 
-        RequestDTO requestDTO = new RequestDTO();
-        requestDTO.setPath(path);
-        module.ifPresent(requestDTO::setModule);
-        requestDTO.setAppKey(appKey);
-        requestDTO.setHttpMethod(httpMethod);
-        requestDTO.setSign(sign);
-        requestDTO.setTimestamp(timestamp);
-
-        return requestDTO;
+        return request;
     }
 
 }
