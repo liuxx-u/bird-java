@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.bird.gateway.common.constant.Constants;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
+import com.bird.gateway.common.enums.RpcTypeEnum;
 import com.bird.gateway.common.result.JsonResult;
 import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.web.pipe.IChainPipe;
@@ -21,6 +22,11 @@ import java.nio.charset.Charset;
 import java.util.Objects;
 
 /**
+ * 网关前置管道
+ *
+ * 在所有管道执行前执行，从RequestDTO信息中解析RouteDefinition
+ *
+ *
  * @author liuxx
  * @date 2018/11/28
  */
@@ -37,12 +43,14 @@ public class PrePipe implements IChainPipe {
     }
 
     /**
-     * Process the Web request and (optionally) delegate to the next
-     * {@code WebFilter} through the given {@link PipeChain}.
+     * 从RequestDTO信息中解析RouteDefinition信息
      *
-     * @param exchange the current server exchange
-     * @param chain    provides a way to delegate to the next filter
-     * @return {@code Mono<Void>} to indicate when request processing is complete
+     * 如果rpc方式为dubbo，从Zookeeper中获取RouteDefinition
+     * 如果rpc方式为springCloud，直接将RequestDTO解析为RouteDefinition
+     *
+     * @param exchange exchange
+     * @param chain    chain
+     * @return {@code Mono<Void>}
      */
     @Override
     public Mono<Void> execute(final ServerWebExchange exchange, final PipeChain chain) {
@@ -50,7 +58,17 @@ public class PrePipe implements IChainPipe {
         if (Objects.isNull(request) || StringUtils.isBlank(request.getPath())) {
             return jsonResult(exchange, JsonResult.error("请求路径不存在."));
         }
-        RouteDefinition routeDefinition = ZookeeperCacheManager.getRouteDefinition(request.getPath());
+        RouteDefinition routeDefinition;
+        if(StringUtils.equalsIgnoreCase(request.getRpcType(),RpcTypeEnum.DUBBO.getName())){
+            routeDefinition = ZookeeperCacheManager.getRouteDefinition(request.getPath());
+        }else {
+            routeDefinition = new RouteDefinition();
+            routeDefinition.setRpcType(RpcTypeEnum.SPRING_CLOUD.getName());
+            routeDefinition.setModule(request.getModule());
+            routeDefinition.setPath(request.getSubPath());
+            routeDefinition.setEnabled(true);
+        }
+
         if (routeDefinition == null || BooleanUtils.isNotTrue(routeDefinition.getEnabled())) {
             return jsonResult(exchange, JsonResult.error("api不存在或已被禁用."));
         }

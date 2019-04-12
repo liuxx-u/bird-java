@@ -16,6 +16,11 @@ public interface Constants {
     String ROUTE_DEFINITION="route_definition";
 
     /**
+     * The constant RPC_TYPE.
+     */
+    String RPC_TYPE = "rpc";
+
+    /**
      * The constant DUBBO_PARAM_HEADER.
      */
     String DUBBO_PARAM_HEADER = "dubbo-param";

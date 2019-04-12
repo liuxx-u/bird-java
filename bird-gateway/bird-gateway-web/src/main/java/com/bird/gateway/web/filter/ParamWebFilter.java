@@ -41,11 +41,11 @@ public class ParamWebFilter extends AbstractWebFilter {
                 .wrap(JSON.toJSONString(result).getBytes(Charset.forName("utf8")))));
     }
 
-    private Boolean verify(final RequestDTO requestDTO) {
-        return !Objects.isNull(requestDTO)
-                && !StringUtils.isBlank(requestDTO.getPath())
-                && !StringUtils.isBlank(requestDTO.getModule())
-                && !StringUtils.isBlank(requestDTO.getHttpMethod())
-                && !Objects.isNull(HttpMethodEnum.acquireByName(requestDTO.getHttpMethod()));
+    private Boolean verify(final RequestDTO request) {
+        return !Objects.isNull(request)
+                && !StringUtils.isBlank(request.getPath())
+                && !StringUtils.isBlank(request.getModule())
+                && !StringUtils.isBlank(request.getHttpMethod())
+                && !Objects.isNull(HttpMethodEnum.acquireByName(request.getHttpMethod()));
     }
 }
