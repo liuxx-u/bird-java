@@ -33,24 +33,24 @@
 		<dependency>
 			<groupId>com.bird</groupId>
 			<artifactId>bird-service-zero-api</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bird</groupId>
 			<artifactId>bird-service-cms-api</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.bird</groupId>
 			<artifactId>bird-web-file</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.bird</groupId>
 			<artifactId>bird-web-starter</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
