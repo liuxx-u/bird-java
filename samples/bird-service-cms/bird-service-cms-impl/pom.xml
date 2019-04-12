@@ -5,7 +5,7 @@
 
 	<groupId>com.bird</groupId>
 	<artifactId>bird-service-cms-impl</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>bird-service-cms-impl</name>
@@ -28,17 +28,17 @@
 		<dependency>
 			<groupId>com.bird</groupId>
 			<artifactId>bird-service-cms-api</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bird</groupId>
 			<artifactId>bird-service-zero-api</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bird</groupId>
 			<artifactId>bird-service-starter</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

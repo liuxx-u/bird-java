@@ -5,13 +5,13 @@
     <parent>
         <artifactId>bird-project</artifactId>
         <groupId>com.bird</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-service-cms</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>bird-service-cms-api</module>
         <module>bird-service-cms-impl</module>
