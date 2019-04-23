@@ -20,7 +20,7 @@ public class OperateLogInfo implements Serializable {
     /**
      * 用户Id
      */
-    private Serializable userId;
+    private String userId;
     /**
      * 用户名
      */
@@ -48,8 +48,8 @@ public class OperateLogInfo implements Serializable {
 
     public OperateLogInfo() {
         BirdSession session = SessionContext.getSession();
-        if (session != null) {
-            this.userId = session.getUserId();
+        if (session != null && session.getUserId() != null) {
+            this.userId = session.getUserId().toString();
             this.userName = session.getName();
         }
         this.createTime = new Date();

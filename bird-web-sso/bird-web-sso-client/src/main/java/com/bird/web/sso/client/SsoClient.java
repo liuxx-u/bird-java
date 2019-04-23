@@ -60,7 +60,7 @@ public class SsoClient {
         try {
             return cache.get(token, () -> ticketHandler.getTicket(token));
         } catch (Exception e) {
-            log.error("sso 客户端票据读取失败", e);
+            log.warn("sso 客户端票据读取失败", e);
             return null;
         }
     }
