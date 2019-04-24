@@ -27,10 +27,11 @@ public class RequestDTO implements Serializable {
      */
     private String path;
 
+
     /**
      * 不带服务名的子路径
      */
-    private String subPath;
+    private String subUrl;
 
     /**
      * RPC方式
@@ -57,7 +58,11 @@ public class RequestDTO implements Serializable {
         RequestDTO request = new RequestDTO();
         module.ifPresent(p -> {
             request.setModule(p);
-            request.setSubPath(path.substring(p.length() + 1));
+            String subUrl = path.substring(p.length() + 1);
+            if (StringUtils.isNotBlank(httpRequest.getURI().getQuery())) {
+                subUrl += "?" + httpRequest.getURI().getQuery();
+            }
+            request.setSubUrl(subUrl);
         });
         request.setPath(path);
         request.setHttpMethod(httpMethod);
@@ -65,5 +70,4 @@ public class RequestDTO implements Serializable {
 
         return request;
     }
-
 }

@@ -65,7 +65,7 @@ public class PrePipe implements IChainPipe {
             routeDefinition = new RouteDefinition();
             routeDefinition.setRpcType(RpcTypeEnum.SPRING_CLOUD.getName());
             routeDefinition.setModule(request.getModule());
-            routeDefinition.setPath(request.getSubPath());
+            routeDefinition.setPath(request.getSubUrl());
             routeDefinition.setEnabled(true);
         }
 
