@@ -20,7 +20,6 @@
         <module>bird-web-file</module>
         <module>bird-web-common</module>
         <module>bird-web-starter</module>
-        <module>samples</module>
         <module>bird-gateway</module>
         <module>bird-dependencies</module>
     </modules>

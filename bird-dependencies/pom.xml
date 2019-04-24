@@ -17,6 +17,11 @@
             <!--bird-->
             <dependency>
                 <groupId>com.bird</groupId>
+                <artifactId>bird-core</artifactId>
+                <version>${bird.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
                 <artifactId>bird-dubbo</artifactId>
                 <version>${bird.version}</version>
             </dependency>
@@ -63,6 +68,11 @@
             <dependency>
                 <groupId>com.bird</groupId>
                 <artifactId>bird-web-starter</artifactId>
+                <version>${bird.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
+                <artifactId>bird-web-sso-core</artifactId>
                 <version>${bird.version}</version>
             </dependency>
             <dependency>
