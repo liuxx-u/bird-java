@@ -58,10 +58,8 @@ public class PrePipe implements IChainPipe {
         if (Objects.isNull(request) || StringUtils.isBlank(request.getPath())) {
             return jsonResult(exchange, JsonResult.error("请求路径不存在."));
         }
-        RouteDefinition routeDefinition;
-        if(StringUtils.equalsIgnoreCase(request.getRpcType(),RpcTypeEnum.DUBBO.getName())){
-            routeDefinition = ZookeeperCacheManager.getRouteDefinition(request.getPath());
-        }else {
+        RouteDefinition routeDefinition = ZookeeperCacheManager.getRouteDefinition(request.getPath());
+        if(routeDefinition == null){
             routeDefinition = new RouteDefinition();
             routeDefinition.setRpcType(RpcTypeEnum.SPRING_CLOUD.getName());
             routeDefinition.setModule(request.getModule());
@@ -69,7 +67,7 @@ public class PrePipe implements IChainPipe {
             routeDefinition.setEnabled(true);
         }
 
-        if (routeDefinition == null || BooleanUtils.isNotTrue(routeDefinition.getEnabled())) {
+        if (BooleanUtils.isNotTrue(routeDefinition.getEnabled())) {
             return jsonResult(exchange, JsonResult.error("api不存在或已被禁用."));
         }
 
