@@ -12,7 +12,7 @@ public interface IUserPermissionChecker {
      * @param userId      用户id
      * @param permissions 权限集合
      * @param checkAll    是否满足全部
-     * @return
+     * @return true or false
      */
     boolean hasPermissions(String userId, String[] permissions, boolean checkAll);
 }
