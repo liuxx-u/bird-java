@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @CacheConfig(cacheNames = "zero_site")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class SiteServiceImpl extends AbstractService<SiteMapper,Site> implements SiteService {
 }

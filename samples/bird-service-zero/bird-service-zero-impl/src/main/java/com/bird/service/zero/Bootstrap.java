@@ -1,6 +1,6 @@
 package com.bird.service.zero;
 
-import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
+import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
 import com.bird.core.utils.SpringContextHolder;
 import com.bird.gateway.configuration.zookeeper.ZookeeperConfigurer;
 import com.bird.service.zero.model.Organization;

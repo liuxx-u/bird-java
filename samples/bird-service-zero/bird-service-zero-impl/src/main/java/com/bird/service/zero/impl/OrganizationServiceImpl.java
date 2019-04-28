@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @CacheConfig(cacheNames = "crm_sharehold_structure")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class OrganizationServiceImpl extends AbstractService<OrganizationMapper,Organization> implements OrganizationService {
 
     /**

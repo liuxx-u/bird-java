@@ -13,4 +13,9 @@ public class BootstrapTests {
 	public void contextLoads() {
 	}
 
+	@Test
+	public void test(){
+		String path = "/thctay-service-zero/sub1/sub2";
+		String subPath = path.substring(path.indexOf(19+1));
+	}
 }

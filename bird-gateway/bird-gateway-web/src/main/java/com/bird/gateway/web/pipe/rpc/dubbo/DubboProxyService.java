@@ -1,12 +1,12 @@
 package com.bird.gateway.web.pipe.rpc.dubbo;
 
-import com.alibaba.dubbo.config.ApplicationConfig;
-import com.alibaba.dubbo.config.ConsumerConfig;
-import com.alibaba.dubbo.config.ReferenceConfig;
-import com.alibaba.dubbo.config.RegistryConfig;
-import com.alibaba.dubbo.config.utils.ReferenceConfigCache;
-import com.alibaba.dubbo.rpc.service.GenericException;
-import com.alibaba.dubbo.rpc.service.GenericService;
+import org.apache.dubbo.config.ApplicationConfig;
+import org.apache.dubbo.config.ConsumerConfig;
+import org.apache.dubbo.config.ReferenceConfig;
+import org.apache.dubbo.config.RegistryConfig;
+import org.apache.dubbo.config.utils.ReferenceConfigCache;
+import org.apache.dubbo.rpc.service.GenericException;
+import org.apache.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bird.core.exception.UserFriendlyException;
@@ -36,8 +36,6 @@ public class DubboProxyService {
     private static final JSONObject EMPTY_BODY = new JSONObject();
 
     private static final Map<String, RegistryConfig> REGISTRY_CONFIG_MAP = Maps.newConcurrentMap();
-
-    private static final Map<String, ApplicationConfig> APPLICATION_CONFIG_MAP = Maps.newConcurrentMap();
 
     private static final Map<DubboHandle,ReferenceConfig<GenericService>> REFERENCE_CONFIG_MAP = Maps.newConcurrentMap();
 
@@ -123,15 +121,12 @@ public class DubboProxyService {
         ReferenceConfig<GenericService> reference = REFERENCE_CONFIG_MAP.get(dubboHandle);
         if (Objects.isNull(reference)) {
             reference = new ReferenceConfig<>();
+            reference.setInterface(dubboHandle.getInterfaceName());
             reference.setGeneric(true);
-
-            final ApplicationConfig applicationConfig = cacheApplication(dubboHandle);
-            reference.setApplication(applicationConfig);
 
             reference.setRegistry(cacheRegistry(dubboHandle));
             reference.setConsumer(getConsumer(dubboHandle));
 
-            reference.setInterface(dubboHandle.getInterfaceName());
             if (StringUtils.isNoneBlank(dubboHandle.getVersion())) {
                 reference.setVersion(dubboHandle.getVersion());
             }
@@ -152,16 +147,6 @@ public class DubboProxyService {
         }
 
         return reference;
-    }
-
-    private ApplicationConfig cacheApplication(final DubboHandle dubboHandle) {
-        String appName = dubboHandle.getAppName();
-        ApplicationConfig applicationConfig = APPLICATION_CONFIG_MAP.get(appName);
-        if (Objects.isNull(applicationConfig)) {
-            applicationConfig = new ApplicationConfig(appName);
-            APPLICATION_CONFIG_MAP.put(appName, applicationConfig);
-        }
-        return applicationConfig;
     }
 
     private RegistryConfig cacheRegistry(final DubboHandle dubboHandle) {

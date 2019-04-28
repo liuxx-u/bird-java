@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @CacheConfig(cacheNames = "zero_user_login_attempt")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class UserLoginAttemptServiceImpl extends AbstractService<UserLoginAttemptMapper,UserLoginAttempt> implements UserLoginAttemptService {
 }

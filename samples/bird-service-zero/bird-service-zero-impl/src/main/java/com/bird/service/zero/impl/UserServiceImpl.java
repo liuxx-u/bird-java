@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Service
 @CacheConfig(cacheNames = "zero_user")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class UserServiceImpl extends AbstractService<UserMapper,User> implements UserService {
 
     /**
