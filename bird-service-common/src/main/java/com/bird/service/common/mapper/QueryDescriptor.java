@@ -20,20 +20,23 @@ import java.util.Map;
  */
 public class QueryDescriptor implements Serializable {
 
-    private static final Map<String, String> OPERATE_MAP = new HashMap<String, String>() {{
-        put(FilterOperate.AND, "and");
-        put(FilterOperate.OR, "or");
-        put(FilterOperate.EQUAL, "=");
-        put(FilterOperate.NOTEQUAL, "!=");
-        put(FilterOperate.LESS, "<");
-        put(FilterOperate.LESSOREQUAL, "<=");
-        put(FilterOperate.GREATER, ">");
-        put(FilterOperate.GREATEROREQUAL, ">=");
-        put(FilterOperate.STARTWITH, "like");
-        put(FilterOperate.ENDWITH, "like");
-        put(FilterOperate.CONTAINS, "like");
-        put(FilterOperate.IN, "in");
-    }};
+    private static final Map<String, String> OPERATE_MAP = new HashMap<>();
+
+    static {
+        OPERATE_MAP.put(FilterOperate.AND, "and");
+        OPERATE_MAP.put(FilterOperate.OR, "or");
+        OPERATE_MAP.put(FilterOperate.EQUAL, "=");
+        OPERATE_MAP.put(FilterOperate.NOTEQUAL, "!=");
+        OPERATE_MAP.put(FilterOperate.LESS, "<");
+        OPERATE_MAP.put(FilterOperate.LESSOREQUAL, "<=");
+        OPERATE_MAP.put(FilterOperate.GREATER, ">");
+        OPERATE_MAP.put(FilterOperate.GREATEROREQUAL, ">=");
+        OPERATE_MAP.put(FilterOperate.STARTWITH, "like");
+        OPERATE_MAP.put(FilterOperate.ENDWITH, "like");
+        OPERATE_MAP.put(FilterOperate.CONTAINS, "like");
+        OPERATE_MAP.put(FilterOperate.IN, "in");
+
+    }
 
     private String select;
     private String from;
@@ -87,10 +90,10 @@ public class QueryDescriptor implements Serializable {
         TableField tableField = field.getAnnotation(TableField.class);
         String dbFieldName = tableField == null ? field.getName() : tableField.value();
 
-        if(StringUtils.startsWith(dbFieldName,"{") && StringUtils.endsWith(dbFieldName,"}")){
-            dbFieldName = StringUtils.removeStart(dbFieldName,"{");
-            dbFieldName = StringUtils.removeEnd(dbFieldName,"}");
-        }else {
+        if (StringUtils.startsWith(dbFieldName, "{") && StringUtils.endsWith(dbFieldName, "}")) {
+            dbFieldName = StringUtils.removeStart(dbFieldName, "{");
+            dbFieldName = StringUtils.removeEnd(dbFieldName, "}");
+        } else {
             dbFieldName = StringUtils.wrapIfMissing(dbFieldName, '`');
         }
         return dbFieldName;
@@ -108,7 +111,7 @@ public class QueryDescriptor implements Serializable {
         String emptyField = "''";
         String dbDelimiter = ".";
         if (StringUtils.isBlank(field)) return emptyField;
-        if (field.indexOf(dbDelimiter) > 0) return field;
+        if (field.contains(dbDelimiter)) return field;
 
         String fieldName = StringUtils.wrapIfMissing(field, '`');
         return this.fieldMap.getOrDefault(fieldName, fieldName);
@@ -165,27 +168,25 @@ public class QueryDescriptor implements Serializable {
                 sb.append(" and ");
             }
 
-            switch (rule.getOperate()) {
-                case FilterOperate.STARTWITH:
-                    value = value + "%";
-                    break;
-                case FilterOperate.ENDWITH:
-                    value = "%" + value;
-                    break;
-                case FilterOperate.CONTAINS:
-                    value = "%" + value + "%";
-                    break;
-                case FilterOperate.IN:
-                    value = String.format("(%s)", StringUtils.strip(value, ","));
-                    break;
-                default:
-                    break;
-            }
-            if (!StringUtils.equals(rule.getOperate(), FilterOperate.IN)) {
+            if (StringUtils.equals(rule.getOperate(), FilterOperate.IN)) {
+                sb.append(String.format("FIND_IN_SET(%s,%s)", this.getDbFieldName(field), StringUtils.wrapIfMissing(StringUtils.strip(value, ","), "'")));
+            } else {
+                switch (rule.getOperate()) {
+                    case FilterOperate.STARTWITH:
+                        value = value + "%";
+                        break;
+                    case FilterOperate.ENDWITH:
+                        value = "%" + value;
+                        break;
+                    case FilterOperate.CONTAINS:
+                        value = "%" + value + "%";
+                        break;
+                    default:
+                        break;
+                }
                 value = StringUtils.wrapIfMissing(value, "'");
+                sb.append(this.getDbFieldName(field)).append(" ").append(OPERATE_MAP.get(rule.getOperate().toLowerCase())).append(" ").append(value);
             }
-
-            sb.append(this.getDbFieldName(field)).append(" ").append(OPERATE_MAP.get(rule.getOperate().toLowerCase())).append(" ").append(value);
             isStart = false;
         }
         String where = sb.toString();
