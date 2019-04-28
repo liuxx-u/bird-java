@@ -11,7 +11,6 @@
 
     <artifactId>bird-web-sso</artifactId>
     <packaging>pom</packaging>
-    <version>${bird.version}</version>
     <modules>
         <module>bird-web-sso-core</module>
         <module>bird-web-sso-server</module>
