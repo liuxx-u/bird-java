@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @CacheConfig(cacheNames = "cms_classify")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class CmsClassifyServiceImpl extends AbstractService<CmsClassifyMapper,CmsClassify> implements CmsClassifyService {
 
     @Autowired

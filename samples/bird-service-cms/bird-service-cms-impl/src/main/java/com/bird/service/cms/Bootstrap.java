@@ -1,6 +1,6 @@
 package com.bird.service.cms;
 
-import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
+import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
 import com.alibaba.fastjson.JSON;
 import com.bird.core.initialize.InitializeExecutor;
 import com.bird.service.cms.dto.CmsClassifyDTO;

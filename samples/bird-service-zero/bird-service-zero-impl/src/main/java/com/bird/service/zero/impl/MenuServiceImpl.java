@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 @CacheConfig(cacheNames = "zero_menu")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class MenuServiceImpl extends AbstractService<MenuMapper,Menu> implements MenuService {
 
     /**

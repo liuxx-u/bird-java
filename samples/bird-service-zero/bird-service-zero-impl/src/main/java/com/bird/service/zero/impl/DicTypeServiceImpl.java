@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @CacheConfig(cacheNames = "zero_dicType")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class DicTypeServiceImpl extends AbstractService<DicTypeMapper,DicType> implements DicTypeService {
 
     /**

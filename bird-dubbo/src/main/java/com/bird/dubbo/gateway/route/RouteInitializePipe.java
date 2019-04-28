@@ -1,6 +1,6 @@
 package com.bird.dubbo.gateway.route;
 
-import com.alibaba.dubbo.config.annotation.Service;
+import org.apache.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.bird.core.initialize.IInitializePipe;
 import com.bird.core.utils.StringHelper;
@@ -26,7 +26,7 @@ import java.util.*;
  */
 public class RouteInitializePipe implements IInitializePipe {
 
-    @Value("${dubbo.application.id:}")
+    @Value("${spring.application.name:}")
     private String application;
     @Value("${dubbo.registry.address:}")
     private String registry;

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @CacheConfig(cacheNames = "cms_attribute")
-@com.alibaba.dubbo.config.annotation.Service
+@org.apache.dubbo.config.annotation.Service
 public class CmsAttributeServiceImpl extends AbstractService<CmsAttributeMapper,CmsAttribute> implements CmsAttributeService {
 
     /**
