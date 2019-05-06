@@ -1,7 +1,6 @@
 package com.bird.service.boot.starter;
 
 import com.bird.core.BirdConfigurer;
-import com.bird.dubbo.gateway.route.RouteInitializePipe;
 import com.bird.eventbus.EventBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +18,4 @@ public class ServiceConfigurer {
     public EventBus eventBus(){
         return new EventBus();
     }
-
-    @Bean
-    public RouteInitializePipe routeInitializePipe(){
-        return new RouteInitializePipe();
-    }
-
-
 }
