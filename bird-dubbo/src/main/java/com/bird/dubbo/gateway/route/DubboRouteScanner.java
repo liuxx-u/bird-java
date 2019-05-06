@@ -1,30 +1,31 @@
 package com.bird.dubbo.gateway.route;
 
-import org.apache.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
-import com.bird.core.initialize.IInitializePipe;
+import com.bird.core.utils.AopHelper;
+import com.bird.core.utils.SpringContextHolder;
 import com.bird.core.utils.StringHelper;
 import com.bird.gateway.common.dto.convert.DubboHandle;
-import com.bird.gateway.common.route.IRouteDefinitionRegistry;
-import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.enums.RpcTypeEnum;
+import com.bird.gateway.common.route.IRouteScanner;
+import com.bird.gateway.common.route.RouteDefinition;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 网关路由信息初始化管道
- *
  * @author liuxx
- * @date 2018/11/15
+ * @date 2019/5/5
  */
-public class RouteInitializePipe implements IInitializePipe {
+public class DubboRouteScanner implements IRouteScanner {
 
     @Value("${spring.application.name:}")
     private String application;
@@ -33,34 +34,15 @@ public class RouteInitializePipe implements IInitializePipe {
     @Value("${dubbo.protocol.name:dubbo}")
     private String protocol;
 
-    @Autowired(required = false)
-    private IRouteDefinitionRegistry routeRegistry;
-
-    private List<RouteDefinition> routeDefinitions;
-
-    public RouteInitializePipe() {
-        routeDefinitions = new ArrayList<>();
-    }
-
     @Override
-    public void scanClass(Class<?> clazz) {
-        if (!this.validate()) return;
-
-        this.parseRouteDefinition(clazz);
-    }
-
-    @Override
-    public void initialize() {
-        routeRegistry.register(application, routeDefinitions);
-    }
-
-    /**
-     * 验证网关初始化参数
-     *
-     * @return true or false
-     */
-    private Boolean validate() {
-        return routeRegistry != null && StringUtils.isNotBlank(this.application);
+    public List<RouteDefinition> getRoutes(){
+        List<RouteDefinition> routeDefinitions = new ArrayList<>();
+        Map<String,Object> map = SpringContextHolder.getApplicationContext().getBeansWithAnnotation(DubboRoute.class);
+        for(Map.Entry<String,Object> entry : map.entrySet()){
+            Class<?> clazz = AopHelper.getTarget(entry.getValue()).getClass();
+            routeDefinitions.addAll(this.parseRouteDefinition(clazz));
+        }
+        return routeDefinitions;
     }
 
     /**
@@ -68,15 +50,17 @@ public class RouteInitializePipe implements IInitializePipe {
      *
      * @param clazz clazz
      */
-    private void parseRouteDefinition(Class<?> clazz) {
+    private List<RouteDefinition> parseRouteDefinition(Class<?> clazz) {
+        List<RouteDefinition> routeDefinitions = new ArrayList<>();
+
         Class<?>[] interfaceClasses = clazz.getInterfaces();
-        if (ArrayUtils.isEmpty(interfaceClasses)) return;
+        if (ArrayUtils.isEmpty(interfaceClasses)) return routeDefinitions;
 
         DubboRoute typeRoute = clazz.getAnnotation(DubboRoute.class);
-        if (typeRoute == null) return;
+        if (typeRoute == null) return routeDefinitions;
 
         Service service = clazz.getAnnotation(Service.class);
-        if (service == null) return;
+        if (service == null) return routeDefinitions;
         String typePath = this.getTypeRoutePath(typeRoute, clazz.getSimpleName());
 
         Method[] methods = clazz.getDeclaredMethods();
@@ -118,6 +102,7 @@ public class RouteInitializePipe implements IInitializePipe {
             definition.setRpcJson(JSON.toJSONString(handle));
             routeDefinitions.add(definition);
         }
+        return routeDefinitions;
     }
 
     /**
