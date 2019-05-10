@@ -1,19 +1,17 @@
-package com.bird.gateway.web.zookeeper;
+package com.bird.gateway.registry.zookeeper.discovery;
 
-import com.bird.gateway.common.constant.ZkPathConstants;
 import com.bird.gateway.common.dto.zk.ModuleZkDTO;
 import com.bird.gateway.common.dto.zk.PluginZkDTO;
-import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.common.enums.PipeEnum;
+import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.registry.zookeeper.ZkPathConstant;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.util.CollectionUtils;
 
@@ -22,10 +20,9 @@ import java.util.stream.Collectors;
 
 /**
  * @author liuxx
- * @date 2018/11/27
+ * @date 2019/5/10
  */
 @Slf4j
-@SuppressWarnings("all")
 public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean {
 
     private static final Map<String, PluginZkDTO> PLUGIN_MAP = Maps.newConcurrentMap();
@@ -35,9 +32,6 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
 
     private final ZkClient zkClient;
 
-    @Value("${bird.gatewey.upstream.time:30}")
-    private int upstreamTime;
-
     private final ZkRouteDataListener zkRouteDataListener;
 
     public ZookeeperCacheManager(final ZkClient zkClient, ZkRouteDataListener zkRouteDataListener) {
@@ -45,24 +39,29 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
         this.zkRouteDataListener = zkRouteDataListener;
     }
 
-    public static RouteDefinition getRouteDefinition(String path) {
+    /**
+     * 获取path对应的Route信息
+     * @param path path
+     * @return route
+     */
+    public static RouteDefinition get(String path) {
         return ROUTE_MAP.get(path);
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         this.loadPlugin();
         this.loadAllRoute();
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         zkClient.close();
     }
 
     private void loadPlugin() {
         Arrays.stream(PipeEnum.values()).forEach(pluginEnum -> {
-            String pluginPath = ZkPathConstants.buildPluginPath(pluginEnum.getName());
+            String pluginPath = ZkPathConstant.buildPluginPath(pluginEnum.getName());
             if (!zkClient.exists(pluginPath)) {
                 zkClient.createPersistent(pluginPath, true);
             }
@@ -89,14 +88,14 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
      * 从zookeeper中加载模块以及路由信息
      */
     private void loadAllRoute() {
-        if (!zkClient.exists(ZkPathConstants.ROUTE_PARENT)) {
-            zkClient.createPersistent(ZkPathConstants.ROUTE_PARENT, true);
+        if (!zkClient.exists(ZkPathConstant.ROUTE_PARENT)) {
+            zkClient.createPersistent(ZkPathConstant.ROUTE_PARENT, true);
         }
 
-        List<String> modules = zkClient.getChildren(ZkPathConstants.ROUTE_PARENT);
+        List<String> modules = zkClient.getChildren(ZkPathConstant.ROUTE_PARENT);
         modules.forEach(this::loadWatchModule);
 
-        zkClient.subscribeChildChanges(ZkPathConstants.ROUTE_PARENT, (parentPath, currentModules) -> {
+        zkClient.subscribeChildChanges(ZkPathConstant.ROUTE_PARENT, (parentPath, currentModules) -> {
             List<String> existModules = new ArrayList<>(MODULE_MAP.keySet());
 
             List<String> newModules = ListUtils.subtract(currentModules, existModules);
@@ -113,7 +112,7 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
      * @param module module
      */
     private void loadWatchModule(String module) {
-        String modulePath = ZkPathConstants.buildModulePath(module);
+        String modulePath = ZkPathConstant.buildModulePath(module);
         ModuleZkDTO data = zkClient.readData(modulePath);
         if (data == null) {
             data = new ModuleZkDTO();
@@ -129,13 +128,13 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
                     .collect(Collectors.toList());
             List<String> currentPaths = children == null
                     ? new ArrayList<>()
-                    : children.stream().map(p -> ZkPathConstants.buildRoutePath(module, p)).collect(Collectors.toList());
+                    : children.stream().map(p -> ZkPathConstant.buildRoutePath(module, p)).collect(Collectors.toList());
 
             List<String> newPaths = ListUtils.subtract(currentPaths, existPaths);
             List<String> removePaths = ListUtils.subtract(existPaths, currentPaths);
 
             newPaths.forEach(p -> {
-                String zkPath = ZkPathConstants.parseZkRoutePath(p);
+                String zkPath = ZkPathConstant.parseZkRoutePath(p);
                 this.loadWatchRoute(zkPath);
             });
             removePaths.forEach(this::unloadRoute);
@@ -152,7 +151,7 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
     private void unloadModule(String module) {
         MODULE_MAP.remove(module);
 
-        String zkPath = ZkPathConstants.buildModulePath(module);
+        String zkPath = ZkPathConstant.buildModulePath(module);
         zkClient.delete(zkPath);
     }
 
@@ -181,7 +180,7 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
     private void loadModuleRoute(String zkModulePath) {
         List<String> routes = zkClient.getChildren(zkModulePath);
         routes.forEach(route -> {
-            String zkRoutePath = ZkPathConstants.buildZkPath(zkModulePath, route);
+            String zkRoutePath = ZkPathConstant.buildZkPath(zkModulePath, route);
             this.loadWatchRoute(zkRoutePath);
         });
     }
@@ -194,7 +193,7 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
     private void loadWatchRoute(String zkRoutePath) {
         RouteDefinition routeDefinition = zkClient.readData(zkRoutePath);
         Optional.ofNullable(routeDefinition).ifPresent(d -> {
-            String path = ZkPathConstants.extractRoutePath(zkRoutePath);
+            String path = ZkPathConstant.extractRoutePath(zkRoutePath);
             ROUTE_MAP.put(path, d);
         });
 
@@ -209,7 +208,7 @@ public class ZookeeperCacheManager implements CommandLineRunner, DisposableBean 
     private void unloadRoute(String path) {
         ROUTE_MAP.remove(path);
 
-        String zkPath = ZkPathConstants.parseZkRoutePath(path);
+        String zkPath = ZkPathConstant.parseZkRoutePath(path);
         zkClient.unsubscribeDataChanges(zkPath, zkRouteDataListener);
         zkClient.delete(zkPath);
     }

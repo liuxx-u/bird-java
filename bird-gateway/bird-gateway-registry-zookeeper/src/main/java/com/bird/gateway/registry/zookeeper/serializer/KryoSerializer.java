@@ -1,12 +1,10 @@
-package com.bird.gateway.configuration.zookeeper.serializer;
+package com.bird.gateway.registry.zookeeper.serializer;
 
 import com.bird.gateway.common.enums.SerializeEnum;
 import com.bird.gateway.common.exception.SerializerException;
-import com.bird.gateway.configuration.zookeeper.SerializerName;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import org.I0Itec.zkclient.exception.ZkMarshallingError;
 import org.I0Itec.zkclient.serialize.ZkSerializer;
 
 import java.io.ByteArrayInputStream;
@@ -15,9 +13,9 @@ import java.io.IOException;
 
 /**
  * @author liuxx
- * @date 2018/11/27
+ * @date 2019/5/10
  */
-public class KryoSerializer implements ZkSerializer, SerializerName {
+public class KryoSerializer implements ZkSerializer {
 
     @Override
     public byte[] serialize(final Object obj) {
@@ -36,7 +34,7 @@ public class KryoSerializer implements ZkSerializer, SerializerName {
     }
 
     @Override
-    public Object deserialize(final byte[] bytes) throws ZkMarshallingError {
+    public Object deserialize(final byte[] bytes) {
         Object object;
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
             Kryo kryo = new Kryo();
@@ -47,10 +45,5 @@ public class KryoSerializer implements ZkSerializer, SerializerName {
             throw new SerializerException("kryo deSerialize error" + e.getMessage());
         }
         return object;
-    }
-
-    @Override
-    public String named() {
-        return SerializeEnum.HESSIAN.getSerialize();
     }
 }

@@ -1,4 +1,4 @@
-package com.bird.gateway.configuration.zookeeper.serializer;
+package com.bird.gateway.registry.zookeeper.serializer;
 
 import org.I0Itec.zkclient.serialize.ZkSerializer;
 
@@ -8,7 +8,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * @author liuxx
- * @date 2018/11/27
+ * @date 2019/5/10
  */
 public class ZkSerializerFactory {
 
@@ -22,9 +22,8 @@ public class ZkSerializerFactory {
      */
     public static ZkSerializer of(final String className) {
         return StreamSupport.stream(SERVICE_LOADER.spliterator(), false)
-                .filter(service ->
-                        Objects.equals(service.getClass().getName().substring(service.getClass().getName().lastIndexOf(".") + 1,
-                                service.getClass().getName().length()),
-                                className)).findFirst().orElse(new KryoSerializer());
+                .filter(service -> Objects.equals(service.getClass().getName().substring(service.getClass().getName().lastIndexOf(".") + 1), className))
+                .findFirst()
+                .orElse(new KryoSerializer());
     }
 }

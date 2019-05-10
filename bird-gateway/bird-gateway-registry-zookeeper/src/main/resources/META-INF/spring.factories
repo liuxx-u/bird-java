@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+  com.bird.gateway.registry.zookeeper.configuration.ZkRegistryAutoConfiguration,\
+  com.bird.gateway.registry.zookeeper.configuration.ZkDiscoveryAutoConfiguration
