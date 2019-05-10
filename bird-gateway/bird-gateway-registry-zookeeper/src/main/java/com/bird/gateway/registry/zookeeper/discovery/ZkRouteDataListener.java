@@ -1,6 +1,6 @@
 package com.bird.gateway.registry.zookeeper.discovery;
 
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.RouteDefinition;
 import com.bird.gateway.registry.zookeeper.ZkPathConstant;
 import org.I0Itec.zkclient.IZkDataListener;
 

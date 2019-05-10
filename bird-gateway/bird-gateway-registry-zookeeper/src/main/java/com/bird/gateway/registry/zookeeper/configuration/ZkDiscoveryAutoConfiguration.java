@@ -1,6 +1,6 @@
 package com.bird.gateway.registry.zookeeper.configuration;
 
-import com.bird.gateway.common.route.IRouteDiscovery;
+import com.bird.gateway.common.IRouteDiscovery;
 import com.bird.gateway.registry.zookeeper.discovery.ZkRouteDataListener;
 import com.bird.gateway.registry.zookeeper.discovery.ZookeeperCacheManager;
 import com.bird.gateway.registry.zookeeper.discovery.ZookeeperRouteDiscovery;

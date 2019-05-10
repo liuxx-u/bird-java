@@ -1,6 +1,6 @@
 package com.bird.gateway.web.utils;
 
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.dto.convert.HystrixHandle;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
@@ -22,16 +22,16 @@ public class HystrixBuilder {
     public static HystrixObservableCommand.Setter build(final HystrixHandle hystrixHandle) {
 
         if (hystrixHandle.getMaxConcurrentRequests() == 0) {
-            hystrixHandle.setMaxConcurrentRequests(Constants.MAX_CONCURRENT_REQUESTS);
+            hystrixHandle.setMaxConcurrentRequests(GatewayConstant.MAX_CONCURRENT_REQUESTS);
         }
         if (hystrixHandle.getErrorThresholdPercentage() == 0) {
-            hystrixHandle.setErrorThresholdPercentage(Constants.ERROR_THRESHOLD_PERCENTAGE);
+            hystrixHandle.setErrorThresholdPercentage(GatewayConstant.ERROR_THRESHOLD_PERCENTAGE);
         }
         if (hystrixHandle.getRequestVolumeThreshold() == 0) {
-            hystrixHandle.setRequestVolumeThreshold(Constants.REQUEST_VOLUME_THRESHOLD);
+            hystrixHandle.setRequestVolumeThreshold(GatewayConstant.REQUEST_VOLUME_THRESHOLD);
         }
         if (hystrixHandle.getSleepWindowInMilliseconds() == 0) {
-            hystrixHandle.setSleepWindowInMilliseconds(Constants.SLEEP_WINDOW_INMILLISECONDS);
+            hystrixHandle.setSleepWindowInMilliseconds(GatewayConstant.SLEEP_WINDOW_INMILLISECONDS);
         }
 
         HystrixCommandGroupKey groupKey = HystrixCommandGroupKey.Factory.asKey(hystrixHandle.getGroupKey());

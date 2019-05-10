@@ -1,13 +1,13 @@
 package com.bird.gateway.web.pipe.after;
 
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.enums.RpcTypeEnum;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.RouteDefinition;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
 import com.bird.gateway.common.enums.ResultEnum;
 import com.bird.gateway.common.exception.GatewayException;
-import com.bird.gateway.common.result.JsonResult;
+import com.bird.gateway.common.dto.JsonResult;
 import com.bird.gateway.web.pipe.AbstractPipe;
 import com.bird.gateway.web.pipe.IChainPipe;
 import com.bird.gateway.web.pipe.PipeChain;
@@ -33,7 +33,7 @@ public class ResultPipe extends AbstractPipe implements IChainPipe {
     protected Mono<Void> doExecute(ServerWebExchange exchange, PipeChain chain, RouteDefinition routeDefinition) {
         return chain.execute(exchange).then(Mono.defer(() -> {
             ServerHttpResponse response = exchange.getResponse();
-            final String resultType = exchange.getAttribute(Constants.RESPONSE_RESULT_TYPE);
+            final String resultType = exchange.getAttribute(GatewayConstant.RESPONSE_RESULT_TYPE);
             if(StringUtils.equalsIgnoreCase(resultType,ResultEnum.ERROR.getName())){
 
             }else if(StringUtils.equalsIgnoreCase(resultType,ResultEnum.TIME_OUT.getName())){
@@ -42,13 +42,13 @@ public class ResultPipe extends AbstractPipe implements IChainPipe {
                 RpcTypeEnum rpcTypeEnum = RpcTypeEnum.acquireByName(routeDefinition.getRpcType());
                 if (RpcTypeEnum.DUBBO.getName().equals(rpcTypeEnum.getName())) {
                     try {
-                        final Object result = exchange.getAttribute(Constants.DUBBO_RPC_RESULT);
+                        final Object result = exchange.getAttribute(GatewayConstant.DUBBO_RPC_RESULT);
                         return jsonResult(exchange,JsonResult.success(result));
                     }catch (GatewayException e){
                         return jsonResult(exchange,JsonResult.success(null));
                     }
                 }else if(RpcTypeEnum.SPRING_CLOUD.getName().equals(rpcTypeEnum.getName())){
-                    ClientResponse clientResponse = exchange.getAttribute(Constants.HTTP_RPC_RESULT);
+                    ClientResponse clientResponse = exchange.getAttribute(GatewayConstant.HTTP_RPC_RESULT);
                     if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR || Objects.isNull(clientResponse)) {
                         return jsonResult(exchange,JsonResult.error(""));
                     }

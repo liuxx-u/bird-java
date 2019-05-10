@@ -3,9 +3,9 @@ package com.bird.gateway.web.pipe;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
-import com.bird.gateway.common.constant.Constants;
-import com.bird.gateway.common.result.JsonResult;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.GatewayConstant;
+import com.bird.gateway.common.dto.JsonResult;
+import com.bird.gateway.common.RouteDefinition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
@@ -51,7 +51,7 @@ public abstract class AbstractPipe implements IPipe {
      */
     @Override
     public Mono<Void> execute(ServerWebExchange exchange, PipeChain chain) {
-        RouteDefinition routeDefinition = exchange.getAttribute(Constants.ROUTE_DEFINITION);
+        RouteDefinition routeDefinition = exchange.getAttribute(GatewayConstant.ROUTE_DEFINITION);
         if (routeDefinition == null || BooleanUtils.isNotTrue(routeDefinition.getEnabled())) {
             return jsonResult(exchange, JsonResult.error("api不存在或已被禁用."));
         }

@@ -3,7 +3,7 @@ package com.bird.gateway.registry.zookeeper.discovery;
 import com.bird.gateway.common.dto.zk.ModuleZkDTO;
 import com.bird.gateway.common.dto.zk.PluginZkDTO;
 import com.bird.gateway.common.enums.PipeEnum;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.RouteDefinition;
 import com.bird.gateway.registry.zookeeper.ZkPathConstant;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;

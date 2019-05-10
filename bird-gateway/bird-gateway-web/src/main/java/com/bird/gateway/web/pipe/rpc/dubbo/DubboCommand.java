@@ -2,10 +2,10 @@ package com.bird.gateway.web.pipe.rpc.dubbo;
 
 import com.alibaba.fastjson.JSON;
 import com.bird.core.exception.UserFriendlyException;
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.dto.convert.DubboHandle;
 import com.bird.gateway.common.enums.ResultEnum;
-import com.bird.gateway.common.result.JsonResult;
+import com.bird.gateway.common.dto.JsonResult;
 import com.bird.gateway.web.pipe.PipeChain;
 import com.netflix.hystrix.HystrixObservableCommand;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +50,9 @@ public class DubboCommand extends HystrixObservableCommand<Void> {
     private Mono<Void> doRpcInvoke() {
         final Object result = dubboProxyService.genericInvoker(exchange, dubboHandle);
         if(result != null){
-            exchange.getAttributes().put(Constants.DUBBO_RPC_RESULT, result);
+            exchange.getAttributes().put(GatewayConstant.DUBBO_RPC_RESULT, result);
         }
-        exchange.getAttributes().put(Constants.RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
+        exchange.getAttributes().put(GatewayConstant.RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
         return chain.execute(exchange);
     }
 
@@ -62,7 +62,7 @@ public class DubboCommand extends HystrixObservableCommand<Void> {
     }
 
     private Mono<Void> doFallback() {
-        String msg = Constants.ERROR_RESULT;
+        String msg = GatewayConstant.ERROR_RESULT;
         if (isFailedExecution() && getExecutionException() != null) {
             String exception = getExecutionException().toString();
             if(exception.startsWith(UserFriendlyException.class.getName())){

@@ -1,9 +1,9 @@
 package com.bird.gateway.web.filter;
 
 import com.alibaba.fastjson.JSON;
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.enums.HttpMethodEnum;
-import com.bird.gateway.common.result.JsonResult;
+import com.bird.gateway.common.dto.JsonResult;
 import com.bird.gateway.web.request.RequestDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class ParamWebFilter extends AbstractWebFilter {
     protected Mono<Boolean> doFilter(final ServerWebExchange exchange, final WebFilterChain chain) {
         final RequestDTO request = RequestDTO.transform(exchange.getRequest());
         if (this.verify(request)) {
-            exchange.getAttributes().put(Constants.REQUESTDTO, request);
+            exchange.getAttributes().put(GatewayConstant.REQUESTDTO, request);
         } else {
             return Mono.just(false);
         }
