@@ -1,4 +1,4 @@
-package com.bird.gateway.common.constant;
+package com.bird.gateway.registry.zookeeper;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 
 /**
  * @author liuxx
- * @date 2018/11/27
+ * @date 2019/5/10
  */
-public final class ZkPathConstants implements Constants {
+public final class ZkPathConstant {
 
     private static final String PLUGIN_PARENT = "/gateway/plugin";
 
@@ -47,7 +47,7 @@ public final class ZkPathConstants implements Constants {
     public static String parseZkRoutePath(String routePath) {
         if (StringUtils.isBlank(routePath)) return null;
         List<String> arr = Arrays.stream(routePath.split("/")).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        if (arr == null || arr.size() < 2) return null;
+        if (arr.size() < 2) return null;
 
         String module = arr.get(0);
         StringBuilder zkRoutePath = new StringBuilder();
@@ -66,7 +66,7 @@ public final class ZkPathConstants implements Constants {
 
         zkPath = StringUtils.stripEnd(zkPath, "/");
         String module = zkPath.substring(ROUTE_PARENT.length(), zkPath.lastIndexOf("/"));
-        String routePath = zkPath.substring((ROUTE_PARENT + module).length(), zkPath.length());
+        String routePath = zkPath.substring((ROUTE_PARENT + module).length());
         routePath = routePath.replaceAll("[-]+", "/");
 
         return (module + routePath).replaceAll("[/]+", "/");

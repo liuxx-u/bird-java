@@ -1,29 +1,29 @@
-package com.bird.gateway.web.zookeeper;
+package com.bird.gateway.registry.zookeeper.discovery;
 
-import com.bird.gateway.common.constant.ZkPathConstants;
 import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.registry.zookeeper.ZkPathConstant;
 import org.I0Itec.zkclient.IZkDataListener;
 
 import java.util.Optional;
 
 /**
  * @author liuxx
- * @date 2018/11/27
+ * @date 2019/5/10
  */
 public class ZkRouteDataListener implements IZkDataListener {
 
     @Override
-    public void handleDataChange(String zkPath, Object data) throws Exception {
+    public void handleDataChange(String zkPath, Object data) {
         Optional.ofNullable(data).ifPresent(o -> {
             RouteDefinition dto = (RouteDefinition) o;
-            String routePath = ZkPathConstants.extractRoutePath(zkPath);
+            String routePath = ZkPathConstant.extractRoutePath(zkPath);
             ZookeeperCacheManager.ROUTE_MAP.put(routePath, dto);
         });
     }
 
     @Override
-    public void handleDataDeleted(String zkPath) throws Exception {
-        String routePath = ZkPathConstants.extractRoutePath(zkPath);
+    public void handleDataDeleted(String zkPath) {
+        String routePath = ZkPathConstant.extractRoutePath(zkPath);
         ZookeeperCacheManager.ROUTE_MAP.remove(routePath);
     }
 }

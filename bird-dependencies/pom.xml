@@ -42,6 +42,11 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
+                <artifactId>bird-gateway-registry-zookeeper</artifactId>
+                <version>${bird.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
                 <artifactId>bird-gateway-web</artifactId>
                 <version>${bird.version}</version>
             </dependency>

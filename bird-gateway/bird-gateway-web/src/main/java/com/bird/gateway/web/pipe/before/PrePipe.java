@@ -6,13 +6,14 @@ import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
 import com.bird.gateway.common.enums.RpcTypeEnum;
 import com.bird.gateway.common.result.JsonResult;
+import com.bird.gateway.common.route.IRouteDiscovery;
 import com.bird.gateway.common.route.RouteDefinition;
 import com.bird.gateway.web.pipe.IChainPipe;
 import com.bird.gateway.web.pipe.PipeChain;
 import com.bird.gateway.web.request.RequestDTO;
-import com.bird.gateway.web.zookeeper.ZookeeperCacheManager;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
@@ -31,6 +32,9 @@ import java.util.Objects;
  * @date 2018/11/28
  */
 public class PrePipe implements IChainPipe {
+
+    @Autowired
+    private IRouteDiscovery routeDiscovery;
 
     @Override
     public String named() {
@@ -58,7 +62,7 @@ public class PrePipe implements IChainPipe {
         if (Objects.isNull(request) || StringUtils.isBlank(request.getPath())) {
             return jsonResult(exchange, JsonResult.error("请求路径不存在."));
         }
-        RouteDefinition routeDefinition = ZookeeperCacheManager.getRouteDefinition(request.getPath());
+        RouteDefinition routeDefinition = routeDiscovery.get(request.getPath());
         if(routeDefinition == null){
             routeDefinition = new RouteDefinition();
             routeDefinition.setRpcType(RpcTypeEnum.SPRING_CLOUD.getName());
