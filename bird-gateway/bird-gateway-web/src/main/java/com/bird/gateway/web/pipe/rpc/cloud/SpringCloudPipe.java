@@ -1,10 +1,10 @@
 package com.bird.gateway.web.pipe.rpc.cloud;
 
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.dto.convert.HttpHandle;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.ResultEnum;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.RouteDefinition;
 import com.bird.gateway.web.pipe.AbstractPipe;
 import com.bird.gateway.web.pipe.PipeChain;
 import com.bird.gateway.web.pipe.rpc.http.HttpCommand;
@@ -51,7 +51,7 @@ public class SpringCloudPipe extends AbstractPipe {
             }
         }).doOnError(throwable -> {
             throwable.printStackTrace();
-            exchange.getAttributes().put(Constants.RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
+            exchange.getAttributes().put(GatewayConstant.RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
             chain.execute(exchange);
         }).then();
     }

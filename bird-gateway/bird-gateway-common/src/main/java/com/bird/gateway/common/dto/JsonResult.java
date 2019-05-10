@@ -1,4 +1,4 @@
-package com.bird.gateway.common.result;
+package com.bird.gateway.common.dto;
 
 import com.bird.gateway.common.exception.CommonErrorCode;
 import lombok.Data;

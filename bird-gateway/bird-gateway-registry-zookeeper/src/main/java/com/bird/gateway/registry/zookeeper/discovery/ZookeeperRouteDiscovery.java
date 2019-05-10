@@ -1,7 +1,7 @@
 package com.bird.gateway.registry.zookeeper.discovery;
 
-import com.bird.gateway.common.route.IRouteDiscovery;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.IRouteDiscovery;
+import com.bird.gateway.common.RouteDefinition;
 
 /**
  * @author liuxx

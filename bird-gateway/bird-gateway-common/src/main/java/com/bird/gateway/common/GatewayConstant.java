@@ -1,10 +1,10 @@
-package com.bird.gateway.common.constant;
+package com.bird.gateway.common;
 
 /**
  * @author liuxx
  * @date 2018/11/27
  */
-public interface Constants {
+public interface GatewayConstant {
     /**
      * The constant REQUESTDTO.
      */

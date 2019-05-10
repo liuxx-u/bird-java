@@ -1,6 +1,6 @@
 package com.bird.gateway.common.dto.convert;
 
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,25 +24,25 @@ public class HystrixHandle {
     /**
      * hystrix withExecutionIsolationSemaphoreMaxConcurrentRequests.
      */
-    private int maxConcurrentRequests = Constants.MAX_CONCURRENT_REQUESTS;
+    private int maxConcurrentRequests = GatewayConstant.MAX_CONCURRENT_REQUESTS;
 
     /**
      * hystrix withCircuitBreakerErrorThresholdPercentage.
      */
-    private int errorThresholdPercentage = Constants.ERROR_THRESHOLD_PERCENTAGE;
+    private int errorThresholdPercentage = GatewayConstant.ERROR_THRESHOLD_PERCENTAGE;
 
     /**
      * hystrix withCircuitBreakerRequestVolumeThreshold.
      */
-    private int requestVolumeThreshold = Constants.REQUEST_VOLUME_THRESHOLD;
+    private int requestVolumeThreshold = GatewayConstant.REQUEST_VOLUME_THRESHOLD;
 
     /**
      * hystrix withCircuitBreakerSleepWindowInMilliseconds.
      */
-    private int sleepWindowInMilliseconds = Constants.SLEEP_WINDOW_INMILLISECONDS;
+    private int sleepWindowInMilliseconds = GatewayConstant.SLEEP_WINDOW_INMILLISECONDS;
 
     /**
      * timeout is required.
      */
-    private Integer timeout = Constants.TIME_OUT;
+    private Integer timeout = GatewayConstant.TIME_OUT;
 }

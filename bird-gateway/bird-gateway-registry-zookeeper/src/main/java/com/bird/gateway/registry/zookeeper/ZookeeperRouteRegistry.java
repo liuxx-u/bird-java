@@ -1,7 +1,7 @@
 package com.bird.gateway.registry.zookeeper;
 
-import com.bird.gateway.common.route.IRouteRegistry;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.IRouteRegistry;
+import com.bird.gateway.common.RouteDefinition;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

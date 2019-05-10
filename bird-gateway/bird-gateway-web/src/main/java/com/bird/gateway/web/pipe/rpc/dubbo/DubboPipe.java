@@ -1,9 +1,9 @@
 package com.bird.gateway.web.pipe.rpc.dubbo;
 
 import com.alibaba.fastjson.JSON;
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.dto.convert.DubboHandle;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.RouteDefinition;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.ResultEnum;
 import com.bird.gateway.web.pipe.AbstractPipe;
@@ -50,7 +50,7 @@ public class DubboPipe extends AbstractPipe {
             }
         }).doOnError(throwable -> {
             throwable.printStackTrace();
-            exchange.getAttributes().put(Constants.RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
+            exchange.getAttributes().put(GatewayConstant.RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
             chain.execute(exchange);
         }).then();
     }

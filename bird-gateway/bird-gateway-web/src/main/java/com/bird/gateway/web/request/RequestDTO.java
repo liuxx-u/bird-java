@@ -1,6 +1,6 @@
 package com.bird.gateway.web.request;
 
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.enums.HttpMethodEnum;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +52,7 @@ public class RequestDTO implements Serializable {
     public static RequestDTO transform(final ServerHttpRequest httpRequest) {
         final String path = httpRequest.getPath().value();
         Optional<String> module = Arrays.stream(path.split("/")).filter(StringUtils::isNotBlank).findFirst();
-        final String rpcType = httpRequest.getHeaders().getFirst(Constants.RPC_TYPE);
+        final String rpcType = httpRequest.getHeaders().getFirst(GatewayConstant.RPC_TYPE);
         final String httpMethod = httpRequest.getMethod() == null ? HttpMethodEnum.POST.getName() : httpRequest.getMethod().name();
 
         RequestDTO request = new RequestDTO();

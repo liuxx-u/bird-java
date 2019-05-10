@@ -3,7 +3,7 @@ package com.bird.gateway.web.pipe.rpc.dubbo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bird.core.exception.UserFriendlyException;
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.dto.convert.DubboHandle;
 import com.bird.gateway.common.exception.GatewayException;
 import com.google.common.collect.Lists;
@@ -103,7 +103,7 @@ public class DubboProxyService {
             param.put(key, pathParams.getFirst(key));
         }
 
-        String base64 = exchange.getRequest().getHeaders().getFirst(Constants.DUBBO_PARAM_HEADER);
+        String base64 = exchange.getRequest().getHeaders().getFirst(GatewayConstant.DUBBO_PARAM_HEADER);
         if(StringUtils.isNotBlank(base64)){
             String body = null ;
             try {

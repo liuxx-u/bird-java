@@ -1,11 +1,11 @@
 package com.bird.gateway.web.pipe.rpc.http;
 
 import com.alibaba.fastjson.JSON;
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.dto.convert.HttpHandle;
 import com.bird.gateway.common.enums.HttpMethodEnum;
 import com.bird.gateway.common.enums.ResultEnum;
-import com.bird.gateway.common.result.JsonResult;
+import com.bird.gateway.common.dto.JsonResult;
 import com.bird.gateway.web.pipe.PipeChain;
 import com.bird.gateway.web.request.RequestDTO;
 import com.netflix.hystrix.HystrixObservableCommand;
@@ -49,7 +49,7 @@ public class HttpCommand extends HystrixObservableCommand<Void> {
         this.exchange = exchange;
         this.chain = chain;
         this.httpHandle = httpHandle;
-        request = exchange.getAttribute(Constants.REQUESTDTO);
+        request = exchange.getAttribute(GatewayConstant.REQUESTDTO);
     }
 
     @Override
@@ -93,11 +93,11 @@ public class HttpCommand extends HystrixObservableCommand<Void> {
 
     private Mono<Void> doNext(final ClientResponse res) {
         if (res.statusCode().is2xxSuccessful()) {
-            exchange.getAttributes().put(Constants.RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
+            exchange.getAttributes().put(GatewayConstant.RESPONSE_RESULT_TYPE, ResultEnum.SUCCESS.getName());
         } else {
-            exchange.getAttributes().put(Constants.RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
+            exchange.getAttributes().put(GatewayConstant.RESPONSE_RESULT_TYPE, ResultEnum.ERROR.getName());
         }
-        exchange.getAttributes().put(Constants.HTTP_RPC_RESULT, res);
+        exchange.getAttributes().put(GatewayConstant.HTTP_RPC_RESULT, res);
         return chain.execute(exchange);
     }
 

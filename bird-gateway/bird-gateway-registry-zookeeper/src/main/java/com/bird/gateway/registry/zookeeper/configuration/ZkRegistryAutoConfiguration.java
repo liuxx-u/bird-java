@@ -1,7 +1,7 @@
 package com.bird.gateway.registry.zookeeper.configuration;
 
-import com.bird.gateway.common.route.IRouteRegistry;
-import com.bird.gateway.common.route.IRouteScanner;
+import com.bird.gateway.common.IRouteRegistry;
+import com.bird.gateway.common.IRouteScanner;
 import com.bird.gateway.registry.zookeeper.RouteInitializeApplicationListener;
 import com.bird.gateway.registry.zookeeper.ZookeeperRouteRegistry;
 import com.bird.gateway.registry.zookeeper.serializer.ZkSerializerFactory;

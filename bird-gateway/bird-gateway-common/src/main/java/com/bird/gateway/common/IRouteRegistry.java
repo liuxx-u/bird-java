@@ -1,4 +1,4 @@
-package com.bird.gateway.common.route;
+package com.bird.gateway.common;
 
 import java.util.List;
 

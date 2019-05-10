@@ -1,13 +1,13 @@
 package com.bird.gateway.web.pipe.before;
 
 import com.alibaba.fastjson.JSON;
-import com.bird.gateway.common.constant.Constants;
+import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
 import com.bird.gateway.common.enums.RpcTypeEnum;
-import com.bird.gateway.common.result.JsonResult;
-import com.bird.gateway.common.route.IRouteDiscovery;
-import com.bird.gateway.common.route.RouteDefinition;
+import com.bird.gateway.common.dto.JsonResult;
+import com.bird.gateway.common.IRouteDiscovery;
+import com.bird.gateway.common.RouteDefinition;
 import com.bird.gateway.web.pipe.IChainPipe;
 import com.bird.gateway.web.pipe.PipeChain;
 import com.bird.gateway.web.request.RequestDTO;
@@ -58,7 +58,7 @@ public class PrePipe implements IChainPipe {
      */
     @Override
     public Mono<Void> execute(final ServerWebExchange exchange, final PipeChain chain) {
-        RequestDTO request = exchange.getAttribute(Constants.REQUESTDTO);
+        RequestDTO request = exchange.getAttribute(GatewayConstant.REQUESTDTO);
         if (Objects.isNull(request) || StringUtils.isBlank(request.getPath())) {
             return jsonResult(exchange, JsonResult.error("请求路径不存在."));
         }
@@ -75,7 +75,7 @@ public class PrePipe implements IChainPipe {
             return jsonResult(exchange, JsonResult.error("api不存在或已被禁用."));
         }
 
-        exchange.getAttributes().put(Constants.ROUTE_DEFINITION, routeDefinition);
+        exchange.getAttributes().put(GatewayConstant.ROUTE_DEFINITION, routeDefinition);
         return chain.execute(exchange);
     }
 
