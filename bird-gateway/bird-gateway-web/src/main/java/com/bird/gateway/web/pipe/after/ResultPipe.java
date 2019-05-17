@@ -1,19 +1,18 @@
 package com.bird.gateway.web.pipe.after;
 
 import com.bird.gateway.common.GatewayConstant;
-import com.bird.gateway.common.enums.RpcTypeEnum;
 import com.bird.gateway.common.RouteDefinition;
+import com.bird.gateway.common.dto.JsonResult;
 import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
 import com.bird.gateway.common.enums.ResultEnum;
+import com.bird.gateway.common.enums.RpcTypeEnum;
 import com.bird.gateway.common.exception.GatewayException;
-import com.bird.gateway.common.dto.JsonResult;
 import com.bird.gateway.web.pipe.AbstractPipe;
 import com.bird.gateway.web.pipe.IChainPipe;
 import com.bird.gateway.web.pipe.PipeChain;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -49,7 +48,7 @@ public class ResultPipe extends AbstractPipe implements IChainPipe {
                     }
                 }else if(RpcTypeEnum.SPRING_CLOUD.getName().equals(rpcTypeEnum.getName())){
                     ClientResponse clientResponse = exchange.getAttribute(GatewayConstant.HTTP_RPC_RESULT);
-                    if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR || Objects.isNull(clientResponse)) {
+                    if (Objects.isNull(clientResponse)) {
                         return jsonResult(exchange,JsonResult.error(""));
                     }
 
