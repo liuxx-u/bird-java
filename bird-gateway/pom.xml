@@ -15,6 +15,7 @@
         <module>bird-gateway-common</module>
         <module>bird-gateway-registry-zookeeper</module>
         <module>bird-gateway-web</module>
+        <module>bird-gateway-registry-redis</module>
     </modules>
 
 </project>

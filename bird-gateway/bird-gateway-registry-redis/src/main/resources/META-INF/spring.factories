@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+  com.bird.gateway.registry.redis.configuration.RedisRegistryAutoConfiguration
