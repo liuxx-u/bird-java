@@ -166,7 +166,7 @@ public class DubboProxyService {
         ConsumerConfig consumerConfig = new ConsumerConfig();
         consumerConfig.setTimeout(timeout);
         consumerConfig.setRetries(0);
-        consumerConfig.setLoadbalance("leastactive");
+        consumerConfig.setLoadbalance(dubboHandle.getLoadBalance());
         consumerConfig.setCluster("failfast");
         consumerConfig.setFilter("consumerSession");
         return consumerConfig;
