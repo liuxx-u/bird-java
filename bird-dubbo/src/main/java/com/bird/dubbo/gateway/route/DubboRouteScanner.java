@@ -33,6 +33,8 @@ public class DubboRouteScanner implements IRouteScanner {
     private String registry;
     @Value("${dubbo.protocol.name:dubbo}")
     private String protocol;
+    @Value("${dubbo.consumer.loadbalance:leastactive}")
+    private String loadbalance;
 
     @Override
     public List<RouteDefinition> getRoutes(){
@@ -91,6 +93,7 @@ public class DubboRouteScanner implements IRouteScanner {
             handle.setAppName(this.application);
             handle.setRegistry(this.registry);
             handle.setProtocol(this.protocol);
+            handle.setLoadBalance(this.loadbalance);
             handle.setInterfaceName(interfaceClasses[0].getName());
             handle.setMethodName(method.getName());
             handle.setVersion(service.version());
