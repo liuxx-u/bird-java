@@ -52,7 +52,7 @@ public class DubboHandle extends HystrixHandle implements Serializable {
     private Integer timeout;
 
     /**
-     * {@linkplain com.bird.gateway.common.enums.LoadBalanceEnum}
+     * loadBalance
      */
     private String loadBalance;
 
