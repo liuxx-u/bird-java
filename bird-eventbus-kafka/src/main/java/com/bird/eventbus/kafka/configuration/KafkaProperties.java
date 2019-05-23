@@ -1,6 +1,6 @@
-package com.bird.service.boot.starter.eventbus.kafka;
+package com.bird.eventbus.kafka.configuration;
 
-import com.bird.service.boot.starter.eventbus.EventbusConstant;
+import com.bird.eventbus.EventbusConstant;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

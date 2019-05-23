@@ -1,5 +1,6 @@
-package com.bird.service.boot.starter.eventbus.kafka;
+package com.bird.eventbus.kafka.configuration;
 
+import com.bird.eventbus.EventBus;
 import com.bird.eventbus.arg.EventArg;
 import com.bird.eventbus.handler.EventDispatcher;
 import com.bird.eventbus.kafka.handler.EventArgDeserializer;
@@ -7,10 +8,11 @@ import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
 import com.bird.eventbus.kafka.register.EventArgSerializer;
 import com.bird.eventbus.kafka.register.KafkaRegister;
 import com.bird.eventbus.register.IEventRegister;
-import com.bird.service.boot.starter.eventbus.EventbusConstant;
+import com.bird.eventbus.EventbusConstant;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +37,12 @@ public class KafkaConfigurer {
 
     @Autowired
     private KafkaProperties kafkaProperties;
+
+    @Bean
+    @ConditionalOnMissingBean(EventBus.class)
+    public EventBus eventBus(){
+        return new EventBus();
+    }
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)

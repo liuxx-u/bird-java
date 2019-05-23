@@ -14,23 +14,13 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-service-common</artifactId>
-            <version>${bird.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-eventbus-kafka</artifactId>
-            <version>${bird.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-eventbus-rabbit</artifactId>
             <version>${bird.version}</version>
         </dependency>
 
