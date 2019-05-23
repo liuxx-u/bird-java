@@ -1,4 +1,4 @@
-package com.bird.service.boot.starter.eventbus.kafka;
+package com.bird.eventbus.kafka.configuration;
 
 import lombok.Getter;
 import lombok.Setter;

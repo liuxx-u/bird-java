@@ -23,6 +23,12 @@
             <version>${bird.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
         <!-- rabbit mq -->
         <dependency>
             <groupId>org.springframework.amqp</groupId>

@@ -1,4 +1,4 @@
-package com.bird.service.boot.starter.eventbus;
+package com.bird.eventbus;
 
 /**
  * @author liuxx

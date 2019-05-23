@@ -1,8 +1,8 @@
-package com.bird.service.boot.starter.eventbus.rabbit;
+package com.bird.eventbus.rabbit.configuration;
 
+import com.bird.eventbus.EventbusConstant;
 import lombok.Getter;
 import lombok.Setter;
-import com.bird.service.boot.starter.eventbus.EventbusConstant;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**

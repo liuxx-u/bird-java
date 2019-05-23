@@ -1,10 +1,11 @@
-package com.bird.service.boot.starter.eventbus.rabbit;
+package com.bird.eventbus.rabbit.configuration;
 
+import com.bird.eventbus.EventBus;
+import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.handler.EventDispatcher;
 import com.bird.eventbus.rabbit.handler.RabbitEventArgListener;
 import com.bird.eventbus.rabbit.register.RabbitRegister;
 import com.bird.eventbus.register.IEventRegister;
-import com.bird.service.boot.starter.eventbus.EventbusConstant;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -43,6 +45,12 @@ public class RabbitConfigurer {
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
+
+    @Bean
+    @ConditionalOnMissingBean(EventBus.class)
+    public EventBus eventBus(){
+        return new EventBus();
+    }
 
     @Bean
     public CachingConnectionFactory connectionFactory() {
