@@ -1,0 +1,69 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkDiscoveryProperties",
+      "name": "bird.gateway.discovery.zookeeper",
+      "type": "com.bird.gateway.registry.zookeeper.configuration.ZkDiscoveryProperties"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkRegistryProperties",
+      "name": "bird.gateway.registry.zookeeper",
+      "type": "com.bird.gateway.registry.zookeeper.configuration.ZkRegistryProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkDiscoveryProperties",
+      "defaultValue": 2000,
+      "name": "bird.gateway.discovery.zookeeper.connection-timeout",
+      "description": "zookeeper connection time out",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkDiscoveryProperties",
+      "name": "bird.gateway.discovery.zookeeper.serializer",
+      "description": "zookeeper serializer",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkDiscoveryProperties",
+      "defaultValue": 5000,
+      "name": "bird.gateway.discovery.zookeeper.session-timeout",
+      "description": "zookeeper session time out",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkDiscoveryProperties",
+      "name": "bird.gateway.discovery.zookeeper.url",
+      "description": "zookeeper url",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkRegistryProperties",
+      "defaultValue": 2000,
+      "name": "bird.gateway.registry.zookeeper.connection-timeout",
+      "description": "zookeeper connection time out",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkRegistryProperties",
+      "name": "bird.gateway.registry.zookeeper.serializer",
+      "description": "zookeeper serializer",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkRegistryProperties",
+      "defaultValue": 5000,
+      "name": "bird.gateway.registry.zookeeper.session-timeout",
+      "description": "zookeeper session time out",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.gateway.registry.zookeeper.configuration.ZkRegistryProperties",
+      "name": "bird.gateway.registry.zookeeper.url",
+      "description": "zookeeper url",
+      "type": "java.lang.String"
+    }
+  ]
+}

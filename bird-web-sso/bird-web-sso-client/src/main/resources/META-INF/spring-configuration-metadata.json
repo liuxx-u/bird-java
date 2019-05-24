@@ -1,0 +1,47 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "name": "bird.sso.client",
+      "type": "com.bird.web.sso.client.SsoClientProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "defaultValue": 30,
+      "name": "bird.sso.client.cache",
+      "description": "客户端票据缓存时间（单位：分），过期后重新去Server拉取用户信息",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "name": "bird.sso.client.cookie-name",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "name": "bird.sso.client.host",
+      "description": "客户端主机地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "name": "bird.sso.client.login-path",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "name": "bird.sso.client.server",
+      "description": "sso服务器地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "name": "bird.sso.client.webflux",
+      "description": "是否是webflux环境",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}

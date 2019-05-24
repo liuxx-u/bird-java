@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,14 +24,8 @@ import java.util.List;
  */
 @Configuration
 @ConditionalOnProperty(value = SsoConstant.CLIENT_COOKIE_NAME)
+@EnableConfigurationProperties(SsoClientProperties.class)
 public class SsoClientAutoConfiguration {
-
-
-    @Bean
-    @ConfigurationProperties(prefix = SsoConstant.PREFIX_CLIENT)
-    public SsoClientProperties clientProperties() {
-        return new SsoClientProperties();
-    }
 
     @Bean
     @ConditionalOnMissingBean

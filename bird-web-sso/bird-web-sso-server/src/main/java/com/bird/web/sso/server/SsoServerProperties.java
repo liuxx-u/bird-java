@@ -1,8 +1,10 @@
 package com.bird.web.sso.server;
 
+import com.bird.web.sso.SsoConstant;
 import com.bird.web.sso.SsoProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author liuxx
@@ -10,6 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ConfigurationProperties(prefix = SsoConstant.PREFIX_SERVER)
 public class SsoServerProperties extends SsoProperties {
 
     /**

@@ -8,7 +8,7 @@ public interface EventbusConstant {
     /**
      * eventbus 配置前缀
      */
-    String PREFIX = "eventbus";
+    String PREFIX = "bird.eventbus";
 
     interface Kafka {
         /**
