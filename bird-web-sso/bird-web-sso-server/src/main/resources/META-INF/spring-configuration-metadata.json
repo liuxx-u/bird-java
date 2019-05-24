@@ -1,0 +1,43 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bird.web.sso.server.SsoServerProperties",
+      "name": "bird.sso.server",
+      "type": "com.bird.web.sso.server.SsoServerProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bird.web.sso.server.SsoServerProperties",
+      "defaultValue": true,
+      "name": "bird.sso.server.auto-refresh",
+      "description": "是否自动刷新token，只在启用SessionStore后有效",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.bird.web.sso.server.SsoServerProperties",
+      "name": "bird.sso.server.cookie-name",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.web.sso.server.SsoServerProperties",
+      "defaultValue": 360,
+      "name": "bird.sso.server.expire",
+      "description": "过期时间（单位：分）",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.web.sso.server.SsoServerProperties",
+      "name": "bird.sso.server.login-path",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.web.sso.server.SsoServerProperties",
+      "defaultValue": true,
+      "name": "bird.sso.server.use-session-store",
+      "description": "是否启用SessionStore，默认启用",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}

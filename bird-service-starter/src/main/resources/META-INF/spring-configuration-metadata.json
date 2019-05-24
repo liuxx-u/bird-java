@@ -1,0 +1,17 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bird.service.boot.starter.permission.DataRuleProperties",
+      "name": "bird.datarule",
+      "type": "com.bird.service.boot.starter.permission.DataRuleProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bird.service.boot.starter.permission.DataRuleProperties",
+      "name": "bird.datarule.base-packages",
+      "type": "java.lang.String"
+    }
+  ]
+}

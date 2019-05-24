@@ -8,7 +8,7 @@ public interface DataRuleConstant {
     /**
      * datarule 配置前缀
      */
-    String PREFIX = "datarule";
+    String PREFIX = "bird.datarule";
 
     /**
      * 规则数据元扫描包路径

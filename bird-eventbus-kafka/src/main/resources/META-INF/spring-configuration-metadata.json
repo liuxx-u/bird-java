@@ -1,0 +1,62 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProperties",
+      "name": "bird.eventbus.kafka",
+      "type": "com.bird.eventbus.kafka.configuration.KafkaProperties"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProperties",
+      "name": "bird.eventbus.kafka.listener",
+      "type": "com.bird.eventbus.kafka.configuration.KafkaListenerProperties"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProperties",
+      "name": "bird.eventbus.kafka.provider",
+      "type": "com.bird.eventbus.kafka.configuration.KafkaProviderProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProperties",
+      "name": "bird.eventbus.kafka.host",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaListenerProperties",
+      "name": "bird.eventbus.kafka.listener.base-packages",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaListenerProperties",
+      "name": "bird.eventbus.kafka.listener.group-id",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProviderProperties",
+      "name": "bird.eventbus.kafka.provider.batch-size",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProviderProperties",
+      "name": "bird.eventbus.kafka.provider.buffer-memory",
+      "type": "java.lang.Long"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProviderProperties",
+      "name": "bird.eventbus.kafka.provider.default-topic",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProviderProperties",
+      "name": "bird.eventbus.kafka.provider.lingerms",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bird.eventbus.kafka.configuration.KafkaProviderProperties",
+      "name": "bird.eventbus.kafka.provider.retries",
+      "type": "java.lang.Integer"
+    }
+  ]
+}

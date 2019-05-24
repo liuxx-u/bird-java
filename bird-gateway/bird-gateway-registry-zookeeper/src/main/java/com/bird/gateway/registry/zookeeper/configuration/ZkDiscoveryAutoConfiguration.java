@@ -8,7 +8,7 @@ import com.bird.gateway.registry.zookeeper.serializer.ZkSerializerFactory;
 import org.I0Itec.zkclient.ZkClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,12 +18,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnProperty(value = "bird.gateway.discovery.zookeeper.url")
+@EnableConfigurationProperties(ZkDiscoveryProperties.class)
 public class ZkDiscoveryAutoConfiguration {
-    @Bean
-    @ConfigurationProperties(prefix = "bird.gateway.discovery.zookeeper")
-    public ZkRegistryProperties registryProperties() {
-        return new ZkRegistryProperties();
-    }
 
     @Bean
     @ConditionalOnMissingBean(ZkClient.class)

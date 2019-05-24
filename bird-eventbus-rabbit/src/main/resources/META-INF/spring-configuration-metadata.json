@@ -1,0 +1,38 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bird.eventbus.rabbit.configuration.RabbitProperties",
+      "name": "bird.eventbus.rabbit",
+      "type": "com.bird.eventbus.rabbit.configuration.RabbitProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bird.eventbus.rabbit.configuration.RabbitProperties",
+      "name": "bird.eventbus.rabbit.address",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.rabbit.configuration.RabbitProperties",
+      "name": "bird.eventbus.rabbit.listener-packages",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.rabbit.configuration.RabbitProperties",
+      "name": "bird.eventbus.rabbit.password",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.rabbit.configuration.RabbitProperties",
+      "name": "bird.eventbus.rabbit.user",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.eventbus.rabbit.configuration.RabbitProperties",
+      "defaultValue": "\/",
+      "name": "bird.eventbus.rabbit.virtual-host",
+      "type": "java.lang.String"
+    }
+  ]
+}

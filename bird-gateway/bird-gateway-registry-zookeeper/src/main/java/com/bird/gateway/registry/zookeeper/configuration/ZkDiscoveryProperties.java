@@ -6,12 +6,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author liuxx
- * @date 2019/5/10
+ * @date 2019/5/24
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "bird.gateway.registry.zookeeper")
-public class ZkRegistryProperties {
+@ConfigurationProperties(prefix = "bird.gateway.discovery.zookeeper")
+public class ZkDiscoveryProperties {
     /**
      * zookeeper url
      */
