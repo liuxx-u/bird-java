@@ -18,12 +18,12 @@ public interface SsoConstant {
     /**
      * sso 服务端Cookie名称
      */
-    String SERVER_COOKIE_NAME = PREFIX_SERVER+".cookieName";
+    String SERVER_COOKIE_NAME = PREFIX_SERVER+".cookie-name";
 
     /**
      * sso 服务端是否启用Session Store
      */
-    String SERVER_USE_SESSION_STORE = PREFIX_SERVER+".useSessionStore";
+    String SERVER_USE_SESSION_STORE = PREFIX_SERVER+".use-session-store";
 
 
     /**
@@ -34,7 +34,7 @@ public interface SsoConstant {
     /**
      * sso 客户端Cookie名称
      */
-    String CLIENT_COOKIE_NAME = PREFIX_CLIENT+".cookieName";
+    String CLIENT_COOKIE_NAME = PREFIX_CLIENT+".cookie-name";
 
     /**
      * sso 客户端是否webflux的配置
