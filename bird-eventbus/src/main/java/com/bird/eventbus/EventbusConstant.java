@@ -29,7 +29,7 @@ public interface EventbusConstant {
         /**
          * kafka 扫描消费者 路径
          */
-        String LISTENER_PACKAGES = PREFIX + ".listener.basePackages";
+        String LISTENER_PACKAGES = PREFIX + ".listener.base-packages";
     }
 
     interface Rabbit {
@@ -46,7 +46,7 @@ public interface EventbusConstant {
         /**
          * kafka 扫描消费者 路径
          */
-        String LISTENER_PACKAGES = PREFIX + ".listenerPackages";
+        String LISTENER_PACKAGES = PREFIX + ".listener-packages";
 
     }
 }
