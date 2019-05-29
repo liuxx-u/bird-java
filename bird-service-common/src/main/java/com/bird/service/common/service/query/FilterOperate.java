@@ -19,7 +19,7 @@ public interface FilterOperate {
     String GREATEROREQUAL = "greaterorequal";
 
     String STARTWITH = "startswith";
-    String ENDWITH = "endwith";
+    String ENDWITH = "endswith";
     String CONTAINS = "contains";
 
     String IN = "in";
