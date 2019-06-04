@@ -7,7 +7,6 @@ import com.bird.gateway.common.enums.PipeEnum;
 import com.bird.gateway.common.enums.PipeTypeEnum;
 import com.bird.gateway.common.enums.ResultEnum;
 import com.bird.gateway.common.enums.RpcTypeEnum;
-import com.bird.gateway.common.exception.GatewayException;
 import com.bird.gateway.web.pipe.AbstractPipe;
 import com.bird.gateway.web.pipe.IChainPipe;
 import com.bird.gateway.web.pipe.PipeChain;
@@ -33,26 +32,22 @@ public class ResultPipe extends AbstractPipe implements IChainPipe {
         return chain.execute(exchange).then(Mono.defer(() -> {
             ServerHttpResponse response = exchange.getResponse();
             final String resultType = exchange.getAttribute(GatewayConstant.RESPONSE_RESULT_TYPE);
-            if(StringUtils.equalsIgnoreCase(resultType,ResultEnum.ERROR.getName())){
+            RpcTypeEnum rpcTypeEnum = RpcTypeEnum.acquireByName(routeDefinition.getRpcType());
 
-            }else if(StringUtils.equalsIgnoreCase(resultType,ResultEnum.TIME_OUT.getName())){
+            if(RpcTypeEnum.SPRING_CLOUD.getName().equals(rpcTypeEnum.getName())){
+                ClientResponse clientResponse = exchange.getAttribute(GatewayConstant.HTTP_RPC_RESULT);
+                if (Objects.isNull(clientResponse)) {
+                    return jsonResult(exchange,JsonResult.error("服务端无响应."));
+                }
+                return response.writeWith(clientResponse.body(BodyExtractors.toDataBuffers()));
 
-            }else {
-                RpcTypeEnum rpcTypeEnum = RpcTypeEnum.acquireByName(routeDefinition.getRpcType());
-                if (RpcTypeEnum.DUBBO.getName().equals(rpcTypeEnum.getName())) {
-                    try {
-                        final Object result = exchange.getAttribute(GatewayConstant.DUBBO_RPC_RESULT);
-                        return jsonResult(exchange,JsonResult.success(result));
-                    }catch (GatewayException e){
-                        return jsonResult(exchange,JsonResult.success(null));
-                    }
-                }else if(RpcTypeEnum.SPRING_CLOUD.getName().equals(rpcTypeEnum.getName())){
-                    ClientResponse clientResponse = exchange.getAttribute(GatewayConstant.HTTP_RPC_RESULT);
-                    if (Objects.isNull(clientResponse)) {
-                        return jsonResult(exchange,JsonResult.error(""));
-                    }
-
-                    return response.writeWith(clientResponse.body(BodyExtractors.toDataBuffers()));
+            }else if(RpcTypeEnum.DUBBO.getName().equals(rpcTypeEnum.getName())){
+                if(StringUtils.equalsIgnoreCase(resultType,ResultEnum.SUCCESS.getName())){
+                    final Object result = exchange.getAttribute(GatewayConstant.DUBBO_RPC_RESULT);
+                    return jsonResult(exchange,JsonResult.success(result));
+                }else {
+                    final String message = exchange.getAttribute(GatewayConstant.DUBBO_ERROR_MESSAGE);
+                    return jsonResult(exchange,JsonResult.error(message));
                 }
             }
             return Mono.empty();

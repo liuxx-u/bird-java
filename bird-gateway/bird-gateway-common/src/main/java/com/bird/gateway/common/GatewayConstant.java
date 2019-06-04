@@ -31,6 +31,11 @@ public interface GatewayConstant {
     String DUBBO_RPC_RESULT = "dubbo_rpc_result";
 
     /**
+     * The constant DUBBO_ERROR_MESSAGE.
+     */
+    String DUBBO_ERROR_MESSAGE = "dubbo_error_message";
+
+    /**
      * The constant HTTP_RPC_RESULT.
      */
     String HTTP_RPC_RESULT = "http_rpc_result";
