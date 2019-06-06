@@ -21,11 +21,11 @@ public class RequestHelper {
      * X-Real-IP：nginx代理一般会加上此请求头
      *
      * @param request 请求
-     * @return
+     * @return ip
      */
     public static String getRealIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if (isEffectiveIp(ip) && ip.indexOf(",") > -1) {
+        if (isEffectiveIp(ip) && ip.contains(",")) {
             String[] array = ip.split(",");
             for (String str : array) {
                 if (isEffectiveIp(str)) {
@@ -58,28 +58,23 @@ public class RequestHelper {
     /**
      * 是否是有效的ip地址
      * @param ip ip地址
-     * @return
+     * @return is effective
      */
     private static boolean isEffectiveIp(String ip) {
-        if (StringUtils.isBlank(ip) || WebConstant.UNKNOWN_IP.equals(ip)) return false;
-
-        return true;
+        return !StringUtils.isBlank(ip) && !WebConstant.UNKNOWN_IP.equals(ip);
     }
 
     /**
      * 是否是Multipart请求
      * @param request 请求
-     * @return
+     * @return is multipart
      */
     public static boolean isMultipartContent(HttpServletRequest request) {
         String contentType = request.getContentType();
         if (contentType == null) {
             return false;
         }
-        if (contentType.toLowerCase(Locale.ENGLISH).startsWith(WebConstant.MULTIPART)) {
-            return true;
-        }
-        return false;
+        return contentType.toLowerCase(Locale.ENGLISH).startsWith(WebConstant.MULTIPART);
     }
 
 }

@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
  *
  * Servlet Session解析器
  */
-public interface IServletSessionResolvor {
+public interface IServletSessionResolver {
 
     /**
      * 从HttpServletRequest中解析Session
-     * @param request
-     * @return
+     * @param request request
+     * @return session
      */
     BirdSession resolve(HttpServletRequest request);
 }

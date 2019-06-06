@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2018/7/23
  */
 public class IdempotencyInterceptor extends HandlerInterceptorAdapter {
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${bird.web.idempotency.header:bird-idempotency}")
     private String headerName;
@@ -35,14 +35,14 @@ public class IdempotencyInterceptor extends HandlerInterceptorAdapter {
 
         String token = request.getHeader(this.headerName);
         if (StringUtils.isBlank(token)) {
-            logger.warn("幂等性接口：" + request.getRequestURI() + "，请求头中token为空.");
-            if(idempotency.force()){
-                response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,"该操作已失效，请刷新后重试");
+            logger.warn("幂等性接口：{}，请求头中token为空.", request.getRequestURI());
+            if (idempotency.force()) {
+                response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已失效，请刷新后重试");
             }
             return true;
         }
         if (!CacheHelper.getCache().del(WebConstant.Cache.IDEMPOTENCY_NAMESPACE + token)) {
-            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,"该操作已提交");
+            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已提交");
         }
 
         return true;
