@@ -31,7 +31,7 @@ public abstract class AbstractController {
 
     /**
      * 从线程中获取当前登录用户的票据信息
-     * @return
+     * @return session
      */
     protected BirdSession getSession(){
         return SessionContext.getSession();

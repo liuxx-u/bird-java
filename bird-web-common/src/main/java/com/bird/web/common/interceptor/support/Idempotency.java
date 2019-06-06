@@ -17,7 +17,7 @@ public @interface Idempotency {
 
     /**
      * 是否强制验证请求头
-     * @return
+     * @return true or false
      */
     boolean force() default false;
 }

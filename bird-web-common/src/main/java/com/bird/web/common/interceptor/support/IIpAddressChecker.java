@@ -11,7 +11,7 @@ public interface IIpAddressChecker {
     /**
      * 检查
      * @param ip ip地址
-     * @return
+     * @return true or false
      */
     boolean check(String ip);
 }

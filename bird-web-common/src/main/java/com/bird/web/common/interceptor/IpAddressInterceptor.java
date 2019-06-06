@@ -20,7 +20,7 @@ public class IpAddressInterceptor extends HandlerInterceptorAdapter {
     private IIpAddressChecker ipChecker;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (!(handler instanceof HandlerMethod)) return true;
 
         if (ipChecker == null) return true;
