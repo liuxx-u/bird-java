@@ -16,6 +16,7 @@ public class AuditMetaObjectHandler extends MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         setFieldValByName("delFlag", false, metaObject);
         setFieldValByName("createTime", new Date(), metaObject);
+        setFieldValByName("modifiedTime", new Date(), metaObject);
     }
 
     @Override
