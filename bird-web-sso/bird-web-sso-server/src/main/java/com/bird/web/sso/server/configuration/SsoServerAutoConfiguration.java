@@ -51,12 +51,15 @@ public class SsoServerAutoConfiguration {
     }
 
     @Bean
-    public SsoServer ssoServer(SsoServerProperties serverProperties) {
-        if (serverProperties.getUseSessionStore()) {
-            return new SsoServer(serverProperties, clientStore(serverProperties), ticketSessionStore(serverProperties));
-        } else {
-            return new SsoServer(serverProperties, clientStore(serverProperties), ticketProtector());
-        }
+    @ConditionalOnProperty(value = SsoConstant.SERVER_USE_SESSION_STORE, havingValue = "true", matchIfMissing = true)
+    public SsoServer ssoServer(SsoServerProperties serverProperties,IClientStore clientStore,ITicketSessionStore ticketSessionStore) {
+        return new SsoServer(serverProperties, clientStore, ticketSessionStore);
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = SsoConstant.SERVER_USE_SESSION_STORE, havingValue = "false")
+    public SsoServer ssoServer(SsoServerProperties serverProperties,IClientStore clientStore,ITicketProtector ticketProtector) {
+        return new SsoServer(serverProperties, clientStore, ticketProtector);
     }
 
     @Bean
