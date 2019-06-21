@@ -1,1 +1,1 @@
-mvn clean compile deploy -P release -DskipTests
+mvn clean compile deploy -DskipTests
