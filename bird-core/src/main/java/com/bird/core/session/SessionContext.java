@@ -45,7 +45,11 @@ public class SessionContext {
         Serializable uid = getUid();
         if (uid == null) return 0L;
         if (StringUtils.isBlank(uid.toString())) return 0L;
-        return Long.valueOf(uid.toString());
+        try {
+            return Long.valueOf(uid.toString());
+        } catch (NumberFormatException ex) {
+            return 0L;
+        }
     }
 
     /**
