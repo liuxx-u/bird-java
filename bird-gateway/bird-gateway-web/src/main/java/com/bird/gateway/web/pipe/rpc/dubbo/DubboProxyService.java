@@ -60,7 +60,7 @@ public class DubboProxyService {
             referenceConfigCache.destroy(reference);
 
             log.error(dubboHandle.getInterfaceName() + "服务连接失败");
-            throw new GatewayException(ex.getMessage());
+            throw new GatewayException(ex);
         }
 
         final Map<String, Object> paramMap = resolveParam(exchange);
