@@ -1,5 +1,7 @@
 package com.bird.web.sso.client.permission;
 
+import java.util.List;
+
 /**
  * @author liuxx
  * @date 2019/3/6
@@ -14,5 +16,5 @@ public interface IUserPermissionChecker {
      * @param checkAll    是否满足全部
      * @return true or false
      */
-    boolean hasPermissions(String userId, String[] permissions, boolean checkAll);
+    boolean hasPermissions(String userId, List<String> permissions, boolean checkAll);
 }
