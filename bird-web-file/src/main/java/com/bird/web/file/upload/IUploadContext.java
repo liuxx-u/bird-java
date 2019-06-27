@@ -21,6 +21,12 @@ public interface IUploadContext {
     long getContentLength();
 
     /**
+     * 获取 schema
+     * @return schema
+     */
+    String getSchema();
+
+    /**
      * 获取 header
      * @param name 名称
      * @return

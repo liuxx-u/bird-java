@@ -47,6 +47,20 @@ public class ServletBase64UploadContext implements IUploadContext {
     }
 
     /**
+     * 获取 schema
+     *
+     * @return schema
+     */
+    @Override
+    public String getSchema() {
+        String schma = request.getHeader("x-forwarded-proto");
+        if(StringUtils.isBlank(schma)){
+            schma = request.getScheme();
+        }
+        return schma;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

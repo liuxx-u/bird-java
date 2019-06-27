@@ -44,12 +44,12 @@ public class SimpleDiskFileStorage implements IFileStorage {
      * @return 上传成功后的URL地址
      */
     @Override
-    public String save(MultipartFile file,byte[] bytes, IUploadContext context) throws UploadException, IOException {
+    public String save(MultipartFile file, byte[] bytes, IUploadContext context) throws UploadException, IOException {
         if (StringUtils.isBlank(this.dir)) {
             throw new UploadException("文件保存路径不存在");
         }
         if (StringUtils.isBlank(urlPrefix)) {
-            urlPrefix = String.format("http://%s/", context.getHeader(HttpHeaders.HOST));
+            urlPrefix = String.format("%s://%s/", context.getSchema(), context.getHeader(HttpHeaders.HOST));
         }
 
         String newFileName = getNewFileName(file, context);
@@ -79,7 +79,7 @@ public class SimpleDiskFileStorage implements IFileStorage {
     /**
      * 获取附加的路径
      *
-     * @param file 文件
+     * @param file    文件
      * @param context 上下文信息
      * @return
      */
@@ -89,11 +89,12 @@ public class SimpleDiskFileStorage implements IFileStorage {
 
     /**
      * 获取保存的文件的名称
-     * @param file 文件
+     *
+     * @param file    文件
      * @param context 上下文信息
      * @return
      */
-    protected String getNewFileName(MultipartFile file,IUploadContext context){
+    protected String getNewFileName(MultipartFile file, IUploadContext context) {
 
         String fileName = file.getOriginalFilename();
         return String.format("%s_%d.%s"
