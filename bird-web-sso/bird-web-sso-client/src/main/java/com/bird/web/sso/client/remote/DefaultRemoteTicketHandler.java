@@ -44,7 +44,7 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
     public TicketInfo getTicket(String token) {
         if (StringUtils.isBlank(token)) return null;
 
-        Integer retryCount = 3;
+        int retryCount = 3;
         String url = clientProperties.getServer() + GET_TICKET_URL + "?token=" + token + "&clientHost=" + clientProperties.getHost();
         List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch");
 
@@ -84,7 +84,7 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
     public Boolean refreshTicket(String token, TicketInfo ticketInfo) {
         if (StringUtils.isBlank(token) || ticketInfo == null) return false;
 
-        Integer retryCount = 3;
+        int retryCount = 3;
         String url = clientProperties.getServer() + REFRESH_TICKET_URL + "?token=" + token;
 
         int resCode = 0;
