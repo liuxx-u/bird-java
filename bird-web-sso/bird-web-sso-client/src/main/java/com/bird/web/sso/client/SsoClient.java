@@ -86,9 +86,8 @@ public class SsoClient {
     public void refreshTicket(String token, TicketInfo ticketInfo) {
         if (StringUtils.isBlank(token)) return;
 
-        TicketInfo originTicket = this.getTicket(token);
-        if (originTicket == null || !StringUtils.equals(ticketInfo.getUserId(), originTicket.getUserId())) {
-            log.error("刷新的票据与当前票据userId不一致，token:" + token);
+        if (ticketInfo == null) {
+            log.warn("刷新的票据为null，token:" + token);
             return;
         }
         if (!ticketHandler.refreshTicket(token, ticketInfo)) {
