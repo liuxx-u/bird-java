@@ -72,7 +72,7 @@ public class SpringCloudPipe extends AbstractPipe {
         httpHandle.setGroupKey(routeDefinition.getModule());
         httpHandle.setCommandKey(routeDefinition.getPath());
         httpHandle.setUrl(uri.toString());
-        httpHandle.setTimeout(30000);
+        httpHandle.setTimeout(180000);
         return httpHandle;
     }
 
