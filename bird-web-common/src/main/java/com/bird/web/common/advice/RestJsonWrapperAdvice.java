@@ -1,6 +1,7 @@
 package com.bird.web.common.advice;
 
 import com.bird.core.OperationResult;
+import com.bird.core.session.SessionContext;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +37,9 @@ public class RestJsonWrapperAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object value, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> converter, ServerHttpRequest request, ServerHttpResponse response) {
+        //返回结果时移除当前线程中的session数据
+        SessionContext.removeSession();
+
         HttpHeaders headers = request.getHeaders();
         if(ArrayUtils.contains(INNER_CALL_HEADER,headers.getFirst("call"))){
             return value;
