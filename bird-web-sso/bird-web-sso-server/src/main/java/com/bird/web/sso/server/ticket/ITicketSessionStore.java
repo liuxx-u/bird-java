@@ -9,6 +9,9 @@ import com.bird.web.sso.ticket.TicketInfo;
  * @date 2019/3/1
  */
 public interface ITicketSessionStore {
+
+    String TOKEN_CLAIM_KEY = "token";
+
     /**
      * 存储票据信息，并返回该票据的Key
      * @param ticketInfo 票据信息

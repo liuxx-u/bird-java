@@ -17,14 +17,15 @@ public class CacheTicketSessionStore implements ITicketSessionStore {
 
     private Cache<String, TicketInfo> cache;
 
-    public CacheTicketSessionStore(Integer expire){
+    public CacheTicketSessionStore(Integer expire) {
         cache = CacheBuilder.newBuilder().expireAfterWrite(expire, TimeUnit.MINUTES).build();
     }
 
     @Override
     public String storeTicket(TicketInfo ticketInfo) {
         String key = UUID.randomUUID().toString();
-        cache.put(key,ticketInfo);
+        ticketInfo.setClaim(TOKEN_CLAIM_KEY, key);
+        cache.put(key, ticketInfo);
         return key;
     }
 
@@ -39,6 +40,7 @@ public class CacheTicketSessionStore implements ITicketSessionStore {
 
         Date expireDate = new Date(System.currentTimeMillis() + expire);
         ticketInfo.setExpireTime(expireDate);
+        ticketInfo.setClaim(TOKEN_CLAIM_KEY, key);
 
         cache.put(key, ticketInfo);
         return ticketInfo;
