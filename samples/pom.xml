@@ -12,9 +12,6 @@
     <artifactId>samples</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>bird-service-cms</module>
-        <module>bird-service-zero</module>
-        <module>bird-web-api</module>
-        <module>bird-gateway-bootstrap</module>
+
     </modules>
 </project>
