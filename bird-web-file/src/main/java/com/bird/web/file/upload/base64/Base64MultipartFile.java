@@ -1,6 +1,7 @@
 package com.bird.web.file.upload.base64;
 
 import com.bird.core.utils.DateHelper;
+import com.bird.core.utils.FileHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class Base64MultipartFile implements MultipartFile {
     /**
      * 日志记录器
      */
-    private static Logger LOGGER = LoggerFactory.getLogger(Base64MultipartFile.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(Base64MultipartFile.class);
 
     /**
      * base64文件头
@@ -66,10 +67,10 @@ public class Base64MultipartFile implements MultipartFile {
 
         String suffix = DEFAULT_SUFFIX;
         if (StringUtils.isNotBlank(this.header)) {
-            if (this.header.indexOf(SUFFIX_DELIMITER) > 0) {
-                suffix = this.header.split(SUFFIX_DELIMITER)[1].split(";")[0];
+            if (this.header.contains(SUFFIX_DELIMITER)) {
+                suffix = FileHelper.getSuffix(this.header.split(SUFFIX_DELIMITER)[1].split(";")[0]);
             }
-            if (this.header.indexOf(CONTENT_TYPE_DELIMITER) > 0) {
+            if (this.header.contains(CONTENT_TYPE_DELIMITER)) {
                 this.contentType = this.header.split(CONTENT_TYPE_DELIMITER)[1].split(";")[0];
             }
         }
@@ -86,7 +87,7 @@ public class Base64MultipartFile implements MultipartFile {
      * @return
      */
     public static Base64MultipartFile init(String base64) {
-        if (StringUtils.isBlank(base64) || base64.indexOf(DELIMITER) < 0) {
+        if (StringUtils.isBlank(base64) || !base64.contains(DELIMITER)) {
             LOGGER.warn("base64字符串格式错误");
             return null;
         }
@@ -141,7 +142,9 @@ public class Base64MultipartFile implements MultipartFile {
     }
 
     @Override
-    public void transferTo(File file) throws IOException, IllegalStateException {
-        new FileOutputStream(file).write(content);
+    public void transferTo(File file) throws IOException {
+        try (FileOutputStream stream = new FileOutputStream(file)){
+            stream.write(content);
+        }
     }
 }
