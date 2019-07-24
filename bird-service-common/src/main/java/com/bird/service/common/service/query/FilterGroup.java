@@ -32,12 +32,12 @@ public class FilterGroup implements Serializable {
     }
 
     public void and(List<FilterGroup> groups){
-        this.operate = FilterOperate.AND;
+        this.operate = FilterOperate.AND.getValue();
         this.groups = groups;
     }
 
     public void or(List<FilterGroup> groups){
-        this.operate = FilterOperate.OR;
+        this.operate = FilterOperate.OR.getValue();
         this.groups = groups;
     }
 }
