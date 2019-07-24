@@ -26,6 +26,6 @@ public class FilterRule implements Serializable {
     }
 
     public FilterRule(String key,String value) {
-        this(key, FilterOperate.EQUAL, value);
+        this(key, FilterOperate.EQUAL.getValue(), value);
     }
 }
