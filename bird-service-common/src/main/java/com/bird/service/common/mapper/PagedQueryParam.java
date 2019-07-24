@@ -1,7 +1,7 @@
 package com.bird.service.common.mapper;
 
-import com.bird.core.session.BirdSession;
 import com.bird.core.session.SessionContext;
+import com.bird.core.utils.NumberHelper;
 import com.bird.core.utils.SpringContextHolder;
 import com.bird.service.common.mapper.permission.IDataRuleProvider;
 import com.bird.service.common.mapper.permission.IDataRuleStore;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -102,9 +101,8 @@ public class PagedQueryParam implements Serializable {
         try {
             IDataRuleStore store = SpringContextHolder.getBean(IDataRuleStore.class);
 
-            BirdSession session = SessionContext.getSession();
-            if (session != null && session.getUserId() != null) {
-                Long userId = Long.parseLong(session.getUserId().toString());
+            Long userId = SessionContext.getUserId();
+            if (NumberHelper.isPositive(userId)) {
                 this.filterGroup = store.get(userId, tables);
             } else {
                 logger.error("当前用户未登录");
