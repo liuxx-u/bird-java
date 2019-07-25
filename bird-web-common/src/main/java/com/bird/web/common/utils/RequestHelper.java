@@ -2,7 +2,16 @@ package com.bird.web.common.utils;
 
 import com.bird.web.common.WebConstant;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 /**
@@ -11,10 +20,12 @@ import java.util.Locale;
  */
 public class RequestHelper {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(RequestHelper.class);
+
     /**
      * 获取请求的真实ip地址
      * 请求头可能出现伪造的情况，该方法不能保证获取到的ip是真实的客户机ip
-     *
+     * <p>
      * X-Forwarded-For：格式为X-Forwarded-For: client1, proxy1, proxy2，一般情况下，第一个ip为客户端真实ip，后面的为经过的代理服务器ip。
      * Proxy-Client-IP/WL- Proxy-Client-IP：用apache http做代理时一般会加上Proxy-Client-IP请求头，而WL- Proxy-Client-IP是他的weblogic插件加上的头
      * HTTP_CLIENT_IP：有些代理服务器会加上此请求头
@@ -57,6 +68,7 @@ public class RequestHelper {
 
     /**
      * 是否是有效的ip地址
+     *
      * @param ip ip地址
      * @return is effective
      */
@@ -66,6 +78,7 @@ public class RequestHelper {
 
     /**
      * 是否是Multipart请求
+     *
      * @param request 请求
      * @return is multipart
      */
@@ -77,4 +90,26 @@ public class RequestHelper {
         return contentType.toLowerCase(Locale.ENGLISH).startsWith(WebConstant.MULTIPART);
     }
 
+    /**
+     * 获取请求Body
+     *
+     * @param request 请求
+     * @return string
+     */
+    public static String getBodyString(ServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+
+        try (
+                InputStream inputStream = request.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")))
+        ) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return sb.toString();
+    }
 }
