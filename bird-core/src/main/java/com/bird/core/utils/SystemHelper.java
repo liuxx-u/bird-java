@@ -1,7 +1,6 @@
 package com.bird.core.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -15,7 +14,7 @@ import java.util.List;
  * @date 2019/5/17
  */
 @Slf4j
-public class SystemHelper {
+public final class SystemHelper {
 
     public static List<String> getLocalIps() {
         List<String> ips = new ArrayList<>();

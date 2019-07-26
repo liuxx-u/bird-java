@@ -13,18 +13,18 @@ public final class NumberHelper extends NumberUtils {
     /**
      * 是否是正数
      * @param number 数字
-     * @return
+     * @return number is positive
      */
-    public static final boolean isPositive(Number number) {
+    public static boolean isPositive(Number number) {
         return greaterThan(number, 0);
     }
 
     /**
      * 是否不是正数
      * @param number 数字
-     * @return
+     * @return number is not positive
      */
-    public static final boolean isNotPositive(Number number){
+    public static boolean isNotPositive(Number number){
         return !isPositive(number);
     }
 
@@ -33,9 +33,9 @@ public final class NumberHelper extends NumberUtils {
      *
      * @param number 数字
      * @param target 目标值
-     * @return
+     * @return number is greater than target number
      */
-    public static final boolean greaterThan(Number number, Number target) {
+    public static boolean greaterThan(Number number, Number target) {
         if (number == null) return false;
         return number.doubleValue() > target.doubleValue();
     }
@@ -45,9 +45,9 @@ public final class NumberHelper extends NumberUtils {
      *
      * @param number 数字
      * @param target 目标值
-     * @return
+     * @return number is less than target number
      */
-    public static final boolean lessThan(Number number, Number target) {
+    public static boolean lessThan(Number number, Number target) {
         if (number == null) return false;
         return number.doubleValue() < target.doubleValue();
     }
@@ -55,10 +55,10 @@ public final class NumberHelper extends NumberUtils {
     /**
      * 获取BigDecimal,value为null时,返回BigDecimal.ZERO
      *
-     * @param value
-     * @return
+     * @param value value
+     * @return value or 0
      */
-    public static final BigDecimal getSafety(BigDecimal value) {
+    public static BigDecimal getSafety(BigDecimal value) {
         if (value == null) {
             return BigDecimal.ZERO;
         }
@@ -68,10 +68,10 @@ public final class NumberHelper extends NumberUtils {
     /**
      * 获取Integer,value为null时，返回0
      *
-     * @param value
-     * @return
+     * @param value value
+     * @return value or 0
      */
-    public static final Integer getSafety(Integer value){
+    public static Integer getSafety(Integer value){
         if(value == null){
             return 0;
         }
@@ -81,10 +81,10 @@ public final class NumberHelper extends NumberUtils {
     /**
      * 获取Long,value为null时，返回0
      *
-     * @param value
-     * @return
+     * @param value value
+     * @return value or 0
      */
-    public static final Long getSafety(Long value){
+    public static Long getSafety(Long value){
         if(value == null){
             return 0L;
         }

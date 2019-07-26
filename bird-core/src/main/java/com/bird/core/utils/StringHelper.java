@@ -62,7 +62,7 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkDigit(String digit) {
-        String regex = "\\-?[1-9]\\d+";
+        String regex = "-?[1-9]\\d+";
         return Pattern.matches(regex,digit);
     }
 
@@ -72,7 +72,7 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkDecimals(String decimals) {
-        String regex = "\\-?[1-9]\\d+(\\.\\d+)?";
+        String regex = "-?[1-9]\\d+(\\.\\d+)?";
         return Pattern.matches(regex,decimals);
     }
 
@@ -198,7 +198,7 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
         int rightIndex = str.length() - right;
         if (rightIndex < 0) rightIndex = 0;
 
-        return str.substring(0, leftIndex) + "****" + str.substring(rightIndex, str.length());
+        return str.substring(0, leftIndex) + "****" + str.substring(rightIndex);
 
     }
 }

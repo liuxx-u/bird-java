@@ -3,7 +3,6 @@ package com.bird.core.utils;
 import com.bird.core.Position;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;

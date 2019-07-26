@@ -88,14 +88,7 @@ public final class OkHttpHelper {
      * @return 结果字符串
      */
     public static String get(String url, Map<String, String> headers) {
-
-        Request.Builder builder = new Request.Builder().url(url);
-        if (MapUtils.isNotEmpty(headers)) {
-            for (Map.Entry<String, String> header : headers.entrySet()) {
-                builder.header(header.getKey(), header.getValue());
-            }
-        }
-
+        Request.Builder builder = getBuilder(url,headers);
         Request request = builder.build();
         return request(request);
     }
@@ -122,13 +115,7 @@ public final class OkHttpHelper {
      * @param callback 回调方法
      */
     public static void getAsync(String url, Map<String, String> headers, Callback callback) {
-        Request.Builder builder = new Request.Builder().url(url);
-        if (MapUtils.isNotEmpty(headers)) {
-            for (Map.Entry<String, String> header : headers.entrySet()) {
-                builder.header(header.getKey(), header.getValue());
-            }
-        }
-
+        Request.Builder builder = getBuilder(url,headers);
         Request request = builder.build();
         requestAsync(request, callback);
     }
@@ -183,12 +170,7 @@ public final class OkHttpHelper {
      * @return 结果字符串
      */
     public static String post(String url, Map<String, String> headers, RequestBody body) {
-        Request.Builder builder = new Request.Builder().url(url);
-        if (MapUtils.isNotEmpty(headers)) {
-            for (Map.Entry<String, String> header : headers.entrySet()) {
-                builder.header(header.getKey(), header.getValue());
-            }
-        }
+        Request.Builder builder = getBuilder(url,headers);
         Request request = builder.post(body).build();
         return request(request);
     }
@@ -217,13 +199,25 @@ public final class OkHttpHelper {
      * @param callback 回调方法
      */
     public static void postAsync(String url, Map<String, String> headers, RequestBody body, Callback callback) {
+        Request.Builder builder = getBuilder(url,headers);
+        Request request = builder.post(body).build();
+        requestAsync(request, callback);
+    }
+
+    /**
+     * 根据url与headers获取Request.Builder
+     * @param url url
+     * @param headers headers
+     * @return Request.Builder
+     */
+    private static Request.Builder getBuilder(String url,Map<String, String> headers){
         Request.Builder builder = new Request.Builder().url(url);
         if (MapUtils.isNotEmpty(headers)) {
             for (Map.Entry<String, String> header : headers.entrySet()) {
                 builder.header(header.getKey(), header.getValue());
             }
         }
-        Request request = builder.post(body).build();
-        requestAsync(request, callback);
+
+        return builder;
     }
 }
