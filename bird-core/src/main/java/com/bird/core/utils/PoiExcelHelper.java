@@ -4,10 +4,10 @@ import com.bird.core.exception.UserFriendlyException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -24,7 +24,9 @@ import java.util.*;
  */
 public class PoiExcelHelper {
 
-    private static DecimalFormat DECIMAL_FORMATE = new DecimalFormat("0");
+    private static Logger logger = LoggerFactory.getLogger(OkHttpHelper.class);
+
+    private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0");
 
     /**
      * 读取本地EXCEL文件
@@ -59,18 +61,12 @@ public class PoiExcelHelper {
      * @return excel数据
      */
     public static List<Map<String, Object>> read(String path, Map<String, String> config, Integer sheetIndex, Integer headerIndex) throws IOException {
-        InputStream stream = null;
-        List<Map<String, Object>> result = new ArrayList<>();
 
-        try {
-            stream = new FileInputStream(path);
+        List<Map<String, Object>> result = new ArrayList<>();
+        try (InputStream stream = new FileInputStream(path)) {
             result = read(stream, config, sheetIndex, headerIndex);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            if (stream != null) {
-                stream.close();
-            }
+            logger.error("文件不存在", e);
         }
         return result;
     }
@@ -108,23 +104,18 @@ public class PoiExcelHelper {
      * @return excel数据
      */
     public static List<Map<String, Object>> readUrl(String uri, Map<String, String> config, Integer sheetIndex, Integer headerIndex) throws IOException {
-        InputStream stream = null;
+        URL url = new URL(uri);
+        URLConnection conn = url.openConnection();
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(10 * 60 * 1000);
+
         List<Map<String, Object>> result = new ArrayList<>();
 
-        try {
-            URL url = new URL(uri);
-            URLConnection conn = url.openConnection();
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10 * 60 * 1000);
-            stream = conn.getInputStream();
+        try(InputStream stream = conn.getInputStream()) {
 
             result = read(stream, config, sheetIndex, headerIndex);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } finally {
-            if (stream != null) {
-                stream.close();
-            }
+            logger.error("文件获取失败", e);
         }
         return result;
     }
@@ -141,14 +132,13 @@ public class PoiExcelHelper {
     public static List<Map<String, Object>> read(InputStream stream, Map<String, String> config, Integer sheetIndex, Integer headerIndex) {
         List<Map<String, Object>> result = new ArrayList<>();
 
-        try {
-            Workbook wb = WorkbookFactory.create(stream);
+        try (Workbook wb = WorkbookFactory.create(stream)) {
             FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
             Sheet sheet = wb.getSheetAt(sheetIndex);
-            if (sheet == null) return null;
+            if (sheet == null) return result;
 
             List<String> headKeys = getHeadKeys(sheet, config, headerIndex);
-            if (CollectionUtils.isEmpty(headKeys)) return null;
+            if (CollectionUtils.isEmpty(headKeys)) return result;
 
             int max = sheet.getLastRowNum();
             for (int i = headerIndex + 1; i <= max; i++) {
@@ -156,9 +146,8 @@ public class PoiExcelHelper {
                 if (line == null) continue;
                 result.add(line);
             }
-            wb.close();
         } catch (InvalidFormatException | IOException e) {
-            e.printStackTrace();
+            logger.error("Excel流读取失败", e);
         }
 
         return result;
@@ -178,8 +167,7 @@ public class PoiExcelHelper {
         if (CollectionUtils.isEmpty(list)) {
             throw new UserFriendlyException("数据源中没有任何数据");
         }
-        Workbook wb = new HSSFWorkbook();
-        try {
+        try(Workbook wb = new HSSFWorkbook()) {
             //因为2003的Excel一个工作表最多可以有65536条记录，除去列头剩下65535条
             //所以如果记录太多，需要放到多个工作表中，其实就是个分页的过程
             //1.计算一共有多少个工作表
@@ -202,7 +190,7 @@ public class PoiExcelHelper {
 
             wb.write(out);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Excel流写入失败", e);
         }
     }
 
@@ -218,7 +206,7 @@ public class PoiExcelHelper {
         ArrayList<String> headKeys = new ArrayList<>();
 
         Row headRow = sheet.getRow(headerIndex);
-        if (headRow == null) return null;
+        if (headRow == null) return headKeys;
 
         short max = headRow.getLastCellNum();
         for (short i = headRow.getFirstCellNum(); i < max; i++) {
@@ -274,7 +262,7 @@ public class PoiExcelHelper {
             }
 
             if (value != null && Objects.equals(value.getClass().getName(), "java.lang.Double") && StringUtils.indexOf(value.toString(), "E") >= 0) {
-                value = DECIMAL_FORMATE.format(value);
+                value = DECIMAL_FORMAT.format(value);
             }
             line.put(key, value);
         }
