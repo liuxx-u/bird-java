@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -28,6 +25,9 @@ public class EventDispatcher {
 
     @Autowired(required = false)
     private IEventHandlerStore handlerStore;
+
+    @Autowired(required = false)
+    private Collection<IEventHandlerInterceptor> interceptors;
 
     @Value("${spring.application.name:}")
     private String application;
@@ -43,7 +43,7 @@ public class EventDispatcher {
     /**
      * topic与处理方法映射关系
      */
-    private static ConcurrentMap<String, Set<Method>> EVENT_HANDLER_CONTAINER = new ConcurrentHashMap<>();
+    private final static ConcurrentMap<String, Set<Method>> EVENT_HANDLER_CONTAINER = new ConcurrentHashMap<>();
 
     public EventDispatcher() {
         ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
@@ -121,16 +121,16 @@ public class EventDispatcher {
 
     /**
      * 获取当前程序所有事件的名称
+     * 如果开启EventBus，且未处理任何的事件，返回默认topics
      *
      * @return 事件名称集合
      */
     public String[] getAllTopics() {
         Set<String> keys = EVENT_HANDLER_CONTAINER.keySet();
-        //如果开启EventBus，且未处理任何的事件，返回默认topics;
-        if (keys.size() == 0) {
+        if (CollectionUtils.isEmpty(keys)) {
             return new String[]{"none-topic"};
         }
-        return keys.toArray(new String[keys.size()]);
+        return keys.toArray(new String[0]);
     }
 
     /**
@@ -151,14 +151,14 @@ public class EventDispatcher {
                 EventHandleResult handleResult = new EventHandleResult(eventArg);
                 handleResult.setGroup(application);
                 EventHandleStatusEnum status = EventHandleStatusEnum.FAIL;
-                Integer span = 24 * 60 * 60 * 1000;
+                int span = 24 * 60 * 60 * 1000;
                 if (System.currentTimeMillis() - eventArg.getEventTime().getTime() > span) {
                     status = EventHandleStatusEnum.TIMEOUT;
                 } else {
                     String eventKey = eventArg.getClass().getName();
                     Set<Method> methods = EVENT_HANDLER_CONTAINER.getOrDefault(eventKey, null);
                     if (CollectionUtils.isNotEmpty(methods)) {
-                        Integer successCount = 0;
+                        int successCount = 0;
                         for (Method method : methods) {
                             EventHandleResult.ConsumerResult itemResult = this.invokeMethod(method, eventArg, handleResult);
                             handleResult.addItem(itemResult);
@@ -197,13 +197,22 @@ public class EventDispatcher {
             Class typeClass = method.getDeclaringClass();
             try {
                 Object instance = SpringContextHolder.getBean(typeClass);
+
+                this.interceptBefore(method, eventArg);
+
                 method.invoke(instance, eventArg);
+
+                this.interceptAfter(method, eventArg);
                 consumerResult.setSuccess(true);
             } catch (InvocationTargetException e) {
+                this.interceptException(method, eventArg, e);
+
                 consumerResult.setSuccess(false);
                 consumerResult.setMessage(e.getTargetException().getMessage());
                 log.error("事件消费失败", e);
             } catch (Exception e) {
+                this.interceptException(method, eventArg, e);
+
                 consumerResult.setSuccess(false);
                 consumerResult.setMessage(e.getLocalizedMessage());
                 log.error("事件消费失败", e);
@@ -212,6 +221,49 @@ public class EventDispatcher {
             consumerResult.setClazz(typeClass.getName());
             consumerResult.setMethod(method.getName());
             return consumerResult;
+        }
+
+
+        /**
+         * 执行事件处理前拦截方法
+         *
+         * @param method   执行的方法
+         * @param eventArg 事件消息
+         */
+        private void interceptBefore(Method method, IEventArg eventArg) {
+            if (interceptors != null) {
+                for (IEventHandlerInterceptor interceptor : interceptors) {
+                    interceptor.beforeHandle(eventArg, method);
+                }
+            }
+        }
+
+        /**
+         * 执行事件处理后拦截方法
+         *
+         * @param method   执行的方法
+         * @param eventArg 事件消息
+         */
+        private void interceptAfter(Method method, IEventArg eventArg) {
+            if (interceptors != null) {
+                for (IEventHandlerInterceptor interceptor : interceptors) {
+                    interceptor.afterHandle(eventArg, method);
+                }
+            }
+        }
+
+        /**
+         * 执行事件处理异常拦截方法
+         *
+         * @param method   执行的方法
+         * @param eventArg 事件消息
+         */
+        private void interceptException(Method method, IEventArg eventArg, Exception ex) {
+            if (interceptors != null) {
+                for (IEventHandlerInterceptor interceptor : interceptors) {
+                    interceptor.onException(eventArg, method, ex);
+                }
+            }
         }
     }
 

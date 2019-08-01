@@ -40,8 +40,8 @@
         <zkclient.version>0.10</zkclient.version>
         <jedis.version>2.9.0</jedis.version>
         <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
-        <mybatisplus.version>2.2.0</mybatisplus.version>
-        <mysql-connector.version>5.1.46</mysql-connector.version>
+        <mybatisplus.version>2.3.1</mybatisplus.version>
+        <mysql-connector.version>5.1.48</mysql-connector.version>
         <druid.version>1.0.31</druid.version>
         <fastjson.version>1.2.47</fastjson.version>
         <dozer.version>5.5.1</dozer.version>
