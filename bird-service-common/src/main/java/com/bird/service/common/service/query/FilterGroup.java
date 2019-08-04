@@ -95,13 +95,13 @@ public class FilterGroup implements Serializable {
     }
 
     private String formatRules(List<FilterRule> rules, Map<String,String> fieldNameMap) {
-        if(CollectionUtils.isEmpty(rules))return StringUtils.EMPTY;
+        if (CollectionUtils.isEmpty(rules)) return StringUtils.EMPTY;
 
         StringBuilder sb = new StringBuilder();
 
         boolean isStart = true;
         for (FilterRule rule : rules) {
-            if(rule == null)continue;
+            if (rule == null) continue;
 
             String field = StringUtils.strip(rule.getField());
             String value = StringUtils.strip(rule.getValue());
@@ -115,7 +115,7 @@ public class FilterGroup implements Serializable {
                 ruleOperate = FilterOperate.EQUAL;
             }
 
-            String dbFieldName = this.getDbFieldName(fieldNameMap,field);
+            String dbFieldName = this.getDbFieldName(fieldNameMap, StringUtils.wrapIfMissing(field, "`"));
 
             if (ruleOperate == FilterOperate.IN) {
                 sb.append(String.format("FIND_IN_SET(%s,%s)", dbFieldName, StringUtils.wrapIfMissing(StringUtils.strip(value, ","), "'")));
