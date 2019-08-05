@@ -22,6 +22,7 @@
         <module>bird-web-starter</module>
         <module>bird-gateway</module>
         <module>bird-dependencies</module>
+        <module>bird-trace</module>
     </modules>
 
     <properties>
