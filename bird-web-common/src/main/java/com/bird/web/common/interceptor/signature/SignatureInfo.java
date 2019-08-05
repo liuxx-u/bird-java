@@ -56,7 +56,7 @@ public class SignatureInfo implements Serializable {
         if(BodyReaderFilter.SUPPORT_HTTP_METHODS.contains(method)){
             signatureInfo.setParams(RequestHelper.getBodyString(request));
         }else {
-            signatureInfo.setParams(RequestHelper.getBodyString(request));
+            signatureInfo.setParams(request.getQueryString());
         }
         return signatureInfo;
     }
@@ -102,7 +102,7 @@ public class SignatureInfo implements Serializable {
         String nonce = "123456";
         String timestamp = String.valueOf(System.currentTimeMillis());
         System.out.println(timestamp);
-        String param = "{\"label\":\"liuxx\",\"value\":\"1\"}";
+        String param = "[\"http://47.98.43.198:8081/public/files/20180614/20180614200137_28.pdf\"]";
         String origin = nonce + timestamp + Base64.getEncoder().encodeToString(param.getBytes(Charset.forName("utf-8")));
         String signature = DigestUtils.md5DigestAsHex(origin.getBytes(Charset.forName("utf-8")));
         System.out.println(signature);

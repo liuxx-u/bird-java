@@ -1,5 +1,6 @@
 package com.bird.web.common.interceptor.signature;
 
+import com.bird.web.common.utils.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.method.HandlerMethod;
@@ -28,6 +29,7 @@ public class SignatureInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) return true;
+        if (RequestHelper.isMultipartContent(request)) return true;
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         SignatureCheck signatureCheck = handlerMethod.getMethodAnnotation(SignatureCheck.class);
@@ -35,23 +37,22 @@ public class SignatureInterceptor extends HandlerInterceptorAdapter {
 
         SignatureInfo signatureInfo = SignatureInfo.init(request);
         if (!signatureInfo.checkValue() || !signatureInfo.checkTimestamp(timeSpan)) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ERROR_MESSAGE);
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, ERROR_MESSAGE);
             return false;
         }
 
         // 默认使用容器中的ISignatureVerifier进行验证，没有使用默认的验证方式
         if (signatureVerifier != null) {
             if (!signatureVerifier.checkSignature(signatureInfo)) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ERROR_MESSAGE);
+                response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, ERROR_MESSAGE);
                 return false;
             }
         } else {
             if (!signatureInfo.checkSignature()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ERROR_MESSAGE);
+                response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, ERROR_MESSAGE);
                 return false;
             }
         }
-
 
         return true;
     }
