@@ -69,6 +69,10 @@ public class EventDispatcher {
      * @param eventArg 事件信息
      */
     public void enqueue(IEventArg eventArg) {
+        if (eventArg == null){
+            log.warn("接受到事件为null");
+            return;
+        }
         try {
             eventQueue.put(eventArg);
         } catch (InterruptedException ex) {
