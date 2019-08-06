@@ -36,21 +36,22 @@ public class FilterGroup implements Serializable {
         this.rules = rules;
     }
 
-    public void and(List<FilterGroup> groups){
+    public void and(List<FilterGroup> groups) {
         this.operate = FilterOperate.AND.getValue();
         this.groups = groups;
     }
 
-    public void or(List<FilterGroup> groups){
+    public void or(List<FilterGroup> groups) {
         this.operate = FilterOperate.OR.getValue();
         this.groups = groups;
     }
 
     /**
      * 解析为SQL语句
+     *
      * @return sql
      */
-    public String formatSQL(){
+    public String formatSQL() {
         return this.formatSQL(new HashMap<>());
     }
 
@@ -60,14 +61,14 @@ public class FilterGroup implements Serializable {
      * @param fieldNameMap map
      * @return sql
      */
-    public String formatSQL(Map<String,String> fieldNameMap){
-        String where = formatRules(this.rules,fieldNameMap);
+    public String formatSQL(Map<String, String> fieldNameMap) {
+        String where = formatRules(this.rules, fieldNameMap);
 
         boolean isStart = true;
         StringBuilder groupBuilder = new StringBuilder();
         if (CollectionUtils.isNotEmpty(this.groups)) {
             for (FilterGroup innerGroup : this.groups) {
-                if(innerGroup == null) continue;
+                if (innerGroup == null) continue;
                 String innerWhere = innerGroup.formatSQL(fieldNameMap);
                 if (StringUtils.isNotBlank(innerWhere)) {
                     if (!isStart) {
@@ -94,7 +95,7 @@ public class FilterGroup implements Serializable {
         }
     }
 
-    private String formatRules(List<FilterRule> rules, Map<String,String> fieldNameMap) {
+    private String formatRules(List<FilterRule> rules, Map<String, String> fieldNameMap) {
         if (CollectionUtils.isEmpty(rules)) return StringUtils.EMPTY;
 
         StringBuilder sb = new StringBuilder();
@@ -115,7 +116,7 @@ public class FilterGroup implements Serializable {
                 ruleOperate = FilterOperate.EQUAL;
             }
 
-            String dbFieldName = this.getDbFieldName(fieldNameMap, StringUtils.wrapIfMissing(field, "`"));
+            String dbFieldName = this.getDbFieldName(fieldNameMap, field);
 
             if (ruleOperate == FilterOperate.IN) {
                 sb.append(String.format("FIND_IN_SET(%s,%s)", dbFieldName, StringUtils.wrapIfMissing(StringUtils.strip(value, ","), "'")));
@@ -144,14 +145,15 @@ public class FilterGroup implements Serializable {
 
     /**
      * 获取字段对应的数据库列名
+     *
      * @param fieldNameMap map
-     * @param field field
+     * @param field        field
      * @return db field name
      */
-    private String getDbFieldName(Map<String,String> fieldNameMap,String field){
-        if(MapUtils.isEmpty(fieldNameMap)){
+    private String getDbFieldName(Map<String, String> fieldNameMap, String field) {
+        if (MapUtils.isEmpty(fieldNameMap)) {
             return field;
         }
-        return fieldNameMap.getOrDefault(field,field);
+        return fieldNameMap.getOrDefault(StringUtils.wrapIfMissing(field, "`"), field);
     }
 }
