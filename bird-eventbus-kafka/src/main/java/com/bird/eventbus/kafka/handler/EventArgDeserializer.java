@@ -26,7 +26,7 @@ public class EventArgDeserializer implements Deserializer<EventArg> {
             if (EventArg.class.isAssignableFrom(clazz)) {
                 return (EventArg) JSON.parseObject(json, clazz);
             }
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             log.error("event:{}反序列化失败", topic, e);
         }
         return null;
