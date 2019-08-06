@@ -1,15 +1,17 @@
 package com.bird.eventbus.kafka.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.bird.eventbus.arg.EventArg;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Deserializer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
  * @author liuxx
  */
+@Slf4j
 public class EventArgDeserializer implements Deserializer<EventArg> {
     @Override
     public void configure(Map<String, ?> map, boolean b) {
@@ -17,18 +19,17 @@ public class EventArgDeserializer implements Deserializer<EventArg> {
     }
 
     @Override
-    public EventArg deserialize(String s, byte[] bytes) {
-        EventArg obj = null;
+    public EventArg deserialize(String topic, byte[] bytes) {
+        String json = new String(bytes, StandardCharsets.UTF_8);
         try {
-            ByteArrayInputStream bis = new ByteArrayInputStream (bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            obj = (EventArg) ois.readObject();
-            ois.close();
-            bis.close();
-        } catch (Exception e) {
-
+            Class clazz = Class.forName(topic);
+            if (EventArg.class.isAssignableFrom(clazz)) {
+                return (EventArg) JSON.parseObject(json, clazz);
+            }
+        } catch (ClassNotFoundException e) {
+            log.error("event:{}反序列化失败", topic, e);
         }
-        return obj;
+        return null;
     }
 
     @Override

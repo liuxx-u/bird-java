@@ -10,6 +10,8 @@ import java.util.UUID;
 @Data
 public abstract class EventArg implements IEventArg{
 
+    private static final long serialVersionUID = 1L;
+
     private String eventId;
 
     private Date eventTime;
