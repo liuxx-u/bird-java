@@ -1,11 +1,13 @@
 package com.bird.trace.client;
 
+import com.alibaba.fastjson.JSON;
+import com.bird.trace.client.aspect.Traceable;
 import com.bird.trace.client.sql.TraceSQL;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @author liuxx
@@ -60,5 +62,33 @@ public class TraceLog {
     /**
      * 扩展信息
      */
-    private Map<String,Object> ext;
+    private Map<String, Object> ext;
+
+    public TraceLog() {
+        this.startTime = new Date();
+    }
+
+    public TraceLog(Method method, Object[] args) {
+        this();
+        if (method == null) return;
+
+        Traceable annotation = method.getAnnotation(Traceable.class);
+        this.operation = annotation != null ? annotation.value() : StringUtils.EMPTY;
+
+        this.method = method.getName();
+        this.clazz = method.getDeclaringClass().getName();
+
+        this.params = args != null ? JSON.toJSONString(args) : StringUtils.EMPTY;
+    }
+
+    /**
+     * 附加SQL记录
+     * @param sql sql
+     */
+    public void appendSQL(TraceSQL sql){
+        if(this.sqls == null || this.sqls.isEmpty()){
+            this.sqls = new ArrayList<>();
+        }
+        this.sqls.add(sql);
+    }
 }
