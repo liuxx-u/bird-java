@@ -3,6 +3,7 @@ package com.bird.trace.client;
 import com.alibaba.fastjson.JSON;
 import com.bird.trace.client.aspect.Traceable;
 import com.bird.trace.client.sql.TraceSQL;
+import com.bird.trace.client.sql.TraceSQLType;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,6 +49,10 @@ public class TraceLog {
      */
     private String params;
     /**
+     * 返回值
+     */
+    private String returnValue;
+    /**
      * 记录开始时间
      */
     private Date startTime;
@@ -60,6 +65,10 @@ public class TraceLog {
      */
     private List<TraceSQL> sqls;
     /**
+     * 记录SQL语句的类型
+     */
+    private List<TraceSQLType> sqlTypes;
+    /**
      * 扩展信息
      */
     private Map<String, Object> ext;
@@ -68,17 +77,24 @@ public class TraceLog {
         this.startTime = new Date();
     }
 
-    public TraceLog(Method method, Object[] args) {
+    public TraceLog(Method method, Object[] args,List<TraceSQLType> sqlTypes) {
         this();
         if (method == null) return;
 
-        Traceable annotation = method.getAnnotation(Traceable.class);
-        this.operation = annotation != null ? annotation.value() : StringUtils.EMPTY;
+        this.sqlTypes = sqlTypes;
+        this.operation = StringUtils.EMPTY;
 
         this.method = method.getName();
         this.clazz = method.getDeclaringClass().getName();
-
         this.params = args != null ? JSON.toJSONString(args) : StringUtils.EMPTY;
+
+        Traceable annotation = method.getAnnotation(Traceable.class);
+        if(annotation != null) {
+            this.operation = annotation.value();
+            if (annotation.sqlTypes().length > 0) {
+                this.sqlTypes = Arrays.asList(annotation.sqlTypes());
+            }
+        }
     }
 
     /**

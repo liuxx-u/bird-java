@@ -39,5 +39,11 @@
             <version>${druid.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.13</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

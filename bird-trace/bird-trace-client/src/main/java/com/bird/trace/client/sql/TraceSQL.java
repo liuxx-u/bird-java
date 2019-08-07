@@ -10,9 +10,9 @@ import lombok.Data;
 public class TraceSQL {
 
     /**
-     * 数据库连接
+     * 数据库
      */
-    private String connection;
+    private String database;
     /**
      * SQL语句
      */
@@ -29,4 +29,16 @@ public class TraceSQL {
      * 耗时 毫秒
      */
     private long elapsed;
+    /**
+     * 错误信息
+     */
+    private String error;
+
+    public TraceSQL() {
+    }
+
+    public TraceSQL(String database,String sql) {
+        this.database = database;
+        this.sql = sql;
+    }
 }

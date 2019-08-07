@@ -3,21 +3,19 @@ package com.bird.trace.client.dispatch;
 import com.bird.trace.client.TraceLog;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
- * 日志发送器
- *
- * 发出日志，可使用队列接收，批量保存
- *
  * @author liuxx
- * @date 2019/8/4
+ * @date 2019/8/7
  */
-public interface ITraceLogDispatcher {
-
+public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
     /**
      * 发送跟踪日志
+     *
      * @param traceLogs 跟踪日志
      */
-    void dispatch(Collection<TraceLog> traceLogs);
+    @Override
+    public void dispatch(Collection<TraceLog> traceLogs) {
+        System.out.println("enter");
+    }
 }

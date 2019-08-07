@@ -1,9 +1,12 @@
 package com.bird.trace.client.configure;
 
 import com.bird.trace.client.TraceConstant;
+import com.bird.trace.client.sql.TraceSQLType;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 /**
  * @author liuxx
@@ -19,4 +22,8 @@ public class TraceProperties {
      */
     private boolean enabled;
 
+    /**
+     * 记录的SQL类型
+     */
+    private List<TraceSQLType> sqlTypes;
 }
