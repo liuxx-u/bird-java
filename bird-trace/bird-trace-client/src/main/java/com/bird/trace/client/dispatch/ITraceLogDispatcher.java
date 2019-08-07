@@ -3,7 +3,6 @@ package com.bird.trace.client.dispatch;
 import com.bird.trace.client.TraceLog;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 日志发送器

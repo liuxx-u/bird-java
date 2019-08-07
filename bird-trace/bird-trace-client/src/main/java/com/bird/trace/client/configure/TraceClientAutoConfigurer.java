@@ -5,8 +5,10 @@ import com.bird.trace.client.TraceContext;
 import com.bird.trace.client.aspect.ITraceLogCustomizer;
 import com.bird.trace.client.aspect.TraceableAspect;
 import com.bird.trace.client.dispatch.DefaultTraceLogDispatcher;
+import com.bird.trace.client.dispatch.IDefaultTraceLogStore;
 import com.bird.trace.client.dispatch.ITraceLogDispatcher;
 import com.bird.trace.client.sql.druid.DruidDataSourcePostProcessor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,6 +25,7 @@ import java.util.List;
  * @author liuxx
  * @date 2019/8/5
  */
+@Slf4j
 @Configuration
 @EnableConfigurationProperties(TraceProperties.class)
 @ConditionalOnProperty(value = "bird.trace.client.enabled", matchIfMissing = true)
@@ -31,7 +34,7 @@ public class TraceClientAutoConfigurer {
     private final ApplicationContext applicationContext;
     private final List<ITraceLogCustomizer> logCustomizers;
 
-    public TraceClientAutoConfigurer(ApplicationContext applicationContext, ObjectProvider<List<ITraceLogCustomizer>> logCustomizersProvider){
+    public TraceClientAutoConfigurer(ApplicationContext applicationContext, ObjectProvider<List<ITraceLogCustomizer>> logCustomizersProvider) {
         this.applicationContext = applicationContext;
         this.logCustomizers = logCustomizersProvider.getIfAvailable();
     }
@@ -57,16 +60,23 @@ public class TraceClientAutoConfigurer {
     }
 
     @Bean
+    @ConditionalOnMissingBean({ITraceLogDispatcher.class, IDefaultTraceLogStore.class})
+    public IDefaultTraceLogStore defaultTraceLogStore() {
+        return logs -> log.warn("未注入IDefaultTraceLogStore实例，丢弃跟踪日志信息");
+    }
+
+
+    @Bean
     @ConditionalOnMissingBean(ITraceLogDispatcher.class)
-    public ITraceLogDispatcher traceLogDispatcher(){
-        return new DefaultTraceLogDispatcher();
+    public ITraceLogDispatcher traceLogDispatcher(IDefaultTraceLogStore defaultTraceLogStore) {
+        return new DefaultTraceLogDispatcher(defaultTraceLogStore);
     }
 
     /**
      * 初始化跟踪日志发送器
      */
     @PostConstruct
-    public void initTraceContext(){
+    public void initTraceContext() {
         ITraceLogDispatcher logDispatcher = applicationContext.getBean(ITraceLogDispatcher.class);
         TraceContext.init(logDispatcher);
     }
