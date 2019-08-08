@@ -10,9 +10,11 @@ import com.bird.trace.client.dispatch.ITraceLogDispatcher;
 import com.bird.trace.client.sql.druid.DruidDataSourcePostProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -28,9 +30,9 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties(TraceProperties.class)
+@AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @ConditionalOnProperty(value = "bird.trace.client.enabled", matchIfMissing = true)
 public class TraceClientAutoConfigurer {
-
     private final ApplicationContext applicationContext;
     private final List<ITraceLogCustomizer> logCustomizers;
 
@@ -54,12 +56,6 @@ public class TraceClientAutoConfigurer {
     }
 
     @Bean
-    @ConditionalOnClass(DruidDataSource.class)
-    public DruidDataSourcePostProcessor druidDataSourcePostProcessor() {
-        return new DruidDataSourcePostProcessor();
-    }
-
-    @Bean
     @ConditionalOnMissingBean({ITraceLogDispatcher.class, IDefaultTraceLogStore.class})
     public IDefaultTraceLogStore defaultTraceLogStore() {
         return logs -> log.warn("未注入IDefaultTraceLogStore实例，丢弃跟踪日志信息");
@@ -79,5 +75,16 @@ public class TraceClientAutoConfigurer {
     public void initTraceContext() {
         ITraceLogDispatcher logDispatcher = applicationContext.getBean(ITraceLogDispatcher.class);
         TraceContext.init(logDispatcher);
+    }
+
+
+    @Configuration
+    @ConditionalOnClass(DruidDataSource.class)
+    static class DruidDataSourcePostProcessorConfiguration{
+
+        @Bean
+        public DruidDataSourcePostProcessor druidDataSourcePostProcessor() {
+            return new DruidDataSourcePostProcessor();
+        }
     }
 }

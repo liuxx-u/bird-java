@@ -6,7 +6,7 @@ import com.alibaba.druid.proxy.jdbc.StatementProxy;
 import com.bird.trace.client.TraceContext;
 import com.bird.trace.client.sql.TraceSQL;
 import com.bird.trace.client.sql.TraceSQLType;
-import com.mysql.cj.jdbc.ClientPreparedStatement;
+import com.mysql.jdbc.PreparedStatement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
@@ -20,13 +20,13 @@ import java.sql.Statement;
 public class DruidTraceSQLFilter extends FilterEventAdapter {
 
     private final static String ATTRIBUTE_KEY = "traceSQL";
-    private static boolean mysql8Available;
+    private static boolean mysql5Available;
 
     static {
         try {
-            mysql8Available = null != Class.forName("com.mysql.cj.jdbc.ClientPreparedStatement");
+            mysql5Available = null != Class.forName("com.mysql.jdbc.PreparedStatement");
         } catch (Exception t) {
-            mysql8Available = false;
+            mysql5Available = false;
         }
     }
 
@@ -89,8 +89,8 @@ public class DruidTraceSQLFilter extends FilterEventAdapter {
         String sql;
         String database = null;
         try {
-            if (mysql8Available && rawObject instanceof ClientPreparedStatement) {
-                sql = ((ClientPreparedStatement) rawObject).asSql();
+            if (mysql5Available && rawObject instanceof PreparedStatement) {
+                sql = ((PreparedStatement) rawObject).asSql();
             } else {
                 sql = rawObject.toString();
             }
