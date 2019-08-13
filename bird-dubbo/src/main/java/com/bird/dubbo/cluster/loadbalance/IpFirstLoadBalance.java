@@ -11,6 +11,10 @@ import org.apache.dubbo.rpc.cluster.loadbalance.RandomLoadBalance;
 import java.util.List;
 
 /**
+ * ip优先负载均衡器
+ *
+ * 优先选择本机提供的服务，方便开发环境调试
+ *
  * @author liuxx
  * @date 2019/5/17
  */
