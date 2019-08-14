@@ -241,7 +241,7 @@ public class PoiExcelHelper {
             CellType cellType = cell.getCellTypeEnum();
             switch (cellType) {
                 case STRING:
-                    value = StringUtils.replaceAll(cell.getStringCellValue(),"\\s*|\t|\r|\n","");
+                    value = StringUtils.trim(StringUtils.replaceAll(cell.getStringCellValue(),"\t|\r|\n",""));
                     break;
                 case NUMERIC:
                     if (HSSFDateUtil.isCellDateFormatted(cell)) {
