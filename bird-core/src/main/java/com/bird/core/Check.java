@@ -3,6 +3,8 @@ package com.bird.core;
 import com.bird.core.exception.ArgumentException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 /**
  *
  * @author liuxx
@@ -10,14 +12,16 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class Check {
 
+    private Check(){}
+
     /**
      * 校验参数不能为空
      *
      * @param object 参数
      * @param name   参数名
      */
-    public static final void NotNull(Object object, String name) {
-        if (object.equals(null)) {
+    public static void NotNull(Object object, String name) {
+        if (Objects.isNull(object)) {
             throw new ArgumentException(name + " can not be null.");
         }
     }
@@ -28,7 +32,7 @@ public final class Check {
      * @param value 参数
      * @param name  参数名
      */
-    public static final void NotEmpty(String value, String name) {
+    public static void NotEmpty(String value, String name) {
         if (StringUtils.isBlank(value)) {
             throw new ArgumentException(name + " can not be null.");
         }
@@ -41,7 +45,7 @@ public final class Check {
      * @param target 目标值
      * @param name   参数名
      */
-    public static final void GreaterThan(Number value, Number target, String name) {
+    public static void GreaterThan(Number value, Number target, String name) {
         if (value == null || value.doubleValue() <= target.doubleValue()) {
             throw new ArgumentException(name + " must greater than " + target);
         }
@@ -54,7 +58,7 @@ public final class Check {
      * @param target 目标值
      * @param name   参数名
      */
-    public static final void LessThan(Number value, Number target, String name) {
+    public static void LessThan(Number value, Number target, String name) {
         if (value == null || value.doubleValue() >= target.doubleValue()) {
             throw new ArgumentException(name + " must less than " + target);
         }
