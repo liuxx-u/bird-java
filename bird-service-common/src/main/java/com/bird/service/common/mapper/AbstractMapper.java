@@ -48,7 +48,7 @@ public interface AbstractMapper<T extends IModel> extends com.baomidou.mybatispl
      * @param param
      */
     @InsertProvider(type = CommonSaveProvider.class, method = "insert")
-    @SelectKey(statement="SELECT LAST_INSERT_ID()", keyProperty="entityDTO.id", before=false, resultType=Long.class)
+    @Options(useGeneratedKeys = true,keyColumn = "id",keyProperty = "entityDTO.id")
     void insertDto(CommonSaveParam param);
 
     /**
