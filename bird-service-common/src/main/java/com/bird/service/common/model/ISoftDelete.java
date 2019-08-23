@@ -10,13 +10,13 @@ public interface ISoftDelete {
 
     /**
      * 获取是否软删除
-     * @return
+     * @return delFlag
      */
     Boolean getDelFlag();
 
     /**
      * 设置为删除
-     * @param delFlag
+     * @param delFlag delFlag
      */
     void setDelFlag(Boolean delFlag);
 }

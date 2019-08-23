@@ -12,13 +12,13 @@ public interface IHasModifyTime {
 
     /**
      * 获取修改时间
-     * @return
+     * @return modifiedTime
      */
     Date getModifiedTime();
 
     /**
      * 设置修改时间
-     * @param modifiedTime
+     * @param modifiedTime modifiedTime
      */
     void setModifiedTime(Date modifiedTime);
 }

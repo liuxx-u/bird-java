@@ -1,9 +1,13 @@
 package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.bird.service.common.service.dto.EntityDTO;
+import com.bird.service.common.incrementer.UUIDHexGenerator;
+import com.bird.service.common.service.dto.GenericEntityDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -13,11 +17,12 @@ import java.util.*;
  * @author liuxx
  * @date 2017/10/20
  */
+@Slf4j
 public class CommonSaveProvider {
     /**
      * 不允许修改的列
      */
-    private static final List<String> STATIC_FIELDS = Arrays.asList("`id`","`createTime`","`modifiedTime`");
+    private static final List<String> STATIC_FIELDS = Arrays.asList("`id`", "`createTime`", "`modifiedTime`");
 
     private static final List<String> STRING_TYPE_NAME = Collections.singletonList("java.lang.String");
     private static final List<String> NUMBER_TYPE_NAME = Arrays.asList("java.lang.Integer", "java.lang.Long", "java.math.BigDecimal", "int", "long");
@@ -27,35 +32,24 @@ public class CommonSaveProvider {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public String insert(CommonSaveParam param) {
-        String tableName = formatName(param.getTableName());
 
+        Map<String, String> fieldValueMap = this.getFieldValueMap(param);
+        if (param.getEntityDTO().getId() instanceof String) {
+            fieldValueMap.put("`id`", "'" + UUIDHexGenerator.generate() + "'");
+        }
+
+        String tableName = formatName(param.getTableName());
         StringBuilder sb = new StringBuilder("insert into ")
                 .append(tableName)
                 .append(" (");
-
-        Field[] fields = param.gettClass().getDeclaredFields();
-
         StringBuilder valueBuilder = new StringBuilder();
-        for (Field field : fields) {
-            TableField tableField = field.getAnnotation(TableField.class);
-            if (tableField != null && !tableField.exist()) continue;
 
-            String fieldName = tableField == null ? field.getName() : tableField.value();
-            //处理适用于多表的DTO
-            if (fieldName.indexOf(".") > 0) {
-                String[] arr = fieldName.split("\\.");
-                if (!StringUtils.equals(formatName(arr[arr.length - 2]), tableName)) continue;
+        for (Map.Entry<String, String> entry : fieldValueMap.entrySet()) {
+            String fieldValue = entry.getValue();
+            if (Objects.equals(fieldValue, "") || Objects.equals(fieldValue, "''") || Objects.equals(fieldValue, "null"))
+                continue;
 
-                fieldName = arr[arr.length - 1];
-            }
-
-            fieldName = formatName(fieldName);
-            if (STATIC_FIELDS.contains(fieldName)) continue;
-
-            String fieldValue = getFieldValue(param.getEntityDTO(), field);
-            if (Objects.equals(fieldValue, "") || Objects.equals(fieldValue, "''") || Objects.equals(fieldValue, "null")) continue;
-
-            sb.append(fieldName).append(",");
+            sb.append(entry.getKey()).append(",");
             valueBuilder.append(fieldValue).append(",");
         }
         String createTime = "'" + dateFormat.format(new Date()) + "'";
@@ -64,14 +58,38 @@ public class CommonSaveProvider {
     }
 
     public String update(CommonSaveParam param) {
-        Long id = param.getEntityDTO().getId();
-        if (id == null || id <= 0) return "";
+        Serializable id = param.getEntityDTO().getId();
+        if (id == null) return "";
+
+        Map<String, String> fieldValueMap = this.getFieldValueMap(param);
+        if (MapUtils.isEmpty(fieldValueMap)) return "";
 
         String tableName = formatName(param.getTableName());
 
         StringBuilder sb = new StringBuilder("update ")
                 .append(tableName)
                 .append(" set ");
+        for (Map.Entry<String, String> entry : fieldValueMap.entrySet()) {
+            sb.append(entry.getKey()).append(" = ").append(entry.getValue()).append(",");
+        }
+
+        String modifiedTime = "'" + dateFormat.format(new Date()) + "'";
+        sb.append("modifiedTime = ").append(modifiedTime);
+        sb.append(" where id = ").append("'").append(id).append("'");
+
+        return sb.toString();
+    }
+
+    /**
+     * 获取字段名与值的映射关系
+     *
+     * @param param param
+     * @return map
+     */
+    private Map<String, String> getFieldValueMap(CommonSaveParam param) {
+        Map<String, String> map = new LinkedHashMap<>();
+
+        String tableName = formatName(param.getTableName());
 
         Field[] fields = param.gettClass().getDeclaredFields();
         for (Field field : fields) {
@@ -79,7 +97,7 @@ public class CommonSaveProvider {
             if (tableField != null && !tableField.exist()) continue;
             String fieldName = tableField == null ? field.getName() : tableField.value();
             //处理适用于多表的DTO
-            if (fieldName.indexOf(".") > 0) {
+            if (fieldName.contains(".")) {
                 String[] arr = fieldName.split("\\.");
                 if (!StringUtils.equals(formatName(arr[arr.length - 2]), tableName)) continue;
 
@@ -90,35 +108,37 @@ public class CommonSaveProvider {
             if (STATIC_FIELDS.contains(fieldName)) continue;
 
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
-            sb.append(fieldName).append(" = ").append(fieldValue).append(",");
+            map.put(fieldName, fieldValue);
         }
-        String modifiedTime = "'" + dateFormat.format(new Date()) + "'";
-        sb.append("modifiedTime = ").append(modifiedTime);
-        sb.append(" where id = ").append(id);
-
-        return sb.toString();
+        return map;
     }
 
-    private String getFieldValue(EntityDTO instance, Field field) {
+    /**
+     * 获取EntityDTO中的字段值
+     *
+     * @param instance dto
+     * @param field    field
+     * @return value
+     */
+    private String getFieldValue(GenericEntityDTO instance, Field field) {
         field.setAccessible(true);
-        String fieldTyppeName = field.getType().getName();
+        String fieldTypeName = field.getType().getName();
 
         try {
             Object value = field.get(instance);
 
-            if (STRING_TYPE_NAME.contains(fieldTyppeName)) {
+            if (STRING_TYPE_NAME.contains(fieldTypeName)) {
                 return value == null ? "''" : "'" + value.toString() + "'";
-            } else if (NUMBER_TYPE_NAME.contains(fieldTyppeName)) {
+            } else if (NUMBER_TYPE_NAME.contains(fieldTypeName)) {
                 return value == null ? "0" : value.toString();
-            } else if (BOOLEAN_TYPE_NAME.contains(fieldTyppeName)) {
+            } else if (BOOLEAN_TYPE_NAME.contains(fieldTypeName)) {
                 if (value == null) return "0";
                 return ((Boolean) value) ? "1" : "0";
-            } else if (DATE_TYPE_NAME.contains(fieldTyppeName)) {
+            } else if (DATE_TYPE_NAME.contains(fieldTypeName)) {
                 return value == null ? "null" : "'" + dateFormat.format((Date) value) + "'";
             }
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("insert error", e);
         }
 
         return "";
