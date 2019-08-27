@@ -1,6 +1,9 @@
 package com.bird.service.common.service;
 
+import com.baomidou.mybatisplus.enums.SqlMethod;
+import com.baomidou.mybatisplus.mapper.SqlHelper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.toolkit.ReflectionKit;
 import com.bird.core.Constant;
 import com.bird.core.cache.CacheHelper;
 import com.bird.core.exception.ExceptionHelper;
@@ -10,7 +13,7 @@ import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.mapper.TreeQueryParam;
 import com.bird.service.common.model.IModel;
-import com.bird.service.common.service.dto.GenericEntityDTO;
+import com.bird.service.common.service.dto.IEntityDTO;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
@@ -18,6 +21,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +29,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +115,7 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      */
     @Override
     @Transactional
-    public TKey save(GenericEntityDTO<TKey> dto) {
+    public TKey save(IEntityDTO<TKey> dto) {
         CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
         return this.save(param);
     }
@@ -266,6 +269,29 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean insertBatch(List<T> entityList, int batchSize) {
+        if (CollectionUtils.isNotEmpty(entityList)) {
+            try(SqlSession batchSqlSession = sqlSessionBatch()) {
+                int size = entityList.size();
+                String sqlStatement = sqlStatement(SqlMethod.INSERT_ONE);
+                for (int i = 0; i < size; i++) {
+                    batchSqlSession.insert(sqlStatement, entityList.get(i));
+                    if (i >= 1 && i % batchSize == 0) {
+                        batchSqlSession.flushStatements();
+                    }
+                }
+                batchSqlSession.flushStatements();
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * 获取缓存键值
      */
     protected String getCacheKey(Serializable id) {
@@ -297,5 +323,29 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
             Constant.Cache.CLASSKEY_MAP.put(cls, cacheName);
         }
         return cacheName;
+    }
+
+    /**
+     * 获取SqlStatement
+     *
+     * @param sqlMethod
+     * @return
+     */
+    protected String sqlStatement(SqlMethod sqlMethod) {
+        return SqlHelper.table(currentModelClass()).getSqlStatement(sqlMethod.getMethod());
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Class<T> currentModelClass() {
+        return ReflectionKit.getSuperClassGenricType(getClass(), 1);
+    }
+
+    /**
+     * <p>
+     * 批量操作 SqlSession
+     * </p>
+     */
+    protected SqlSession sqlSessionBatch() {
+        return SqlHelper.sqlSessionBatch(currentModelClass());
     }
 }

@@ -5,7 +5,7 @@ import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.mapper.TreeQueryParam;
 import com.bird.service.common.model.IModel;
-import com.bird.service.common.service.dto.GenericEntityDTO;
+import com.bird.service.common.service.dto.IEntityDTO;
 import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
@@ -30,7 +30,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
     PagedListResultDTO queryPagedList(PagedQueryParam param);
 
     /**
-     * 定义通用的查询接口（支持查询、分页、排序）
+     * 定义通用的单表查询接口（支持查询、分页、排序）
      * 支持灵活组装查询数据源
      * 支持灵活控制返回的字段
      *
@@ -54,7 +54,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      *
      * @param dto 数据
      */
-    TKey save(GenericEntityDTO<TKey> dto);
+    TKey save(IEntityDTO<TKey> dto);
 
     /**
      * 定义通用的 获取树数据方法
@@ -120,4 +120,29 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @return list<Model>
      */
     List<T> selectList(Wrapper<T> entity);
+
+    /**
+     * <p>
+     * 插入（批量），该方法不适合 Oracle
+     * </p>
+     *
+     * @param entityList 实体对象列表
+     * @return boolean
+     */
+    default boolean insertBatch(List<T> entityList){
+        return insertBatch(entityList,50);
+    }
+
+    /**
+     * <p>
+     * 插入（批量）
+     * </p>
+     *
+     * @param entityList 实体对象列表
+     * @param batchSize  插入批次数量
+     * @return boolean
+     */
+    boolean insertBatch(List<T> entityList, int batchSize);
+
+
 }

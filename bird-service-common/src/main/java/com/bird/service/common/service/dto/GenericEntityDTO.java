@@ -1,7 +1,6 @@
 package com.bird.service.common.service.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,9 +9,10 @@ import java.util.Date;
  * @author liuxx
  * @date 2019/8/22
  */
-@Getter
-@Setter
-public abstract class GenericEntityDTO<TKey extends Serializable> extends AbstractDTO {
+@Data
+public abstract class GenericEntityDTO<TKey extends Serializable> implements IEntityDTO<TKey> {
+
+    private static final long serialVersionUID = 1L;
 
     private TKey id;
     private Date createTime;

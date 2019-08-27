@@ -2,7 +2,7 @@ package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.bird.service.common.incrementer.UUIDHexGenerator;
-import com.bird.service.common.service.dto.GenericEntityDTO;
+import com.bird.service.common.service.dto.IEntityDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -120,7 +120,7 @@ public class CommonSaveProvider {
      * @param field    field
      * @return value
      */
-    private String getFieldValue(GenericEntityDTO instance, Field field) {
+    private String getFieldValue(IEntityDTO instance, Field field) {
         field.setAccessible(true);
         String fieldTypeName = field.getType().getName();
 
