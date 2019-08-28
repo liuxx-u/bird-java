@@ -14,12 +14,11 @@
         <module>bird-eventbus</module>
         <module>bird-web-sso</module>
         <module>bird-web-file</module>
-        <module>bird-web-common</module>
-        <module>bird-web-starter</module>
         <module>bird-gateway</module>
         <module>bird-dependencies</module>
         <module>bird-trace</module>
         <module>bird-service</module>
+        <module>bird-web</module>
     </modules>
 
     <properties>
