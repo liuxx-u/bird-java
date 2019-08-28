@@ -6,7 +6,7 @@
     <groupId>com.bird</groupId>
     <artifactId>bird-project</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.2-RELEASE</version>
+    <version>1.0.3-SNAPSHOT</version>
 
     <modules>
         <module>bird-core</module>
@@ -30,7 +30,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- 版本号 -->
-        <bird.version>1.0.2-RELEASE</bird.version>
+        <bird.version>1.0.3-SNAPSHOT</bird.version>
         <spring.version>5.0.10.RELEASE</spring.version>
         <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
         <spring-data-redis.version>2.0.8.RELEASE</spring-data-redis.version>
