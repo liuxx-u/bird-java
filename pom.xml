@@ -12,8 +12,6 @@
         <module>bird-core</module>
         <module>bird-dubbo</module>
         <module>bird-eventbus</module>
-        <module>bird-service-common</module>
-        <module>bird-service-starter</module>
         <module>bird-web-sso</module>
         <module>bird-web-file</module>
         <module>bird-web-common</module>
@@ -21,6 +19,7 @@
         <module>bird-gateway</module>
         <module>bird-dependencies</module>
         <module>bird-trace</module>
+        <module>bird-service</module>
     </modules>
 
     <properties>
