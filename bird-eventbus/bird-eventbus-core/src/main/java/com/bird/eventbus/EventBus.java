@@ -38,12 +38,4 @@ public class EventBus {
         }
         eventRegister.regist(eventArg);
     }
-
-    /**
-     * 局部事件消费，事件只在本服务内被消费
-     *
-     * @param eventArg 事件
-     */
-    public void pushLocal(IEventArg eventArg) {
-    }
 }

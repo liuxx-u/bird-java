@@ -3,23 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>bird-project</artifactId>
+        <artifactId>bird-eventbus</artifactId>
         <groupId>com.bird</groupId>
         <version>1.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>bird-eventbus-kafka</artifactId>
+    <artifactId>bird-eventbus-rabbit</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.bird</groupId>
-            <artifactId>bird-core</artifactId>
-            <version>${bird.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-eventbus</artifactId>
+            <artifactId>bird-eventbus-core</artifactId>
             <version>${bird.version}</version>
         </dependency>
 
@@ -35,11 +30,11 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- kafka -->
+        <!-- rabbit mq -->
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-            <version>${spring-kafka.version}</version>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>2.1.0.RELEASE</version>
         </dependency>
     </dependencies>
 </project>

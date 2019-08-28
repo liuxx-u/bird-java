@@ -12,8 +12,6 @@
         <module>bird-core</module>
         <module>bird-dubbo</module>
         <module>bird-eventbus</module>
-        <module>bird-eventbus-kafka</module>
-        <module>bird-eventbus-rabbit</module>
         <module>bird-service-common</module>
         <module>bird-service-starter</module>
         <module>bird-web-sso</module>

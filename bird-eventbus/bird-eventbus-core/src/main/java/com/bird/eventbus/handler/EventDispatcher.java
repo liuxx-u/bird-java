@@ -1,14 +1,16 @@
 package com.bird.eventbus.handler;
 
-import com.bird.core.Check;
-import com.bird.core.utils.ClassHelper;
-import com.bird.core.utils.SpringContextHolder;
 import com.bird.eventbus.arg.IEventArg;
+import com.bird.eventbus.utils.ClassUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
@@ -28,6 +30,9 @@ public class EventDispatcher {
 
     @Autowired(required = false)
     private Collection<IEventHandlerInterceptor> interceptors;
+
+    @Autowired
+    private ConfigurableListableBeanFactory beanFactory;
 
     @Value("${spring.application.name:}")
     private String application;
@@ -86,10 +91,13 @@ public class EventDispatcher {
      * @param packageName 包名
      */
     public void initWithPackage(String packageName) {
-        Check.NotNull(packageName, "packageName");
+        if (StringUtils.isBlank(packageName)) {
+            log.warn("eventbus监听器初始化报名不存在");
+            return;
+        }
 
         List<EventHandlerDefinition> definitions = new ArrayList<>();
-        Set<Class<?>> classes = ClassHelper.getClasses(packageName);
+        Set<Class<?>> classes = ClassUtils.getClasses(packageName);
         if (classes != null) {
             for (Class<?> clazz : classes) {
                 for (Method method : clazz.getDeclaredMethods()) {
@@ -98,14 +106,10 @@ public class EventDispatcher {
 
                     //被@EventHandler注解标注的方法只接受一个参数，且参数必须是IEventArg的子类
                     Class<?>[] parameterTypes = method.getParameterTypes();
-                    if (parameterTypes.length != 1) continue;
-                    if (!IEventArg.class.isAssignableFrom(parameterTypes[0])) continue;
+                    if (parameterTypes.length != 1 || !IEventArg.class.isAssignableFrom(parameterTypes[0])) continue;
 
                     String argClassName = parameterTypes[0].getName();
-                    if (!EVENT_HANDLER_CONTAINER.containsKey(argClassName)) {
-                        EVENT_HANDLER_CONTAINER.put(argClassName, new HashSet<>());
-                    }
-                    Set<Method> eventHandlers = EVENT_HANDLER_CONTAINER.get(argClassName);
+                    Set<Method> eventHandlers = EVENT_HANDLER_CONTAINER.computeIfAbsent(argClassName, p -> new HashSet<>());
                     eventHandlers.add(method);
                     EVENT_HANDLER_CONTAINER.put(argClassName, eventHandlers);
 
@@ -118,10 +122,11 @@ public class EventDispatcher {
                 }
             }
         }
-        if (handlerStore != null && CollectionUtils.isNotEmpty(definitions)) {
+        if (handlerStore != null && !CollectionUtils.isEmpty(definitions)) {
             handlerStore.initialize(definitions);
         }
     }
+
 
     /**
      * 获取当前程序所有事件的名称
@@ -161,7 +166,7 @@ public class EventDispatcher {
                 } else {
                     String eventKey = eventArg.getClass().getName();
                     Set<Method> methods = EVENT_HANDLER_CONTAINER.getOrDefault(eventKey, null);
-                    if (CollectionUtils.isNotEmpty(methods)) {
+                    if (!CollectionUtils.isEmpty(methods)) {
                         int successCount = 0;
                         for (Method method : methods) {
                             EventHandleResult.ConsumerResult itemResult = this.invokeMethod(method, eventArg, handleResult);
@@ -200,7 +205,7 @@ public class EventDispatcher {
 
             Class typeClass = method.getDeclaringClass();
             try {
-                Object instance = SpringContextHolder.getBean(typeClass);
+                Object instance = beanFactory.getBean(typeClass);
 
                 this.interceptBefore(method, eventArg);
 
