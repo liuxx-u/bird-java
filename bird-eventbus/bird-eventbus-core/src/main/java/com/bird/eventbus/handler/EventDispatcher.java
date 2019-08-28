@@ -7,8 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
@@ -32,7 +30,7 @@ public class EventDispatcher {
     private Collection<IEventHandlerInterceptor> interceptors;
 
     @Autowired
-    private ConfigurableListableBeanFactory beanFactory;
+    private ApplicationContext applicationContext;
 
     @Value("${spring.application.name:}")
     private String application;
@@ -205,7 +203,7 @@ public class EventDispatcher {
 
             Class typeClass = method.getDeclaringClass();
             try {
-                Object instance = beanFactory.getBean(typeClass);
+                Object instance = applicationContext.getBean(typeClass);
 
                 this.interceptBefore(method, eventArg);
 
