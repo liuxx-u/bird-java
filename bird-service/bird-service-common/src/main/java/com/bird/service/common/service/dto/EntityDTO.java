@@ -3,8 +3,6 @@ package com.bird.service.common.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 /**
  *
  * @author liuxx
@@ -13,7 +11,5 @@ import java.util.Date;
 @Getter
 @Setter
 @SuppressWarnings("serial")
-public abstract class EntityDTO extends AbstractDTO {
-    private Long id;
-    private Date createTime;
+public abstract class EntityDTO extends GenericEntityDTO<Long> {
 }

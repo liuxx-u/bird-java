@@ -12,13 +12,13 @@ public interface IHasCreateTime {
 
     /**
      * 获取创建时间
-     * @return
+     * @return createTime
      */
     Date getCreateTime();
 
     /**
      * 设置创建时间
-     * @param createTime
+     * @param createTime createTime
      */
     void setCreateTime(Date createTime);
 }

@@ -7,7 +7,8 @@ import com.baomidou.mybatisplus.enums.FieldFill;
  * @author liuxx
  * @date 2019/7/11
  */
-public class AbstractFullModel extends AbstractModel implements IHasCreatorId,IHasModifierId {
+@Deprecated
+public abstract class AbstractFullModel extends AbstractModel implements IHasCreatorId<Long>,IHasModifierId<Long> {
 
     @TableField(fill = FieldFill.INSERT)
     private Long creatorId;
