@@ -11,6 +11,7 @@ import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
 
 import java.io.Serializable;
+import java.security.Key;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      *
      * @param param param
      */
+    @Deprecated
     TKey save(CommonSaveParam<TKey> param);
 
     /**
@@ -55,6 +57,20 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @param dto 数据
      */
     TKey save(IEntityDTO<TKey> dto);
+
+    /**
+     * 以DTO为根据 新增
+     * @param dto 数据
+     * @return id
+     */
+    TKey insert(IEntityDTO<TKey> dto);
+
+    /**
+     * 以DTO为根据 编辑
+     * @param dto 数据
+     * @return id
+     */
+    TKey update(IEntityDTO<TKey> dto);
 
     /**
      * 定义通用的 获取树数据方法
@@ -96,6 +112,21 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @return model
      */
     T save(T record);
+
+    /**
+     * 新增
+     * @param record 数据
+     * @return 是否成功
+     */
+    T insert(T record);
+
+
+    /**
+     * 编辑
+     * @param record 数据
+     * @return 是否成功
+     */
+    boolean update(T record);
 
     /**
      * 根据id查询数据并缓存

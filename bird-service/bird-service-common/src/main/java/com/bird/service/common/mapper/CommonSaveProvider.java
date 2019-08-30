@@ -35,7 +35,11 @@ public class CommonSaveProvider {
 
         Map<String, String> fieldValueMap = this.getFieldValueMap(param);
         if (param.getEntityDTO().getId() instanceof String) {
-            fieldValueMap.put("`id`", "'" + UUIDHexGenerator.generate() + "'");
+            String id = param.getEntityDTO().getId().toString();
+            if (StringUtils.isBlank(id)) {
+                id = UUIDHexGenerator.generate();
+            }
+            fieldValueMap.put("`id`", "'" + id + "'");
         }
 
         String tableName = formatName(param.getTableName());

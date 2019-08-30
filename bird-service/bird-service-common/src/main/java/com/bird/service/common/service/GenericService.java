@@ -4,9 +4,6 @@ import com.baomidou.mybatisplus.enums.SqlMethod;
 import com.baomidou.mybatisplus.mapper.SqlHelper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.ReflectionKit;
-import com.bird.core.Constant;
-import com.bird.core.cache.CacheHelper;
-import com.bird.core.exception.ExceptionHelper;
 import com.bird.core.utils.ClassHelper;
 import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.common.mapper.CommonSaveParam;
@@ -18,15 +15,10 @@ import com.bird.service.common.service.dto.TreeDTO;
 import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -45,6 +37,34 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
 
     @Value("${spring.application.name:bird}")
     private String cachePrefix;
+
+    private volatile Class<T> modelClass;
+
+    private volatile Class<TKey> keyClass;
+
+    @SuppressWarnings("all")
+    protected Class<T> getModelClass(){
+        if(modelClass == null){
+            synchronized (this){
+                if(modelClass == null){
+                    modelClass = (Class<T>)ReflectionKit.getSuperClassGenricType(getClass(), 1);
+                }
+            }
+        }
+        return modelClass;
+    }
+
+    @SuppressWarnings("all")
+    protected Class<TKey> getKeyClass(){
+        if(keyClass == null){
+            synchronized (this){
+                if(keyClass == null){
+                    keyClass = (Class<TKey>)ReflectionKit.getSuperClassGenricType(getClass(), 1);
+                }
+            }
+        }
+        return keyClass;
+    }
 
     /**
      * 主键是否为空
@@ -87,26 +107,28 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     @Transactional(rollbackFor = Exception.class)
     public TKey save(CommonSaveParam<TKey> param) {
-        TKey id = param.getEntityDTO().getId();
-        if (isEmptyKey(id)) {
-            mapper.insertDto(param);
-            return param.getEntityDTO().getId();
-        } else {
-            String lockKey = getLockKey(id);
-            if (CacheHelper.getLock(lockKey)) {
-                try {
-                    CacheHelper.getCache().del(getCacheKey(id));
-                    mapper.updateDto(param);
-                    return id;
-                } finally {
-                    CacheHelper.unlock(lockKey);
-                }
+        return this.save(param.getEntityDTO());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public TKey save(IEntityDTO<TKey> dto) {
+        try {
+            TKey id = dto.getId();
+            if (this.isEmptyKey(id)) {
+                return this.insert(dto);
             } else {
-                sleep(500);
-                return save(param);
+                return this.update(dto);
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return null;
         }
     }
 
@@ -114,11 +136,33 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    @Transactional
-    public TKey save(IEntityDTO<TKey> dto) {
-        CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
-        return this.save(param);
+    public TKey insert(IEntityDTO<TKey> dto) {
+        try {
+            CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
+            mapper.insertDto(param);
+            return dto.getId();
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
     }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TKey update(IEntityDTO<TKey> dto){
+        try {
+            CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
+            mapper.updateDto(param);
+            return dto.getId();
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+    }
+
 
     /**
      * {@inheritDoc}
@@ -170,7 +214,6 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
     public void delete(TKey id) {
         try {
             mapper.deleteById(id);
-            CacheHelper.getCache().del(getCacheKey(id));
         } catch (Exception e) {
             logger.error("数据删除失败", e);
         }
@@ -184,40 +227,52 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
     public T save(T record) {
         try {
             if (isEmptyKey(record.getId())) {
-                mapper.insert(record);
+                return this.insert(record);
             } else {
-                T org = this.queryById(record.getId());
-                String lockKey = getLockKey(record.getId());
-                if (CacheHelper.getLock(lockKey)) {
-                    try {
-                        CacheHelper.getCache().del(getCacheKey(record.getId()));
-
-                        T update = ClassHelper.getDiff(org, record);
-                        update.setId(record.getId());
-                        mapper.updateById(update);
-                    } finally {
-                        CacheHelper.unlock(lockKey);
-                    }
-                } else {
-                    sleep(20);
-                    return save(record);
-                }
+                this.update(record);
+                return record;
             }
-        } catch (DuplicateKeyException e) {
-            String msg = ExceptionHelper.getStackTraceAsString(e);
-            logger.error(Constant.EXCEPTION_HEAD + msg, e);
         } catch (Exception e) {
-            String msg = ExceptionHelper.getStackTraceAsString(e);
-            logger.error(msg, e);
+            logger.error(e.getMessage(), e);
+            return null;
         }
-        return record;
     }
 
-    protected void sleep(int millis) {
+    /**
+     * 新增
+     *
+     * @param record 数据
+     * @return 是否成功
+     */
+    @Override
+    public T insert(T record) {
         try {
-            Thread.sleep(RandomUtils.nextLong(10, millis));
+            mapper.insert(record);
+            return record;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+    }
+
+    /**
+     * 新增
+     *
+     * @param record 数据
+     * @return 是否成功
+     */
+    @Override
+    public boolean update(T record) {
+        try {
+            T org = this.queryById(record.getId());
+            T update = ClassHelper.getDiff(org, record);
+            update.setId(record.getId());
+            Integer result = mapper.updateById(update);
+
+            return null != result && result >= 1;
         } catch (Exception e) {
-            logger.error("thread sleep error", e);
+            logger.error(e.getMessage(), e);
+            return false;
         }
     }
 
@@ -225,30 +280,12 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("unchecked")
     public T queryById(TKey id) {
         if (isEmptyKey(id)) {
             return null;
         }
 
-        String key = getCacheKey(id);
-        T record = (T) CacheHelper.getCache().get(key);
-        if (record == null) {
-            String lockKey = getLockKey(id);
-            if (CacheHelper.getLock(lockKey)) {
-                try {
-                    record = mapper.selectById(id);
-                    CacheHelper.getCache().set(key, record);
-                } finally {
-                    CacheHelper.unlock(lockKey);
-                }
-            } else {
-                logger.debug("{}:{} retry queryById.", getClass().getSimpleName(), id);
-                sleep(20);
-                return queryById(id);
-            }
-        }
-        return record;
+        return mapper.selectById(id);
     }
 
     /**
@@ -292,60 +329,21 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
     }
 
     /**
-     * 获取缓存键值
-     */
-    protected String getCacheKey(Serializable id) {
-        String cacheName = getCacheKey();
-        return cachePrefix + ":" + cacheName + ":" + id;
-    }
-
-    /**
-     * 获取缓存键值
-     */
-    protected String getLockKey(Serializable id) {
-        String cacheName = getCacheKey();
-        return cachePrefix + ":" + cacheName + ":LOCK:" + id;
-    }
-
-    /**
-     * @return cacheKey
-     */
-    private String getCacheKey() {
-        Class<?> cls = getClass();
-        String cacheName = Constant.Cache.CLASSKEY_MAP.get(cls);
-        if (StringUtils.isBlank(cacheName)) {
-            CacheConfig cacheConfig = cls.getAnnotation(CacheConfig.class);
-            if (cacheConfig == null || ArrayUtils.isEmpty(cacheConfig.cacheNames())) {
-                cacheName = getClass().getName();
-            } else {
-                cacheName = cacheConfig.cacheNames()[0];
-            }
-            Constant.Cache.CLASSKEY_MAP.put(cls, cacheName);
-        }
-        return cacheName;
-    }
-
-    /**
-     * 获取SqlStatement
-     *
-     * @param sqlMethod
-     * @return
-     */
-    protected String sqlStatement(SqlMethod sqlMethod) {
-        return SqlHelper.table(currentModelClass()).getSqlStatement(sqlMethod.getMethod());
-    }
-
-    @SuppressWarnings("unchecked")
-    protected Class<T> currentModelClass() {
-        return ReflectionKit.getSuperClassGenricType(getClass(), 1);
-    }
-
-    /**
      * <p>
      * 批量操作 SqlSession
      * </p>
      */
     protected SqlSession sqlSessionBatch() {
-        return SqlHelper.sqlSessionBatch(currentModelClass());
+        return SqlHelper.sqlSessionBatch(getModelClass());
+    }
+
+    /**
+     * 获取SqlStatement
+     *
+     * @param sqlMethod sqlMethod
+     * @return String
+     */
+    private String sqlStatement(SqlMethod sqlMethod) {
+        return SqlHelper.table(getModelClass()).getSqlStatement(sqlMethod.getMethod());
     }
 }

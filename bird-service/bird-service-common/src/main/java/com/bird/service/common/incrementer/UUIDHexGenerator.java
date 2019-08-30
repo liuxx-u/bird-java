@@ -1,14 +1,12 @@
 package com.bird.service.common.incrementer;
 
-import com.baomidou.mybatisplus.incrementer.IKeyGenerator;
-
 import java.net.InetAddress;
 
 /**
  * @author liuxx
  * @date 2019/8/23
  */
-public class UUIDHexGenerator implements IKeyGenerator {
+public class UUIDHexGenerator {
 
     private final static String DELIMITER = "-";
 
@@ -88,20 +86,5 @@ public class UUIDHexGenerator implements IKeyGenerator {
             result = (result << 8) - Byte.MIN_VALUE + (int) bytes[i];
         }
         return result;
-    }
-
-
-    /**
-     * <p>
-     * 执行 key 生成 SQL
-     * </p>
-     *
-     * @param incrementerName 序列名称
-     * @return key
-     */
-    @Override
-    public String executeSql(String incrementerName) {
-        String uid = UUIDHexGenerator.generate();
-        return "select '" + uid + "' from dual";
     }
 }
