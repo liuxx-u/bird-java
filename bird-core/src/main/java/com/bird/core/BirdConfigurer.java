@@ -1,8 +1,6 @@
 package com.bird.core;
 
 import com.bird.core.cache.redis.RedisCacheConfigurer;
-import com.bird.core.initialize.IInitializePipe;
-import com.bird.core.initialize.InitializeExecutor;
 import com.bird.core.utils.DozerHelper;
 import com.bird.core.utils.SpringContextHolder;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,11 +24,6 @@ public class BirdConfigurer {
     @Lazy(false)
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
-    }
-
-    @Bean(initMethod = "initialize")
-    public InitializeExecutor initializeExecutor(){
-        return new InitializeExecutor(basePackage);
     }
 
     @Bean

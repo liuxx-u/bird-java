@@ -1,8 +1,9 @@
 package com.bird.service.boot.starter.permission;
 
-import com.bird.service.common.mapper.permission.DataRuleInitializePipe;
+import com.bird.service.common.mapper.permission.DataRuleInitializer;
 import com.bird.service.common.mapper.permission.IDataRuleStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,6 +19,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(DataRuleProperties.class)
 public class DataRuleConfigurer {
 
+    @Value("spring.application.name")
+    private String applicationName;
+
     private final DataRuleProperties properties;
 
     @Autowired
@@ -28,12 +32,15 @@ public class DataRuleConfigurer {
 
     @Bean
     @ConditionalOnMissingBean
-    public IDataRuleStore dataRuleStore(){
+    public IDataRuleStore dataRuleStore() {
         return new NullDataRuleStore();
     }
 
     @Bean
-    public DataRuleInitializePipe dataRuleInitializePipe(){
-        return new DataRuleInitializePipe(properties.getBasePackages());
+    public DataRuleInitializer dataRuleInitializePipe(IDataRuleStore dataRuleStore) {
+        DataRuleInitializer dataRuleInitializer = new DataRuleInitializer(properties.getBasePackages(), applicationName, dataRuleStore);
+        dataRuleInitializer.init();
+
+        return dataRuleInitializer;
     }
 }
