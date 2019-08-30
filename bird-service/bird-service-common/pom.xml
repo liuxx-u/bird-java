@@ -18,11 +18,6 @@
             <artifactId>bird-core</artifactId>
             <version>${bird.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.bird</groupId>
-            <artifactId>bird-dubbo</artifactId>
-            <version>${bird.version}</version>
-        </dependency>
 
         <!-- 添加mybatis-plus依赖 -->
         <dependency>

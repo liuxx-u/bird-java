@@ -2,7 +2,7 @@ package com.bird.service.common.service.query;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
 import java.util.HashMap;
