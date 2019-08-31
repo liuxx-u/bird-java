@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 用户从SsoServer注销时触发的事件
+ *
  * @author liuxx
  * @date 2019/3/7
  */

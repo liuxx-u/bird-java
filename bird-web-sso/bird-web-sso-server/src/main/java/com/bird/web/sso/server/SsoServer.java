@@ -2,6 +2,7 @@ package com.bird.web.sso.server;
 
 import com.bird.web.sso.event.SsoEvent;
 import com.bird.web.sso.server.client.IClientStore;
+import com.bird.web.sso.server.event.SsoClientObtainTicketEvent;
 import com.bird.web.sso.server.event.SsoServerLoginEvent;
 import com.bird.web.sso.server.event.SsoServerLogoutEvent;
 import com.bird.web.sso.server.event.SsoServerRefreshTicketEvent;
@@ -76,7 +77,7 @@ public class SsoServer {
 
         //用户中心写入Cookie
         CookieHelper.setCookie(response, serverProperties.getCookieName(), StringUtils.strip(token), serverProperties.getExpire() * 60);
-        //触发事件
+        //触发登录事件
         this.postEvent(new SsoServerLoginEvent(token, ticketInfo));
         return token;
     }
@@ -103,7 +104,7 @@ public class SsoServer {
             CookieHelper.removeCookie(request, response, serverProperties.getCookieName());
             //通知客户端，移除缓存
             executorService.execute(() -> this.removeClientCache(token));
-            //触发事件
+            //触发注销事件
             this.postEvent(new SsoServerLogoutEvent(token, ticketInfo));
         }
     }
@@ -132,13 +133,15 @@ public class SsoServer {
                 if (t1 > t2) {
                     TicketInfo origin = ticketInfo.clone();
                     ticketInfo = sessionStore.refreshTicket(token, ticketInfo, t1 + t2);
-                    //触发事件
+                    //触发票据刷新事件
                     this.postEvent(new SsoServerRefreshTicketEvent(token, origin, true, ticketInfo));
                 }
             }
         } else {
             ticketInfo = protector.unProtect(token);
         }
+        //触发客户端获取票据事件
+        this.postEvent(new SsoClientObtainTicketEvent(token, ticketInfo, clientHost));
         return ticketInfo;
     }
 
@@ -158,15 +161,15 @@ public class SsoServer {
         }
 
         sessionStore.refreshTicket(token, ticketInfo, serverProperties.getExpire() * 60 * 1000L);
-        //触发事件
+        //触发票据刷新事件
         this.postEvent(new SsoServerRefreshTicketEvent(token, curTicket, false, ticketInfo));
     }
 
     /**
      * 从HttpServletRequest中获取token
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return token
      */
     public String getToken(HttpServletRequest request) {
         //先从header中获取token
@@ -180,7 +183,7 @@ public class SsoServer {
     /**
      * 触发事件
      *
-     * @param event
+     * @param event 事件
      */
     private void postEvent(SsoEvent event) {
         if (eventBus == null || event == null) return;
@@ -195,7 +198,7 @@ public class SsoServer {
         if (CollectionUtils.isEmpty(clientHosts)) return;
 
         for (String clientHost : clientHosts) {
-            Integer retryCount = 3;
+            int retryCount = 3;
             String url = clientHost + REMOVE_CLIENT_TICKET_URL + token;
             List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch");
             int resCode = 0;
