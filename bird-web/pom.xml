@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bird-web</artifactId>
+    <packaging>pom</packaging>
 
     <modules>
         <module>bird-web-common</module>
