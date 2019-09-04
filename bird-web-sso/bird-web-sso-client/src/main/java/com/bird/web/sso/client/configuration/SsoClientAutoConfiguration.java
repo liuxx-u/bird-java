@@ -3,6 +3,8 @@ package com.bird.web.sso.client.configuration;
 import com.bird.web.sso.SsoConstant;
 import com.bird.web.sso.client.SsoClient;
 import com.bird.web.sso.client.SsoClientProperties;
+import com.bird.web.sso.client.cache.DefaultClientTicketCache;
+import com.bird.web.sso.client.cache.IClientTicketCache;
 import com.bird.web.sso.client.controller.TicketController;
 import com.bird.web.sso.client.remote.DefaultRemoteTicketHandler;
 import com.bird.web.sso.client.remote.IRemoteTicketHandler;
@@ -11,7 +13,6 @@ import com.google.common.eventbus.EventBus;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +35,15 @@ public class SsoClientAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
+    public IClientTicketCache clientTicketCache(SsoClientProperties clientProperties, IRemoteTicketHandler ticketHandler) {
+        return new DefaultClientTicketCache(clientProperties, ticketHandler);
+    }
+
+    @Bean
     @ConditionalOnProperty(value = SsoConstant.CLIENT_WEBFLUX, havingValue = "false", matchIfMissing = true)
-    public SsoClient ssoClient(SsoClientProperties clientProperties, IRemoteTicketHandler remoteTicketHandler) {
-        return new SsoClient(clientProperties, remoteTicketHandler);
+    public SsoClient ssoClient(SsoClientProperties clientProperties, IRemoteTicketHandler remoteTicketHandler, IClientTicketCache clientTicketCache) {
+        return new SsoClient(clientProperties, remoteTicketHandler, clientTicketCache);
     }
 
     @Bean
