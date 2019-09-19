@@ -27,7 +27,7 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
-                <artifactId>bird-eventbus</artifactId>
+                <artifactId>bird-eventbus-core</artifactId>
                 <version>${bird.version}</version>
             </dependency>
             <dependency>
