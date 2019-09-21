@@ -49,12 +49,7 @@ public class EventDispatcher {
     private final static ConcurrentMap<String, Set<Method>> EVENT_HANDLER_CONTAINER = new ConcurrentHashMap<>();
 
     public EventDispatcher() {
-        ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-            Thread thread = new Thread(r, "com.bird.eventbus.handler");
-            thread.setDaemon(true);
-
-            return thread;
-        });
+        ExecutorService executor = Executors.newCachedThreadPool();
         executor.execute(new EventConsumer());
     }
 
