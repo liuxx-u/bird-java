@@ -1,8 +1,10 @@
 package com.bird.gateway.web.pipe;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.bird.gateway.common.GatewayConstant;
 import com.bird.gateway.common.dto.JsonResult;
 import com.bird.gateway.common.RouteDefinition;
@@ -14,6 +16,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -26,9 +29,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public abstract class AbstractPipe implements IPipe {
 
+    private static SerializeConfig JSON_SERIALIZE_CONFIG = SerializeConfig.globalInstance;
+
     private static SimplePropertyPreFilter JSON_FILTER = new SimplePropertyPreFilter();
     static {
         JSON_FILTER.getExcludes().add("class");
+
+        JSON_SERIALIZE_CONFIG.put(Long.class , ToStringSerializer.instance);
+        JSON_SERIALIZE_CONFIG.put(Long.TYPE , ToStringSerializer.instance);
+        JSON_SERIALIZE_CONFIG.put(BigInteger .class , ToStringSerializer.instance);
     }
 
     /**
@@ -71,7 +80,7 @@ public abstract class AbstractPipe implements IPipe {
 
         return response.writeWith(Mono.just(exchange.getResponse()
                         .bufferFactory()
-                        .wrap(Objects.requireNonNull(JSON.toJSONString(result,JSON_FILTER
+                        .wrap(Objects.requireNonNull(JSON.toJSONString(result,JSON_SERIALIZE_CONFIG,JSON_FILTER
                                 , SerializerFeature.PrettyFormat
                                 , SerializerFeature.QuoteFieldNames
                                 , SerializerFeature.WriteDateUseDateFormat
