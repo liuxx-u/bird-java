@@ -7,7 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,6 +18,8 @@ import java.util.Map;
  */
 public class QueryDescriptor implements Serializable {
 
+    //排除的列
+    private static final List<String> EXCLUDE_FIELD_NAMES = Collections.singletonList("serialVersionUID");
     private final static String OBJECT_CLASS_NAME = "java.lang.Object";
 
     private String select;
@@ -38,6 +42,8 @@ public class QueryDescriptor implements Serializable {
         while (tempClass != null && !StringUtils.equals(tempClass.getName(), OBJECT_CLASS_NAME)) {
             Field[] tempFields = tempClass.getDeclaredFields();
             for (Field field : tempFields) {
+                if(EXCLUDE_FIELD_NAMES.contains(field.getName()))continue;
+
                 TableField tableField = field.getAnnotation(TableField.class);
                 if (tableField != null && !tableField.exist()) continue;
 

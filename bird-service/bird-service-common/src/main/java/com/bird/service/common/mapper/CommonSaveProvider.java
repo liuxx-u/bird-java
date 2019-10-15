@@ -19,6 +19,10 @@ import java.util.*;
  */
 @Slf4j
 public class CommonSaveProvider {
+
+    //排除的列
+    private static final List<String> EXCLUDE_FIELD_NAMES = Collections.singletonList("serialVersionUID");
+
     /**
      * 不允许修改的列
      */
@@ -97,6 +101,8 @@ public class CommonSaveProvider {
 
         Field[] fields = param.gettClass().getDeclaredFields();
         for (Field field : fields) {
+            if (EXCLUDE_FIELD_NAMES.contains(field.getName())) continue;
+
             TableField tableField = field.getAnnotation(TableField.class);
             if (tableField != null && !tableField.exist()) continue;
             String fieldName = tableField == null ? field.getName() : tableField.value();
