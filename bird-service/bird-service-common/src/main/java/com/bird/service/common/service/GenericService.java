@@ -108,7 +108,6 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      */
     @Override
     @Deprecated
-    @Transactional(rollbackFor = Exception.class)
     public TKey save(CommonSaveParam<TKey> param) {
         return this.save(param.getEntityDTO());
     }
@@ -117,7 +116,6 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public TKey save(IEntityDTO<TKey> dto) {
         try {
             TKey id = dto.getId();
@@ -210,7 +208,6 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void delete(TKey id) {
         try {
             mapper.deleteById(id);
@@ -223,7 +220,6 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public T save(T record) {
         try {
             if (isEmptyKey(record.getId())) {
@@ -308,8 +304,8 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
     /**
      * {@inheritDoc}
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean insertBatch(List<T> entityList, int batchSize) {
         if (CollectionUtils.isNotEmpty(entityList)) {
             try(SqlSession batchSqlSession = sqlSessionBatch()) {
