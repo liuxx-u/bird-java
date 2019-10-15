@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.enums.SqlMethod;
 import com.baomidou.mybatisplus.mapper.SqlHelper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.toolkit.ReflectionKit;
-import com.bird.core.utils.ClassHelper;
 import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
@@ -260,11 +259,7 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
     @Override
     public boolean update(T record) {
         try {
-            T org = this.queryById(record.getId());
-            T update = ClassHelper.getDiff(org, record);
-            update.setId(record.getId());
-            Integer result = mapper.updateById(update);
-
+            Integer result = mapper.updateById(record);
             return null != result && result >= 1;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
