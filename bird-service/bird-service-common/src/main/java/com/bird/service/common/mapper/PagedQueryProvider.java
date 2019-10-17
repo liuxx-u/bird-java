@@ -67,7 +67,7 @@ public class PagedQueryProvider {
         if (StringUtils.isBlank(where)) {
             where = param.isFilterSoftDelete() ? " delFlag = 0 " : "";
         } else {
-            where = param.isFilterSoftDelete() ? " delFlag = 0 and (" + where + ")" : where;
+            where = param.isFilterSoftDelete() ?  " (" + where + ") and delFlag = 0": where;
         }
 
         if (StringUtils.isNotBlank(where)) {
