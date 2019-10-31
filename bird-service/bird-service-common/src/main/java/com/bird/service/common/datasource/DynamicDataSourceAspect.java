@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class DynamicDataSourceAspect {
 
-    @Around("@within(com.bird.service.common.datasource.TargetDataSource)")
+    @Around("@within(com.bird.service.common.datasource.TargetDataSource) || @annotation(com.bird.service.common.datasource.TargetDataSource)")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         String currentDataSource = DataSourceContext.get();
 
