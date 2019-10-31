@@ -1,5 +1,6 @@
 package com.bird.service.sample;
 
+import com.bird.service.common.datasource.DataSourceContext;
 import com.bird.service.sample.dto.TabLongDTO;
 import com.bird.service.sample.dto.TabStringDTO;
 import com.bird.service.sample.model.TabLong;
@@ -73,6 +74,7 @@ public class TestController {
 
     @GetMapping("/string/insert")
     public TabString insertString(String remark) {
+        DataSourceContext.set("db2");
         TabString model = new TabString();
         model.setRemark(remark);
         return tabStringService.save(model);

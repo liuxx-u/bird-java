@@ -1,0 +1,32 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bird.service.common.configure.DynamicDataSourceProperties",
+      "name": "spring.datasource",
+      "type": "com.bird.service.common.configure.DynamicDataSourceProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bird.service.common.configure.DynamicDataSourceProperties",
+      "name": "spring.datasource.collection",
+      "description": "数据源集合",
+      "type": "java.util.Map<java.lang.String,javax.sql.DataSource>"
+    },
+    {
+      "sourceType": "com.bird.service.common.configure.DynamicDataSourceProperties",
+      "defaultValue": "default",
+      "name": "spring.datasource.default-data-source",
+      "description": "默认的数据源",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bird.service.common.configure.DynamicDataSourceProperties",
+      "defaultValue": false,
+      "name": "spring.datasource.dynamic",
+      "description": "是否启用",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}
