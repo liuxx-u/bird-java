@@ -8,14 +8,14 @@ spring:
       enable: true
       collection:
         default:
-          url: jdbc:mysql://10.10.116.15:3306/bird-demo?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
+          url: jdbc:mysql://127.0.0.1:3306/bird-demo?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
           username: root
-          password: Thctlrb888
+          password: bird123456
           driver-class-name: com.mysql.jdbc.Driver
         db2:
-          url: jdbc:mysql://10.10.116.15:3306/bird-demo2?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
+          url: jdbc:mysql://127.0.0.1:3306/bird-demo2?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
           username: root
-          password: Thctlrb888
+          password: bird123456
           driver-class-name: com.mysql.jdbc.Driver
 
 
