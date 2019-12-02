@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -173,7 +174,7 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    public List<T> getList(List<TKey> ids) {
+    public List<T> getList(Collection<TKey> ids) {
         List<T> list = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(ids)) {
             list = mapper.selectBatchIds(ids);
@@ -185,7 +186,7 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    public <K> List<K> getList(List<TKey> ids, Class<K> cls) {
+    public <K> List<K> getList(Collection<TKey> ids, Class<K> cls) {
         List<T> list = getList(ids);
         List<K> list2 = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(list)) {
@@ -301,13 +302,15 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean insertBatch(List<T> entityList, int batchSize) {
+    public boolean insertBatch(Collection<T> entityList, int batchSize) {
         if (CollectionUtils.isNotEmpty(entityList)) {
-            try(SqlSession batchSqlSession = sqlSessionBatch()) {
-                int size = entityList.size();
+            List<T> models = new ArrayList<>(entityList);
+
+            try (SqlSession batchSqlSession = sqlSessionBatch()) {
+                int size = models.size();
                 String sqlStatement = sqlStatement(SqlMethod.INSERT_ONE);
                 for (int i = 0; i < size; i++) {
-                    batchSqlSession.insert(sqlStatement, entityList.get(i));
+                    batchSqlSession.insert(sqlStatement, models.get(i));
                     if (i >= 1 && i % batchSize == 0) {
                         batchSqlSession.flushStatements();
                     }

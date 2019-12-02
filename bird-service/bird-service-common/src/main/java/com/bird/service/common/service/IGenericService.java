@@ -11,7 +11,7 @@ import com.bird.service.common.service.query.PagedListQueryDTO;
 import com.bird.service.common.service.query.PagedListResultDTO;
 
 import java.io.Serializable;
-import java.security.Key;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -86,7 +86,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @param ids id集合
      * @return
      */
-    List<T> getList(List<TKey> ids);
+    List<T> getList(Collection<TKey> ids);
 
     /**
      * 根据id集合获取指定类型的数据
@@ -96,7 +96,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @param <K> K
      * @return list<K>
      */
-    <K> List<K> getList(List<TKey> ids, Class<K> cls);
+    <K> List<K> getList(Collection<TKey> ids, Class<K> cls);
 
     /**
      * 物理删除
@@ -160,7 +160,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @param entityList 实体对象列表
      * @return boolean
      */
-    default boolean insertBatch(List<T> entityList){
+    default boolean insertBatch(Collection<T> entityList){
         return insertBatch(entityList,50);
     }
 
@@ -173,7 +173,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @param batchSize  插入批次数量
      * @return boolean
      */
-    boolean insertBatch(List<T> entityList, int batchSize);
+    boolean insertBatch(Collection<T> entityList, int batchSize);
 
 
 }

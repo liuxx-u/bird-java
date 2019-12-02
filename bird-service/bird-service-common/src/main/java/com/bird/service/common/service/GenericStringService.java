@@ -7,7 +7,7 @@ import com.bird.service.common.service.dto.IEntityDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author liuxx
@@ -43,10 +43,30 @@ public abstract class GenericStringService<M extends AbstractMapper<T>,T extends
     }
 
     @Override
-    public boolean insertBatch(List<T> entityList, int batchSize) {
-        if(CollectionUtils.isNotEmpty(entityList)){
-            entityList.forEach(p->p.setId(UUIDHexGenerator.generate()));
-        }
+    public boolean insertBatch(Collection<T> entityList, int batchSize) {
+        this.initModelIds(entityList);
         return super.insertBatch(entityList, batchSize);
+    }
+
+    /**
+     * 批量生成id
+     *
+     * @param models {@link Collection<T>}
+     */
+    protected void initModelIds(Collection<T> models) {
+        if (CollectionUtils.isNotEmpty(models)) {
+            models.forEach(p -> p.setId(UUIDHexGenerator.generate()));
+        }
+    }
+
+    /**
+     * 批量生成id
+     *
+     * @param dtos {@link Collection<IEntityDTO>}
+     */
+    protected void initDtoIds(Collection<IEntityDTO<String>> dtos) {
+        if (CollectionUtils.isNotEmpty(dtos)) {
+            dtos.forEach(p -> p.setId(UUIDHexGenerator.generate()));
+        }
     }
 }

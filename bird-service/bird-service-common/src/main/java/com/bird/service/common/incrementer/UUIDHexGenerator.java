@@ -6,7 +6,9 @@ import java.net.InetAddress;
  * @author liuxx
  * @date 2019/8/23
  */
-public class UUIDHexGenerator {
+public final class UUIDHexGenerator {
+
+    private static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
     private final static String DELIMITER = "-";
 
@@ -25,15 +27,34 @@ public class UUIDHexGenerator {
         FORMAT_JVM = format((int) (System.currentTimeMillis() >>> 8));
     }
 
+    private UUIDHexGenerator(){}
+
     private static short counter = (short) 0;
 
 
     public static String generate() {
-        return format(getLoTime()) + DELIMITER
+        return format(System.currentTimeMillis()) + DELIMITER
                 + format(getHiTime()) + DELIMITER
                 + FORMAT_JVM + DELIMITER
                 + FORMAT_IP + DELIMITER
                 + format(getCount());
+    }
+
+    private static String format(long longValue){
+        int digitIndex;
+        long longPositive = Math.abs(longValue);
+        int radix = 36;//36进制
+        char[] outDigits = new char[37];
+        for (digitIndex = 0; digitIndex <= 36; digitIndex++){
+            if (longPositive == 0) { break; }
+            outDigits[outDigits.length - digitIndex - 1] = digits[(int) (longPositive %  radix)];
+            longPositive /= radix;
+        }
+        String formatted = new String(outDigits, outDigits.length - digitIndex, digitIndex);
+
+        StringBuilder buf = new StringBuilder("000000000");
+        buf.replace(9 - formatted.length(), 9, formatted);
+        return buf.toString();
     }
 
     private static String format(int intValue) {
@@ -66,10 +87,6 @@ public class UUIDHexGenerator {
      */
     private static short getHiTime() {
         return (short) (System.currentTimeMillis() >>> 32);
-    }
-
-    private static int getLoTime() {
-        return (int) System.currentTimeMillis();
     }
 
     /**
