@@ -40,7 +40,6 @@ public class DynamicDataSourceAutoConfigurer {
     /**
      * 注入动态数据源
      *
-     * @param dataSourceCollection 数据源集合
      * @param properties           配置信息
      * @return DynamicDataSource
      */
