@@ -38,11 +38,13 @@ public class IdempotencyInterceptor extends HandlerInterceptorAdapter {
             logger.warn("幂等性接口：{}，请求头中token为空.", request.getRequestURI());
             if (idempotency.force()) {
                 response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已失效，请刷新后重试");
+                return false;
             }
             return true;
         }
         if (!CacheHelper.getCache().del(WebConstant.Cache.IDEMPOTENCY_NAMESPACE + token)) {
             response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已提交");
+            return false;
         }
 
         return true;
