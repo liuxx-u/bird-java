@@ -18,7 +18,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -301,7 +300,6 @@ public abstract class GenericService<M extends AbstractMapper<T>,T extends IMode
      * {@inheritDoc}
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public boolean insertBatch(Collection<T> entityList, int batchSize) {
         if (CollectionUtils.isNotEmpty(entityList)) {
             List<T> models = new ArrayList<>(entityList);

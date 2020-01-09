@@ -161,7 +161,7 @@ public interface IGenericService<T extends IModel<TKey>,TKey extends Serializabl
      * @return boolean
      */
     default boolean insertBatch(Collection<T> entityList){
-        return insertBatch(entityList,50);
+        return insertBatch(entityList,500);
     }
 
     /**
