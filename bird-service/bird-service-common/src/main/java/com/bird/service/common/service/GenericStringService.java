@@ -27,7 +27,9 @@ public abstract class GenericStringService<M extends AbstractMapper<T>,T extends
             logger.warn("新增的model信息为null");
             return null;
         }
-        record.setId(UUIDHexGenerator.generate());
+        if(isEmptyKey(record.getId())){
+            record.setId(UUIDHexGenerator.generate());
+        }
         return super.insert(record);
     }
 
@@ -37,8 +39,9 @@ public abstract class GenericStringService<M extends AbstractMapper<T>,T extends
             logger.warn("新增的dto信息为null");
             return null;
         }
-
-        dto.setId(UUIDHexGenerator.generate());
+        if(isEmptyKey(dto.getId())){
+            dto.setId(UUIDHexGenerator.generate());
+        }
         return super.insert(dto);
     }
 
