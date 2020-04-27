@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,7 +155,7 @@ public class PoiExcelHelper {
     }
 
     /**
-     * 导出Excel
+     * 导出Excel（2003）
      *
      * @param list      数据源
      * @param config    表头与Key映射
@@ -188,6 +189,31 @@ public class PoiExcelHelper {
                 }
             }
 
+            wb.write(out);
+        } catch (Exception e) {
+            logger.error("Excel流写入失败", e);
+        }
+    }
+
+    /**
+     * 导出Excel（2003）
+     *
+     * @param list      数据源
+     * @param config    表头与Key映射
+     * @param sheetName 工作表的名称
+     * @param out       导出流
+     */
+    public static void listToExcel7(List<Map> list, LinkedHashMap<String, String> config, String sheetName, OutputStream out) {
+        if (CollectionUtils.isEmpty(list)) {
+            throw new UserFriendlyException("数据源中没有任何数据");
+        }
+        //2007的Excel一个工作表最多可以有1048576条记录，除去列头剩下1048575条
+        if(list.size() > 1048575){
+            throw new UserFriendlyException("数据条数太多，无法导出");
+        }
+        try(Workbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet(sheetName);
+            fillSheet(sheet, list, config, 0, list.size() - 1);
             wb.write(out);
         } catch (Exception e) {
             logger.error("Excel流写入失败", e);
