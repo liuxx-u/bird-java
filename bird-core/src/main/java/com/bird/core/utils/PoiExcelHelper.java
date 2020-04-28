@@ -134,21 +134,36 @@ public class PoiExcelHelper {
         List<Map<String, Object>> result = new ArrayList<>();
 
         try (Workbook wb = WorkbookFactory.create(stream)) {
-            FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
             Sheet sheet = wb.getSheetAt(sheetIndex);
-            if (sheet == null) return result;
-
-            List<String> headKeys = getHeadKeys(sheet, config, headerIndex);
-            if (CollectionUtils.isEmpty(headKeys)) return result;
-
-            int max = sheet.getLastRowNum();
-            for (int i = headerIndex + 1; i <= max; i++) {
-                Map<String, Object> line = readLine(sheet.getRow(i), headKeys, evaluator);
-                if (line == null) continue;
-                result.add(line);
-            }
+            result = read(sheet,config,headerIndex);
         } catch (InvalidFormatException | IOException e) {
             logger.error("Excel流读取失败", e);
+        }
+
+        return result;
+    }
+
+    /**
+     * 读取EXCEL文件
+     *
+     * @param sheet      sheet页
+     * @param config      表头与Key映射\
+     * @param headerIndex header行序号
+     * @return excel数据
+     */
+    public static List<Map<String, Object>> read(Sheet sheet, Map<String, String> config, Integer headerIndex) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        if (sheet == null) return result;
+
+        List<String> headKeys = getHeadKeys(sheet, config, headerIndex);
+        if (CollectionUtils.isEmpty(headKeys)) return result;
+
+        int max = sheet.getLastRowNum();
+        FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
+        for (int i = headerIndex + 1; i <= max; i++) {
+            Map<String, Object> line = readLine(sheet.getRow(i), headKeys, evaluator);
+            if (line == null) continue;
+            result.add(line);
         }
 
         return result;
