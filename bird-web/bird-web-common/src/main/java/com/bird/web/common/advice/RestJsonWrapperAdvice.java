@@ -1,6 +1,6 @@
 package com.bird.web.common.advice;
 
-import com.bird.core.OperationResult;
+import com.bird.core.Result;
 import com.bird.core.session.SessionContext;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.MethodParameter;
@@ -44,8 +44,8 @@ public class RestJsonWrapperAdvice implements ResponseBodyAdvice<Object> {
         if(ArrayUtils.contains(INNER_CALL_HEADER,headers.getFirst("call"))){
             return value;
         }
-        if(!(value instanceof OperationResult)){
-            value = OperationResult.Success("success", value);
+        if(!(value instanceof Result)){
+            value = Result.success("success", value);
         }
         return value;
     }

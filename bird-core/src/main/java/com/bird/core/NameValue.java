@@ -15,6 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NameValue implements Serializable {
+
     private String label;
     private String value;
 }

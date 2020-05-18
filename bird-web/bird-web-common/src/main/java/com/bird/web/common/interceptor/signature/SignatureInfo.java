@@ -2,7 +2,6 @@ package com.bird.web.common.interceptor.signature;
 
 import com.bird.web.common.utils.RequestHelper;
 import lombok.Data;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.DigestUtils;

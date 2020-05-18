@@ -6,24 +6,36 @@ package com.bird.core.exception;
  * @date 2017/5/16
  */
 public abstract class AbstractException extends RuntimeException {
+
+    protected String errorCode;
+
     public AbstractException() {
     }
 
-    public AbstractException(Throwable ex) {
-        super(ex);
-    }
-
-    public AbstractException(String message) {
+    public AbstractException(String errorCode, String message) {
         super(message);
+        this.errorCode = errorCode;
     }
 
-    public AbstractException(String message, Throwable ex) {
+    public AbstractException(String errorCode, String message, Throwable ex) {
         super(message, ex);
+        this.errorCode = errorCode;
+    }
+
+    public AbstractException(ErrorCode errorCode) {
+        this(errorCode.getCode(), errorCode.getDesc());
+    }
+
+    public AbstractException(ErrorCode errorCode, Throwable ex) {
+        this(errorCode.getCode(), errorCode.getDesc(), ex);
     }
 
     /**
-     * 获取异常对应的业务编码
-     * @return
+     * 获取异常对应的错误码
+     *
+     * @return 错误码
      */
-    public abstract Integer getCode();
+    public String getErrorCode() {
+        return this.errorCode;
+    }
 }

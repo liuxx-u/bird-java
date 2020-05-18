@@ -28,7 +28,7 @@
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-eventbus-kafka</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -1,9 +1,9 @@
 package com.bird.web.file.upload.storage;
 
 import com.bird.core.utils.DateHelper;
-import com.bird.core.utils.FileHelper;
 import com.bird.web.file.upload.IUploadContext;
 import com.bird.web.file.upload.UploadException;
+import com.bird.web.file.utils.FileHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;

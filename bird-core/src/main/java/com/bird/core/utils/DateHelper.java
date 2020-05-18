@@ -23,25 +23,29 @@ public final class DateHelper extends DateUtils {
      * 日期转字符串
      * @param date 日期
      * @param pattern 模式
-     * @return
+     * @return 时间字符串
      */
     public static String format(Date date, String pattern) {
-        if (date == null) return null;
+        if (date == null) {
+            return null;
+        }
         if (StringUtils.isBlank(pattern)) {
             pattern = "yyyy-MM-dd HH:mm:ss";
         }
-        SimpleDateFormat formater = new SimpleDateFormat(pattern);
-        return formater.format(date);
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
     }
 
     /**
      * 字符串转换为时间
      * @param strDate 时间字符串
      * @param pattern 格式
-     * @return
+     * @return 时间
      */
     public static Date parse(String strDate, String pattern) {
-        if (StringUtils.isBlank(strDate)) return null;
+        if (StringUtils.isBlank(strDate)) {
+            return null;
+        }
         try {
             return new SimpleDateFormat(pattern).parse(strDate);
         } catch (ParseException ex) {
@@ -52,7 +56,7 @@ public final class DateHelper extends DateUtils {
     /**
      * 获取当前时间的字符串值
      * @param pattern 模式
-     * @return
+     * @return 当前时间
      */
     public static String strNow(String pattern) {
         return format(new Date(),pattern);

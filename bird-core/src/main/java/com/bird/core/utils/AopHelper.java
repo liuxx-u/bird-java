@@ -12,7 +12,8 @@ import java.lang.reflect.Field;
  */
 public final class AopHelper {
 
-    private AopHelper(){}
+    private AopHelper() {
+    }
 
     /**
      * 获取 目标对象
@@ -49,7 +50,7 @@ public final class AopHelper {
         return getProxyTargetObject(aopProxy);
     }
 
-    private static Object getProxyTargetObject(Object proxy) throws Exception{
+    private static Object getProxyTargetObject(Object proxy) throws Exception {
         Field advised = proxy.getClass().getDeclaredField("advised");
         advised.setAccessible(true);
         return ((AdvisedSupport) advised.get(proxy)).getTargetSource().getTarget();

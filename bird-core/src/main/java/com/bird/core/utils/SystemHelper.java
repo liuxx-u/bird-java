@@ -16,6 +16,10 @@ import java.util.List;
 @Slf4j
 public final class SystemHelper {
 
+    /**
+     * 获取机器ip
+     * @return 机器ip集合
+     */
     public static List<String> getLocalIps() {
         List<String> ips = new ArrayList<>();
         try {

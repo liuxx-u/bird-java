@@ -1,7 +1,7 @@
 package com.bird.web.file.upload.base64;
 
 import com.bird.core.utils.DateHelper;
-import com.bird.core.utils.FileHelper;
+import com.bird.web.file.utils.FileHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -15,14 +15,25 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public enum TraceSQLType {
 
+    /**
+     * 不记录SQL
+     */
     NONE("none"),
-
+    /**
+     * SELECT
+     */
     SELECT("select"),
-
+    /**
+     * INSERT
+     */
     INSERT("insert"),
-
+    /**
+     * UPDATE
+     */
     UPDATE("update"),
-
+    /**
+     * DELETE
+     */
     DELETE("delete");
 
     private final String type;

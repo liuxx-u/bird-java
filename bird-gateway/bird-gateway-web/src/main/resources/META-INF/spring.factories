@@ -1,4 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.bird.gateway.web.config.GatewayWebConfigurer,\
-com.bird.gateway.web.config.SpringCloudAutoConfiguration

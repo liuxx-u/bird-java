@@ -1,7 +1,5 @@
 package com.bird.web.common;
 
-import com.bird.core.Constant;
-
 /**
  * @author liuxx
  * @date 2018/4/26
@@ -16,6 +14,6 @@ public interface WebConstant {
     String MULTIPART = "multipart/";
 
     interface Cache {
-        String IDEMPOTENCY_NAMESPACE = Constant.Cache.NAMESPACE + "operation_token:";
+        String IDEMPOTENCY_NAMESPACE = "bird:operation_token:";
     }
 }

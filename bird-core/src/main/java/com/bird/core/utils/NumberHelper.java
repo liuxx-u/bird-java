@@ -36,7 +36,9 @@ public final class NumberHelper extends NumberUtils {
      * @return number is greater than target number
      */
     public static boolean greaterThan(Number number, Number target) {
-        if (number == null) return false;
+        if (number == null) {
+            return false;
+        }
         return number.doubleValue() > target.doubleValue();
     }
 
@@ -48,7 +50,9 @@ public final class NumberHelper extends NumberUtils {
      * @return number is less than target number
      */
     public static boolean lessThan(Number number, Number target) {
-        if (number == null) return false;
+        if (number == null) {
+            return false;
+        }
         return number.doubleValue() < target.doubleValue();
     }
 

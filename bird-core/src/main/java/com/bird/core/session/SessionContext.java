@@ -1,7 +1,5 @@
 package com.bird.core.session;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.Serializable;
 
 /**
@@ -32,7 +30,9 @@ public class SessionContext {
      */
     public static Serializable getUid() {
         BirdSession session = getSession();
-        if (session == null) return null;
+        if (session == null) {
+            return null;
+        }
         return session.getUserId();
     }
 
@@ -41,15 +41,27 @@ public class SessionContext {
      *
      * @return userId
      */
-    public static Long getUserId() {
+    public static <T extends Serializable> T getUserId() {
         Serializable uid = getUid();
-        if (uid == null) return 0L;
-        if (StringUtils.isBlank(uid.toString())) return 0L;
-        try {
-            return Long.valueOf(uid.toString());
-        } catch (NumberFormatException ex) {
-            return 0L;
+
+        if (uid == null) {
+            return null;
         }
+        return (T) uid;
+    }
+
+    /**
+     * 获取当前登录用户userId
+     *
+     * @return userId
+     */
+    public static <T extends Serializable> T getTenantId() {
+        BirdSession session = getSession();
+        if(session == null){
+            return null;
+        }
+        Serializable tenantId = session.getTenantId();
+        return (T) tenantId;
     }
 
     /**

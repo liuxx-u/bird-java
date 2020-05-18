@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.bird.service.boot.starter.ServiceConfigurer,\
-  com.bird.service.boot.starter.permission.DataRuleConfigurer

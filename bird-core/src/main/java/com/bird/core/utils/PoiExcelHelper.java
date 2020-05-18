@@ -1,7 +1,6 @@
 package com.bird.core.utils;
 
 import com.bird.core.exception.UserFriendlyException;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -9,6 +8,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -28,6 +28,15 @@ public class PoiExcelHelper {
     private static Logger logger = LoggerFactory.getLogger(OkHttpHelper.class);
 
     private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0");
+
+    /**
+     * Office 2003 最大的数据行数
+     */
+    private final static double MAX_ROW_2003 = 65535d;
+    /**
+     * Office 2007 最大的数据行数
+     */
+    private final static int MAX_ROW_2007 = 1048575;
 
     /**
      * 读取本地EXCEL文件
@@ -112,7 +121,7 @@ public class PoiExcelHelper {
 
         List<Map<String, Object>> result = new ArrayList<>();
 
-        try(InputStream stream = conn.getInputStream()) {
+        try (InputStream stream = conn.getInputStream()) {
 
             result = read(stream, config, sheetIndex, headerIndex);
         } catch (MalformedURLException e) {
@@ -135,7 +144,7 @@ public class PoiExcelHelper {
 
         try (Workbook wb = WorkbookFactory.create(stream)) {
             Sheet sheet = wb.getSheetAt(sheetIndex);
-            result = read(sheet,config,headerIndex);
+            result = read(sheet, config, headerIndex);
         } catch (InvalidFormatException | IOException e) {
             logger.error("Excel流读取失败", e);
         }
@@ -146,23 +155,29 @@ public class PoiExcelHelper {
     /**
      * 读取EXCEL文件
      *
-     * @param sheet      sheet页
+     * @param sheet       sheet页
      * @param config      表头与Key映射\
      * @param headerIndex header行序号
      * @return excel数据
      */
     public static List<Map<String, Object>> read(Sheet sheet, Map<String, String> config, Integer headerIndex) {
         List<Map<String, Object>> result = new ArrayList<>();
-        if (sheet == null) return result;
+        if (sheet == null) {
+            return result;
+        }
 
         List<String> headKeys = getHeadKeys(sheet, config, headerIndex);
-        if (CollectionUtils.isEmpty(headKeys)) return result;
+        if (CollectionUtils.isEmpty(headKeys)) {
+            return result;
+        }
 
         int max = sheet.getLastRowNum();
         FormulaEvaluator evaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
         for (int i = headerIndex + 1; i <= max; i++) {
             Map<String, Object> line = readLine(sheet.getRow(i), headKeys, evaluator);
-            if (line == null) continue;
+            if (line == null) {
+                continue;
+            }
             result.add(line);
         }
 
@@ -183,11 +198,11 @@ public class PoiExcelHelper {
         if (CollectionUtils.isEmpty(list)) {
             throw new UserFriendlyException("数据源中没有任何数据");
         }
-        try(Workbook wb = new HSSFWorkbook()) {
+        try (Workbook wb = new HSSFWorkbook()) {
             //因为2003的Excel一个工作表最多可以有65536条记录，除去列头剩下65535条
             //所以如果记录太多，需要放到多个工作表中，其实就是个分页的过程
             //1.计算一共有多少个工作表
-            double sheetNum = Math.ceil(list.size() / 65535d);
+            double sheetNum = Math.ceil(list.size() / MAX_ROW_2003);
             if (sheetNum == 1) {
                 Sheet sheet = wb.createSheet(sheetName);
                 fillSheet(sheet, list, config, 0, list.size() - 1);
@@ -211,7 +226,7 @@ public class PoiExcelHelper {
     }
 
     /**
-     * 导出Excel（2003）
+     * 导出Excel（2007）
      *
      * @param list      数据源
      * @param config    表头与Key映射
@@ -223,10 +238,10 @@ public class PoiExcelHelper {
             throw new UserFriendlyException("数据源中没有任何数据");
         }
         //2007的Excel一个工作表最多可以有1048576条记录，除去列头剩下1048575条
-        if(list.size() > 1048575){
+        if (list.size() > MAX_ROW_2007) {
             throw new UserFriendlyException("数据条数太多，无法导出");
         }
-        try(Workbook wb = new XSSFWorkbook()) {
+        try (Workbook wb = new XSSFWorkbook()) {
             Sheet sheet = wb.createSheet(sheetName);
             fillSheet(sheet, list, config, 0, list.size() - 1);
             wb.write(out);
@@ -243,11 +258,15 @@ public class PoiExcelHelper {
      * @return 字段集合
      */
     private static List<String> getHeadKeys(Sheet sheet, Map<String, String> config, Integer headerIndex) {
-        if (sheet == null || NumberHelper.isNotPositive(sheet.getLastRowNum())) return null;
+        if (sheet == null || NumberHelper.isNotPositive(sheet.getLastRowNum())) {
+            return null;
+        }
         ArrayList<String> headKeys = new ArrayList<>();
 
         Row headRow = sheet.getRow(headerIndex);
-        if (headRow == null) return headKeys;
+        if (headRow == null) {
+            return headKeys;
+        }
 
         short max = headRow.getLastCellNum();
         for (short i = headRow.getFirstCellNum(); i < max; i++) {
@@ -267,22 +286,28 @@ public class PoiExcelHelper {
      * @return 行数据
      */
     private static Map<String, Object> readLine(Row row, List<String> headKeys, FormulaEvaluator evaluator) {
-        if (row == null) return null;
+        if (row == null) {
+            return null;
+        }
 
         Map<String, Object> line = new HashMap<>(8);
         short max = row.getLastCellNum();
         for (short i = row.getFirstCellNum(); i < max; i++) {
-            if (i >= headKeys.size()) break;
+            if (i >= headKeys.size()) {
+                break;
+            }
 
             Cell cell = row.getCell(i);
-            if (cell == null) continue;
+            if (cell == null) {
+                continue;
+            }
 
             String key = headKeys.get(i);
             Object value = null;
             CellType cellType = cell.getCellTypeEnum();
             switch (cellType) {
                 case STRING:
-                    value = StringUtils.replaceAll(cell.getStringCellValue(),"^\\s*|\\s*$|\t|\r|\n","");
+                    value = StringUtils.replaceAll(cell.getStringCellValue(), "^\\s*|\\s*$|\t|\r|\n", "");
                     break;
                 case NUMERIC:
                     if (HSSFDateUtil.isCellDateFormatted(cell)) {
@@ -319,7 +344,7 @@ public class PoiExcelHelper {
      * @param firstIndex 开始索引
      * @param lastIndex  结束索引
      */
-    private static void fillSheet(Sheet sheet, List<Map> list, LinkedHashMap<String, String> fieldMap, int firstIndex, int lastIndex) throws Exception {
+    private static void fillSheet(Sheet sheet, List<Map> list, LinkedHashMap<String, String> fieldMap, int firstIndex, int lastIndex) {
 
         //定义存放英文字段名和中文字段名的数组
         String[] cnFields = new String[fieldMap.size()];
@@ -351,7 +376,9 @@ public class PoiExcelHelper {
             Map item = list.get(index);
             for (int i = 0; i < enFields.length; i++) {
                 Object objValue = item.get(enFields[i]);
-                if (objValue == null) continue;
+                if (objValue == null) {
+                    continue;
+                }
                 if (objValue instanceof Date) {
                     objValue = DateHelper.format((Date) objValue, "yyyy-MM-dd HH:mm:ss");
                 }

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @author liuxx
  * @date 2017/5/18
  */
-public final class StringHelper extends org.apache.commons.lang3.StringUtils {
+public final class StringHelper {
     /**
      * 验证Email
      * @param email email地址，格式：zhangsan@zuidaima.com，zhangsan@xxx.com.cn，xxx代表邮件服务商
@@ -52,7 +52,7 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkPhone(String phone) {
-        String regex = "(\\+\\d+)?(\\d{3,4}\\-?)?\\d{7,8}$";
+        String regex = "(\\+\\d+)?(\\d{3,4}-?)?\\d{7,8}$";
         return Pattern.matches(regex, phone);
     }
 
@@ -189,14 +189,22 @@ public final class StringHelper extends org.apache.commons.lang3.StringUtils {
      * @return result
      */
     public static String vague(String str,int left,int right){
-        if (StringUtils.isBlank(str)) return str;
+        if (StringUtils.isBlank(str)) {
+            return str;
+        }
 
-        if (left < 0) left = 0;
-        if (right < 0) right = 0;
+        if (left < 0) {
+            left = 0;
+        }
+        if (right < 0) {
+            right = 0;
+        }
 
         int leftIndex = left >= str.length() ? str.length() : left;
         int rightIndex = str.length() - right;
-        if (rightIndex < 0) rightIndex = 0;
+        if (rightIndex < 0) {
+            rightIndex = 0;
+        }
 
         return str.substring(0, leftIndex) + "****" + str.substring(rightIndex);
 

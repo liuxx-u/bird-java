@@ -1,11 +1,10 @@
 package com.bird.web.file.upload;
 
-import com.bird.core.utils.FileHelper;
 import com.bird.web.file.upload.handler.IFileHandler;
 import com.bird.web.file.upload.storage.IFileStorage;
 import com.bird.web.file.upload.validator.IFileValidator;
 import com.bird.web.file.upload.validator.ValidateResult;
-import org.apache.commons.collections.MapUtils;
+import com.bird.web.file.utils.FileHelper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -92,11 +91,11 @@ public abstract class AbstractUploader {
 
             //文件处理
             String suffix = FileHelper.getSuffix(file.getOriginalFilename());
-            Object handlers = MapUtils.getObject(fileHandlerMap, suffix);
+            List<IFileHandler> handlers = fileHandlerMap.get(suffix);
             byte[] bytes = file.getBytes();
             if (handlers != null) {
                 if (listenerEnable) uploadListener.beforeHandle(file, context);
-                for (IFileHandler handler : (List<IFileHandler>) handlers) {
+                for (IFileHandler handler : handlers) {
                     bytes = handler.handle(bytes);
                 }
                 if (listenerEnable) uploadListener.afterHandle(file, context);

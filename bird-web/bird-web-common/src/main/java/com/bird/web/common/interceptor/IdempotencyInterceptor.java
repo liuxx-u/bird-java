@@ -1,6 +1,5 @@
 package com.bird.web.common.interceptor;
 
-import com.bird.core.cache.CacheHelper;
 import com.bird.web.common.WebConstant;
 import com.bird.web.common.interceptor.support.Idempotency;
 import org.apache.commons.lang3.StringUtils;
@@ -27,11 +26,15 @@ public class IdempotencyInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!(handler instanceof HandlerMethod)) return true;
+        if (!(handler instanceof HandlerMethod)) {
+            return true;
+        }
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Idempotency idempotency = handlerMethod.getMethodAnnotation(Idempotency.class);
-        if (idempotency == null) return true;
+        if (idempotency == null) {
+            return true;
+        }
 
         String token = request.getHeader(this.headerName);
         if (StringUtils.isBlank(token)) {
@@ -42,10 +45,10 @@ public class IdempotencyInterceptor extends HandlerInterceptorAdapter {
             }
             return true;
         }
-        if (!CacheHelper.getCache().del(WebConstant.Cache.IDEMPOTENCY_NAMESPACE + token)) {
-            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已提交");
-            return false;
-        }
+//        if (!CacheHelper.getCache().del(WebConstant.Cache.IDEMPOTENCY_NAMESPACE + token)) {
+//            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已提交");
+//            return false;
+//        }
 
         return true;
     }

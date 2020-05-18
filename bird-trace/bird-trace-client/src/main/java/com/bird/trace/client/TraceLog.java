@@ -79,7 +79,9 @@ public class TraceLog {
 
     public TraceLog(Method method, Object[] args,List<TraceSQLType> sqlTypes) {
         this();
-        if (method == null) return;
+        if (method == null) {
+            return;
+        }
 
         this.sqlTypes = sqlTypes;
         this.operation = StringUtils.EMPTY;

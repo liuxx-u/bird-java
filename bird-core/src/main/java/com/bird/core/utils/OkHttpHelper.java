@@ -2,7 +2,7 @@ package com.bird.core.utils;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

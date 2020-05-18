@@ -1,8 +1,7 @@
 package com.bird.core.exception;
 
-import com.bird.core.HttpCode;
-
 /**
+ * 用户友好的异常，错误消息将传递至调用方
  *
  * @author liuxx
  * @date 2017/7/13
@@ -10,11 +9,22 @@ import com.bird.core.HttpCode;
 public class UserFriendlyException extends AbstractException {
 
     public UserFriendlyException(String message) {
-        super(message);
+        this(ErrorCode.A0001.getCode(), message);
     }
 
-    @Override
-    public Integer getCode() {
-        return HttpCode.BAD_REQUEST.value();
+    public UserFriendlyException(String errorCode, String message) {
+        super(errorCode, message);
+    }
+
+    public UserFriendlyException(String errorCode, String message, Throwable ex) {
+        super(errorCode, message, ex);
+    }
+
+    public UserFriendlyException(ErrorCode errorCode) {
+        super(errorCode);
+    }
+
+    public UserFriendlyException(ErrorCode errorCode, Throwable ex) {
+        super(errorCode, ex);
     }
 }

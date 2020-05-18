@@ -56,7 +56,9 @@ public class TraceContext {
      * @param log log
      */
     public static void enter(TraceLog log) {
-        if (logDispatcher == null || log == null) return;
+        if (logDispatcher == null || log == null) {
+            return;
+        }
 
         TraceLog current = current();
         if (current != null) {
@@ -76,7 +78,9 @@ public class TraceContext {
      * @param sql sql
      */
     public static void appendSQL(TraceSQL sql) {
-        if (logDispatcher == null) return;
+        if (logDispatcher == null) {
+            return;
+        }
 
         if (sql == null || StringUtils.isBlank(sql.getSql())) {
             return;
@@ -109,7 +113,9 @@ public class TraceContext {
      * @param returnValue 返回值
      */
     public static void exit(Object returnValue) {
-        if (logDispatcher == null) return;
+        if (logDispatcher == null) {
+            return;
+        }
 
         TraceLog current = current();
         if (current == null) {
