@@ -2,7 +2,6 @@ package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bird.service.common.model.IModel;
-import com.bird.service.common.service.dto.TreeDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

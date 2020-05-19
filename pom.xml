@@ -16,7 +16,7 @@
         <module>bird-dependencies</module>
         <module>bird-trace</module>
         <module>bird-service-support</module>
-        <module>bird-web</module>
+        <module>bird-web-support</module>
     </modules>
 
     <properties>

@@ -42,7 +42,7 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
-                <artifactId>bird-web-common</artifactId>
+                <artifactId>bird-web-support</artifactId>
                 <version>${bird.version}</version>
             </dependency>
             <dependency>

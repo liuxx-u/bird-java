@@ -91,8 +91,6 @@ public interface IService<T extends IModel<TKey>,TKey extends Serializable> {
      */
     int count(Wrapper<T> queryWrapper);
 
-
-
     /**
      * 根据Model保存数据
      * @param model model
@@ -129,7 +127,6 @@ public interface IService<T extends IModel<TKey>,TKey extends Serializable> {
      * @return 新增后的主键值
      */
     TKey insert(IEntityDTO<TKey> dto);
-
 
     /**
      * 根据DTO更新数据
