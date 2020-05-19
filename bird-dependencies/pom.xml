@@ -22,11 +22,6 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
-                <artifactId>bird-dubbo</artifactId>
-                <version>${bird.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.bird</groupId>
                 <artifactId>bird-eventbus-core</artifactId>
                 <version>${bird.version}</version>
             </dependency>
@@ -38,21 +33,6 @@
             <dependency>
                 <groupId>com.bird</groupId>
                 <artifactId>bird-eventbus-rabbit</artifactId>
-                <version>${bird.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.bird</groupId>
-                <artifactId>bird-gateway-registry-zookeeper</artifactId>
-                <version>${bird.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.bird</groupId>
-                <artifactId>bird-gateway-registry-redis</artifactId>
-                <version>${bird.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.bird</groupId>
-                <artifactId>bird-gateway-web</artifactId>
                 <version>${bird.version}</version>
             </dependency>
             <dependency>

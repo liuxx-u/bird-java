@@ -17,7 +17,6 @@
         <module>bird-trace</module>
         <module>bird-service-support</module>
         <module>bird-web</module>
-        <module>bird-cache</module>
     </modules>
 
     <properties>
@@ -33,15 +32,13 @@
 
         <javax.version>3.1.0</javax.version>
         <dubbo.version>2.7.1</dubbo.version>
-        <zkclient.version>0.10</zkclient.version>
         <jedis.version>2.9.0</jedis.version>
         <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
         <mybatisplus.version>3.3.1.tmp</mybatisplus.version>
         <mysql-connector.version>5.1.48</mysql-connector.version>
         <druid.version>1.1.22</druid.version>
-        <fastjson.version>1.2.47</fastjson.version>
+        <fastjson.version>1.2.68</fastjson.version>
         <dozer.version>5.5.1</dozer.version>
-        <okhttp.version>3.10.0</okhttp.version>
         <poi.version>3.17</poi.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
@@ -57,7 +54,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <!--fastjson-->
@@ -71,23 +67,32 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
 
         <!-- slf4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
         </dependency>
 
         <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

@@ -27,15 +27,6 @@ public interface AbstractMapper<T extends IModel> extends BaseMapper<T> {
     List<Map> queryPagedList(PagedQueryParam param);
 
     /**
-     * 查询通用查询的中数量
-     *
-     * @param param 筛选条件
-     * @return 总条数
-     */
-    @SelectProvider(type = PagedQueryProvider.class, method = "queryTotalCount")
-    Long queryTotalCount(PagedQueryParam param);
-
-    /**
      * 查询 通用查询中的合计信息
      * @param param 筛选条件
      * @return 合计信息

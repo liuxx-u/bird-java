@@ -8,7 +8,7 @@ import com.bird.service.common.model.IModel;
  * @author liuxx
  * @date 2019/8/23
  */
-public abstract class AbstractLongService<M extends AbstractMapper<T>,T extends IModel<Long>> extends AbstractService<M,T,Long> implements IService<T,Long> {
+public abstract class AbstractLongService<M extends AbstractMapper<T>,T extends IModel<Long>> extends AbstractService<M,T,Long> {
 
 
     @Override

@@ -13,7 +13,7 @@ import java.util.Collection;
  * @author liuxx
  * @date 2019/8/23
  */
-public abstract class AbstractStringService<M extends AbstractMapper<T>,T extends StringPureModel> extends AbstractService<M,T,String> implements IService<T,String> {
+public abstract class AbstractStringService<M extends AbstractMapper<T>,T extends StringPureModel> extends AbstractService<M,T,String> {
 
 
     @Override
@@ -43,12 +43,6 @@ public abstract class AbstractStringService<M extends AbstractMapper<T>,T extend
             dto.setId(UUIDHexGenerator.generate());
         }
         return super.insert(dto);
-    }
-
-    @Override
-    public boolean insertBatch(Collection<T> entityList, int batchSize) {
-        this.initModelIds(entityList);
-        return super.insertBatch(entityList, batchSize);
     }
 
     /**

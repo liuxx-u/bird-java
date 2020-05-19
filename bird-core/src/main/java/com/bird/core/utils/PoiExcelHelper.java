@@ -1,13 +1,12 @@
 package com.bird.core.utils;
 
 import com.bird.core.exception.UserFriendlyException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.io.*;
@@ -23,9 +22,8 @@ import java.util.*;
  * @author liuxx
  * @date 2018/6/8
  */
+@Slf4j
 public class PoiExcelHelper {
-
-    private static Logger logger = LoggerFactory.getLogger(OkHttpHelper.class);
 
     private final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0");
 
@@ -76,7 +74,7 @@ public class PoiExcelHelper {
         try (InputStream stream = new FileInputStream(path)) {
             result = read(stream, config, sheetIndex, headerIndex);
         } catch (FileNotFoundException e) {
-            logger.error("文件不存在", e);
+            log.error("文件不存在", e);
         }
         return result;
     }
@@ -125,7 +123,7 @@ public class PoiExcelHelper {
 
             result = read(stream, config, sheetIndex, headerIndex);
         } catch (MalformedURLException e) {
-            logger.error("文件获取失败", e);
+            log.error("文件获取失败", e);
         }
         return result;
     }
@@ -146,7 +144,7 @@ public class PoiExcelHelper {
             Sheet sheet = wb.getSheetAt(sheetIndex);
             result = read(sheet, config, headerIndex);
         } catch (InvalidFormatException | IOException e) {
-            logger.error("Excel流读取失败", e);
+            log.error("Excel流读取失败", e);
         }
 
         return result;
@@ -221,7 +219,7 @@ public class PoiExcelHelper {
 
             wb.write(out);
         } catch (Exception e) {
-            logger.error("Excel流写入失败", e);
+            log.error("Excel流写入失败", e);
         }
     }
 
@@ -246,7 +244,7 @@ public class PoiExcelHelper {
             fillSheet(sheet, list, config, 0, list.size() - 1);
             wb.write(out);
         } catch (Exception e) {
-            logger.error("Excel流写入失败", e);
+            log.error("Excel流写入失败", e);
         }
     }
 

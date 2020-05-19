@@ -1,5 +1,10 @@
 package com.bird.service.common.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.bird.service.common.model.IModel;
 import com.bird.service.common.service.dto.IEntityDTO;
 import com.bird.service.common.service.query.PagedListQuery;
@@ -8,6 +13,7 @@ import com.bird.service.common.service.query.PagedListResult;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuxx
@@ -15,117 +21,157 @@ import java.util.List;
  */
 public interface IService<T extends IModel<TKey>,TKey extends Serializable> {
 
-
     /**
-     * 定义通用的单表查询接口（支持查询、分页、排序）
-     * 支持灵活组装查询数据源
-     * 支持灵活控制返回的字段
-     *
-     * @param queryDTO 筛选条件
-     * @param cls      映射的DTO类型
-     * @return 查询的结果
+     * 自定义通用分页查询方法
+     * @param queryDTO 分页查询参数
+     * @param cls DTO类名
+     * @return 查询结果
      */
     PagedListResult queryPagedList(PagedListQuery queryDTO, Class cls);
 
     /**
-     * 以DTO为根据的通用保存方法
+     * 根据主键查询实体
+     * @param id id
+     * @return 实体
+     */
+    T getById(TKey id);
+
+    /**
+     * 根据 Wrapper，查询一条记录 <br/>
+     * <p>结果集，如果是多个会抛出异常，随机取一条加上限制条件 wrapper.last("LIMIT 1")</p>
+     *
+     * @param queryWrapper 实体对象封装操作类
+     */
+    T getOne(Wrapper<T> queryWrapper);
+
+    /**
+     * 根据 Wrapper，查询一条记录
+     *
+     * @param queryWrapper 实体对象封装操作类
+     * @param throwEx      有多个 result 是否抛出异常
+     */
+    T getOne(Wrapper<T> queryWrapper, boolean throwEx);
+
+    /**
+     * 查询（根据ID 批量查询）
+     *
+     * @param ids 主键ID列表
+     * @return 实体列表
+     */
+    List<T> listByIds(Collection<TKey> ids);
+
+    /**
+     * 查询（根据ID 批量查询）并转换为指定的数据类型
+     *
+     * @param ids 主键ID列表
+     * @return 指定类型的数据列表
+     */
+    <K> List<K> listByIds(Collection<TKey> ids, Class<K> cls);
+
+    /**
+     * 查询列表
+     *
+     * @param queryWrapper 实体对象封装操作类
+     * @return 实体列表
+     */
+    List<T> list(Wrapper<T> queryWrapper);
+
+    /**
+     * 查询列表
+     *
+     * @param queryWrapper 实体对象封装操作类
+     * @return 查询结果集
+     */
+    List<Map<String, Object>> listMaps(Wrapper<T> queryWrapper);
+
+    /**
+     * 根据 Wrapper 条件，查询总记录数
+     *
+     * @param queryWrapper 实体对象封装操作类
+     */
+    int count(Wrapper<T> queryWrapper);
+
+
+
+    /**
+     * 根据Model保存数据
+     * @param model model
+     * @return 保存后的model
+     */
+    T save(T model);
+
+    /**
+     * 新增
+     *
+     * @param model 数据
+     * @return 是否成功
+     */
+    T insert(T model);
+
+    /**
+     * 根据Id更新Model
+     *
+     * @param model model
+     * @return 是否成功
+     */
+    boolean update(T model);
+
+    /**
+     * 根据DTO保存数据
      * @param dto dto
-     * @return 保存后的主键
+     * @return 保存后主键值
      */
     TKey save(IEntityDTO<TKey> dto);
 
     /**
-     * 以DTO为根据 新增
+     * 根据DTO新增数据
      * @param dto 数据
-     * @return id
+     * @return 新增后的主键值
      */
     TKey insert(IEntityDTO<TKey> dto);
 
+
     /**
-     * 以DTO为根据 编辑
+     * 根据DTO更新数据
      * @param dto 数据
-     * @return id
+     * @return 更新后的主键值
      */
     TKey update(IEntityDTO<TKey> dto);
 
     /**
-     * 根据id集合获取数据
-     *
-     * @param ids id集合
-     * @return
-     */
-    List<T> getList(Collection<TKey> ids);
-
-    /**
-     * 根据id集合获取指定类型的数据
-     *
-     * @param ids id集合
-     * @param cls 返回的数据类型
-     * @param <K> K
-     * @return list<K>
-     */
-    <K> List<K> getList(Collection<TKey> ids, Class<K> cls);
-
-    /**
-     * 物理删除
-     *
-     * @param id 数据id
+     * 根据主键删除数据
+     * @param id 主键
      */
     void delete(TKey id);
 
     /**
-     * 保存，包括新增与编辑
+     * 链式查询 普通
      *
-     * @param record 数据
-     * @return model
+     * @return QueryWrapper 的包装类
      */
-    T save(T record);
+    QueryChainWrapper<T> query();
 
     /**
-     * 新增
-     * @param record 数据
-     * @return 是否成功
-     */
-    T insert(T record);
-
-
-    /**
-     * 编辑
-     * @param record 数据
-     * @return 是否成功
-     */
-    boolean update(T record);
-
-    /**
-     * 根据id查询数据并缓存
+     * 链式查询 lambda 式
+     * <p>注意：不支持 Kotlin </p>
      *
-     * @param id id
-     * @return model
+     * @return LambdaQueryWrapper 的包装类
      */
-    T queryById(TKey id);
+    LambdaQueryChainWrapper<T> lambdaQuery();
 
     /**
-     * <p>
-     * 插入（批量），该方法不适合 Oracle
-     * </p>
+     * 链式更改 普通
      *
-     * @param entityList 实体对象列表
-     * @return boolean
+     * @return UpdateWrapper 的包装类
      */
-    default boolean insertBatch(Collection<T> entityList){
-        return insertBatch(entityList,500);
-    }
+    UpdateChainWrapper<T> update();
 
     /**
-     * <p>
-     * 插入（批量）
-     * </p>
+     * 链式更改 lambda 式
+     * <p>注意：不支持 Kotlin </p>
      *
-     * @param entityList 实体对象列表
-     * @param batchSize  插入批次数量
-     * @return boolean
+     * @return LambdaUpdateWrapper 的包装类
      */
-    boolean insertBatch(Collection<T> entityList, int batchSize);
-
+    LambdaUpdateChainWrapper<T> lambdaUpdate();
 
 }

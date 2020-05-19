@@ -29,10 +29,6 @@ public class PagedQueryProvider {
         return sql;
     }
 
-    public String queryTotalCount(PagedQueryParam param) {
-        return "select count(1) from " + param.getFrom() + this.getTailSql(param);
-    }
-
     public String queryPagedSum(PagedQueryParam param) {
         StringBuilder sumSql = this.getSumSql(param, true);
         sumSql.append(" from ").append(param.getFrom()).append(this.getTailSql(param));

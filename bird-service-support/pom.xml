@@ -23,12 +23,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -38,7 +36,6 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatisplus.version}</version>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -49,16 +46,10 @@
             <artifactId>druid</artifactId>
             <version>${druid.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
         <!-- aspectj -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>${aspectj.version}</version>
             <scope>provided</scope>
         </dependency>
         <!--dozer-->
