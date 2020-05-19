@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+  com.bird.service.common.configure.ServiceAutoConfigurer,\
   com.bird.service.common.configure.DynamicDataSourceAutoConfigurer,\
   com.bird.service.common.configure.permission.DataRuleConfigurer
