@@ -62,13 +62,13 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
 
     /**
      * 根据 Wrapper，查询一条记录 <br/>
-     * <p>结果集，如果是多个会抛出异常，随机取一条加上限制条件 wrapper.last("LIMIT 1")</p>
+     * 结果集，如果是多个，随机取一条
      *
      * @param queryWrapper 实体对象封装操作类
      */
     @Override
     public T getOne(Wrapper<T> queryWrapper) {
-        return getOne(queryWrapper, true);
+        return getOne(queryWrapper, false);
     }
 
     /**
