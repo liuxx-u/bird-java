@@ -1,6 +1,6 @@
 package com.bird.service.common.service.query;
 
-import com.bird.service.common.service.dto.AbstractDTO;
+import com.bird.service.common.service.dto.AbstractBO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class PagedResult<T> extends AbstractDTO {
+public class PagedResult<T> extends AbstractBO {
     private Long totalCount;
     private List<T> items;
     private Map<String, Number> sum;

@@ -1,6 +1,6 @@
 package com.bird.service.common.service.query;
 
-import com.bird.service.common.service.dto.AbstractDTO;
+import com.bird.service.common.service.dto.AbstractBO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ColumnInfo extends AbstractDTO {
+public class ColumnInfo extends AbstractBO {
     private String field;
     private String name;
     private String type;

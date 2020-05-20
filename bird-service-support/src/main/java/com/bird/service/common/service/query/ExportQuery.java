@@ -1,6 +1,6 @@
 package com.bird.service.common.service.query;
 
-import com.bird.service.common.service.dto.AbstractDTO;
+import com.bird.service.common.service.dto.AbstractBO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class ExportQuery extends AbstractDTO {
+public class ExportQuery extends AbstractBO {
     /**
      * 标题
      */

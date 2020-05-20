@@ -1,7 +1,7 @@
 package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.bird.service.common.model.IModel;
+import com.bird.service.common.model.IDO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Map;
  * @author liuxx
  * @date 2017/5/15
  */
-public interface AbstractMapper<T extends IModel> extends BaseMapper<T> {
+public interface AbstractMapper<T extends IDO> extends BaseMapper<T> {
 
     /**
      * 定义通用的查询接口（支持查询、分页、排序）

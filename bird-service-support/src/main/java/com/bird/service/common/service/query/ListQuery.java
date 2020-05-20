@@ -1,6 +1,6 @@
 package com.bird.service.common.service.query;
 
-import com.bird.service.common.service.dto.AbstractDTO;
+import com.bird.service.common.service.dto.AbstractBO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class ListQuery extends AbstractDTO {
+public class ListQuery extends AbstractBO {
     private String sortField;
     private int sortDirection;
     private List<FilterRule> filters;

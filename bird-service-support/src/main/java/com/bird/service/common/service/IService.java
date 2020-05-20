@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
-import com.bird.service.common.model.IModel;
-import com.bird.service.common.service.dto.IEntityDTO;
+import com.bird.service.common.model.IDO;
+import com.bird.service.common.service.dto.IEntityBO;
 import com.bird.service.common.service.query.PagedListQuery;
 import com.bird.service.common.service.query.PagedListResult;
 
@@ -19,7 +19,7 @@ import java.util.Map;
  * @author liuxx
  * @date 2019/8/22
  */
-public interface IService<T extends IModel<TKey>,TKey extends Serializable> {
+public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
 
     /**
      * 自定义通用分页查询方法
@@ -119,21 +119,21 @@ public interface IService<T extends IModel<TKey>,TKey extends Serializable> {
      * @param dto dto
      * @return 保存后主键值
      */
-    TKey save(IEntityDTO<TKey> dto);
+    TKey save(IEntityBO<TKey> dto);
 
     /**
      * 根据DTO新增数据
      * @param dto 数据
      * @return 新增后的主键值
      */
-    TKey insert(IEntityDTO<TKey> dto);
+    TKey insert(IEntityBO<TKey> dto);
 
     /**
      * 根据DTO更新数据
      * @param dto 数据
      * @return 更新后的主键值
      */
-    TKey update(IEntityDTO<TKey> dto);
+    TKey update(IEntityBO<TKey> dto);
 
     /**
      * 根据主键删除数据

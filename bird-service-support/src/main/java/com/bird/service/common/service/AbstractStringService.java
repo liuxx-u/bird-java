@@ -2,8 +2,8 @@ package com.bird.service.common.service;
 
 import com.bird.service.common.incrementer.UUIDHexGenerator;
 import com.bird.service.common.mapper.AbstractMapper;
-import com.bird.service.common.model.StringPureModel;
-import com.bird.service.common.service.dto.IEntityDTO;
+import com.bird.service.common.model.StringPureDO;
+import com.bird.service.common.service.dto.IEntityBO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,7 +13,7 @@ import java.util.Collection;
  * @author liuxx
  * @date 2019/8/23
  */
-public abstract class AbstractStringService<M extends AbstractMapper<T>,T extends StringPureModel> extends AbstractService<M,T,String> {
+public abstract class AbstractStringService<M extends AbstractMapper<T>,T extends StringPureDO> extends AbstractService<M,T,String> {
 
 
     @Override
@@ -34,7 +34,7 @@ public abstract class AbstractStringService<M extends AbstractMapper<T>,T extend
     }
 
     @Override
-    public String insert(IEntityDTO<String> dto) {
+    public String insert(IEntityBO<String> dto) {
         if (dto == null) {
             logger.warn("新增的dto信息为null");
             return null;
@@ -59,9 +59,9 @@ public abstract class AbstractStringService<M extends AbstractMapper<T>,T extend
     /**
      * 批量生成id
      *
-     * @param dtos {@link Collection<IEntityDTO>}
+     * @param dtos {@link Collection< IEntityBO >}
      */
-    protected void initDtoIds(Collection<IEntityDTO<String>> dtos) {
+    protected void initDtoIds(Collection<IEntityBO<String>> dtos) {
         if (CollectionUtils.isNotEmpty(dtos)) {
             dtos.forEach(p -> p.setId(UUIDHexGenerator.generate()));
         }

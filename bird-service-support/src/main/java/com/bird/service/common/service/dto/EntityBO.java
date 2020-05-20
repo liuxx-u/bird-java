@@ -10,7 +10,7 @@ import java.util.Date;
  * @date 2019/8/22
  */
 @Data
-public abstract class GenericEntityDTO<TKey extends Serializable> implements IEntityDTO<TKey> {
+public abstract class EntityBO<TKey extends Serializable> implements IEntityBO<TKey> {
 
     private static final long serialVersionUID = 1L;
 

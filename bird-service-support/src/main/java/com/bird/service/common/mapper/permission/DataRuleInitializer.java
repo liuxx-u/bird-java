@@ -3,7 +3,7 @@ package com.bird.service.common.mapper.permission;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bird.service.common.mapper.QueryDescriptor;
-import com.bird.service.common.model.IModel;
+import com.bird.service.common.model.IDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,7 +37,7 @@ public class DataRuleInitializer{
         //Set<Class<?>> classes = ClassHelper.getClasses(this.basePackages);
         Set<Class<?>> classes = new LinkedHashSet<>();
         Set<DataRuleInfo> ruleInfos = classes.stream()
-                .filter(IModel.class::isAssignableFrom)
+                .filter(IDO.class::isAssignableFrom)
                 .filter(p -> p.isAnnotationPresent(TableName.class))
                 .map(this::collectRuleInfos).flatMap(Collection::stream)
                 .collect(Collectors.toSet());

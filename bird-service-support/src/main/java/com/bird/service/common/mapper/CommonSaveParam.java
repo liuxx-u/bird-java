@@ -2,7 +2,7 @@ package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bird.core.exception.UserFriendlyException;
-import com.bird.service.common.service.dto.IEntityDTO;
+import com.bird.service.common.service.dto.IEntityBO;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @date 2017/10/20
  */
 public class CommonSaveParam<TKey extends Serializable> implements Serializable {
-    public CommonSaveParam(IEntityDTO<TKey> entityDTO, Class<?> tClass) {
+    public CommonSaveParam(IEntityBO<TKey> entityDTO, Class<?> tClass) {
         this.entityDTO = entityDTO;
         this.tClass = tClass;
     }
@@ -22,13 +22,13 @@ public class CommonSaveParam<TKey extends Serializable> implements Serializable 
      */
     private Class<?> tClass;
 
-    private IEntityDTO<TKey> entityDTO;
+    private IEntityBO<TKey> entityDTO;
 
-    public IEntityDTO<TKey> getEntityDTO() {
+    public IEntityBO<TKey> getEntityDTO() {
         return entityDTO;
     }
 
-    public void setEntityDTO(IEntityDTO<TKey> entityDTO) {
+    public void setEntityDTO(IEntityBO<TKey> entityDTO) {
         this.entityDTO = entityDTO;
     }
 

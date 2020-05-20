@@ -10,8 +10,8 @@ import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.bird.service.common.mapper.AbstractMapper;
 import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
-import com.bird.service.common.model.IModel;
-import com.bird.service.common.service.dto.IEntityDTO;
+import com.bird.service.common.model.IDO;
+import com.bird.service.common.service.dto.IEntityBO;
 import com.bird.service.common.service.query.PagedListQuery;
 import com.bird.service.common.service.query.PagedListResult;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,7 +28,7 @@ import java.util.Map;
  * @author liuxx
  * @date 2019/8/22
  */
-public abstract class AbstractService<M extends AbstractMapper<T>,T extends IModel<TKey>,TKey extends Serializable> extends BaseService implements IService<T,TKey> {
+public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<TKey>,TKey extends Serializable> extends BaseService implements IService<T,TKey> {
 
     @Autowired
     protected M mapper;
@@ -209,7 +209,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @return 保存后主键值
      */
     @Override
-    public TKey save(IEntityDTO<TKey> dto) {
+    public TKey save(IEntityBO<TKey> dto) {
         TKey id = dto.getId();
         if (this.isEmptyKey(id)) {
             return this.insert(dto);
@@ -224,7 +224,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @return 新增后的主键值
      */
     @Override
-    public TKey insert(IEntityDTO<TKey> dto) {
+    public TKey insert(IEntityBO<TKey> dto) {
         CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
         mapper.insertDto(param);
         return dto.getId();
@@ -236,7 +236,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IMod
      * @return 更新后的主键值
      */
     @Override
-    public TKey update(IEntityDTO<TKey> dto){
+    public TKey update(IEntityBO<TKey> dto){
         CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
         mapper.updateDto(param);
         return dto.getId();

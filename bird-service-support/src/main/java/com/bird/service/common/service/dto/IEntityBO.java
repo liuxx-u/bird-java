@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author liuxx
  * @date 2019/8/26
  */
-public interface IEntityDTO<TKey extends Serializable> extends Serializable {
+public interface IEntityBO<TKey extends Serializable> extends Serializable {
 
     /**
      * 获取主键

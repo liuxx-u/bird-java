@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 
 @SuppressWarnings("serial")
-public abstract class AbstractDTO implements Serializable {
+public abstract class AbstractBO implements Serializable {
 
     @Override
     public int hashCode() {

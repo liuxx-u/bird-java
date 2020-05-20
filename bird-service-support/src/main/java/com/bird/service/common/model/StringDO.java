@@ -11,7 +11,7 @@ import java.util.Date;
  * @author liuxx
  * @date 2019/8/22
  */
-public abstract class LongModel extends LongPureModel implements ISoftDelete,IHasCreateTime,IHasModifyTime {
+public abstract class StringDO extends StringPureDO implements ISoftDelete,IHasCreateTime,IHasModifyTime {
 
     @TableLogic
     @TableField(fill = FieldFill.INSERT)

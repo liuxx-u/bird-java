@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * @author liuxx
  * @date 2019/8/22
  */
-public abstract class StringPureModel implements IModel<String> {
+public abstract class StringPureDO implements IDO<String> {
 
     private static final long serialVersionUID = 1L;
 
