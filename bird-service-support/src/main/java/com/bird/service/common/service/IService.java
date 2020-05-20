@@ -138,8 +138,23 @@ public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
     /**
      * 根据主键删除数据
      * @param id 主键
+     * @return 是否删除成功
      */
-    void delete(TKey id);
+    boolean delete(TKey id);
+
+    /**
+     * 根据 entity 条件，删除记录
+     *
+     * @param queryWrapper 实体包装类
+     */
+    boolean delete(Wrapper<T> queryWrapper);
+
+    /**
+     * 删除（根据ID 批量删除）
+     *
+     * @param ids 主键ID列表
+     */
+    boolean deleteByIds(Collection<TKey> ids);
 
     /**
      * 链式查询 普通

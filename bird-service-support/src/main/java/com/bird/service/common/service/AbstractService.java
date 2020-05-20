@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -120,7 +121,9 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
         if (CollectionUtils.isNotEmpty(list)) {
             for (T t : list) {
                 try {
-                    K k = cls.getDeclaredConstructor().newInstance();
+                    Constructor<K> constructor = cls.getDeclaredConstructor();
+                    constructor.setAccessible(true);
+                    K k = constructor.newInstance();
                     BeanUtils.copyProperties(t, k);
                     list2.add(k);
                 } catch (Exception e) {
@@ -247,12 +250,31 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
      * @param id 主键
      */
     @Override
-    public void delete(TKey id) {
-        try {
-            mapper.deleteById(id);
-        } catch (Exception e) {
-            logger.error("数据删除失败", e);
+    public boolean delete(TKey id) {
+        return SqlHelper.retBool(mapper.deleteById(id));
+    }
+
+    /**
+     * 根据 entity 条件，删除记录
+     *
+     * @param queryWrapper 实体包装类
+     */
+    @Override
+    public boolean delete(Wrapper<T> queryWrapper) {
+        return SqlHelper.retBool(mapper.delete(queryWrapper));
+    }
+
+    /**
+     * 删除（根据ID 批量删除）
+     *
+     * @param ids 主键ID列表
+     */
+    @Override
+    public boolean deleteByIds(Collection<TKey> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return false;
         }
+        return SqlHelper.retBool(mapper.deleteBatchIds(ids));
     }
 
     /**

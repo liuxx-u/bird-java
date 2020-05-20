@@ -25,6 +25,10 @@ public class ServiceAutoConfigurer {
         return new AuditMetaObjectHandler();
     }
 
+    /**
+     * 注入String主键生成器
+     * @return 主键生成器
+     */
     @Bean
     @ConditionalOnMissingBean(IdentifierGenerator.class)
     public IdentifierGenerator stringKeyGenerator(){
