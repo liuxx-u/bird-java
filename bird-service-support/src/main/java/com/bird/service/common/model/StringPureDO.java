@@ -12,7 +12,7 @@ public abstract class StringPureDO implements IDO<String> {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(type = IdType.INPUT)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     /**

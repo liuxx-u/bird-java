@@ -1,7 +1,10 @@
 package com.bird.service.common.configure;
 
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
+import com.bird.service.common.incrementer.StringKeyGenerator;
 import com.bird.service.common.mapper.injector.AuditMetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,5 +23,11 @@ public class ServiceAutoConfigurer {
     @Bean
     public AuditMetaObjectHandler auditMetaObjectHandler(){
         return new AuditMetaObjectHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(IdentifierGenerator.class)
+    public IdentifierGenerator stringKeyGenerator(){
+        return new StringKeyGenerator();
     }
 }
