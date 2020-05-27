@@ -17,6 +17,7 @@
         <module>bird-trace</module>
         <module>bird-service-support</module>
         <module>bird-web-support</module>
+        <module>bird-cache</module>
     </modules>
 
     <properties>
@@ -34,7 +35,7 @@
         <dubbo.version>2.7.1</dubbo.version>
         <jedis.version>2.9.0</jedis.version>
         <spring-kafka.version>2.1.0.RELEASE</spring-kafka.version>
-        <mybatisplus.version>3.3.1.tmp</mybatisplus.version>
+        <mybatisplus.version>3.3.2</mybatisplus.version>
         <mysql-connector.version>5.1.48</mysql-connector.version>
         <druid.version>1.1.22</druid.version>
         <fastjson.version>1.2.68</fastjson.version>
