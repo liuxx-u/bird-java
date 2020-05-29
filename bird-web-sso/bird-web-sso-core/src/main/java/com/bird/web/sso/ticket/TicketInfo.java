@@ -15,10 +15,11 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class TicketInfo implements Serializable,Cloneable {
+public class TicketInfo implements Serializable{
     private String userId;
     private String tenantId;
-    private String name;
+    private String userName;
+    private String realName;
     private Date creationTime;
     private Date lastRefreshTime;
     private Date expireTime;
@@ -38,7 +39,9 @@ public class TicketInfo implements Serializable,Cloneable {
      * @return
      */
     public boolean hasClaim(String key) {
-        if (StringUtils.isBlank(key)) return false;
+        if (StringUtils.isBlank(key)) {
+            return false;
+        }
         return this.claims.containsKey(key);
     }
 
@@ -49,7 +52,9 @@ public class TicketInfo implements Serializable,Cloneable {
      * @return
      */
     public Object getClaim(String key) {
-        if (StringUtils.isBlank(key)) return null;
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
         return this.claims.get(key);
     }
 
@@ -60,7 +65,9 @@ public class TicketInfo implements Serializable,Cloneable {
      * @param value 值
      */
     public void setClaim(String key, Object value) {
-        if (StringUtils.isBlank(key) || value == null) return;
+        if (StringUtils.isBlank(key) || value == null) {
+            return;
+        }
         if (hasClaim(key)) {
             this.claims.replace(key, value);
         } else {
@@ -74,21 +81,9 @@ public class TicketInfo implements Serializable,Cloneable {
      * @param key key
      */
     public void removeClaim(String key) {
-        if (StringUtils.isBlank(key)) return;
+        if (StringUtils.isBlank(key)) {
+            return;
+        }
         this.claims.remove(key);
-    }
-
-    @Override
-    public TicketInfo clone() {
-        TicketInfo cloneTicket = new TicketInfo();
-        cloneTicket = new TicketInfo();
-        cloneTicket.setUserId(this.userId);
-        cloneTicket.setTenantId(this.tenantId);
-        cloneTicket.setName(this.name);
-        cloneTicket.setCreationTime(this.creationTime);
-        cloneTicket.setLastRefreshTime(this.lastRefreshTime);
-        cloneTicket.setExpireTime(this.expireTime);
-        cloneTicket.setClaims(new HashMap<>(this.claims));
-        return cloneTicket;
     }
 }

@@ -36,7 +36,7 @@ public abstract class AbstractUploader {
     /**
      * 文件处理器
      */
-    protected Map<String, List<IFileHandler>> fileHandlerMap;
+    protected Map<String, List<IFileHandler>> fileHandlerMap = new HashMap<>(16);
 
     /**
      * 文件存储器
@@ -50,11 +50,11 @@ public abstract class AbstractUploader {
      * @param suffixs 对应的文件后缀名集合
      */
     public synchronized void setFileHandler(IFileHandler handler, String... suffixs) {
-        if (handler == null) return;
-        if (ArrayUtils.isEmpty(suffixs)) return;
-
-        if (fileHandlerMap == null) {
-            fileHandlerMap = new HashMap<>(16);
+        if (handler == null) {
+            return;
+        }
+        if (ArrayUtils.isEmpty(suffixs)) {
+            return;
         }
         for (String suffix : suffixs) {
             List<IFileHandler> handlers = fileHandlerMap.getOrDefault(suffix, new ArrayList<>());
@@ -81,12 +81,16 @@ public abstract class AbstractUploader {
 
             //文件验证
             if (validator != null) {
-                if (listenerEnable) uploadListener.beforeValidate(file, context);
+                if (listenerEnable) {
+                    uploadListener.beforeValidate(file, context);
+                }
                 ValidateResult validateResult = validator.validate(file);
                 if (validateResult != null && !validateResult.isSuccess()) {
                     return UploadResult.fail(validateResult.getErrorInfo());
                 }
-                if (listenerEnable) uploadListener.afterValidate(file, context, validateResult);
+                if (listenerEnable) {
+                    uploadListener.afterValidate(file, context, validateResult);
+                }
             }
 
             //文件处理
@@ -94,18 +98,26 @@ public abstract class AbstractUploader {
             List<IFileHandler> handlers = fileHandlerMap.get(suffix);
             byte[] bytes = file.getBytes();
             if (handlers != null) {
-                if (listenerEnable) uploadListener.beforeHandle(file, context);
+                if (listenerEnable) {
+                    uploadListener.beforeHandle(file, context);
+                }
                 for (IFileHandler handler : handlers) {
                     bytes = handler.handle(bytes);
                 }
-                if (listenerEnable) uploadListener.afterHandle(file, context);
+                if (listenerEnable) {
+                    uploadListener.afterHandle(file, context);
+                }
             }
 
             //文件存储
-            if (listenerEnable) uploadListener.beforeStorage(file, context);
+            if (listenerEnable) {
+                uploadListener.beforeStorage(file, context);
+            }
             String url = storage.save(file, bytes, context);
             UploadResult result = UploadResult.success(url);
-            if (listenerEnable) uploadListener.afterStorage(file, context, result);
+            if (listenerEnable) {
+                uploadListener.afterStorage(file, context, result);
+            }
             return result;
         }
 
