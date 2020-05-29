@@ -24,5 +24,5 @@ public interface IDataRuleStore {
      * @param tables 表名
      * @return 查询规则
      */
-    FilterGroup get(Long userId,String ...tables);
+    FilterGroup get(String userId,String ...tables);
 }

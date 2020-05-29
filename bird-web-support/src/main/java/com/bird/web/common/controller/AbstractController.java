@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 
 /**
  * @author liuxx
@@ -39,8 +40,19 @@ public abstract class AbstractController {
 
     /**
      * 从线程中获取当前登录用户的userId
+     *
+     * @return userId
      */
-    protected Long getUserId() {
+    protected String getUserId() {
         return SessionContext.getUserId();
+    }
+
+    /**
+     * 从线程中获取当前登录用户的租户id
+     *
+     * @return userId
+     */
+    protected String getTenantId() {
+        return SessionContext.getTenantId();
     }
 }

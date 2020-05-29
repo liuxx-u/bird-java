@@ -28,7 +28,7 @@ public abstract class BaseService {
      *
      * @return userId
      */
-    protected <T extends Serializable> T getUserId() {
+    protected String getUserId() {
         return SessionContext.getUserId();
     }
 
@@ -37,7 +37,7 @@ public abstract class BaseService {
      *
      * @return userId
      */
-    protected <T extends Serializable> T getTenantId() {
+    protected String getTenantId() {
         return SessionContext.getTenantId();
     }
 }

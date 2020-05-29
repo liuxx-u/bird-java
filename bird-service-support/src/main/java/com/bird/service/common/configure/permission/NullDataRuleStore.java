@@ -17,7 +17,7 @@ public class NullDataRuleStore implements IDataRuleStore {
     }
 
     @Override
-    public FilterGroup get(Long userId, String... tables) {
+    public FilterGroup get(String userId, String... tables) {
         return null;
     }
 }

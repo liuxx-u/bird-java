@@ -101,8 +101,8 @@ public class PagedQueryParam implements Serializable {
         try {
             IDataRuleStore store = SpringContextHolder.getBean(IDataRuleStore.class);
 
-            Long userId = SessionContext.getUserId();
-            if (NumberHelper.isPositive(userId)) {
+            String userId = SessionContext.getUserId();
+            if (StringUtils.isNotBlank(userId)) {
                 this.filterGroup = store.get(userId, tables);
             } else {
                 logger.error("当前用户未登录");

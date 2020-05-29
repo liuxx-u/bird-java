@@ -41,13 +41,13 @@ public class SessionContext {
      *
      * @return userId
      */
-    public static <T extends Serializable> T getUserId() {
+    public static String getUserId() {
         Serializable uid = getUid();
 
         if (uid == null) {
             return null;
         }
-        return (T) uid;
+        return uid.toString();
     }
 
     /**
@@ -55,13 +55,13 @@ public class SessionContext {
      *
      * @return userId
      */
-    public static <T extends Serializable> T getTenantId() {
+    public static String getTenantId() {
         BirdSession session = getSession();
         if(session == null){
             return null;
         }
         Serializable tenantId = session.getTenantId();
-        return (T) tenantId;
+        return tenantId == null ? null : tenantId.toString();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.bird.web.sso.server;
 
+import com.alibaba.fastjson.JSON;
 import com.bird.web.sso.event.SsoEvent;
 import com.bird.web.sso.server.client.IClientStore;
 import com.bird.web.sso.server.event.SsoClientObtainTicketEvent;
@@ -131,7 +132,7 @@ public class SsoServer {
                 long t1 = now.getTime() - issuedTime.getTime();
                 long t2 = expireTime.getTime() - now.getTime();
                 if (t1 > t2) {
-                    TicketInfo origin = ticketInfo.clone();
+                    TicketInfo origin = JSON.parseObject(JSON.toJSONString(ticketInfo),TicketInfo.class);
                     ticketInfo = sessionStore.refreshTicket(token, ticketInfo, t1 + t2);
                     //触发票据刷新事件
                     this.postEvent(new SsoServerRefreshTicketEvent(token, origin, true, ticketInfo));
