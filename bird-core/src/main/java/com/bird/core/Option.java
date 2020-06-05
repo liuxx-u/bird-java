@@ -17,4 +17,11 @@ public class Option extends NameValue {
      * 是否禁用
      */
     private Boolean disabled;
+
+    public Option() {
+    }
+
+    public Option(String label, String value) {
+        super(label, value);
+    }
 }
