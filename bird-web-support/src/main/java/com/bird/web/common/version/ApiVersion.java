@@ -15,5 +15,5 @@ import java.lang.annotation.*;
 @Documented
 @Mapping
 public @interface ApiVersion {
-    double value();
+    String value();
 }
