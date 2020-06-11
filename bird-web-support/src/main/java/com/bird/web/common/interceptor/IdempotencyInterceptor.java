@@ -2,10 +2,13 @@ package com.bird.web.common.interceptor;
 
 import com.bird.web.common.WebConstant;
 import com.bird.web.common.interceptor.support.Idempotency;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -23,6 +26,9 @@ public class IdempotencyInterceptor extends HandlerInterceptorAdapter {
 
     @Value("${bird.web.idempotency.header:bird-idempotency}")
     private String headerName;
+
+    @Autowired(required = false)
+    RedisTemplate<String,Object> redisTemplate;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -45,11 +51,14 @@ public class IdempotencyInterceptor extends HandlerInterceptorAdapter {
             }
             return true;
         }
-//        if (!CacheHelper.getCache().del(WebConstant.Cache.IDEMPOTENCY_NAMESPACE + token)) {
-//            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已提交");
-//            return false;
-//        }
-
+        if(redisTemplate == null){
+            logger.warn("幂等性校验，RedisTemplate未注入");
+            return true;
+        }
+        if (BooleanUtils.isNotTrue(redisTemplate.delete(WebConstant.Cache.IDEMPOTENCY + token))) {
+            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "该操作已提交");
+            return false;
+        }
         return true;
     }
 }

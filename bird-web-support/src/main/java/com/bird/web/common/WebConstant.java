@@ -14,6 +14,6 @@ public interface WebConstant {
     String MULTIPART = "multipart/";
 
     interface Cache {
-        String IDEMPOTENCY_NAMESPACE = "bird:operation_token:";
+        String IDEMPOTENCY = "bird:opt_token:";
     }
 }

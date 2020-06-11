@@ -86,8 +86,6 @@ public class SsoServer {
     /**
      * 注销
      * 1、清除SessionStore；2、清除Cookie
-     *
-     * @return
      */
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         String token = getToken(request);
@@ -117,7 +115,9 @@ public class SsoServer {
      * @return 票据
      */
     public TicketInfo getTicket(String clientHost, String token) {
-        if (StringUtils.isBlank(clientHost) || StringUtils.isBlank(token)) return null;
+        if (StringUtils.isBlank(clientHost) || StringUtils.isBlank(token)) {
+            return null;
+        }
         clientStore.store(token, clientHost);
 
         TicketInfo ticketInfo;
@@ -153,7 +153,9 @@ public class SsoServer {
      * @param ticketInfo ticketInfo
      */
     public void refreshTicket(String token, TicketInfo ticketInfo) {
-        if (StringUtils.isBlank(token) || ticketInfo == null || !serverProperties.getUseSessionStore()) return;
+        if (StringUtils.isBlank(token) || ticketInfo == null || !serverProperties.getUseSessionStore()) {
+            return;
+        }
 
         TicketInfo curTicket = sessionStore.getTicket(token);
         if (curTicket == null) {
@@ -187,7 +189,9 @@ public class SsoServer {
      * @param event 事件
      */
     private void postEvent(SsoEvent event) {
-        if (eventBus == null || event == null) return;
+        if (eventBus == null || event == null) {
+            return;
+        }
         eventBus.post(event);
     }
 
@@ -196,7 +200,9 @@ public class SsoServer {
      */
     private void removeClientCache(String token) {
         List<String> clientHosts = clientStore.getAll(token);
-        if (CollectionUtils.isEmpty(clientHosts)) return;
+        if (CollectionUtils.isEmpty(clientHosts)) {
+            return;
+        }
 
         for (String clientHost : clientHosts) {
             int retryCount = 3;

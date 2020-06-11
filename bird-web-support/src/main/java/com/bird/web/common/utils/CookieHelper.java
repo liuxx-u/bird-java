@@ -15,15 +15,14 @@ import java.util.Map;
  * @date 2018/4/16
  */
 public final class CookieHelper {
-    public static final int COOKIE_MAX_AGE = 7 * 24 * 3600;
-    public static final int COOKIE_HALF_HOUR = 30 * 60;
+    private static final int COOKIE_HALF_HOUR = 30 * 60;
 
     /**
      * 根据Cookie名称得到Cookie对象，不存在该对象则返回Null
      *
-     * @param request
-     * @param name
-     * @return
+     * @param request 请求
+     * @param name cookie 名
+     * @return Cookie
      */
     public static Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
@@ -43,9 +42,9 @@ public final class CookieHelper {
     /**
      * 根据Cookie名称直接得到Cookie值
      *
-     * @param request
-     * @param name
-     * @return
+     * @param request 请求
+     * @param name cookie 名
+     * @return cookie 值
      */
     public static String getCookieValue(HttpServletRequest request, String name) {
         Cookie cookie = getCookie(request, name);
@@ -57,8 +56,8 @@ public final class CookieHelper {
 
     /**
      * 移除cookie
-     * @param request
-     * @param response
+     * @param request 请求
+     * @param response 响应
      * @param name 这个是名称，不是值
      */
     public static void removeCookie(HttpServletRequest request, HttpServletResponse response, String name) {
@@ -117,8 +116,8 @@ public final class CookieHelper {
 
     /**
      * 将cookie封装到Map里面
-     * @param request
-     * @return
+     * @param request 请求
+     * @return cookie map
      */
     public static Map<String,Cookie> getCookieMap(HttpServletRequest request){
         Map<String,Cookie> cookieMap = new HashMap<>();

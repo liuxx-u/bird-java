@@ -19,7 +19,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @RestControllerAdvice
 public class RestJsonWrapperAdvice implements ResponseBodyAdvice<Object> {
 
+    private final static String CALL_HEADER = "call";
     private final static String[] INNER_CALL_HEADER = {"ribbon","feign"};
+
 
     private final String wrapperScanPackage;
 
@@ -41,7 +43,7 @@ public class RestJsonWrapperAdvice implements ResponseBodyAdvice<Object> {
         SessionContext.removeSession();
 
         HttpHeaders headers = request.getHeaders();
-        if(ArrayUtils.contains(INNER_CALL_HEADER,headers.getFirst("call"))){
+        if(ArrayUtils.contains(INNER_CALL_HEADER,headers.getFirst(CALL_HEADER))){
             return value;
         }
         if(!(value instanceof Result)){

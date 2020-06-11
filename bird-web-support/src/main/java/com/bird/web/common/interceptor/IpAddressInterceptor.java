@@ -21,9 +21,13 @@ public class IpAddressInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (!(handler instanceof HandlerMethod)) return true;
+        if (!(handler instanceof HandlerMethod)) {
+            return true;
+        }
 
-        if (ipChecker == null) return true;
+        if (ipChecker == null) {
+            return true;
+        }
 
         String ip = RequestHelper.getRealIp(request);
         return ipChecker.check(ip);
