@@ -3,6 +3,7 @@ package com.bird.web.common.version;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +15,7 @@ public class ApiVersionCondition implements RequestCondition<ApiVersionCondition
     /**
      * 路径中版本的前缀， 这里用 /v([1-9]{1,2}[.]?[0-9]{1,2})/的形式
      */
-    private final static Pattern VERSION_PREFIX_PATTERN = Pattern.compile("v([1-9]{1,2}[.]?[0-9]{1,2})/");
+    private final static Pattern VERSION_PREFIX_PATTERN = Pattern.compile("v([1-9]{1,2}[.][0-9]{1,2})/");
     private double apiVersion;
 
     public ApiVersionCondition(double apiVersion) {
@@ -27,13 +28,14 @@ public class ApiVersionCondition implements RequestCondition<ApiVersionCondition
         return new ApiVersionCondition(other.getApiVersion());
     }
 
-    @Override public ApiVersionCondition getMatchingCondition(HttpServletRequest request) {
+    @Override
+    public ApiVersionCondition getMatchingCondition(HttpServletRequest request) {
 
         Matcher m = VERSION_PREFIX_PATTERN.matcher(request.getRequestURI());
         if (m.find()) {
             Double version = Double.valueOf(m.group(1));
-            // 如果请求的版本号大于配置版本号， 则满足
-            if (version >= this.apiVersion) {
+            // 严格匹配版本号
+            if (Objects.equals(version,this.apiVersion)) {
                 return this;
             }
         }
