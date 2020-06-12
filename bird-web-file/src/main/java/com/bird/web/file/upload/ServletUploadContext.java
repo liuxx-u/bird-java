@@ -1,5 +1,6 @@
 package com.bird.web.file.upload;
 
+import com.bird.web.common.utils.RequestHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -29,13 +30,7 @@ public class ServletUploadContext implements IUploadContext {
      */
     @Override
     public long getContentLength() {
-        long size;
-        try {
-            size = Long.parseLong(request.getHeader(HttpHeaders.CONTENT_LENGTH));
-        } catch (NumberFormatException e) {
-            size = request.getContentLengthLong();
-        }
-        return size;
+        return RequestHelper.getContentLength(request);
     }
 
     /**

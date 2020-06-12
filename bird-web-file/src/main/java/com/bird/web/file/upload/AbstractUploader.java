@@ -6,7 +6,6 @@ import com.bird.web.file.upload.validator.IFileValidator;
 import com.bird.web.file.upload.validator.ValidateResult;
 import com.bird.web.file.utils.FileHelper;
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -47,16 +46,16 @@ public abstract class AbstractUploader {
      * 设置文件处理器
      *
      * @param handler 处理器
-     * @param suffixs 对应的文件后缀名集合
+     * @param suffixes 对应的文件后缀名集合
      */
-    public synchronized void setFileHandler(IFileHandler handler, String... suffixs) {
+    public synchronized void setFileHandler(IFileHandler handler, String... suffixes) {
         if (handler == null) {
             return;
         }
-        if (ArrayUtils.isEmpty(suffixs)) {
+        if (ArrayUtils.isEmpty(suffixes)) {
             return;
         }
-        for (String suffix : suffixs) {
+        for (String suffix : suffixes) {
             List<IFileHandler> handlers = fileHandlerMap.getOrDefault(suffix, new ArrayList<>());
             handlers.add(handler);
             fileHandlerMap.put(suffix, handlers);
@@ -92,11 +91,13 @@ public abstract class AbstractUploader {
                     uploadListener.afterValidate(file, context, validateResult);
                 }
             }
+            byte[] bytes = file.getBytes();
+
+
 
             //文件处理
             String suffix = FileHelper.getSuffix(file.getOriginalFilename());
             List<IFileHandler> handlers = fileHandlerMap.get(suffix);
-            byte[] bytes = file.getBytes();
             if (handlers != null) {
                 if (listenerEnable) {
                     uploadListener.beforeHandle(file, context);

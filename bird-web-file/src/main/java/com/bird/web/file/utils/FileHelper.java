@@ -32,4 +32,6 @@ public class FileHelper {
         String fileName = file.getName();
         return getSuffix(fileName);
     }
+
+
 }

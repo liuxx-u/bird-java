@@ -18,8 +18,8 @@ public class ServletUploader extends AbstractUploader {
      * multi-part 上传
      *
      * @param request 请求
-     * @return
-     * @throws IOException
+     * @return 文件上传结果
+     * @throws IOException exception
      */
     public UploadResult upload(HttpServletRequest request) throws IOException {
         if (!(request instanceof MultipartHttpServletRequest)) {
@@ -34,8 +34,8 @@ public class ServletUploader extends AbstractUploader {
      * base64 文件流上传
      *
      * @param request 请求
-     * @return
-     * @throws IOException
+     * @return 文件上传结果
+     * @throws IOException exception
      */
     public UploadResult uploadBase64(HttpServletRequest request) throws IOException {
         IUploadContext uploadContext = new ServletBase64UploadContext(request);

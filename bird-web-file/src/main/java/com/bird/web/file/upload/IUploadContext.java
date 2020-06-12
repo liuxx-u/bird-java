@@ -36,25 +36,25 @@ public interface IUploadContext {
     /**
      * 获取参数值
      * @param name 名称
-     * @return
+     * @return 参数值
      */
     String getParameter(String name);
 
     /**
      * 获取参数名集合
-     * @return
+     * @return 参数名集合
      */
     Enumeration<String> getParameterNames();
 
     /**
      * 获取所有参数集合
-     * @return
+     * @return 参数Map
      */
     Map<String, String[]> getParameterMap();
 
     /**
      * 获取文件参数名集合
-     * @return
+     * @return 文件参数名集合
      */
     Iterator<String> getFileNames();
 
@@ -74,7 +74,7 @@ public interface IUploadContext {
 
     /**
      * 获取所有文件集合
-     * @return
+     * @return 文件Map
      */
     Map<String, MultipartFile> getFileMap();
 }
