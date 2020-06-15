@@ -4,6 +4,7 @@ import com.bird.web.sso.ticket.TicketInfo;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import java.time.Duration;
 import java.util.UUID;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -35,10 +36,10 @@ public class CacheTicketSessionStore implements ITicketSessionStore {
     }
 
     @Override
-    public TicketInfo refreshTicket(String key, TicketInfo ticketInfo, long expire) {
+    public TicketInfo refreshTicket(String key, TicketInfo ticketInfo, Duration duration) {
         ticketInfo.setLastRefreshTime(new Date());
 
-        Date expireDate = new Date(System.currentTimeMillis() + expire);
+        Date expireDate = new Date(System.currentTimeMillis() + duration.toMillis());
         ticketInfo.setExpireTime(expireDate);
         ticketInfo.setClaim(TOKEN_CLAIM_KEY, key);
 

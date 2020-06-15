@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -133,7 +134,7 @@ public class SsoServer {
                 long t2 = expireTime.getTime() - now.getTime();
                 if (t1 > t2) {
                     TicketInfo origin = JSON.parseObject(JSON.toJSONString(ticketInfo),TicketInfo.class);
-                    ticketInfo = sessionStore.refreshTicket(token, ticketInfo, t1 + t2);
+                    ticketInfo = sessionStore.refreshTicket(token, ticketInfo, Duration.ofMinutes(serverProperties.getExpire()));
                     //触发票据刷新事件
                     this.postEvent(new SsoServerRefreshTicketEvent(token, origin, true, ticketInfo));
                 }
@@ -163,7 +164,7 @@ public class SsoServer {
             return;
         }
 
-        sessionStore.refreshTicket(token, ticketInfo, serverProperties.getExpire() * 60 * 1000L);
+        sessionStore.refreshTicket(token, ticketInfo, Duration.ofMinutes(serverProperties.getExpire()));
         //触发票据刷新事件
         this.postEvent(new SsoServerRefreshTicketEvent(token, curTicket, false, ticketInfo));
     }

@@ -2,6 +2,8 @@ package com.bird.web.sso.server.ticket;
 
 import com.bird.web.sso.ticket.TicketInfo;
 
+import java.time.Duration;
+
 /**
  * 定义session存储器
  *
@@ -31,10 +33,10 @@ public interface ITicketSessionStore {
      *
      * @param key key
      * @param ticketInfo 票据
-     * @param expire 有效期（毫秒）
+     * @param duration 有效期
      * @return 刷新后的票据信息
      */
-    TicketInfo refreshTicket(String key, TicketInfo ticketInfo,long expire);
+    TicketInfo refreshTicket(String key, TicketInfo ticketInfo, Duration duration);
 
     /**
      * 移除票据信息
