@@ -14,4 +14,9 @@ public interface IHasModifierId<TKey extends Serializable> {
      * @return id
      */
     TKey getModifierId();
+
+    /**
+     * 设置修改者id
+     */
+    void setModifierId(TKey modifierId);
 }

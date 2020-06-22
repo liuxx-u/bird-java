@@ -1,7 +1,10 @@
 package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.bird.core.session.SessionContext;
 import com.bird.service.common.incrementer.UUIDHexGenerator;
+import com.bird.service.common.model.IHasCreatorId;
+import com.bird.service.common.model.IHasModifierId;
 import com.bird.service.common.service.dto.IEntityBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
@@ -48,6 +51,12 @@ public class CommonSaveProvider {
             }
             fieldValueMap.put("`id`", "'" + id + "'");
         }
+        if (param.getEntityDTO() instanceof IHasCreatorId) {
+            fieldValueMap.put("`creatorId`", "'" + SessionContext.getUserId() + "'");
+        }
+        if (param.getEntityDTO() instanceof IHasModifierId) {
+            fieldValueMap.put("`modifierId`", "'" + SessionContext.getUserId() + "'");
+        }
 
         String tableName = formatName(param.getTableName());
         StringBuilder sb = new StringBuilder("insert into ")
@@ -57,8 +66,9 @@ public class CommonSaveProvider {
 
         for (Map.Entry<String, String> entry : fieldValueMap.entrySet()) {
             String fieldValue = entry.getValue();
-            if (Objects.equals(fieldValue, "") || Objects.equals(fieldValue, "''") || Objects.equals(fieldValue, "null"))
+            if (Objects.equals(fieldValue, "") || Objects.equals(fieldValue, "''") || Objects.equals(fieldValue, "null")) {
                 continue;
+            }
 
             sb.append(entry.getKey()).append(",");
             valueBuilder.append(fieldValue).append(",");
@@ -70,10 +80,17 @@ public class CommonSaveProvider {
 
     public String update(CommonSaveParam param) {
         Serializable id = param.getEntityDTO().getId();
-        if (id == null) return "";
+        if (id == null) {
+            return "";
+        }
 
         Map<String, String> fieldValueMap = this.getFieldValueMap(param);
-        if (MapUtils.isEmpty(fieldValueMap)) return "";
+        if (MapUtils.isEmpty(fieldValueMap)) {
+            return "";
+        }
+        if (param.getEntityDTO() instanceof IHasModifierId) {
+            fieldValueMap.put("`modifierId`", "'" + SessionContext.getUserId() + "'");
+        }
 
         String tableName = formatName(param.getTableName());
 
@@ -104,21 +121,28 @@ public class CommonSaveProvider {
 
         Field[] fields = param.gettClass().getDeclaredFields();
         for (Field field : fields) {
-            if (EXCLUDE_FIELD_NAMES.contains(field.getName())) continue;
-
             TableField tableField = field.getAnnotation(TableField.class);
-            if (tableField != null && !tableField.exist()) continue;
-            String fieldName = tableField == null ? field.getName() : tableField.value();
+            if (tableField != null && !tableField.exist()) {
+                continue;
+            }
+            if (EXCLUDE_FIELD_NAMES.contains(field.getName())) {
+                continue;
+            }
+            String fieldName = (tableField == null || StringUtils.isBlank(tableField.value())) ? field.getName() : tableField.value();
             //处理适用于多表的DTO
             if (fieldName.contains(".")) {
                 String[] arr = fieldName.split("\\.");
-                if (!StringUtils.equals(formatName(arr[arr.length - 2]), tableName)) continue;
+                if (!StringUtils.equals(formatName(arr[arr.length - 2]), tableName)) {
+                    continue;
+                }
 
                 fieldName = arr[arr.length - 1];
             }
 
             fieldName = formatName(fieldName);
-            if (STATIC_FIELDS.contains(fieldName)) continue;
+            if (STATIC_FIELDS.contains(fieldName)) {
+                continue;
+            }
 
             String fieldValue = getFieldValue(param.getEntityDTO(), field);
             map.put(fieldName, fieldValue);
@@ -145,7 +169,9 @@ public class CommonSaveProvider {
             } else if (NUMBER_TYPE_NAME.contains(fieldTypeName)) {
                 return value == null ? "0" : value.toString();
             } else if (BOOLEAN_TYPE_NAME.contains(fieldTypeName)) {
-                if (value == null) return "0";
+                if (value == null) {
+                    return "0";
+                }
                 return ((Boolean) value) ? "1" : "0";
             } else if (DATE_TYPE_NAME.contains(fieldTypeName)) {
                 return value == null ? "null" : "'" + dateFormat.format((Date) value) + "'";
@@ -158,11 +184,12 @@ public class CommonSaveProvider {
     }
 
     private String formatName(String dbFieldName) {
+        String separator = "`";
 
-        if (!StringUtils.startsWith(dbFieldName, "`")) {
+        if (!StringUtils.startsWith(dbFieldName, separator)) {
             dbFieldName = "`" + dbFieldName;
         }
-        if (!StringUtils.endsWith(dbFieldName, "`")) {
+        if (!StringUtils.endsWith(dbFieldName, separator)) {
             dbFieldName += "`";
         }
         return dbFieldName;

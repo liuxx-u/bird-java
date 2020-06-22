@@ -14,4 +14,9 @@ public interface IHasCreatorId<TKey extends Serializable> {
      * @return id
      */
     TKey getCreatorId();
+
+    /**
+     * 设置创建者id
+     */
+    void setCreatorId(TKey creatorId);
 }

@@ -37,17 +37,23 @@ public class QueryDescriptor implements Serializable {
     public static QueryDescriptor parseClass(Class<?> tClass) {
         Map<String, String> fieldMap = new HashMap<>(16);
 
-        if (tClass == null) return null;
+        if (tClass == null) {
+            return null;
+        }
         Class tempClass = tClass;
         StringBuilder sb = new StringBuilder();
 
         while (tempClass != null && !StringUtils.equals(tempClass.getName(), OBJECT_CLASS_NAME)) {
             Field[] tempFields = tempClass.getDeclaredFields();
             for (Field field : tempFields) {
-                if(EXCLUDE_FIELD_NAMES.contains(field.getName()))continue;
+                if(EXCLUDE_FIELD_NAMES.contains(field.getName())) {
+                    continue;
+                }
 
                 TableField tableField = field.getAnnotation(TableField.class);
-                if (tableField != null && !tableField.exist()) continue;
+                if (tableField != null && !tableField.exist()) {
+                    continue;
+                }
 
                 String fieldName = StringUtils.wrapIfMissing(field.getName(), '`');
                 String dbFieldName = getDbFieldName(field);
@@ -76,7 +82,7 @@ public class QueryDescriptor implements Serializable {
 
     public static String getDbFieldName(Field field) {
         TableField tableField = field.getAnnotation(TableField.class);
-        String dbFieldName = tableField == null ? field.getName() : tableField.value();
+        String dbFieldName = (tableField == null || StringUtils.isBlank(tableField.value())) ? field.getName() : tableField.value();
 
         if (StringUtils.startsWith(dbFieldName, "{") && StringUtils.endsWith(dbFieldName, "}")) {
             dbFieldName = StringUtils.removeStart(dbFieldName, "{");
