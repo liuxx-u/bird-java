@@ -8,6 +8,8 @@ package com.bird.core.exception;
  */
 public class UserFriendlyException extends AbstractException {
 
+    public UserFriendlyException(){}
+
     public UserFriendlyException(String message) {
         this(ErrorCode.A0001.getCode(), message);
     }
