@@ -175,6 +175,8 @@ public class CommonSaveProvider {
                 return ((Boolean) value) ? "1" : "0";
             } else if (DATE_TYPE_NAME.contains(fieldTypeName)) {
                 return value == null ? "null" : "'" + dateFormat.format((Date) value) + "'";
+            } else {
+                return value == null ? "null" : "'" + value.toString() + "'";
             }
         } catch (IllegalArgumentException | IllegalAccessException e) {
             log.error("insert error", e);
