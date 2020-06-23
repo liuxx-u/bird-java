@@ -49,7 +49,8 @@ public class HttpClient {
 
             return getResult(conn);
         } catch (Exception e) {
-            return new HttpResult(500, e.toString(), Collections.<String, String>emptyMap());
+            log.error("请求出错",e);
+            return new HttpResult(500, e.toString(), Collections.emptyMap());
         } finally {
             if (conn != null) {
                 conn.disconnect();
@@ -94,7 +95,7 @@ public class HttpClient {
             inputStream = conn.getErrorStream();
         }
 
-        Map<String, String> respHeaders = new HashMap<String, String>(conn.getHeaderFields().size());
+        Map<String, String> respHeaders = new HashMap<>(conn.getHeaderFields().size());
         for (Map.Entry<String, List<String>> entry : conn.getHeaderFields().entrySet()) {
             respHeaders.put(entry.getKey(), entry.getValue().get(0));
         }
