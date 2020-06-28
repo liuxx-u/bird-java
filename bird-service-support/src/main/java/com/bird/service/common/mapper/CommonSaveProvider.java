@@ -163,20 +163,20 @@ public class CommonSaveProvider {
 
         try {
             Object value = field.get(instance);
+            if(Objects.isNull(value)){
+                return "null";
+            }
 
             if (STRING_TYPE_NAME.contains(fieldTypeName)) {
-                return value == null ? "''" : "'" + value.toString() + "'";
+                return "'" + value.toString() + "'";
             } else if (NUMBER_TYPE_NAME.contains(fieldTypeName)) {
-                return value == null ? "0" : value.toString();
+                return value.toString();
             } else if (BOOLEAN_TYPE_NAME.contains(fieldTypeName)) {
-                if (value == null) {
-                    return "0";
-                }
                 return ((Boolean) value) ? "1" : "0";
             } else if (DATE_TYPE_NAME.contains(fieldTypeName)) {
-                return value == null ? "null" : "'" + dateFormat.format((Date) value) + "'";
+                return "'" + dateFormat.format((Date) value) + "'";
             } else {
-                return value == null ? "null" : "'" + value.toString() + "'";
+                return "'" + value.toString() + "'";
             }
         } catch (IllegalArgumentException | IllegalAccessException e) {
             log.error("insert error", e);
