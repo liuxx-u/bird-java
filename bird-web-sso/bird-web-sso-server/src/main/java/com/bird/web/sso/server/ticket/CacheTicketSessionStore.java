@@ -1,12 +1,12 @@
 package com.bird.web.sso.server.ticket;
 
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ServerTicket;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import java.time.Duration;
-import java.util.UUID;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,32 +16,30 @@ import java.util.concurrent.TimeUnit;
  */
 public class CacheTicketSessionStore implements ITicketSessionStore {
 
-    private Cache<String, TicketInfo> cache;
+    private Cache<String, ServerTicket> cache;
 
     public CacheTicketSessionStore(Integer expire) {
         cache = CacheBuilder.newBuilder().expireAfterWrite(expire, TimeUnit.MINUTES).build();
     }
 
     @Override
-    public String storeTicket(TicketInfo ticketInfo) {
+    public String storeTicket(ServerTicket serverTicket) {
         String key = UUID.randomUUID().toString();
-        ticketInfo.setClaim(TOKEN_CLAIM_KEY, key);
-        cache.put(key, ticketInfo);
+        cache.put(key, serverTicket);
         return key;
     }
 
     @Override
-    public TicketInfo getTicket(String key) {
+    public ServerTicket getTicket(String key) {
         return cache.getIfPresent(key);
     }
 
     @Override
-    public TicketInfo refreshTicket(String key, TicketInfo ticketInfo, Duration duration) {
+    public ServerTicket refreshTicket(String key, ServerTicket ticketInfo, Duration duration) {
         ticketInfo.setLastRefreshTime(new Date());
 
         Date expireDate = new Date(System.currentTimeMillis() + duration.toMillis());
         ticketInfo.setExpireTime(expireDate);
-        ticketInfo.setClaim(TOKEN_CLAIM_KEY, key);
 
         cache.put(key, ticketInfo);
         return ticketInfo;

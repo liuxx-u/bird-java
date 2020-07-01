@@ -1,7 +1,6 @@
 package com.bird.web.sso.ticket;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -13,8 +12,8 @@ import java.util.Map;
  * @author liuxx
  * @date 2019/3/1
  */
-@Getter
-@Setter
+@Data
+@Deprecated
 public class TicketInfo implements Serializable{
     private String userId;
     private String tenantId;
@@ -36,7 +35,7 @@ public class TicketInfo implements Serializable{
      * 是否包含claim信息
      *
      * @param key Key
-     * @return
+     * @return bool
      */
     public boolean hasClaim(String key) {
         if (StringUtils.isBlank(key)) {
@@ -49,7 +48,7 @@ public class TicketInfo implements Serializable{
      * 获取票据的claim信息
      *
      * @param key Key
-     * @return
+     * @return claim
      */
     public Object getClaim(String key) {
         if (StringUtils.isBlank(key)) {

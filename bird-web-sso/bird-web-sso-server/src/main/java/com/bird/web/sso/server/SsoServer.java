@@ -9,11 +9,13 @@ import com.bird.web.sso.server.event.SsoServerLogoutEvent;
 import com.bird.web.sso.server.event.SsoServerRefreshTicketEvent;
 import com.bird.web.sso.server.ticket.ITicketProtector;
 import com.bird.web.sso.server.ticket.ITicketSessionStore;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
+import com.bird.web.sso.ticket.ServerTicket;
 import com.bird.web.sso.utils.CookieHelper;
 import com.bird.web.sso.utils.HttpClient;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -23,9 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -64,23 +64,23 @@ public class SsoServer {
     /**
      * 登录，将token写入cookie
      *
-     * @param ticketInfo 票据信息
+     * @param serverTicket 票据信息
      * @return token
      */
-    public String login(HttpServletResponse response, TicketInfo ticketInfo) {
-        if (ticketInfo.getExpireTime() == null) {
-            Date creationTime = ticketInfo.getCreationTime();
+    public String login(HttpServletResponse response, ServerTicket serverTicket) {
+        if (serverTicket.getExpireTime() == null) {
+            Date creationTime = serverTicket.getCreationTime();
             long expire = creationTime.getTime() + serverProperties.getExpire() * 60 * 1000L;
-            ticketInfo.setExpireTime(new Date(expire));
+            serverTicket.setExpireTime(new Date(expire));
         }
         String token = serverProperties.getUseSessionStore()
-                ? sessionStore.storeTicket(ticketInfo)
-                : protector.protect(ticketInfo);
+                ? sessionStore.storeTicket(serverTicket)
+                : protector.protect(serverTicket);
 
         //用户中心写入Cookie
         CookieHelper.setCookie(response, serverProperties.getCookieName(), StringUtils.strip(token), serverProperties.getExpire() * 60);
         //触发登录事件
-        this.postEvent(new SsoServerLoginEvent(token, ticketInfo));
+        this.postEvent(new SsoServerLoginEvent(token, serverTicket));
         return token;
     }
 
@@ -92,7 +92,7 @@ public class SsoServer {
         String token = getToken(request);
 
         if (!StringUtils.isEmpty(token)) {
-            TicketInfo ticketInfo = serverProperties.getUseSessionStore()
+            ServerTicket serverTicket = serverProperties.getUseSessionStore()
                     ? sessionStore.getTicket(token)
                     : protector.unProtect(token);
 
@@ -105,7 +105,7 @@ public class SsoServer {
             //通知客户端，移除缓存
             executorService.execute(() -> this.removeClientCache(token));
             //触发注销事件
-            this.postEvent(new SsoServerLogoutEvent(token, ticketInfo));
+            this.postEvent(new SsoServerLogoutEvent(token, serverTicket));
         }
     }
 
@@ -115,58 +115,103 @@ public class SsoServer {
      * @param token token
      * @return 票据
      */
-    public TicketInfo getTicket(String clientHost, String token) {
+    public ServerTicket getTicket(String token) {
+        if (StringUtils.isBlank(token)) {
+            return null;
+        }
+
+        ServerTicket serverTicket;
+        if (serverProperties.getUseSessionStore()) {
+            serverTicket = sessionStore.getTicket(token);
+            if (serverTicket != null && serverProperties.getAutoRefresh()) {
+                //如果超过一半的有效期，则刷新
+                Date now = new Date();
+                Date issuedTime = serverTicket.getLastRefreshTime();
+                Date expireTime = serverTicket.getExpireTime();
+
+                long t1 = now.getTime() - issuedTime.getTime();
+                long t2 = expireTime.getTime() - now.getTime();
+                if (t1 > t2) {
+                    ServerTicket origin = JSON.parseObject(JSON.toJSONString(serverTicket),ServerTicket.class);
+                    serverTicket = sessionStore.refreshTicket(token, serverTicket, Duration.ofMinutes(serverProperties.getExpire()));
+                    //触发票据刷新事件
+                    this.postEvent(new SsoServerRefreshTicketEvent(token, origin, true, serverTicket));
+                }
+            }
+        } else {
+            serverTicket = protector.unProtect(token);
+        }
+        return serverTicket;
+    }
+
+    /**
+     * 获取客户端票据信息
+     * @param appId appId
+     * @param clientHost clientHost
+     * @param token token
+     * @return 客户端票据
+     */
+    public ClientTicket getClientTicket(String appId,String clientHost, String token){
         if (StringUtils.isBlank(clientHost) || StringUtils.isBlank(token)) {
             return null;
         }
         clientStore.store(token, clientHost);
 
-        TicketInfo ticketInfo;
-        if (serverProperties.getUseSessionStore()) {
-            ticketInfo = sessionStore.getTicket(token);
-            if (ticketInfo != null && serverProperties.getAutoRefresh()) {
-                //如果超过一半的有效期，则刷新
-                Date now = new Date();
-                Date issuedTime = ticketInfo.getLastRefreshTime();
-                Date expireTime = ticketInfo.getExpireTime();
-
-                long t1 = now.getTime() - issuedTime.getTime();
-                long t2 = expireTime.getTime() - now.getTime();
-                if (t1 > t2) {
-                    TicketInfo origin = JSON.parseObject(JSON.toJSONString(ticketInfo),TicketInfo.class);
-                    ticketInfo = sessionStore.refreshTicket(token, ticketInfo, Duration.ofMinutes(serverProperties.getExpire()));
-                    //触发票据刷新事件
-                    this.postEvent(new SsoServerRefreshTicketEvent(token, origin, true, ticketInfo));
-                }
-            }
-        } else {
-            ticketInfo = protector.unProtect(token);
+        ServerTicket serverTicket = this.getTicket(token);
+        if(serverTicket == null){
+            return null;
         }
+
+        ClientTicket clientTicket = serverTicket.extractClientTicket(appId);
         //触发客户端获取票据事件
-        this.postEvent(new SsoClientObtainTicketEvent(token, ticketInfo, clientHost));
-        return ticketInfo;
+        this.postEvent(new SsoClientObtainTicketEvent(token, serverTicket, clientHost));
+        return clientTicket;
     }
 
     /**
      * 刷新票据
      *
      * @param token      token
-     * @param ticketInfo ticketInfo
+     * @param serverTicket serverTicket
      */
-    public void refreshTicket(String token, TicketInfo ticketInfo) {
-        if (StringUtils.isBlank(token) || ticketInfo == null || !serverProperties.getUseSessionStore()) {
+    public void refreshTicket(String token, ServerTicket serverTicket) {
+        if (StringUtils.isBlank(token) || serverTicket == null || !serverProperties.getUseSessionStore()) {
             return;
         }
 
-        TicketInfo curTicket = sessionStore.getTicket(token);
+        ServerTicket curTicket = sessionStore.getTicket(token);
         if (curTicket == null) {
             log.warn("试图刷新一个不存在的票据信息，token：" + token);
             return;
         }
 
-        sessionStore.refreshTicket(token, ticketInfo, Duration.ofMinutes(serverProperties.getExpire()));
+        sessionStore.refreshTicket(token, serverTicket, Duration.ofMinutes(serverProperties.getExpire()));
         //触发票据刷新事件
-        this.postEvent(new SsoServerRefreshTicketEvent(token, curTicket, false, ticketInfo));
+        this.postEvent(new SsoServerRefreshTicketEvent(token, curTicket, false, serverTicket));
+    }
+
+    /**
+     * 刷新客户端票据，只能刷新客户端的Claim信息
+     *
+     * @param token      token
+     * @param clientTicket ticketInfo
+     */
+    public void refreshClientTicket(String token,String appId, ClientTicket clientTicket) {
+        if (StringUtils.isBlank(token) || clientTicket == null || BooleanUtils.isNotTrue(serverProperties.getUseSessionStore())) {
+            return;
+        }
+
+        ServerTicket serverTicket = sessionStore.getTicket(token);
+        if (serverTicket == null) {
+            log.warn("试图刷新一个不存在的票据信息，token：" + token);
+            return;
+        }
+
+        Map<String, Map<String, Object>> appClaims = Optional.ofNullable(serverTicket.getAppClaims()).orElse(new HashMap<>());
+        appClaims.put(appId, clientTicket.getClaims());
+        serverTicket.setAppClaims(appClaims);
+
+        sessionStore.refreshTicket(token, serverTicket, Duration.ofMinutes(serverProperties.getExpire()));
     }
 
     /**
@@ -200,7 +245,7 @@ public class SsoServer {
      * 移除客户端token对应的Ticket缓存
      */
     private void removeClientCache(String token) {
-        List<String> clientHosts = clientStore.getAll(token);
+        Set<String> clientHosts = clientStore.getAll(token);
         if (CollectionUtils.isEmpty(clientHosts)) {
             return;
         }

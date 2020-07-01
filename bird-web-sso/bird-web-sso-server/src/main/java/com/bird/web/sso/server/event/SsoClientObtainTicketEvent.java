@@ -1,7 +1,7 @@
 package com.bird.web.sso.server.event;
 
 import com.bird.web.sso.event.SsoEvent;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ServerTicket;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,9 +19,14 @@ public class SsoClientObtainTicketEvent extends SsoEvent {
      * 客户端host
      */
     private String clientHost;
+    /**
+     * 票据信息
+     */
+    private ServerTicket serverTicket;
 
-    public SsoClientObtainTicketEvent(String token, TicketInfo ticketInfo,String clientHost){
-        super(token,ticketInfo);
+    public SsoClientObtainTicketEvent(String token, ServerTicket serverTicket,String clientHost){
+        super(token);
+        this.serverTicket = serverTicket;
         this.clientHost = clientHost;
     }
 }

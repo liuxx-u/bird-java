@@ -21,6 +21,11 @@ public class SsoClientProperties extends SsoProperties {
     private Boolean webflux;
 
     /**
+     * 应用标识
+     */
+    private String appId;
+
+    /**
      * 客户端主机地址
      */
     private String host;

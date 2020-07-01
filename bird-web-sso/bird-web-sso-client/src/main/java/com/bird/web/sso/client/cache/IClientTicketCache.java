@@ -1,6 +1,6 @@
 package com.bird.web.sso.client.cache;
 
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
 
 /**
  * 客户端票据缓存
@@ -20,11 +20,13 @@ public interface IClientTicketCache {
      * @param token token
      * @return ticket
      */
-    TicketInfo get(String token);
+    ClientTicket get(String token);
 
     /**
      * 移除token的客户端缓存
+     *
      * @param token token
+     * @return 客户端票据信息
      */
-    TicketInfo remove(String token);
+    ClientTicket remove(String token);
 }

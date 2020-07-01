@@ -1,7 +1,7 @@
 package com.bird.web.sso.client.event;
 
 import com.bird.web.sso.event.SsoEvent;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,15 +14,16 @@ import lombok.Setter;
 public class SsoClientFetchTicketEvent extends SsoEvent {
     private Boolean success;
     private String errorMsg;
+    private ClientTicket clientTicket;
 
     public SsoClientFetchTicketEvent(String token) {
         super();
         this.setToken(token);
     }
 
-    public void success(TicketInfo ticketInfo) {
+    public void success(ClientTicket clientTicket) {
         this.setSuccess(true);
-        this.setTicketInfo(ticketInfo);
+        this.clientTicket = clientTicket;
     }
 
     public void fail(String errorMsg) {

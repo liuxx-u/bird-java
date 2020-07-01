@@ -1,6 +1,6 @@
 package com.bird.web.sso.server.ticket;
 
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ServerTicket;
 
 /**
  * @author liuxx
@@ -8,12 +8,12 @@ import com.bird.web.sso.ticket.TicketInfo;
  */
 public class JwtTicketProtector implements ITicketProtector {
     @Override
-    public String protect(TicketInfo ticket) {
+    public String protect(ServerTicket ticket) {
         return null;
     }
 
     @Override
-    public TicketInfo unProtect(String token) {
+    public ServerTicket unProtect(String token) {
         return null;
     }
 }

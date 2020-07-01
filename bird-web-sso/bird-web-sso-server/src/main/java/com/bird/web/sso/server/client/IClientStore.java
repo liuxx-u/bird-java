@@ -1,6 +1,6 @@
 package com.bird.web.sso.server.client;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * token与clientHost存储器
@@ -21,12 +21,13 @@ public interface IClientStore {
     /**
      * 获取token已登录的所有客户端信息
      * @param token token
+     * @return 客户端信息集合
      */
-    List<String> getAll(String token);
+    Set<String> getAll(String token);
 
     /**
      * 清除token与client的关联信息
-     * @param token
+     * @param token token
      */
     void remove(String token);
 }

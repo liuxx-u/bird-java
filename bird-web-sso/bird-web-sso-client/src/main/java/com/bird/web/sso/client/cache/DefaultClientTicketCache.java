@@ -2,7 +2,7 @@ package com.bird.web.sso.client.cache;
 
 import com.bird.web.sso.client.SsoClientProperties;
 import com.bird.web.sso.client.remote.IRemoteTicketHandler;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +17,7 @@ public class DefaultClientTicketCache implements IClientTicketCache {
 
     private IRemoteTicketHandler ticketHandler;
 
-    private Cache<String, TicketInfo> cache;
+    private Cache<String, ClientTicket> cache;
 
     public DefaultClientTicketCache(SsoClientProperties clientProperties, IRemoteTicketHandler ticketHandler){
         this.ticketHandler = ticketHandler;
@@ -32,8 +32,10 @@ public class DefaultClientTicketCache implements IClientTicketCache {
      * @return ticket
      */
     @Override
-    public TicketInfo get(String token) {
-        if (StringUtils.isBlank(token)) return null;
+    public ClientTicket get(String token) {
+        if (StringUtils.isBlank(token)) {
+            return null;
+        }
 
         try {
             return cache.get(token, () -> ticketHandler.getTicket(token));
@@ -48,11 +50,13 @@ public class DefaultClientTicketCache implements IClientTicketCache {
      * @param token token
      */
     @Override
-    public TicketInfo remove(String token) {
-        if (StringUtils.isBlank(token)) return null;
+    public ClientTicket remove(String token) {
+        if (StringUtils.isBlank(token)) {
+            return null;
+        }
 
-        TicketInfo ticketInfo = cache.getIfPresent(token);
+        ClientTicket clientTicket = cache.getIfPresent(token);
         cache.invalidate(token);
-        return ticketInfo;
+        return clientTicket;
     }
 }

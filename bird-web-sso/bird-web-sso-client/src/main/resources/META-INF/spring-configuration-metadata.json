@@ -1,47 +1,53 @@
 {
-  "hints": [],
   "groups": [
     {
-      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
       "name": "bird.sso.client",
-      "type": "com.bird.web.sso.client.SsoClientProperties"
+      "type": "com.bird.web.sso.client.SsoClientProperties",
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties"
     }
   ],
   "properties": [
     {
-      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
-      "defaultValue": 30,
+      "name": "bird.sso.client.app-id",
+      "type": "java.lang.String",
+      "description": "应用标识",
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties"
+    },
+    {
       "name": "bird.sso.client.cache",
+      "type": "java.lang.Integer",
       "description": "客户端票据缓存时间（单位：分），过期后重新去Server拉取用户信息",
-      "type": "java.lang.Integer"
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
+      "defaultValue": 30
     },
     {
-      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
       "name": "bird.sso.client.cookie-name",
-      "type": "java.lang.String"
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties"
     },
     {
-      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
       "name": "bird.sso.client.host",
+      "type": "java.lang.String",
       "description": "客户端主机地址",
-      "type": "java.lang.String"
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties"
     },
     {
-      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
       "name": "bird.sso.client.login-path",
-      "type": "java.lang.String"
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties"
     },
     {
-      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
       "name": "bird.sso.client.server",
+      "type": "java.lang.String",
       "description": "sso服务器地址",
-      "type": "java.lang.String"
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties"
     },
     {
-      "sourceType": "com.bird.web.sso.client.SsoClientProperties",
       "name": "bird.sso.client.webflux",
+      "type": "java.lang.Boolean",
       "description": "是否是webflux环境",
-      "type": "java.lang.Boolean"
+      "sourceType": "com.bird.web.sso.client.SsoClientProperties"
     }
-  ]
+  ],
+  "hints": []
 }

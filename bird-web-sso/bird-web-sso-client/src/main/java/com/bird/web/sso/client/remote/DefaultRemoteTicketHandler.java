@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bird.web.sso.client.SsoClientProperties;
 import com.bird.web.sso.client.event.SsoClientFetchTicketEvent;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
 import com.bird.web.sso.utils.HttpClient;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
@@ -41,15 +41,17 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
      * @return 票据信息
      */
     @Override
-    public TicketInfo getTicket(String token) {
-        if (StringUtils.isBlank(token)) return null;
+    public ClientTicket getTicket(String token) {
+        if (StringUtils.isBlank(token)) {
+            return null;
+        }
 
         int retryCount = 3;
-        String url = clientProperties.getServer() + GET_TICKET_URL + "?token=" + token + "&clientHost=" + clientProperties.getHost();
+        String url = clientProperties.getServer() + GET_TICKET_URL + "?token=" + token + "&clientHost=" + clientProperties.getHost() + "&appId=" + clientProperties.getAppId();
         List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch");
 
         int resCode = 0;
-        TicketInfo ticketInfo;
+        ClientTicket ticketInfo;
         do {
             SsoClientFetchTicketEvent fetchTicketEvent = new SsoClientFetchTicketEvent(token);
             try {
@@ -58,7 +60,7 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
                     throw new IOException("Error while requesting: " + url + ". Server returned: " + result.code);
                 }
                 resCode = result.code;
-                ticketInfo = JSONObject.parseObject(result.content, TicketInfo.class);
+                ticketInfo = JSONObject.parseObject(result.content, ClientTicket.class);
                 fetchTicketEvent.success(ticketInfo);
             } catch (Exception ex) {
                 log.error(ex.getMessage(), ex);
@@ -81,11 +83,13 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
      * @param ticketInfo 新的票据信息
      */
     @Override
-    public Boolean refreshTicket(String token, TicketInfo ticketInfo) {
-        if (StringUtils.isBlank(token) || ticketInfo == null) return false;
+    public Boolean refreshTicket(String token, ClientTicket ticketInfo) {
+        if (StringUtils.isBlank(token) || ticketInfo == null) {
+            return false;
+        }
 
         int retryCount = 3;
-        String url = clientProperties.getServer() + REFRESH_TICKET_URL + "?token=" + token;
+        String url = clientProperties.getServer() + REFRESH_TICKET_URL + "?token=" + token + "&appId=" + clientProperties.getAppId();
 
         int resCode = 0;
         do {

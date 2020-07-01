@@ -7,7 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * 平台单点登陆权限切面
- * Created by liuxx on 2017/5/17.
+  *
+  * @author liuxx
+  * @since 2020/6/30
  */
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

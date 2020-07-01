@@ -1,7 +1,7 @@
 package com.bird.web.sso.client.event;
 
 import com.bird.web.sso.event.SsoEvent;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,11 @@ import lombok.Setter;
 @Setter
 public class SsoClientClearCacheEvent extends SsoEvent {
 
-    public SsoClientClearCacheEvent(String token, TicketInfo ticketInfo) {
-        super(token, ticketInfo);
+    private ClientTicket clientTicket;
+
+    public SsoClientClearCacheEvent(String token, ClientTicket clientTicket) {
+        super(token);
+
+        this.clientTicket = clientTicket;
     }
 }

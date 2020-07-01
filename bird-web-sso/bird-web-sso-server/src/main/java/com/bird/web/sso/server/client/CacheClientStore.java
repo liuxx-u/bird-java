@@ -2,10 +2,13 @@ package com.bird.web.sso.server.client;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * JVM缓存实现的Client Store
@@ -15,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CacheClientStore implements IClientStore {
 
-    private Cache<String, List<String>> cache;
+    private Cache<String, Set<String>> cache;
 
     public CacheClientStore(Integer expire) {
         cache = CacheBuilder.newBuilder().expireAfterWrite(expire, TimeUnit.MINUTES).build();
@@ -23,18 +26,24 @@ public class CacheClientStore implements IClientStore {
 
     @Override
     public void store(String token, String clientHost) {
-        List<String> clients = cache.getIfPresent(token);
+        if (StringUtils.isAnyBlank(token, clientHost)) {
+            return;
+        }
+
+        Set<String> clients = cache.getIfPresent(token);
         if (clients == null) {
-            clients = new ArrayList<>();
+            clients = new LinkedHashSet<>();
         }
-        if (!clients.contains(clientHost)) {
-            clients.add(clientHost);
-            cache.put(token, clients);
-        }
+        Set<String> clientHosts = Arrays.stream(StringUtils.split(clientHost, ","))
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toSet());
+
+        clients.addAll(clientHosts);
+        cache.put(token, clients);
     }
 
     @Override
-    public List<String> getAll(String token) {
+    public Set<String> getAll(String token) {
         return cache.getIfPresent(token);
     }
 

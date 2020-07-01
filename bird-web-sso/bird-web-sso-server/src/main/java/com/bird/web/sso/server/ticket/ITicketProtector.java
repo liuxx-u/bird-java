@@ -1,6 +1,6 @@
 package com.bird.web.sso.server.ticket;
 
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ServerTicket;
 
 /**
  * 定义票据加密解密器
@@ -12,15 +12,15 @@ public interface ITicketProtector {
 
     /**
      * 票据加密
-     * @param ticket
-     * @return
+     * @param ticket 票据信息
+     * @return 加密后字符串
      */
-    String protect(TicketInfo ticket);
+    String protect(ServerTicket ticket);
 
     /**
      * 票据解密
-     * @param token
-     * @return
+     * @param token token
+     * @return 票据信息
      */
-    TicketInfo unProtect(String token);
+    ServerTicket unProtect(String token);
 }

@@ -1,7 +1,7 @@
 package com.bird.web.sso.server.controller;
 
 import com.bird.web.sso.server.SsoServer;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,18 +26,18 @@ public class TicketController {
      * @return 票据信息
      */
     @GetMapping("/get")
-    public TicketInfo get(String clientHost, String token) {
-        return ssoServer.getTicket(clientHost, token);
+    public ClientTicket get(@RequestParam(defaultValue = "") String appId, @RequestParam(defaultValue = "") String clientHost, String token) {
+        return ssoServer.getClientTicket(appId, clientHost, token);
     }
 
     /**
      * 刷新票据
      *
      * @param token      token
-     * @param ticketInfo 新的票据信息
+     * @param clientTicket 新的客户端票据信息
      */
     @PostMapping("/refresh")
-    public void refresh(String token, @RequestBody TicketInfo ticketInfo) {
-        ssoServer.refreshTicket(token, ticketInfo);
+    public void refresh(@RequestParam(defaultValue = "") String appId,String token, @RequestBody ClientTicket clientTicket) {
+        ssoServer.refreshClientTicket(token,appId, clientTicket);
     }
 }

@@ -1,7 +1,7 @@
 package com.bird.web.sso.server.event;
 
 import com.bird.web.sso.event.SsoEvent;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ServerTicket;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,13 +20,19 @@ public class SsoServerRefreshTicketEvent extends SsoEvent {
      */
     private Boolean autoRefresh;
     /**
+     * 当前的票据信息
+     */
+    private ServerTicket currentTicket;
+    /**
      * 新的票据信息
      */
-    private TicketInfo newTicketInfo;
+    private ServerTicket newTicket;
 
-    public SsoServerRefreshTicketEvent(String token, TicketInfo ticketInfo, Boolean autoRefresh, TicketInfo newTicketInfo) {
-        super(token, ticketInfo);
+    public SsoServerRefreshTicketEvent(String token, ServerTicket currentTicket, Boolean autoRefresh, ServerTicket newTicket) {
+        super(token);
         this.autoRefresh = autoRefresh;
-        this.newTicketInfo = newTicketInfo;
+
+        this.currentTicket = currentTicket;
+        this.newTicket = newTicket;
     }
 }

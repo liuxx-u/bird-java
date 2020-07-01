@@ -4,7 +4,7 @@ import com.bird.web.sso.client.cache.IClientTicketCache;
 import com.bird.web.sso.client.event.SsoClientClearCacheEvent;
 import com.bird.web.sso.client.remote.IRemoteTicketHandler;
 import com.bird.web.sso.event.SsoEvent;
-import com.bird.web.sso.ticket.TicketInfo;
+import com.bird.web.sso.ticket.ClientTicket;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +40,7 @@ public class WebfluxSsoClient {
      * @param request request
      * @return TicketInfo
      */
-    public TicketInfo getTicket(ServerWebExchange request) {
+    public ClientTicket getTicket(ServerWebExchange request) {
         String token = this.getToken(request);
         return this.getTicket(token);
     }
@@ -51,8 +51,10 @@ public class WebfluxSsoClient {
      * @param token token
      * @return TicketInfo
      */
-    public TicketInfo getTicket(String token) {
-        if (StringUtils.isBlank(token)) return null;
+    public ClientTicket getTicket(String token) {
+        if (StringUtils.isBlank(token)) {
+            return null;
+        }
 
         return clientTicketCache.get(token);
     }
@@ -61,24 +63,26 @@ public class WebfluxSsoClient {
      * 刷新票据信息
      *
      * @param request    request
-     * @param ticketInfo 新的票据信息
+     * @param clientTicket 新的票据信息
      */
-    public void refreshTicket(ServerWebExchange request, TicketInfo ticketInfo) {
+    public void refreshTicket(ServerWebExchange request, ClientTicket clientTicket) {
         String token = this.getToken(request);
 
-        this.refreshTicket(token, ticketInfo);
+        this.refreshTicket(token, clientTicket);
     }
 
     /**
      * 刷新票据信息
      *
      * @param token      token
-     * @param ticketInfo 新的票据信息
+     * @param clientTicket 新的票据信息
      */
-    public void refreshTicket(String token, TicketInfo ticketInfo) {
-        if (StringUtils.isBlank(token)) return;
+    public void refreshTicket(String token, ClientTicket clientTicket) {
+        if (StringUtils.isBlank(token)) {
+            return;
+        }
 
-        if (!ticketHandler.refreshTicket(token, ticketInfo)) {
+        if (!ticketHandler.refreshTicket(token, clientTicket)) {
             log.error("票据刷新失败");
             return;
         }
@@ -101,11 +105,13 @@ public class WebfluxSsoClient {
      * @param token token
      */
     public void removeTicketCache(String token) {
-        if (StringUtils.isBlank(token)) return;
+        if (StringUtils.isBlank(token)) {
+            return;
+        }
 
-        TicketInfo ticketInfo = clientTicketCache.remove(token);
+        ClientTicket clientTicket = clientTicketCache.remove(token);
 
-        this.postEvent(new SsoClientClearCacheEvent(token, ticketInfo));
+        this.postEvent(new SsoClientClearCacheEvent(token, clientTicket));
     }
 
     /**
@@ -133,7 +139,9 @@ public class WebfluxSsoClient {
      * @param event event
      */
     private void postEvent(SsoEvent event) {
-        if (eventBus == null || event == null) return;
+        if (eventBus == null || event == null) {
+            return;
+        }
         eventBus.post(event);
     }
 }
