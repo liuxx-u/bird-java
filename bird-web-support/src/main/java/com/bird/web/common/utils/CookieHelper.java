@@ -96,11 +96,6 @@ public final class CookieHelper {
             cookie.setMaxAge(COOKIE_HALF_HOUR);
         }
         response.addCookie(cookie);
-        try {
-            response.flushBuffer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
