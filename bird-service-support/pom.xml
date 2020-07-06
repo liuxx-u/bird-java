@@ -52,11 +52,5 @@
             <artifactId>aspectjweaver</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!--dozer-->
-        <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>${dozer.version}</version>
-        </dependency>
     </dependencies>
 </project>
