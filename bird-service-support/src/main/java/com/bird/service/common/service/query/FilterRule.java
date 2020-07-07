@@ -17,15 +17,16 @@ public class FilterRule implements Serializable {
     private String operate;
     private String value;
 
-    public FilterRule(){}
+    public FilterRule() {
+    }
 
-    public FilterRule(String field,String operate,String value) {
+    public FilterRule(String field, String operate, String value) {
         this.field = field;
         this.operate = operate;
         this.value = value;
     }
 
-    public FilterRule(String key,String value) {
+    public FilterRule(String key, String value) {
         this(key, FilterOperate.EQUAL.getValue(), value);
     }
 }
