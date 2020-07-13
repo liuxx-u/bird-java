@@ -203,6 +203,42 @@ public class Assert {
     }
 
     /**
+     * 断言 - 空白字符
+     *
+     * @param sequence 字符串
+     */
+    public static void isBlank(CharSequence sequence) {
+        if (StringUtils.isNotBlank(sequence)) {
+            throw new IllegalArgumentException("CharSequence is blank.");
+        }
+    }
+
+    /**
+     * 断言 - 空白字符
+     *
+     * @param sequence 字符串
+     * @param message  错误消息
+     */
+    public static void isBlank(CharSequence sequence, String message) {
+        if (StringUtils.isNotBlank(sequence)) {
+            throw new UserArgumentException(message);
+        }
+    }
+
+    /**
+     * 断言 - 空白字符
+     *
+     * @param sequence  字符串
+     * @param errorCode 错误码
+     * @param message   错误消息
+     */
+    public static void isBlank(CharSequence sequence, String errorCode, String message) {
+        if (StringUtils.isNotBlank(sequence)) {
+            throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
      * 断言 - 包含字符串
      *
      * @param text    被搜索字符串
@@ -315,6 +351,42 @@ public class Assert {
     }
 
     /**
+     * 断言 - 集合为空
+     *
+     * @param collection 集合
+     */
+    public static void isEmpty(Collection collection) {
+        if (!CollectionUtils.isEmpty(collection)) {
+            throw new IllegalArgumentException("Collection is not empty.");
+        }
+    }
+
+    /**
+     * 断言 - 集合为空
+     *
+     * @param collection 集合
+     * @param message    错误消息
+     */
+    public static void isEmpty(Collection collection, String message) {
+        if (!CollectionUtils.isEmpty(collection)) {
+            throw new UserArgumentException(message);
+        }
+    }
+
+    /**
+     * 断言 - 集合为空
+     *
+     * @param collection 集合
+     * @param errorCode  错误码
+     * @param message    错误消息
+     */
+    public static void isEmpty(Collection collection, String errorCode, String message) {
+        if (!CollectionUtils.isEmpty(collection)) {
+            throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
      * 断言 - Map不为空
      *
      * @param map map
@@ -346,6 +418,42 @@ public class Assert {
      */
     public static void notEmpty(Map map, String errorCode, String message) {
         if (MapUtils.isEmpty(map)) {
+            throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - Map为空
+     *
+     * @param map map
+     */
+    public static void isEmpty(Map map) {
+        if (MapUtils.isNotEmpty(map)) {
+            throw new IllegalArgumentException("Map is empty.");
+        }
+    }
+
+    /**
+     * 断言 - Map为空
+     *
+     * @param map     map
+     * @param message 错误消息
+     */
+    public static void isEmpty(Map map, String message) {
+        if (MapUtils.isNotEmpty(map)) {
+            throw new UserArgumentException(message);
+        }
+    }
+
+    /**
+     * 断言 - 集合为空
+     *
+     * @param map       集合
+     * @param errorCode 错误码
+     * @param message   错误消息
+     */
+    public static void isEmpty(Map map, String errorCode, String message) {
+        if (MapUtils.isNotEmpty(map)) {
             throw new UserArgumentException(errorCode, message);
         }
     }
