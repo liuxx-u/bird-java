@@ -2,7 +2,6 @@ package com.bird.core.utils;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
-import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -212,7 +211,7 @@ public final class OkHttpHelper {
      */
     private static Request.Builder getBuilder(String url,Map<String, String> headers){
         Request.Builder builder = new Request.Builder().url(url);
-        if (MapUtils.isNotEmpty(headers)) {
+        if (headers != null && headers.size() > 0) {
             for (Map.Entry<String, String> header : headers.entrySet()) {
                 builder.header(header.getKey(), header.getValue());
             }

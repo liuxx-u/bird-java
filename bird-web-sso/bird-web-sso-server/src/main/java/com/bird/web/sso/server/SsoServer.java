@@ -186,6 +186,8 @@ public class SsoServer {
         }
 
         sessionStore.refreshTicket(token, serverTicket, Duration.ofMinutes(serverProperties.getExpire()));
+        //通知客户端，移除缓存
+        executorService.execute(() -> this.removeClientCache(token));
         //触发票据刷新事件
         this.postEvent(new SsoServerRefreshTicketEvent(token, curTicket, false, serverTicket));
     }
@@ -251,7 +253,7 @@ public class SsoServer {
         }
 
         for (String clientHost : clientHosts) {
-            int retryCount = 3;
+            int retryCount = 1;
             String url = clientHost + REMOVE_CLIENT_TICKET_URL + token;
             List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch");
             int resCode = 0;
