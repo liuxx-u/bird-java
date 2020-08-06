@@ -22,11 +22,11 @@ public abstract class AbstractException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public AbstractException(ErrorCode errorCode) {
+    public AbstractException(IErrorCode errorCode) {
         this(errorCode.getCode(), errorCode.getDesc());
     }
 
-    public AbstractException(ErrorCode errorCode, Throwable ex) {
+    public AbstractException(IErrorCode errorCode, Throwable ex) {
         this(errorCode.getCode(), errorCode.getDesc(), ex);
     }
 

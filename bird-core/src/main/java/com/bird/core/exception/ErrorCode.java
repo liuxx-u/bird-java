@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @SuppressWarnings("all")
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum ErrorCode implements IErrorCode {
 
     SUCCESS("00000","一切OK"),
 

@@ -1,5 +1,6 @@
 package com.bird.core;
 
+import com.bird.core.exception.IErrorCode;
 import com.bird.core.exception.UserArgumentException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
@@ -56,6 +57,18 @@ public class Assert {
     }
 
     /**
+     * 断言 - 不为NULL
+     *
+     * @param obj       obj
+     * @param errorCode 错误码
+     */
+    public static void notNull(Object obj, IErrorCode errorCode) {
+        if (obj == null) {
+            throw new UserArgumentException(errorCode);
+        }
+    }
+
+    /**
      * 断言 - 为NULL
      *
      * @param obj obj
@@ -88,6 +101,18 @@ public class Assert {
     public static void isNull(Object obj, String errorCode, String message) {
         if (obj != null) {
             throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - 为NULL
+     *
+     * @param obj       obj
+     * @param errorCode 错误码
+     */
+    public static void isNull(Object obj, IErrorCode errorCode) {
+        if (obj != null) {
+            throw new UserArgumentException(errorCode);
         }
     }
 
@@ -131,6 +156,19 @@ public class Assert {
     }
 
     /**
+     * 断言 - 相等
+     *
+     * @param obj1      源对象
+     * @param obj2      目标对象
+     * @param errorCode 错误码
+     */
+    public static void equals(Object obj1, Object obj2, IErrorCode errorCode) {
+        if (!Objects.equals(obj1, obj2)) {
+            throw new UserArgumentException(errorCode);
+        }
+    }
+
+    /**
      * 断言 - 不为空
      *
      * @param sequence 字符串
@@ -163,6 +201,18 @@ public class Assert {
     public static void notEmpty(CharSequence sequence, String errorCode, String message) {
         if (StringUtils.isEmpty(sequence)) {
             throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - 不为空
+     *
+     * @param sequence  字符串
+     * @param errorCode 错误码
+     */
+    public static void notEmpty(CharSequence sequence, IErrorCode errorCode) {
+        if (StringUtils.isEmpty(sequence)) {
+            throw new UserArgumentException(errorCode);
         }
     }
 
@@ -203,6 +253,18 @@ public class Assert {
     }
 
     /**
+     * 断言 - 不为空白字符
+     *
+     * @param sequence  字符串
+     * @param errorCode 错误码
+     */
+    public static void notBlank(CharSequence sequence, IErrorCode errorCode) {
+        if (StringUtils.isBlank(sequence)) {
+            throw new UserArgumentException(errorCode);
+        }
+    }
+
+    /**
      * 断言 - 空白字符
      *
      * @param sequence 字符串
@@ -235,6 +297,18 @@ public class Assert {
     public static void isBlank(CharSequence sequence, String errorCode, String message) {
         if (StringUtils.isNotBlank(sequence)) {
             throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - 空白字符
+     *
+     * @param sequence  字符串
+     * @param errorCode 错误码
+     */
+    public static void isBlank(CharSequence sequence, IErrorCode errorCode) {
+        if (StringUtils.isNotBlank(sequence)) {
+            throw new UserArgumentException(errorCode);
         }
     }
 
@@ -277,6 +351,19 @@ public class Assert {
     }
 
     /**
+     * 断言 - 包含字符串
+     *
+     * @param text    被搜索字符串
+     * @param subText 子字符串
+     * @param errorCode 错误码
+     */
+    public static void contains(String text, String subText, IErrorCode errorCode) {
+        if (!StringUtils.contains(text, subText)) {
+            throw new UserArgumentException(errorCode);
+        }
+    }
+
+    /**
      * 断言 - 不包含字符串
      *
      * @param text    被搜索字符串
@@ -311,6 +398,19 @@ public class Assert {
     public static void notContains(String text, String subText, String errorCode, String message) {
         if (StringUtils.contains(text, subText)) {
             throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - 不包含字符串
+     *
+     * @param text    被搜索字符串
+     * @param subText 子字符串
+     * @param errorCode 错误码
+     */
+    public static void notContains(String text, String subText, IErrorCode errorCode) {
+        if (StringUtils.contains(text, subText)) {
+            throw new UserArgumentException(errorCode);
         }
     }
 
@@ -351,6 +451,18 @@ public class Assert {
     }
 
     /**
+     * 断言 - 集合不为空
+     *
+     * @param collection 集合
+     * @param errorCode  错误码
+     */
+    public static void notEmpty(Collection collection, IErrorCode errorCode) {
+        if (CollectionUtils.isEmpty(collection)) {
+            throw new UserArgumentException(errorCode);
+        }
+    }
+
+    /**
      * 断言 - 集合为空
      *
      * @param collection 集合
@@ -383,6 +495,18 @@ public class Assert {
     public static void isEmpty(Collection collection, String errorCode, String message) {
         if (!CollectionUtils.isEmpty(collection)) {
             throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - 集合为空
+     *
+     * @param collection 集合
+     * @param errorCode  错误码
+     */
+    public static void isEmpty(Collection collection, IErrorCode errorCode) {
+        if (!CollectionUtils.isEmpty(collection)) {
+            throw new UserArgumentException(errorCode);
         }
     }
 
@@ -423,6 +547,18 @@ public class Assert {
     }
 
     /**
+     * 断言 - 集合不为空
+     *
+     * @param map       集合
+     * @param errorCode 错误码
+     */
+    public static void notEmpty(Map map, IErrorCode errorCode) {
+        if (MapUtils.isEmpty(map)) {
+            throw new UserArgumentException(errorCode);
+        }
+    }
+
+    /**
      * 断言 - Map为空
      *
      * @param map map
@@ -455,6 +591,18 @@ public class Assert {
     public static void isEmpty(Map map, String errorCode, String message) {
         if (MapUtils.isNotEmpty(map)) {
             throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - 集合为空
+     *
+     * @param map       集合
+     * @param errorCode 错误码
+     */
+    public static void isEmpty(Map map, IErrorCode errorCode) {
+        if (MapUtils.isNotEmpty(map)) {
+            throw new UserArgumentException(errorCode);
         }
     }
 
@@ -495,6 +643,18 @@ public class Assert {
     }
 
     /**
+     * 断言 - 必须为true
+     *
+     * @param expression 表达式
+     * @param errorCode  错误码
+     */
+    public static void isTrue(Boolean expression, IErrorCode errorCode) {
+        if (BooleanUtils.isNotTrue(expression)) {
+            throw new UserArgumentException(errorCode);
+        }
+    }
+
+    /**
      * 断言 - 必须为false
      *
      * @param expression 表达式
@@ -527,6 +687,18 @@ public class Assert {
     public static void isFalse(Boolean expression, String errorCode, String message) {
         if (BooleanUtils.isTrue(expression)) {
             throw new UserArgumentException(errorCode, message);
+        }
+    }
+
+    /**
+     * 断言 - 必须为false
+     *
+     * @param expression 表达式
+     * @param errorCode  错误码
+     */
+    public static void isFalse(Boolean expression, IErrorCode errorCode) {
+        if (BooleanUtils.isTrue(expression)) {
+            throw new UserArgumentException(errorCode);
         }
     }
 

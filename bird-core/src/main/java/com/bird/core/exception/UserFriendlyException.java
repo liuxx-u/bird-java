@@ -22,11 +22,11 @@ public class UserFriendlyException extends AbstractException {
         super(errorCode, message, ex);
     }
 
-    public UserFriendlyException(ErrorCode errorCode) {
+    public UserFriendlyException(IErrorCode errorCode) {
         super(errorCode);
     }
 
-    public UserFriendlyException(ErrorCode errorCode, Throwable ex) {
+    public UserFriendlyException(IErrorCode errorCode, Throwable ex) {
         super(errorCode, ex);
     }
 }

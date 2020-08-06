@@ -5,7 +5,8 @@ package com.bird.core.exception;
  * @since 2020/6/28
  */
 public class UserArgumentException extends AbstractException {
-    public UserArgumentException(){}
+    public UserArgumentException() {
+    }
 
     public UserArgumentException(String message) {
         this(ErrorCode.A0001.getCode(), message);
@@ -13,5 +14,9 @@ public class UserArgumentException extends AbstractException {
 
     public UserArgumentException(String errorCode, String message) {
         super(errorCode, message);
+    }
+
+    public UserArgumentException(IErrorCode errorCode) {
+        super(errorCode);
     }
 }
