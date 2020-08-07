@@ -17,6 +17,7 @@
         <module>bird-trace</module>
         <module>bird-service-support</module>
         <module>bird-web-support</module>
+        <module>bird-statemachine</module>
     </modules>
 
     <properties>
