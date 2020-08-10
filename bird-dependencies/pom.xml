@@ -22,6 +22,11 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
+                <artifactId>bird-statemachine</artifactId>
+                <version>${bird.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
                 <artifactId>bird-eventbus-core</artifactId>
                 <version>${bird.version}</version>
             </dependency>

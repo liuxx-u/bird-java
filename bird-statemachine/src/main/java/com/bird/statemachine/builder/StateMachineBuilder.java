@@ -29,15 +29,15 @@ public class StateMachineBuilder<S,E,C> {
 
 
     public TransitionBuilder<S, E, C> externalTransition() {
-        return new TransitionBuilder<>(stateMap, TransitionType.EXTERNAL);
+        return new TransitionBuilder<>(stateMap);
     }
 
     public TransitionsBuilder<S, E, C> externalTransitions() {
-        return new TransitionsBuilder<>(stateMap, TransitionType.EXTERNAL);
+        return new TransitionsBuilder<>(stateMap);
     }
 
     public TransitionBuilder<S, E, C> internalTransition() {
-        return new TransitionBuilder<>(stateMap, TransitionType.INTERNAL);
+        return new TransitionBuilder<>(stateMap);
     }
 
     public StateMachine<S, E, C> build(String machineId) {

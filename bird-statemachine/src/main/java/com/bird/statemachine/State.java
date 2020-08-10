@@ -26,19 +26,13 @@ public class State<S,E,C> {
         return this.stateId;
     }
 
-    public Transition<S, E, C> addTransition(E event, State<S,E,C> target, TransitionType transitionType) {
-        Transition<S, E, C> newTransition = new Transition<>();
-        newTransition.setSource(this);
-        newTransition.setTarget(target);
-        newTransition.setEvent(event);
-        newTransition.setTransitionType(transitionType);
-
-        verify(event, newTransition);
-        transitions.put(event, newTransition);
-        return newTransition;
+    public Transition<S, E, C> setTransition(E event, Transition<S,E,C> transition) {
+        verify(event, transition);
+        transitions.put(event, transition);
+        return transition;
     }
 
-    Optional<Transition<S, E, C>> getTransition(E event) {
+    public Optional<Transition<S, E, C>> getTransition(E event) {
         return Optional.ofNullable(transitions.get(event));
     }
 
@@ -46,8 +40,6 @@ public class State<S,E,C> {
         StringBuilder sb = new StringBuilder();
         for(Transition transition: this.getTransitions()){
             sb.append(transition.getSource().getId())
-                    .append(" --> ")
-                    .append(transition.getTarget().getId())
                     .append(" : ")
                     .append(transition.getEvent())
                     .append('\n');

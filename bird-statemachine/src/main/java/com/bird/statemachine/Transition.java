@@ -3,6 +3,10 @@ package com.bird.statemachine;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
+
 /**
  * @author liuxx
  * @since 2020/8/6
@@ -13,38 +17,46 @@ public class Transition<S,E,C> {
 
     private State<S, E, C> source;
 
-    private State<S, E, C> target;
-
     private E event;
 
-    private Condition<C> condition;
+    private PriorityQueue<Action<S, C>> actions = new PriorityQueue<>(Comparator.comparing(Action::getPriority));
 
-    private Action<S, E, C> action;
+    public Transition() {
+    }
 
-    private TransitionType transitionType = TransitionType.EXTERNAL;
+    public Transition(State<S, E, C> source, E event) {
+        this.source = source;
+        this.event = event;
+    }
 
-    public State<S, E, C> transit(C ctx) {
-        this.verify();
-        if (condition == null || condition.isSatisfied(ctx)) {
-            if (action != null) {
-                action.execute(source.getId(), target.getId(), event, ctx);
-            }
-            return target;
+    public void addAction(Action<S, C> action) {
+        if (action == null) {
+            return;
         }
 
-        return source;
+        this.actions.add(action);
+    }
+
+    public S transit(C ctx) {
+        this.verify();
+        for (Action<S, C> action : actions) {
+            if (action.getCondition().apply(ctx)) {
+                return action.getHandler().apply(ctx);
+            }
+        }
+
+        return source.getId();
     }
 
     private void verify() {
-        if (transitionType == TransitionType.INTERNAL && source != target) {
-            throw new StateMachineException(String.format("Internal transition source state '%s' " +
-                    "and target state '%s' must be same.", source, target));
+        if (actions == null || actions.size() == 0) {
+            throw new StateMachineException(String.format("event '%s' actions is empty.", event));
         }
     }
 
     @Override
     public final String toString() {
-        return source + "-[" + event.toString() + ", " + transitionType + "]->" + target;
+        return source + "-[" + event.toString() + "]->";
     }
 
     @Override
@@ -53,7 +65,7 @@ public class Transition<S,E,C> {
             Transition other = (Transition) anObject;
             return this.event.equals(other.getEvent())
                     && this.source.equals(other.getSource())
-                    && this.target.equals(other.getTarget());
+                    && this.actions.equals(other.getActions());
         }
         return false;
     }

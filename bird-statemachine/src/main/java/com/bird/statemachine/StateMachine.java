@@ -14,6 +14,8 @@ public interface StateMachine<S,E,C> {
 
     /**
      * 设置准备状态
+     *
+     * @param ready 准备状态
      */
     void setReady(boolean ready);
 
