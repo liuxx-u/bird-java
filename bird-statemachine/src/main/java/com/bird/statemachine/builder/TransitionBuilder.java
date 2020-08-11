@@ -3,57 +3,47 @@ package com.bird.statemachine.builder;
 import com.bird.statemachine.*;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * @author liuxx
  * @since 2020/8/7
  */
-public class TransitionBuilder<S,E,C> implements From<S,E,C>, On<S,E,C>, To<S,E,C> {
+public class TransitionBuilder<S,E,C> implements When<S,C>, On<S,E,C> {
 
     private State<S, E, C> source;
 
-    State<S, E, C> target;
+    E event;
 
     private Transition<S, E, C> transition;
 
     final Map<S, State<S, E, C>> stateMap;
-    final TransitionType transitionType;
 
-    TransitionBuilder(Map<S, State<S, E, C>> stateMap, TransitionType transitionType){
+    TransitionBuilder(Map<S, State<S, E, C>> stateMap) {
         this.stateMap = stateMap;
-        this.transitionType = transitionType;
     }
 
-    public From<S, E, C> from(S stateId) {
+    public On<S, E, C> from(S stateId) {
         source = StateHelper.getState(stateMap, stateId);
         return this;
     }
 
     @Override
-    public To<S, E, C> to(S stateId) {
-        target = StateHelper.getState(stateMap, stateId);
-        return this;
-    }
-
-    public To<S, E, C> within(S stateId) {
-        source = target = StateHelper.getState(stateMap, stateId);
+    public When<S, C> on(E event) {
+        this.event = event;
         return this;
     }
 
     @Override
-    public On<S, E, C> on(E event) {
-        transition = source.addTransition(event, target, transitionType);
+    public synchronized When<S, C> perform(int priority, Function<C, Boolean> condition, Function<C, S> action) {
+        if (condition == null || action == null) {
+            throw new StateMachineException("perform condition and action can`t be null");
+        }
+        if (this.transition == null) {
+            transition = this.source.setTransition(this.event, new Transition<>(this.source, this.event));
+        }
+        transition.addAction(new Action<>(priority, condition, action));
         return this;
-    }
-
-    @Override
-    public When<S, E, C> when(Condition<C> condition) {
-        transition.setCondition(condition);
-        return this;
-    }
-
-    @Override
-    public void perform(Action<S, E, C> action) {
-        transition.setAction(action);
     }
 }

@@ -52,7 +52,7 @@ public class StandardStateMachine<S,E,C> implements StateMachine<S,E,C> {
     public S fireEvent(S sourceState, E event, C ctx) {
         this.checkReady();
         State<S, E, C> state = this.getState(sourceState);
-        return this.doTransition(state, event, ctx).getId();
+        return this.doTransition(state, event, ctx);
     }
 
     /**
@@ -79,12 +79,12 @@ public class StandardStateMachine<S,E,C> implements StateMachine<S,E,C> {
      * @param ctx         用户上下文
      * @return 目标状态
      */
-    private State<S, E, C> doTransition(State<S, E, C> sourceState, E event, C ctx) {
+    private S doTransition(State<S, E, C> sourceState, E event, C ctx) {
         Optional<Transition<S, E, C>> transition = sourceState.getTransition(event);
         if (transition.isPresent()) {
             return transition.get().transit(ctx);
         }
-        return sourceState;
+        return sourceState.getId();
     }
 
     /**

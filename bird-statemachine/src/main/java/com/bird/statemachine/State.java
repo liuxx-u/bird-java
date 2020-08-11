@@ -26,16 +26,10 @@ public class State<S,E,C> {
         return this.stateId;
     }
 
-    public Transition<S, E, C> addTransition(E event, State<S,E,C> target, TransitionType transitionType) {
-        Transition<S, E, C> newTransition = new Transition<>();
-        newTransition.setSource(this);
-        newTransition.setTarget(target);
-        newTransition.setEvent(event);
-        newTransition.setTransitionType(transitionType);
-
-        verify(event, newTransition);
-        transitions.put(event, newTransition);
-        return newTransition;
+    public Transition<S, E, C> setTransition(E event, Transition<S,E,C> transition) {
+        verify(event);
+        transitions.put(event, transition);
+        return transition;
     }
 
     Optional<Transition<S, E, C>> getTransition(E event) {
@@ -46,8 +40,6 @@ public class State<S,E,C> {
         StringBuilder sb = new StringBuilder();
         for(Transition transition: this.getTransitions()){
             sb.append(transition.getSource().getId())
-                    .append(" --> ")
-                    .append(transition.getTarget().getId())
                     .append(" : ")
                     .append(transition.getEvent())
                     .append('\n');
@@ -59,12 +51,9 @@ public class State<S,E,C> {
         return transitions.values();
     }
 
-    private void verify(E event, Transition<S,E,C> newTransition) {
-        Transition existingTransition = transitions.get(event);
-        if(existingTransition != null){
-            if(existingTransition.equals(newTransition)){
-                throw new StateMachineException(existingTransition+" already Exist, you can not add another one");
-            }
+    private void verify(E event) {
+        if(this.transitions.containsKey(event)){
+            throw new StateMachineException(event+" already Exist, you can not add another one");
         }
     }
 
@@ -75,6 +64,11 @@ public class State<S,E,C> {
             return this.stateId.equals(other.getId());
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.stateId.hashCode();
     }
 
     @Override

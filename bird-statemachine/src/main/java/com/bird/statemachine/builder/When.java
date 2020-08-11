@@ -2,17 +2,42 @@ package com.bird.statemachine.builder;
 
 import com.bird.statemachine.Action;
 
+import java.util.function.Function;
+
 /**
- * When
- *
- * @author Frank Zhang
- * @date 2020-02-07 9:33 PM
+ * @author liuxx
+ * @since 2020/8/7
  */
-public interface When<S, E, C>{
+public interface When<S, C> {
+
+    /**
+     * Define action to be performed during transition without condition
+     *
+     * @param action performed action
+     * @return When
+     */
+    default When<S, C> perform(Function<C, S> action) {
+        return perform(p -> true, action);
+    }
+
+    /**
+     * Define action to be performed during transition with lowest priority
+     *
+     * @param condition condition
+     * @param action    performed action
+     * @return When
+     */
+    default When<S, C> perform(Function<C, Boolean> condition, Function<C, S> action) {
+        return perform(Action.LOWEST_PRECEDENCE, condition, action);
+    }
+
     /**
      * Define action to be performed during transition
      *
-     * @param action performed action
+     * @param priority  performed priority
+     * @param condition performed condition
+     * @param action    performed action
+     * @return When
      */
-    void perform(Action<S, E, C> action);
+    When<S, C> perform(int priority, Function<C, Boolean> condition, Function<C, S> action);
 }

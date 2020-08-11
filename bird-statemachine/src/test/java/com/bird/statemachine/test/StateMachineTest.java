@@ -1,7 +1,5 @@
 package com.bird.statemachine.test;
 
-import com.bird.statemachine.Action;
-import com.bird.statemachine.Condition;
 import com.bird.statemachine.StateMachine;
 import com.bird.statemachine.StateMachineFactory;
 import com.bird.statemachine.builder.StateMachineBuilder;
@@ -16,62 +14,52 @@ public class StateMachineTest {
 
     static String MACHINE_ID = "TestStateMachine";
 
-    static enum States {
+    enum States {
         STATE1, STATE2, STATE3, STATE4
     }
 
-    static enum Events {
-        EVENT1, EVENT2, EVENT3, EVENT4, INTERNAL_EVENT
+    enum Events {
+        EVENT1, EVENT2, EVENT3, EVENT4
     }
 
     static class Context {
-        String operator = "frank";
+        String operator = "liuxx";
         String entityId = "123465";
+        int amount = 10000;
+    }
+
+    static class SubContext extends Context{
+        String text = "subContext";
     }
 
     @Test
-    public void testExternalNormal() {
+    public void testNormal() {
         StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE1)
-                .to(States.STATE2)
                 .on(Events.EVENT1)
-                .when(checkCondition())
-                .perform(doAction());
+                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
+                .perform(3,context -> context.amount > 5000,context -> States.STATE3)
+                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
 
         StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID);
-        States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, new Context());
-        Assert.assertEquals(States.STATE2, target);
-    }
-
-    @Test
-    public void testExternalTransitionsNormal(){
-        StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.externalTransitions()
-                .fromAmong(States.STATE1, States.STATE2, States.STATE3)
-                .to(States.STATE4)
-                .on(Events.EVENT1)
-                .when(checkCondition())
-                .perform(doAction());
-
-        StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID+"1");
-        States target = stateMachine.fireEvent(States.STATE2, Events.EVENT1, new Context());
+        States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, new SubContext());
         Assert.assertEquals(States.STATE4, target);
     }
 
     @Test
-    public void testInternalNormal(){
+    public void testExternalTransitionsNormal() {
         StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.internalTransition()
-                .within(States.STATE1)
-                .on(Events.INTERNAL_EVENT)
-                .when(checkCondition())
-                .perform(doAction());
-        StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID+"2");
+        builder.transitions()
+                .fromAmong(States.STATE1, States.STATE2, States.STATE3)
+                .on(Events.EVENT1)
+                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
+                .perform(3, context -> context.amount > 5000, context -> States.STATE3)
+                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
 
-        stateMachine.fireEvent(States.STATE1, Events.EVENT1, new Context());
-        States target = stateMachine.fireEvent(States.STATE1, Events.INTERNAL_EVENT, new Context());
-        Assert.assertEquals(States.STATE1, target);
+        StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID + "1");
+        States target = stateMachine.fireEvent(States.STATE2, Events.EVENT1, new Context());
+        Assert.assertEquals(States.STATE4, target);
     }
 
     @Test
@@ -80,50 +68,31 @@ public class StateMachineTest {
 
         Context context = new Context();
         States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, context);
-        Assert.assertEquals(States.STATE2, target);
-        target = stateMachine.fireEvent(States.STATE2, Events.INTERNAL_EVENT, context);
-        Assert.assertEquals(States.STATE2, target);
+        Assert.assertEquals(States.STATE4, target);
         target = stateMachine.fireEvent(States.STATE2, Events.EVENT2, context);
-        Assert.assertEquals(States.STATE1, target);
+        Assert.assertEquals(States.STATE2, target);
         target = stateMachine.fireEvent(States.STATE1, Events.EVENT3, context);
         Assert.assertEquals(States.STATE3, target);
     }
 
     private StateMachine<States, Events, Context> buildStateMachine(String machineId) {
         StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE1)
-                .to(States.STATE2)
                 .on(Events.EVENT1)
-                .when(checkCondition())
-                .perform(doAction());
+                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
+                .perform(3,context -> context.amount > 5000,context -> States.STATE3)
+                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
 
-        builder.internalTransition()
-                .within(States.STATE2)
-                .on(Events.INTERNAL_EVENT)
-                .when(checkCondition())
-                .perform(doAction());
-
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE2)
-                .to(States.STATE1)
                 .on(Events.EVENT2)
-                .when(checkCondition())
-                .perform(doAction());
+                .perform(ctx -> States.STATE2);
 
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE1)
-                .to(States.STATE3)
                 .on(Events.EVENT3)
-                .when(checkCondition())
-                .perform(doAction());
-
-        builder.externalTransitions()
-                .fromAmong(States.STATE1, States.STATE2, States.STATE3)
-                .to(States.STATE4)
-                .on(Events.EVENT4)
-                .when(checkCondition())
-                .perform(doAction());
+                .perform(ctx -> States.STATE3);
 
         builder.build(machineId);
 
@@ -140,16 +109,6 @@ public class StateMachineTest {
             Thread thread = new Thread(()->{
                 StateMachine<States, Events, Context> stateMachine = StateMachineFactory.get("testMultiThread");
                 States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, new Context());
-                Assert.assertEquals(States.STATE2, target);
-            });
-            thread.start();
-        }
-
-
-        for(int i=0 ; i<10 ; i++) {
-            Thread thread = new Thread(() -> {
-                StateMachine<States, Events, Context> stateMachine = StateMachineFactory.get("testMultiThread");
-                States target = stateMachine.fireEvent(States.STATE1, Events.EVENT4, new Context());
                 Assert.assertEquals(States.STATE4, target);
             });
             thread.start();
@@ -164,13 +123,5 @@ public class StateMachineTest {
             thread.start();
         }
 
-    }
-
-    private Condition<Context> checkCondition() {
-        return (ctx) -> true;
-    }
-
-    private Action<States, Events, Context> doAction() {
-        return (from, to, event, ctx) -> System.out.println(ctx.operator + " is operating " + ctx.entityId + " from:" + from + " to:" + to + " on:" + event);
     }
 }
