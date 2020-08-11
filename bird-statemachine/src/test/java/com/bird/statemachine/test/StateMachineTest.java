@@ -19,12 +19,13 @@ public class StateMachineTest {
     }
 
     enum Events {
-        EVENT1, EVENT2, EVENT3, EVENT4, INTERNAL_EVENT
+        EVENT1, EVENT2, EVENT3, EVENT4
     }
 
     static class Context {
         String operator = "frank";
         String entityId = "123465";
+        int amount = 10000;
     }
 
     static class SubContext extends Context{
@@ -32,27 +33,31 @@ public class StateMachineTest {
     }
 
     @Test
-    public void testExternalNormal() {
+    public void testNormal() {
         StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE1)
                 .on(Events.EVENT1)
-                .perform(ctx -> States.STATE2);
+                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
+                .perform(3,context -> context.amount > 5000,context -> States.STATE3)
+                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
 
         StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID);
         States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, new SubContext());
-        Assert.assertEquals(States.STATE2, target);
+        Assert.assertEquals(States.STATE4, target);
     }
 
     @Test
-    public void testExternalTransitionsNormal(){
+    public void testExternalTransitionsNormal() {
         StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.externalTransitions()
+        builder.transitions()
                 .fromAmong(States.STATE1, States.STATE2, States.STATE3)
                 .on(Events.EVENT1)
-                .perform(ctx -> States.STATE4);
+                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
+                .perform(3, context -> context.amount > 5000, context -> States.STATE3)
+                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
 
-        StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID+"1");
+        StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID + "1");
         States target = stateMachine.fireEvent(States.STATE2, Events.EVENT1, new Context());
         Assert.assertEquals(States.STATE4, target);
     }
@@ -63,36 +68,31 @@ public class StateMachineTest {
 
         Context context = new Context();
         States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, context);
-        Assert.assertEquals(States.STATE2, target);
-        target = stateMachine.fireEvent(States.STATE2, Events.INTERNAL_EVENT, context);
-        Assert.assertEquals(States.STATE2, target);
+        Assert.assertEquals(States.STATE4, target);
         target = stateMachine.fireEvent(States.STATE2, Events.EVENT2, context);
-        Assert.assertEquals(States.STATE1, target);
+        Assert.assertEquals(States.STATE2, target);
         target = stateMachine.fireEvent(States.STATE1, Events.EVENT3, context);
         Assert.assertEquals(States.STATE3, target);
     }
 
     private StateMachine<States, Events, Context> buildStateMachine(String machineId) {
         StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE1)
                 .on(Events.EVENT1)
-                .perform(ctx->States.STATE2);
+                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
+                .perform(3,context -> context.amount > 5000,context -> States.STATE3)
+                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
 
-        builder.internalTransition()
-                .from(States.STATE2)
-                .on(Events.INTERNAL_EVENT)
-                .perform(ctx->States.STATE2);
-
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE2)
                 .on(Events.EVENT2)
-                .perform(ctx->States.STATE2);
+                .perform(ctx -> States.STATE2);
 
-        builder.externalTransition()
+        builder.transition()
                 .from(States.STATE1)
                 .on(Events.EVENT3)
-                .perform(ctx->States.STATE3);
+                .perform(ctx -> States.STATE3);
 
         builder.build(machineId);
 
@@ -109,16 +109,6 @@ public class StateMachineTest {
             Thread thread = new Thread(()->{
                 StateMachine<States, Events, Context> stateMachine = StateMachineFactory.get("testMultiThread");
                 States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, new Context());
-                Assert.assertEquals(States.STATE2, target);
-            });
-            thread.start();
-        }
-
-
-        for(int i=0 ; i<10 ; i++) {
-            Thread thread = new Thread(() -> {
-                StateMachine<States, Events, Context> stateMachine = StateMachineFactory.get("testMultiThread");
-                States target = stateMachine.fireEvent(States.STATE1, Events.EVENT4, new Context());
                 Assert.assertEquals(States.STATE4, target);
             });
             thread.start();

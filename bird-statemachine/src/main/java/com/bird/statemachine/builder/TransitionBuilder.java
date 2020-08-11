@@ -3,6 +3,7 @@ package com.bird.statemachine.builder;
 import com.bird.statemachine.*;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -13,9 +14,7 @@ public class TransitionBuilder<S,E,C> implements When<S,C>, On<S,E,C> {
 
     private State<S, E, C> source;
 
-    protected E event;
-
-    private Transition<S, E, C> transition;
+    E event;
 
     final Map<S, State<S, E, C>> stateMap;
 
@@ -39,9 +38,12 @@ public class TransitionBuilder<S,E,C> implements When<S,C>, On<S,E,C> {
         if (condition == null || action == null) {
             throw new StateMachineException("perform condition and action can`t be null");
         }
-        Transition<S, E, C> transition = this.source.getTransition(this.event).orElse(new Transition<>(this.source,this.event));
-        transition.addAction(new Action<>(priority, condition, action));
-        this.source.setTransition(this.event,transition);
+        Optional<Transition<S, E, C>> transition = this.source.getTransition(this.event);
+        if (!transition.isPresent()) {
+            transition = Optional.of(this.source.setTransition(this.event, new Transition<>(this.source, this.event)));
+        }
+
+        transition.ifPresent(p -> p.addAction(new Action<>(priority, condition, action)));
         return this;
     }
 }

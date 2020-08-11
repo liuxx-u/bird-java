@@ -5,6 +5,7 @@ import com.bird.statemachine.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -14,8 +15,6 @@ import java.util.function.Function;
 public class TransitionsBuilder<S,E,C> extends TransitionBuilder<S,E,C> {
 
     private List<State<S, E, C>> sources = new ArrayList<>();
-
-    private List<Transition<S, E, C>> transitions = new ArrayList<>();
 
     TransitionsBuilder(Map<S, State<S, E, C>> stateMap) {
         super(stateMap);
@@ -29,8 +28,18 @@ public class TransitionsBuilder<S,E,C> extends TransitionBuilder<S,E,C> {
     }
 
     @Override
-    public When<S, C> on(E event) {
-        this.event = event;
+    public synchronized When<S, C> perform(int priority, Function<C, Boolean> condition, Function<C, S> action) {
+        if (condition == null || action == null) {
+            throw new StateMachineException("perform condition and action can`t be null");
+        }
+        for(State<S,E,C> state : this.sources){
+            Optional<Transition<S, E, C>> transition = state.getTransition(this.event);
+            if (!transition.isPresent()) {
+                transition = Optional.of(state.setTransition(this.event, new Transition<>(state, this.event)));
+            }
+
+            transition.ifPresent(p -> p.addAction(new Action<>(priority, condition, action)));
+        }
         return this;
     }
 }

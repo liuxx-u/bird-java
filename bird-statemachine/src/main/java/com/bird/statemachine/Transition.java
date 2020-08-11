@@ -3,9 +3,9 @@ package com.bird.statemachine;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * @author liuxx
@@ -19,10 +19,7 @@ public class Transition<S,E,C> {
 
     private E event;
 
-    private PriorityQueue<Action<S, C>> actions = new PriorityQueue<>(Comparator.comparing(Action::getPriority));
-
-    public Transition() {
-    }
+    private List<Action<S, C>> actions = new ArrayList<>();
 
     public Transition(State<S, E, C> source, E event) {
         this.source = source;
@@ -35,6 +32,7 @@ public class Transition<S,E,C> {
         }
 
         this.actions.add(action);
+        Collections.sort(this.actions);
     }
 
     public S transit(C ctx) {

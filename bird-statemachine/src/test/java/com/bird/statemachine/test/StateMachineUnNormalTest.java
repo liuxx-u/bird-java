@@ -19,7 +19,7 @@ import org.junit.Test;
 //    @Test
 //    public void testConditionNotMeet() {
 //        StateMachineBuilder<StateMachineTest.States, StateMachineTest.Events, StateMachineTest.Context> builder = StateMachineBuilder.init();
-//        builder.externalTransition()
+//        builder.transition()
 //                .from(StateMachineTest.States.STATE1)
 //                .to(StateMachineTest.States.STATE2)
 //                .on(StateMachineTest.Events.EVENT1)
@@ -35,14 +35,14 @@ import org.junit.Test;
 //    @Test(expected = StateMachineException.class)
 //    public void testDuplicatedTransition() {
 //        StateMachineBuilder<StateMachineTest.States, StateMachineTest.Events, StateMachineTest.Context> builder = StateMachineBuilder.init();
-//        builder.externalTransition()
+//        builder.transition()
 //                .from(StateMachineTest.States.STATE1)
 //                .to(StateMachineTest.States.STATE2)
 //                .on(StateMachineTest.Events.EVENT1)
 //                .when(checkCondition())
 //                .perform(doAction());
 //
-//        builder.externalTransition()
+//        builder.transition()
 //                .from(StateMachineTest.States.STATE1)
 //                .to(StateMachineTest.States.STATE2)
 //                .on(StateMachineTest.Events.EVENT1)
@@ -53,7 +53,7 @@ import org.junit.Test;
 //    @Test(expected = StateMachineException.class)
 //    public void testDuplicateMachine() {
 //        StateMachineBuilder<StateMachineTest.States, StateMachineTest.Events, StateMachineTest.Context> builder = StateMachineBuilder.init();
-//        builder.externalTransition()
+//        builder.transition()
 //                .from(StateMachineTest.States.STATE1)
 //                .to(StateMachineTest.States.STATE2)
 //                .on(StateMachineTest.Events.EVENT1)

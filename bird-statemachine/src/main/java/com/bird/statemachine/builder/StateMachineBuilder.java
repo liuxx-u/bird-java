@@ -28,16 +28,12 @@ public class StateMachineBuilder<S,E,C> {
     }
 
 
-    public TransitionBuilder<S, E, C> externalTransition() {
+    public TransitionBuilder<S, E, C> transition() {
         return new TransitionBuilder<>(stateMap);
     }
 
-    public TransitionsBuilder<S, E, C> externalTransitions() {
+    public TransitionsBuilder<S, E, C> transitions() {
         return new TransitionsBuilder<>(stateMap);
-    }
-
-    public TransitionBuilder<S, E, C> internalTransition() {
-        return new TransitionBuilder<>(stateMap);
     }
 
     public StateMachine<S, E, C> build(String machineId) {
