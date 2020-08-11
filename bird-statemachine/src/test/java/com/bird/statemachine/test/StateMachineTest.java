@@ -23,7 +23,7 @@ public class StateMachineTest {
     }
 
     static class Context {
-        String operator = "frank";
+        String operator = "liuxx";
         String entityId = "123465";
         int amount = 10000;
     }

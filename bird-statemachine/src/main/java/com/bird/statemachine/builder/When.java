@@ -5,10 +5,8 @@ import com.bird.statemachine.Action;
 import java.util.function.Function;
 
 /**
- * When
- *
- * @author Frank Zhang
- * @date 2020-02-07 9:33 PM
+ * @author liuxx
+ * @since 2020/8/7
  */
 public interface When<S, C> {
 
