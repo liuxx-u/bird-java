@@ -16,6 +16,8 @@ public class TransitionBuilder<S,E,C> implements When<S,C>, On<S,E,C> {
 
     E event;
 
+    private Transition<S, E, C> transition;
+
     final Map<S, State<S, E, C>> stateMap;
 
     TransitionBuilder(Map<S, State<S, E, C>> stateMap) {
@@ -38,12 +40,10 @@ public class TransitionBuilder<S,E,C> implements When<S,C>, On<S,E,C> {
         if (condition == null || action == null) {
             throw new StateMachineException("perform condition and action can`t be null");
         }
-        Optional<Transition<S, E, C>> transition = this.source.getTransition(this.event);
-        if (!transition.isPresent()) {
-            transition = Optional.of(this.source.setTransition(this.event, new Transition<>(this.source, this.event)));
+        if (this.transition == null) {
+            transition = this.source.setTransition(this.event, new Transition<>(this.source, this.event));
         }
-
-        transition.ifPresent(p -> p.addAction(new Action<>(priority, condition, action)));
+        transition.addAction(new Action<>(priority, condition, action));
         return this;
     }
 }
