@@ -6,7 +6,6 @@ import com.alibaba.druid.proxy.jdbc.StatementProxy;
 import com.bird.trace.client.TraceContext;
 import com.bird.trace.client.sql.TraceSQL;
 import com.bird.trace.client.sql.TraceSQLType;
-import com.mysql.jdbc.PreparedStatement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
@@ -20,15 +19,6 @@ import java.sql.Statement;
 public class DruidTraceSQLFilter extends FilterEventAdapter {
 
     private final static String ATTRIBUTE_KEY = "traceSQL";
-    private static boolean mysql5Available;
-
-    static {
-        try {
-            mysql5Available = null != Class.forName("com.mysql.jdbc.PreparedStatement");
-        } catch (Exception t) {
-            mysql5Available = false;
-        }
-    }
 
     @Override
     protected void statementExecuteUpdateBefore(StatementProxy statement, String sql) {
@@ -86,14 +76,9 @@ public class DruidTraceSQLFilter extends FilterEventAdapter {
         }
 
         Statement rawObject = statement.getRawObject();
-        String sql;
+        String sql = rawObject.toString();
         String database = null;
         try {
-            if (mysql5Available && rawObject instanceof PreparedStatement) {
-                sql = ((PreparedStatement) rawObject).asSql();
-            } else {
-                sql = rawObject.toString();
-            }
             database = statement.getConnection().getCatalog();
         } catch (SQLException e) {
             sql = rawObject.toString();
@@ -113,7 +98,9 @@ public class DruidTraceSQLFilter extends FilterEventAdapter {
      */
     private void afterStatementExecute(StatementProxy statement, Throwable error) {
         TraceSQL traceSQL = (TraceSQL) statement.getAttribute(ATTRIBUTE_KEY);
-        if (traceSQL == null) return;
+        if (traceSQL == null) {
+            return;
+        }
         traceSQL.setEnd(System.currentTimeMillis());
         traceSQL.setElapsed(traceSQL.getEnd() - traceSQL.getStart());
         if (error != null) {
