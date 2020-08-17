@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/sso/client/ticket")
-public class TicketController {
+public class ClientTicketController {
 
     private SsoClient ssoClient;
 
-    public TicketController(SsoClient ssoClient) {
+    public ClientTicketController(SsoClient ssoClient) {
         this.ssoClient = ssoClient;
     }
 
