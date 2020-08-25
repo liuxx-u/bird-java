@@ -23,7 +23,7 @@ public class SsoServerProperties extends SsoProperties {
     /**
      * 过期时间（单位：分）
      */
-    private Integer expire = 360;
+    private Integer expire = 120;
 
     /**
      * 是否启用SessionStore，默认启用

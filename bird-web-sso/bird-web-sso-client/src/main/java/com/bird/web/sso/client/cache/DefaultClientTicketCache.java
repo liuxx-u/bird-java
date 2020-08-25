@@ -5,6 +5,7 @@ import com.bird.web.sso.client.remote.IRemoteTicketHandler;
 import com.bird.web.sso.ticket.ClientTicket;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuxx
  * @date 2019/9/4
  */
+@Slf4j
 public class DefaultClientTicketCache implements IClientTicketCache {
 
     private IRemoteTicketHandler ticketHandler;
@@ -40,6 +42,7 @@ public class DefaultClientTicketCache implements IClientTicketCache {
         try {
             return cache.get(token, () -> ticketHandler.getTicket(token));
         } catch (Exception e) {
+            log.error("客户端获取Ticket出错", e);
             return null;
         }
     }

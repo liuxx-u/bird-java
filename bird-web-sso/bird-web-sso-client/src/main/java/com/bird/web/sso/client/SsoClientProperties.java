@@ -38,5 +38,5 @@ public class SsoClientProperties extends SsoProperties {
     /**
      * 客户端票据缓存时间（单位：分），过期后重新去Server拉取用户信息
      */
-    private Integer cache = 30;
+    private Integer cache = 20;
 }
