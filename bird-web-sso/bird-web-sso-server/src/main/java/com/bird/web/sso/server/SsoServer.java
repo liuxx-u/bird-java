@@ -39,6 +39,7 @@ public class SsoServer {
     private final static String REMOVE_CLIENT_TICKET_URL = "/sso/client/ticket/removeCache?token=";
 
     private SsoServerProperties serverProperties;
+    private long halfCacheMillis;
 
     private IClientStore clientStore;
     private ITicketSessionStore sessionStore;
@@ -53,6 +54,7 @@ public class SsoServer {
         this.serverProperties = serverProperties;
         this.clientStore = clientStore;
         this.sessionStore = sessionStore;
+        this.halfCacheMillis = serverProperties.getExpire() * 60 * 1000 / 2L;
     }
 
     public SsoServer(SsoServerProperties serverProperties, IClientStore clientStore, ITicketProtector protector) {
@@ -125,13 +127,8 @@ public class SsoServer {
             serverTicket = sessionStore.getTicket(token);
             if (serverTicket != null && serverProperties.getAutoRefresh()) {
                 //如果超过一半的有效期，则刷新
-                Date now = new Date();
-                Date issuedTime = serverTicket.getLastRefreshTime();
-                Date expireTime = serverTicket.getExpireTime();
-
-                long t1 = now.getTime() - issuedTime.getTime();
-                long t2 = expireTime.getTime() - now.getTime();
-                if (t1 > t2) {
+                long span = System.currentTimeMillis() - serverTicket.getLastRefreshTime().getTime();
+                if(span > this.halfCacheMillis ){
                     ServerTicket origin = JSON.parseObject(JSON.toJSONString(serverTicket),ServerTicket.class);
                     serverTicket = sessionStore.refreshTicket(token, serverTicket, Duration.ofMinutes(serverProperties.getExpire()));
                     //触发票据刷新事件

@@ -3,6 +3,7 @@ package com.bird.web.sso.ticket;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,11 +32,16 @@ public class ClientTicket {
      */
     private String realName;
     /**
+     * 客户端票据创建时间
+     */
+    private Date createTime;
+    /**
      * 摘要信息
      */
     private Map<String, Object> claims;
 
     public ClientTicket(){
+        this.createTime = new Date();
         this.claims = new HashMap<>();
     }
 

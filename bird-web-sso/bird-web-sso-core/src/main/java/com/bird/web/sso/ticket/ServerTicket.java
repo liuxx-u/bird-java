@@ -67,6 +67,7 @@ public class ServerTicket {
         clientTicket.setTenantId(this.tenantId);
         clientTicket.setUserName(this.userName);
         clientTicket.setRealName(this.realName);
+        clientTicket.setCreateTime(new Date());
         if (this.appClaims != null) {
             clientTicket.setClaims(this.appClaims.getOrDefault(appId, new HashMap<>(0)));
         }

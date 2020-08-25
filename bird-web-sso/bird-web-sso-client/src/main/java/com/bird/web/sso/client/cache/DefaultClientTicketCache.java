@@ -17,13 +17,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DefaultClientTicketCache implements IClientTicketCache {
 
+    private long halfCacheMillis;
     private IRemoteTicketHandler ticketHandler;
-
     private Cache<String, ClientTicket> cache;
 
-    public DefaultClientTicketCache(SsoClientProperties clientProperties, IRemoteTicketHandler ticketHandler){
+    public DefaultClientTicketCache(SsoClientProperties clientProperties, IRemoteTicketHandler ticketHandler) {
         this.ticketHandler = ticketHandler;
-
+        this.halfCacheMillis = clientProperties.getCache() * 60 * 1000 / 2L;
         cache = CacheBuilder.newBuilder().expireAfterWrite(clientProperties.getCache(), TimeUnit.MINUTES).build();
     }
 
@@ -40,7 +40,18 @@ public class DefaultClientTicketCache implements IClientTicketCache {
         }
 
         try {
-            return cache.get(token, () -> ticketHandler.getTicket(token));
+            ClientTicket ticket = cache.get(token, () -> ticketHandler.getTicket(token));
+            //客户端缓存时间超过一半，重新获取票据
+            if(ticket != null){
+                long span = System.currentTimeMillis() - ticket.getCreateTime().getTime();
+                if(span > this.halfCacheMillis ){
+                    ticket = ticketHandler.getTicket(token);
+                    if(ticket != null){
+                        cache.put(token,ticket);
+                    }
+                }
+            }
+            return ticket;
         } catch (Exception e) {
             log.error("客户端获取Ticket出错", e);
             return null;

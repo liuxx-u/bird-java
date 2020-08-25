@@ -71,7 +71,7 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
                     eventBus.post(fetchTicketEvent);
                 }
             }
-        } while (HttpURLConnection.HTTP_OK != resCode && retryCount-- > 0);
+        } while (HttpURLConnection.HTTP_OK != resCode && --retryCount > 0);
 
         return ticketInfo;
     }

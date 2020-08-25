@@ -19,7 +19,7 @@ public class CacheTicketSessionStore implements ITicketSessionStore {
     private Cache<String, ServerTicket> cache;
 
     public CacheTicketSessionStore(Integer expire) {
-        cache = CacheBuilder.newBuilder().expireAfterWrite(expire, TimeUnit.MINUTES).build();
+        this.cache = CacheBuilder.newBuilder().expireAfterWrite(expire, TimeUnit.MINUTES).build();
     }
 
     @Override
