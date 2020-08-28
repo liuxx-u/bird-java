@@ -12,6 +12,6 @@ import com.bird.core.exception.ErrorCode;
 public class UploadException extends AbstractException {
 
     public UploadException(String message) {
-        super(ErrorCode.A0001.getCode(),message);
+        super(ErrorCode.A0001.getCode(), message);
     }
 }

@@ -14,8 +14,16 @@
     <dependencies>
         <dependency>
             <groupId>com.bird</groupId>
-            <artifactId>bird-web-support</artifactId>
+            <artifactId>bird-core</artifactId>
             <version>${bird.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
         </dependency>
     </dependencies>
 </project>

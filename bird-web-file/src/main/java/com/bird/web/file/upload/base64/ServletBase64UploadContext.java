@@ -1,9 +1,8 @@
 package com.bird.web.file.upload.base64;
 
-import com.bird.web.common.utils.RequestHelper;
 import com.bird.web.file.upload.IUploadContext;
+import com.bird.web.file.utils.FileHelper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +37,7 @@ public class ServletBase64UploadContext implements IUploadContext {
 
     @Override
     public long getContentLength() {
-        return RequestHelper.getContentLength(request);
+        return FileHelper.getContentLength(request);
     }
 
     /**

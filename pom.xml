@@ -51,13 +51,6 @@
             <artifactId>spring-context</artifactId>
         </dependency>
 
-        <!--fastjson-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
-
         <!-- apache -->
         <dependency>
             <groupId>org.apache.commons</groupId>

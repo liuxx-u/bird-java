@@ -11,5 +11,11 @@
 
     <artifactId>bird-eventbus-core</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -4,7 +4,6 @@ import com.bird.web.common.WebConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -112,20 +111,5 @@ public class RequestHelper {
             LOGGER.error(e.getMessage(), e);
         }
         return sb.toString();
-    }
-
-    /**
-     * 获取Content-Length
-     * @param request 请求
-     * @return content-length
-     */
-    public static long getContentLength(HttpServletRequest request){
-        long size;
-        try {
-            size = Long.parseLong(request.getHeader(HttpHeaders.CONTENT_LENGTH));
-        } catch (NumberFormatException e) {
-            size = request.getContentLengthLong();
-        }
-        return size;
     }
 }

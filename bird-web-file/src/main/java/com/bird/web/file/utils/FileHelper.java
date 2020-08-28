@@ -1,7 +1,9 @@
 package com.bird.web.file.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
 /**
@@ -33,5 +35,18 @@ public class FileHelper {
         return getSuffix(fileName);
     }
 
-
+    /**
+     * 获取Content-Length
+     * @param request 请求
+     * @return content-length
+     */
+    public static long getContentLength(HttpServletRequest request){
+        long size;
+        try {
+            size = Long.parseLong(request.getHeader(HttpHeaders.CONTENT_LENGTH));
+        } catch (NumberFormatException e) {
+            size = request.getContentLengthLong();
+        }
+        return size;
+    }
 }
