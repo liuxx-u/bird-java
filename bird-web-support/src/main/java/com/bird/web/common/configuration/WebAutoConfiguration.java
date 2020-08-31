@@ -1,4 +1,4 @@
-package com.bird.web.common.configure;
+package com.bird.web.common.configuration;
 
 import com.bird.core.SpringContextHolder;
 import com.bird.web.common.WebProperties;

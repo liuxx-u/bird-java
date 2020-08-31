@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.bird.web.common.configure.WebAutoConfiguration
+  com.bird.web.common.configuration.WebAutoConfiguration
 
 org.springframework.context.ApplicationContextInitializer=\
     com.bird.core.scan.ScanExcludeFilterContextInitializer
