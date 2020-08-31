@@ -1,4 +1,4 @@
-package com.bird.web.common.interceptor.support;
+package com.bird.web.common.idempotency;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

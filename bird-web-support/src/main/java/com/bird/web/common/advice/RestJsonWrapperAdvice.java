@@ -20,21 +20,27 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 public class RestJsonWrapperAdvice implements ResponseBodyAdvice<Object> {
 
     private final static String CALL_HEADER = "call";
-    private final static String[] INNER_CALL_HEADER = {"ribbon","feign"};
+    private final static String[] INNER_CALL_HEADER = {"ribbon", "feign"};
 
 
-    private final String wrapperScanPackage;
+    private final String[] wrapperScanPackages;
 
-    public RestJsonWrapperAdvice(String wrapperScanPackage){
-        this.wrapperScanPackage = wrapperScanPackage;
+    public RestJsonWrapperAdvice(String... wrapperScanPackages) {
+        this.wrapperScanPackages = wrapperScanPackages;
     }
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converter) {
-        if(methodParameter.getMethodAnnotation(JsonWrapperIgnore.class) != null || methodParameter.getDeclaringClass().isAnnotationPresent(JsonWrapperIgnore.class)){
+        if (methodParameter.getMethodAnnotation(JsonWrapperIgnore.class) != null || methodParameter.getDeclaringClass().isAnnotationPresent(JsonWrapperIgnore.class)) {
             return false;
         }
-        return methodParameter.getDeclaringClass().getName().startsWith(this.wrapperScanPackage);
+
+        for (String wrapperPackage : this.wrapperScanPackages) {
+            if (methodParameter.getDeclaringClass().getName().startsWith(wrapperPackage)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -43,10 +49,10 @@ public class RestJsonWrapperAdvice implements ResponseBodyAdvice<Object> {
         SessionContext.removeSession();
 
         HttpHeaders headers = request.getHeaders();
-        if(ArrayUtils.contains(INNER_CALL_HEADER,headers.getFirst(CALL_HEADER))){
+        if (ArrayUtils.contains(INNER_CALL_HEADER, headers.getFirst(CALL_HEADER))) {
             return value;
         }
-        if(!(value instanceof Result)){
+        if (!(value instanceof Result)) {
             value = Result.success("success", value);
         }
         return value;

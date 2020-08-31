@@ -1,4 +1,4 @@
-package com.bird.web.common.controller;
+package com.bird.web.common.idempotency;
 
 import com.bird.core.Result;
 import com.bird.core.exception.UserFriendlyException;
@@ -25,6 +25,12 @@ public class IdempotencyController {
     @Autowired(required = false)
     RedisTemplate<String, Object> redisTemplate;
 
+    private final IdempotencyProperties idempotencyProperties;
+
+    public IdempotencyController(IdempotencyProperties idempotencyProperties) {
+        this.idempotencyProperties = idempotencyProperties;
+    }
+
     @GetMapping("/token")
     public Result<String> token() {
         if (redisTemplate == null) {
@@ -33,7 +39,7 @@ public class IdempotencyController {
         String token = UUID.randomUUID().toString();
         String cacheKey = WebConstant.Cache.IDEMPOTENCY + token;
 
-        redisTemplate.opsForValue().set(cacheKey, 1, 6, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(cacheKey, 1, this.idempotencyProperties.getExpire(), TimeUnit.MINUTES);
         return Result.success("获取成功", token);
     }
 }

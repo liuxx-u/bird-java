@@ -17,7 +17,9 @@ import java.io.InputStreamReader;
  */
 public class BodyReaderHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-    //用于将请求流保存下来
+    /**
+     * 用于将请求流保存下来
+     */
     private byte[] requestBody;
 
     public BodyReaderHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
