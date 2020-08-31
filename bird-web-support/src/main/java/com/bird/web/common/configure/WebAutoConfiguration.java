@@ -1,5 +1,6 @@
 package com.bird.web.common.configure;
 
+import com.bird.core.SpringContextHolder;
 import com.bird.web.common.WebProperties;
 import com.bird.web.common.advice.RestJsonWrapperAdvice;
 import com.bird.web.common.idempotency.IdempotencyController;
@@ -25,6 +26,17 @@ public class WebAutoConfiguration {
         this.webProperties = webProperties;
     }
 
+    /**
+     * 注册 SpringContextHolder
+     */
+    @Bean
+    public SpringContextHolder springContextHolder(){
+        return new SpringContextHolder();
+    }
+
+    /**
+     * 注册 统一的响应结果处理组件
+     */
     @Bean
     @ConditionalOnProperty(value = PREFIX + "global-result-wrapper", havingValue = "true", matchIfMissing = true)
     public RestJsonWrapperAdvice restJsonWrapperAdvice() {
