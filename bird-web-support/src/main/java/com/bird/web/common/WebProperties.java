@@ -3,6 +3,7 @@ package com.bird.web.common;
 import com.bird.web.common.idempotency.IdempotencyProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author liuxx
@@ -27,5 +28,6 @@ public class WebProperties {
     /**
      * 幂等性配置
      */
-    private IdempotencyProperties idempotency;
+    @NestedConfigurationProperty
+    private IdempotencyProperties idempotency = new IdempotencyProperties();
 }
