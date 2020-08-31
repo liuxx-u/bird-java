@@ -1,0 +1,39 @@
+{
+  "groups": [
+    {
+      "name": "bird.web",
+      "type": "com.bird.web.common.WebProperties",
+      "sourceType": "com.bird.web.common.WebProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bird.web.base-packages",
+      "type": "java.lang.String[]",
+      "description": "包路径",
+      "sourceType": "com.bird.web.common.WebProperties",
+      "defaultValue": []
+    },
+    {
+      "name": "bird.web.global-exception-enable",
+      "type": "java.lang.Boolean",
+      "description": "是否开启全局异常处理",
+      "sourceType": "com.bird.web.common.WebProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.web.global-result-wrapper",
+      "type": "java.lang.Boolean",
+      "description": "是否开启全局结果包装器",
+      "sourceType": "com.bird.web.common.WebProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.web.idempotency",
+      "type": "com.bird.web.common.idempotency.IdempotencyProperties",
+      "description": "幂等性配置",
+      "sourceType": "com.bird.web.common.WebProperties"
+    }
+  ],
+  "hints": []
+}
