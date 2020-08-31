@@ -1,4 +1,4 @@
-package com.bird.web.common.scan;
+package com.bird.core.scan;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

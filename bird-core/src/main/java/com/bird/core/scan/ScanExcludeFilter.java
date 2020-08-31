@@ -1,6 +1,5 @@
-package com.bird.web.common.scan;
+package com.bird.core.scan;
 
-import com.bird.core.scan.IgnoreScan;
 import org.springframework.boot.context.TypeExcludeFilter;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
