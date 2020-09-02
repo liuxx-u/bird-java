@@ -23,8 +23,8 @@ import javax.validation.ConstraintViolationException;
  * @date 2019/5/15
  */
 @Slf4j
-@ControllerAdvice(basePackages = "cn.chengtay")
-public class ExceptionAdvice {
+@ControllerAdvice
+public class GlobalExceptionAdvice {
 
     private final static String DEFAULT_ERROR_MASSAGE = "系统走神了,请稍候再试.";
     private final static String ARGUMENT_ERROR_MESSAGE = "非法的参数";

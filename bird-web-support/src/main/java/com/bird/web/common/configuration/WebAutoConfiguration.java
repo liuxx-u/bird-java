@@ -3,6 +3,7 @@ package com.bird.web.common.configuration;
 import com.bird.core.SpringContextHolder;
 import com.bird.web.common.WebProperties;
 import com.bird.web.common.advice.RestJsonWrapperAdvice;
+import com.bird.web.common.exception.GlobalExceptionAdvice;
 import com.bird.web.common.idempotency.IdempotencyController;
 import com.bird.web.common.idempotency.IdempotencyInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,6 +42,15 @@ public class WebAutoConfiguration {
     @ConditionalOnProperty(value = PREFIX + "global-result-wrapper", havingValue = "true", matchIfMissing = true)
     public RestJsonWrapperAdvice restJsonWrapperAdvice() {
         return new RestJsonWrapperAdvice(this.webProperties.getBasePackages());
+    }
+
+    /**
+     * 注册 统一的异常处理组件
+     */
+    @Bean
+    @ConditionalOnProperty(value = PREFIX + "global-exception-enable", havingValue = "true", matchIfMissing = true)
+    public GlobalExceptionAdvice globalExceptionAdvice() {
+        return new GlobalExceptionAdvice();
     }
 
     /**
