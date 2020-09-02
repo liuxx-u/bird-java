@@ -1,5 +1,6 @@
 package com.bird.web.common;
 
+import com.bird.web.common.cors.CorsProperties;
 import com.bird.web.common.idempotency.IdempotencyProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -30,4 +31,9 @@ public class WebProperties {
      */
     @NestedConfigurationProperty
     private IdempotencyProperties idempotency = new IdempotencyProperties();
+    /**
+     * Cors 跨域配置
+     */
+    @NestedConfigurationProperty
+    private CorsProperties cors = new CorsProperties();
 }

@@ -3,13 +3,17 @@ package com.bird.web.common.configuration;
 import com.bird.core.SpringContextHolder;
 import com.bird.web.common.WebProperties;
 import com.bird.web.common.advice.RestJsonWrapperAdvice;
-import com.bird.web.common.exception.GlobalExceptionAdvice;
+import com.bird.web.common.advice.GlobalExceptionAdvice;
+import com.bird.web.common.cors.CorsFilter;
+import com.bird.web.common.cors.CorsProperties;
 import com.bird.web.common.idempotency.IdempotencyController;
 import com.bird.web.common.idempotency.IdempotencyInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 
 /**
  * @author liuxx
@@ -31,7 +35,7 @@ public class WebAutoConfiguration {
      * 注册 SpringContextHolder
      */
     @Bean
-    public SpringContextHolder springContextHolder(){
+    public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }
 
@@ -57,8 +61,8 @@ public class WebAutoConfiguration {
      * 注册 幂等性操作码接口
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "idempotency.enable",havingValue = "true",matchIfMissing = true)
-    public IdempotencyController idempotencyController(){
+    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true", matchIfMissing = true)
+    public IdempotencyController idempotencyController() {
         return new IdempotencyController(webProperties.getIdempotency());
     }
 
@@ -66,8 +70,24 @@ public class WebAutoConfiguration {
      * 注册 幂等性校验拦截器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "idempotency.enable",havingValue = "true",matchIfMissing = true)
-    public IdempotencyInterceptor idempotencyInterceptor(){
+    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true", matchIfMissing = true)
+    public IdempotencyInterceptor idempotencyInterceptor() {
         return new IdempotencyInterceptor(webProperties.getIdempotency());
+    }
+
+    /**
+     * 注册 跨域资源共享过滤器
+     */
+    @Bean
+    @ConditionalOnProperty(value = PREFIX + "cors.enable", havingValue = "true", matchIfMissing = true)
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
+        CorsProperties corsProperties = webProperties.getCors();
+
+        FilterRegistrationBean<CorsFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new CorsFilter(corsProperties));
+        registration.addUrlPatterns(corsProperties.getUrlPatterns());
+        registration.setName("corsFilter");
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registration;
     }
 }

@@ -1,4 +1,4 @@
-package com.bird.web.common.exception;
+package com.bird.web.common.advice;
 
 import com.bird.core.Result;
 import com.bird.core.exception.ErrorCode;
