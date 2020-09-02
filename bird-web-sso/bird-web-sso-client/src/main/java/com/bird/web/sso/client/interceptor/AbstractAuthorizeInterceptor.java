@@ -3,8 +3,6 @@ package com.bird.web.sso.client.interceptor;
 import com.bird.core.session.BirdSession;
 import com.bird.core.session.SessionContext;
 import com.bird.web.sso.SsoAuthorize;
-import com.bird.web.sso.client.permission.IUserPermissionChecker;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -20,15 +18,21 @@ import java.util.List;
  */
 public abstract class AbstractAuthorizeInterceptor extends HandlerInterceptorAdapter {
 
-    @Autowired
-    private IUserPermissionChecker permissionChecker;
-
     /**
      * 从请求中解析Session信息
      * @param request 请求
      * @return session
      */
     protected abstract BirdSession getSession(HttpServletRequest request);
+
+    /**
+     * 校验权限
+     * @param userId userId
+     * @param permissions 权限集合
+     * @param checkAll 是否检查全部
+     * @return 是否检查通过
+     */
+    protected abstract boolean checkPermissions(String userId, List<String> permissions, boolean checkAll);
 
     /**
      * 拦截器处理方法
@@ -80,7 +84,7 @@ public abstract class AbstractAuthorizeInterceptor extends HandlerInterceptorAda
             }
 
             boolean isCheckAll = methodAuthorize.isCheckAll();
-            if (!permissionChecker.hasPermissions(session.getUserId().toString(), permissions, isCheckAll)) {
+            if (!checkPermissions(session.getUserId().toString(), permissions, isCheckAll)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,"用户没有当前操作的权限");
                 return false;
             }

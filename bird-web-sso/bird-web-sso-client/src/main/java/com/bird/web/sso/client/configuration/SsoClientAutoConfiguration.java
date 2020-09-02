@@ -6,6 +6,9 @@ import com.bird.web.sso.client.SsoClientProperties;
 import com.bird.web.sso.client.cache.DefaultClientTicketCache;
 import com.bird.web.sso.client.cache.IClientTicketCache;
 import com.bird.web.sso.client.controller.ClientTicketController;
+import com.bird.web.sso.client.interceptor.SsoClientAuthorizeInterceptor;
+import com.bird.web.sso.client.permission.DefaultUserPermissionChecker;
+import com.bird.web.sso.client.permission.IUserPermissionChecker;
 import com.bird.web.sso.client.remote.DefaultRemoteTicketHandler;
 import com.bird.web.sso.client.remote.IRemoteTicketHandler;
 import com.bird.web.sso.event.ISsoEventListener;
@@ -50,6 +53,18 @@ public class SsoClientAutoConfiguration {
     @ConditionalOnProperty(value = SsoConstant.CLIENT_WEBFLUX, havingValue = "false", matchIfMissing = true)
     public ClientTicketController clientTicketController(SsoClient ssoClient) {
         return new ClientTicketController(ssoClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(IUserPermissionChecker.class)
+    public IUserPermissionChecker userPermissionChecker() {
+        return new DefaultUserPermissionChecker();
+    }
+
+    @Bean
+    @ConditionalOnBean(SsoClient.class)
+    public SsoClientAuthorizeInterceptor ssoClientAuthorizeInterceptor(SsoClient ssoClient, IUserPermissionChecker userPermissionChecker) {
+        return new SsoClientAuthorizeInterceptor(ssoClient, userPermissionChecker);
     }
 
     @Bean
