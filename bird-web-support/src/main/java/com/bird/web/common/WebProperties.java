@@ -2,6 +2,7 @@ package com.bird.web.common;
 
 import com.bird.web.common.cors.CorsProperties;
 import com.bird.web.common.idempotency.IdempotencyProperties;
+import com.bird.web.common.security.ip.IpCheckProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -36,4 +37,9 @@ public class WebProperties {
      */
     @NestedConfigurationProperty
     private CorsProperties cors = new CorsProperties();
+    /**
+     * ip白名单配置
+     */
+    @NestedConfigurationProperty
+    private IpCheckProperties ipCheck = new IpCheckProperties();
 }

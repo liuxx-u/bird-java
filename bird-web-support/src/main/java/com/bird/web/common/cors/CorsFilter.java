@@ -17,6 +17,9 @@ import java.util.Objects;
  */
 public class CorsFilter extends OncePerRequestFilter {
 
+    private final static String DEFAULT_ORIGIN = "default";
+    private final static String ALLOW_CREDENTIALS = "true";
+
     private final CorsProperties corsProperties;
 
     public CorsFilter(CorsProperties corsProperties) {
@@ -26,15 +29,15 @@ public class CorsFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String allowOrigin = this.corsProperties.getAllowOrigin();
-        if (Objects.equals(allowOrigin, "default")) {
+        if (Objects.equals(allowOrigin, DEFAULT_ORIGIN)) {
             allowOrigin = request.getHeader("Origin");
         }
         response.setHeader("Access-Control-Allow-Origin", allowOrigin);
         response.setHeader("Access-Control-Allow-Methods", this.corsProperties.getAllowMethods());
         response.addHeader("Access-Control-Allow-Headers", this.corsProperties.getAllowHeaders());
         response.setHeader("Access-Control-Max-Age", this.corsProperties.getMaxAge());
-        if (Objects.equals(this.corsProperties.getAllowCredentials(), "true")) {
-            response.addHeader("Access-Control-Allow-Credentials", "true");
+        if (Objects.equals(this.corsProperties.getAllowCredentials(), ALLOW_CREDENTIALS)) {
+            response.addHeader("Access-Control-Allow-Credentials", ALLOW_CREDENTIALS);
         }
 
         filterChain.doFilter(request, response);

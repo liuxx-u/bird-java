@@ -2,12 +2,16 @@ package com.bird.web.common.configuration;
 
 import com.bird.core.SpringContextHolder;
 import com.bird.web.common.WebProperties;
-import com.bird.web.common.advice.RestJsonWrapperAdvice;
 import com.bird.web.common.advice.GlobalExceptionAdvice;
+import com.bird.web.common.advice.RestJsonWrapperAdvice;
 import com.bird.web.common.cors.CorsFilter;
 import com.bird.web.common.cors.CorsProperties;
 import com.bird.web.common.idempotency.IdempotencyController;
 import com.bird.web.common.idempotency.IdempotencyInterceptor;
+import com.bird.web.common.security.ip.DefaultIpListProvider;
+import com.bird.web.common.security.ip.IIpListProvider;
+import com.bird.web.common.security.ip.IpCheckInterceptor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -89,5 +93,24 @@ public class WebAutoConfiguration {
         registration.setName("corsFilter");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registration;
+    }
+
+    /**
+     * 注册 默认的ip配置提供者
+     */
+    @Bean
+    @ConditionalOnProperty(value = PREFIX + "ip-check.enable", havingValue = "true")
+    @ConditionalOnMissingBean(IIpListProvider.class)
+    public IIpListProvider ipListProvider() {
+        return new DefaultIpListProvider(this.webProperties.getIpCheck().getIpList());
+    }
+
+    /**
+     * 注册 ip校验拦截器
+     */
+    @Bean
+    @ConditionalOnProperty(value = PREFIX + "ip-check.enable", havingValue = "true")
+    public IpCheckInterceptor ipCheckInterceptor(IIpListProvider ipListProvider) {
+        return new IpCheckInterceptor(ipListProvider);
     }
 }
