@@ -1,4 +1,4 @@
-package com.bird.web.common.interceptor.signature;
+package com.bird.web.common.security.signature;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

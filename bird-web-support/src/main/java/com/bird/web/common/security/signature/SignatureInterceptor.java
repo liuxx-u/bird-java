@@ -1,4 +1,4 @@
-package com.bird.web.common.interceptor.signature;
+package com.bird.web.common.security.signature;
 
 import com.bird.web.common.utils.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.bird.web.common.interceptor.signature;
+package com.bird.web.common.security.signature;
 
 import org.springframework.util.StreamUtils;
 
