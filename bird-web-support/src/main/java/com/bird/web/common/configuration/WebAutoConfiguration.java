@@ -65,7 +65,7 @@ public class WebAutoConfiguration {
      * 注册 幂等性操作码接口
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true")
     public IdempotencyController idempotencyController() {
         return new IdempotencyController(webProperties.getIdempotency());
     }
@@ -74,7 +74,7 @@ public class WebAutoConfiguration {
      * 注册 幂等性校验拦截器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true")
     public IdempotencyInterceptor idempotencyInterceptor() {
         return new IdempotencyInterceptor(webProperties.getIdempotency());
     }
@@ -83,7 +83,7 @@ public class WebAutoConfiguration {
      * 注册 跨域资源共享过滤器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "cors.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = PREFIX + "cors.enable", havingValue = "true")
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         CorsProperties corsProperties = webProperties.getCors();
 

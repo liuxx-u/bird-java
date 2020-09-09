@@ -80,9 +80,12 @@ public class ApiVersionRequestHandlerMapping extends RequestMappingHandlerMappin
     @Nullable
     private RequestMappingInfo createRequestMappingInfo(AnnotatedElement element, ApiVersion apiVersion) {
         RequestMapping requestMapping = AnnotatedElementUtils.findMergedAnnotation(element, RequestMapping.class);
+        if (requestMapping == null && apiVersion == null) {
+            return null;
+        }
 
         RequestCondition<?> condition = (element instanceof Class ? getCustomTypeCondition((Class<?>) element) : getCustomMethodCondition((Method) element));
-        return (requestMapping != null ? createRequestMappingInfo(requestMapping, condition, apiVersion) : null);
+        return createRequestMappingInfo(requestMapping, condition, apiVersion);
     }
 
     /**
@@ -93,8 +96,12 @@ public class ApiVersionRequestHandlerMapping extends RequestMappingHandlerMappin
      */
     private RequestMappingInfo createRequestMappingInfo(RequestMapping requestMapping, @Nullable RequestCondition<?> customCondition, ApiVersion apiVersion) {
 
+        if(requestMapping == null){
+            return createRequestMappingInfo(customCondition,apiVersion);
+        }
+
         String prefix = this.getVersionPrefix(apiVersion);
-        List<String> paths = Arrays.stream(requestMapping.path()).map(path -> this.ensureStart(prefix, "/") + this.ensureStart(path, "/")).collect(Collectors.toList());
+        List<String> paths = Arrays.stream(requestMapping.path()).map(path -> this.ensureStart(prefix) + this.ensureStart(path)).collect(Collectors.toList());
 
         RequestMappingInfo.Builder builder = RequestMappingInfo
                 .paths(resolveEmbeddedValuesInPatterns(paths.toArray(new String[]{})))
@@ -110,6 +117,17 @@ public class ApiVersionRequestHandlerMapping extends RequestMappingHandlerMappin
         return builder.options(this.config).build();
     }
 
+    private RequestMappingInfo createRequestMappingInfo(@Nullable RequestCondition<?> customCondition, ApiVersion apiVersion) {
+
+        String prefix = this.getVersionPrefix(apiVersion);
+
+        RequestMappingInfo.Builder builder = RequestMappingInfo.paths(resolveEmbeddedValuesInPatterns(new String[]{this.ensureStart(prefix)}));
+        if (customCondition != null) {
+            builder.customCondition(customCondition);
+        }
+        return builder.options(this.config).build();
+    }
+
 
     private String getVersionPrefix(ApiVersion apiVersion) {
         if (apiVersion == null) {
@@ -118,11 +136,11 @@ public class ApiVersionRequestHandlerMapping extends RequestMappingHandlerMappin
         return apiVersion.value();
     }
 
-    private String ensureStart(String str, String prefix) {
+    private String ensureStart(String str) {
         if (StringUtils.isBlank(str)) {
             return StringUtils.EMPTY;
         }
 
-        return str.startsWith(prefix) ? str : prefix + str;
+        return str.startsWith("/") ? str : "/" + str;
     }
 }

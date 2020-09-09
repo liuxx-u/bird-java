@@ -36,7 +36,7 @@ public final class SystemHelper {
                 }
             }
         } catch (Exception ex) {
-            log.warn("robbin负载均衡获取本机ip失败", ex);
+            log.warn("获取本机ip失败", ex);
         }
         return ips;
     }

@@ -4,6 +4,26 @@
       "name": "bird.web",
       "type": "com.bird.web.common.WebProperties",
       "sourceType": "com.bird.web.common.WebProperties"
+    },
+    {
+      "name": "bird.web.cors",
+      "type": "com.bird.web.common.cors.CorsProperties",
+      "sourceType": "com.bird.web.common.WebProperties"
+    },
+    {
+      "name": "bird.web.idempotency",
+      "type": "com.bird.web.common.idempotency.IdempotencyProperties",
+      "sourceType": "com.bird.web.common.WebProperties"
+    },
+    {
+      "name": "bird.web.ip-check",
+      "type": "com.bird.web.common.security.ip.IpCheckProperties",
+      "sourceType": "com.bird.web.common.WebProperties"
+    },
+    {
+      "name": "bird.web.ip-check.ip-list",
+      "type": "java.util.List",
+      "sourceType": "com.bird.web.common.security.ip.IpCheckProperties"
     }
   ],
   "properties": [
@@ -13,6 +33,49 @@
       "description": "包路径",
       "sourceType": "com.bird.web.common.WebProperties",
       "defaultValue": []
+    },
+    {
+      "name": "bird.web.cors.allow-credentials",
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.common.cors.CorsProperties",
+      "defaultValue": "true"
+    },
+    {
+      "name": "bird.web.cors.allow-headers",
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.common.cors.CorsProperties",
+      "defaultValue": "Origin,X-Requested-With,Content-Type,Accept,Sso-Token,bird-idempotency,appId,tenantId,JSESSIONID"
+    },
+    {
+      "name": "bird.web.cors.allow-methods",
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.common.cors.CorsProperties",
+      "defaultValue": "POST, GET, OPTIONS, DELETE"
+    },
+    {
+      "name": "bird.web.cors.allow-origin",
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.common.cors.CorsProperties",
+      "defaultValue": "default"
+    },
+    {
+      "name": "bird.web.cors.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否开启跨域资源共享功能",
+      "sourceType": "com.bird.web.common.cors.CorsProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.web.cors.max-age",
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.common.cors.CorsProperties",
+      "defaultValue": "3600"
+    },
+    {
+      "name": "bird.web.cors.url-patterns",
+      "type": "java.lang.String",
+      "sourceType": "com.bird.web.common.cors.CorsProperties",
+      "defaultValue": "\/*"
     },
     {
       "name": "bird.web.global-exception-enable",
@@ -29,10 +92,39 @@
       "defaultValue": true
     },
     {
-      "name": "bird.web.idempotency",
-      "type": "com.bird.web.common.idempotency.IdempotencyProperties",
-      "description": "幂等性配置",
-      "sourceType": "com.bird.web.common.WebProperties"
+      "name": "bird.web.idempotency.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否开启幂等性校验功能",
+      "sourceType": "com.bird.web.common.idempotency.IdempotencyProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.web.idempotency.error-message",
+      "type": "java.lang.String",
+      "description": "Token失效时提示信息",
+      "sourceType": "com.bird.web.common.idempotency.IdempotencyProperties",
+      "defaultValue": "该操作已失效，请刷新后重试"
+    },
+    {
+      "name": "bird.web.idempotency.expire",
+      "type": "java.lang.Integer",
+      "description": "操作Token有效期，单位分钟",
+      "sourceType": "com.bird.web.common.idempotency.IdempotencyProperties",
+      "defaultValue": 120
+    },
+    {
+      "name": "bird.web.idempotency.header-name",
+      "type": "java.lang.String",
+      "description": "请求头名称",
+      "sourceType": "com.bird.web.common.idempotency.IdempotencyProperties",
+      "defaultValue": "bird-idempotency"
+    },
+    {
+      "name": "bird.web.ip-check.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用ip白名单校验",
+      "sourceType": "com.bird.web.common.security.ip.IpCheckProperties",
+      "defaultValue": false
     }
   ],
   "hints": []
