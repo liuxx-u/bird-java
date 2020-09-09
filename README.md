@@ -14,7 +14,7 @@ bird-java是以Spring Boot为基础的开发增强组件包。
 
 bird-java提供了一些简单的功能特性，包括：
 
- 1. [Spring Boot 功能增强；][https://github.com/liuxx001/bird-java/tree/master/bird-web-support]
+ 1. [Spring Boot 功能增强；](https://github.com/liuxx001/bird-java/tree/master/bird-web-support)
  2. 全自动CRUD，表格增删查改、筛选、排序、分页均从框架层面解决，业务编码量不到20行；
  3. 自研轻量级SSO组件，设计优雅，可扩展；
  4. 多数据源支持；
