@@ -21,7 +21,7 @@ bird:
     global-result-wrapper: true
 ```
 
-- base-packages：必填，包扫描范围内@RestController标记的接口会自动对结果进行封装。
+- base-packages：必填，包扫描范围内`@RestController`标记的接口会自动对结果进行封装。
 - global-result-wrapper：是否开启JSON全局结果封装，默认：true
 
 ### 1.2、正常的结果返回
@@ -50,7 +50,7 @@ public DemoBO testJson(){
 ```
 ### 1.3、忽略全局结果封装
 
-对于某些特定的接口不需要进行统一封装的接口，可使用@com.bird.web.common.advice.JsonWrapperIgnore注解进行忽略。@JsonWrapperIgnore可作用与类上或方法上。
+对于某些特定的接口不需要进行统一封装的接口，可使用`@com.bird.web.common.advice.JsonWrapperIgnore`注解进行忽略。`@JsonWrapperIgnore`可作用与类上或方法上。
 
 ## 2、全局异常处理
 ### 2.1、相关配置
@@ -75,24 +75,24 @@ bird:
 ### 2.2、异常处理
 #### 2.2.1、校验类异常
 
-- **Spring的校验框架：**即使用@org.springframework.validation.annotation.Validated标注的校验，校验失败时message直接向前端返回；处理异常包括 ：
-   - org.springframework.web.bind.MethodArgumentNotValidException
-   - javax.validation.ConstraintViolationException；
-- **IllegalArgumentException：**抛出非法参数异常及其子类异常时，默认向前端返回message为："非法参数**"**
-- **UserArgumentException：**自定义的用户友好的校验参数异常，默认直接向前端返回该异常的message。
+- Spring的校验框架：即使用`@org.springframework.validation.annotation.Validated`标注的校验，校验失败时message直接向前端返回；处理异常包括 ：
+   - `org.springframework.web.bind.MethodArgumentNotValidException`
+   - `javax.validation.ConstraintViolationException`
+- `IllegalArgumentException`：抛出非法参数异常及其子类异常时，默认向前端返回message为："非法参数"
+- `UserArgumentException`：自定义的用户友好的校验参数异常，默认直接向前端返回该异常的message。
 
 校验类异常日志打印级别：**WARN**
 
 #### 2.2.2、运行时异常
 
-- **UserFriendlyException：**自定义的用户友好的运行时异常，默认直接向前端返回该异常的message。日志打印级别：WARN
-- **其他异常：**默认向前端返回message为："系统走神了,请稍候再试."。日志打印级别：ERROR
+- `UserFriendlyException`：自定义的用户友好的运行时异常，默认直接向前端返回该异常的message。日志打印级别：WARN
+- 其他异常：默认向前端返回message为："系统走神了,请稍候再试."。日志打印级别：ERROR
 
 #### 2.2.3、系统执行异常
 默认向前端返回message为："系统走神了,请稍候再试."。日志打印级别：ERROR
 
 ## 3、接口版本号
-版本号注解：@com.bird.web.common.version.ApiVersion。支持在Controller及其Method上标记版本号，优先级：Method上的版本号优先级 > Controller上的版本号。
+版本号注解：`@com.bird.web.common.version.ApiVersion`。支持在Controller及其Method上标记版本号，优先级：Method上的版本号优先级 > Controller上的版本号。
 
 ### 3.1 使用示例
 ```java
@@ -144,6 +144,7 @@ public class DemoController {
 - 如果校验失败，则表示重复操作，直接返回指定的结果给客户端。
 
 ![1.png](https://cdn.nlark.com/yuque/0/2020/png/191323/1599639711166-932ee269-3a91-48d0-a6c8-ce0af4bdc0f5.png#align=left&display=inline&height=343&margin=%5Bobject%20Object%5D&name=1.png&originHeight=343&originWidth=640&size=133780&status=done&style=none&width=640)
+ 
  图片来自网络，如有侵权，请联系我进行删除
  
 ### 4.1、添加依赖
@@ -192,7 +193,7 @@ bird:
 ```
 ### 4.4、幂等性校验
 
-在需要进行幂等校验的接口添加@com.bird.web.common.idempotency.Idempotency注解即可
+在需要进行幂等校验的接口添加`@com.bird.web.common.idempotency.Idempotency`注解即可
 
 ## 5、跨域支持
 ### 5.1、相关配置
