@@ -12,7 +12,7 @@ public class CorsProperties {
     /**
      * 是否开启跨域资源共享功能
      */
-    private Boolean enable = true;
+    private Boolean enable;
 
     private String urlPatterns = "/*";
 
@@ -24,5 +24,5 @@ public class CorsProperties {
 
     private String maxAge = "3600";
 
-    private String allowCredentials = "true";
+    private String allowCredentials = "false";
 }

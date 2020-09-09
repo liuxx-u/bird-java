@@ -12,7 +12,7 @@ public class IdempotencyProperties {
     /**
      * 是否开启幂等性校验功能
      */
-    private Boolean enable = true;
+    private Boolean enable;
 
     /**
      * 操作Token有效期，单位分钟
