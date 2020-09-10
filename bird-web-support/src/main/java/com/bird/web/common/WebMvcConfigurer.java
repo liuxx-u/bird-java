@@ -42,7 +42,7 @@ import java.util.List;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnClass({ Servlet.class, DispatcherServlet.class, org.springframework.web.servlet.config.annotation.WebMvcConfigurer.class })
-@AutoConfigureAfter(WebAutoConfiguration.class)
+@AutoConfigureAfter(name = {"com.bird.web.common.configuration.WebAutoConfiguration","com.bird.web.sso.client.configuration.SsoClientAutoConfiguration"})
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
 @EnableConfigurationProperties({ WebMvcProperties.class, ResourceProperties.class })
