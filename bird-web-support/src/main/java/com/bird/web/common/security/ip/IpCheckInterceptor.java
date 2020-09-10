@@ -60,9 +60,9 @@ public class IpCheckInterceptor extends HandlerInterceptorAdapter {
     }
 
     private PathMatcher getPathMatcher() {
-        PathMatcher pathMatcher = null;
+        PathMatcher pathMatcher;
         try {
-            SpringContextHolder.getBean(PathMatcher.class);
+            pathMatcher = SpringContextHolder.getBean(PathMatcher.class);
         } catch (Exception ex) {
             pathMatcher = new AntPathMatcher();
         }
