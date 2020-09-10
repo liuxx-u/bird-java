@@ -216,3 +216,28 @@ bird:
 - allow-methods：允许的请求方式
 - allow-headers：允许传递的请求头
 - allow-credentials：是否允许跨域设置Cookie
+
+## 6、IP白名单
+
+### 6.1、相关配置
+
+```yaml
+bird:
+  web:
+    ip-check:
+      enable: true
+      ip-list:
+        - uri-pattern: /test/*
+          ips: 10.10.200.226
+        - uri-pattern: /v1/test/*
+          ips: 10.10.129.7/0,10.10.129.8/0
+```
+
+ - enable：是否启用ip白名单配置，默认：false
+ - ip-list：ip白名单配置
+    - uri-pattern：uri模式
+    - ips：允许的ip集合，多个ip用逗号分隔，支持设置ip段（掩码）
+    
+### 6.2、自定义ip配置支持
+
+ip白名单的配置可能来自数据库或者其他配置源，框架支持自定义ip白名单的来源配置，实现`com.bird.web.common.security.ip.IIpListProvider`接口并注入Spring容器即可。若未配置，将默认读取配置文件中的ip白名单配置。
