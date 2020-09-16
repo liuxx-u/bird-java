@@ -1,6 +1,5 @@
 package com.bird.web.common;
 
-import com.bird.web.common.configuration.WebAutoConfiguration;
 import com.bird.web.common.version.ApiVersionRequestHandlerMapping;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
