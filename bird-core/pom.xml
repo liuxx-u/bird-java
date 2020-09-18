@@ -22,23 +22,5 @@
             <artifactId>spring-boot</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!--poi-->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>
