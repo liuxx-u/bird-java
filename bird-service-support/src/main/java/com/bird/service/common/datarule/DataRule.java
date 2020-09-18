@@ -1,4 +1,4 @@
-package com.bird.service.common.mapper.permission;
+package com.bird.service.common.datarule;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package com.bird.service.common.mapper.permission;
+package com.bird.service.common.datarule;
 
 /**
  * 数据规则数据源 策略

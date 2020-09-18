@@ -1,7 +1,7 @@
-package com.bird.service.common.configure.permission;
+package com.bird.service.common.datarule;
 
-import com.bird.service.common.mapper.permission.DataRuleInfo;
-import com.bird.service.common.mapper.permission.IDataRuleStore;
+import com.bird.service.common.datarule.DataRuleDefinition;
+import com.bird.service.common.datarule.IDataRuleStore;
 import com.bird.service.common.service.query.FilterGroup;
 
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class NullDataRuleStore implements IDataRuleStore {
     @Override
-    public void store(Set<DataRuleInfo> rules) {
+    public void store(Set<DataRuleDefinition> rules) {
 
     }
 

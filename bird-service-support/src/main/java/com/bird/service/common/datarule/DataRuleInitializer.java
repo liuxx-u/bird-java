@@ -1,16 +1,17 @@
-package com.bird.service.common.mapper.permission;
+package com.bird.service.common.datarule;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.bird.core.utils.ClassHelper;
 import com.bird.service.common.mapper.QueryDescriptor;
 import com.bird.service.common.model.IDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,13 +21,13 @@ import java.util.stream.Collectors;
  * @date 2018/10/10
  */
 @Slf4j
-public class DataRuleInitializer{
+public class DataRuleInitializer {
 
     private String basePackages;
     private String applicationName;
     private IDataRuleStore dataRuleStore;
 
-    public DataRuleInitializer(String basePackages,String applicationName,IDataRuleStore dataRuleStore) {
+    public DataRuleInitializer(String basePackages, String applicationName, IDataRuleStore dataRuleStore) {
         this.basePackages = basePackages;
         this.applicationName = applicationName;
         this.dataRuleStore = dataRuleStore;
@@ -34,12 +35,18 @@ public class DataRuleInitializer{
 
 
     public void init() {
-        //Set<Class<?>> classes = ClassHelper.getClasses(this.basePackages);
-        Set<Class<?>> classes = new LinkedHashSet<>();
-        Set<DataRuleInfo> ruleInfos = classes.stream()
+        Set<Class<?>> classes;
+        try {
+            classes = ClassHelper.scanClasses(this.basePackages, IDO.class);
+        } catch (IOException e) {
+            log.error("数据规则初始化失败，{}包下类扫描失败", this.basePackages, e);
+            return;
+        }
+        Set<DataRuleDefinition> ruleInfos = classes.stream()
                 .filter(IDO.class::isAssignableFrom)
                 .filter(p -> p.isAnnotationPresent(TableName.class))
-                .map(this::collectRuleInfos).flatMap(Collection::stream)
+                .map(this::collectRuleInfos)
+                .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
         dataRuleStore.store(ruleInfos);
@@ -50,8 +57,8 @@ public class DataRuleInitializer{
      *
      * @param clazz class
      */
-    private Set<DataRuleInfo> collectRuleInfos(Class<?> clazz) {
-        Set<DataRuleInfo> ruleInfos = new HashSet<>();
+    private Set<DataRuleDefinition> collectRuleInfos(Class<?> clazz) {
+        Set<DataRuleDefinition> ruleInfos = new HashSet<>();
 
         TableName tableName = clazz.getAnnotation(TableName.class);
         Field[] fields = clazz.getDeclaredFields();
@@ -64,7 +71,7 @@ public class DataRuleInitializer{
             DataRule dataRule = field.getAnnotation(DataRule.class);
 
             if (dataRule != null) {
-                DataRuleInfo ruleInfo = new DataRuleInfo();
+                DataRuleDefinition ruleInfo = new DataRuleDefinition();
                 ruleInfo.setAppName(applicationName);
                 ruleInfo.setClassName(clazz.getName());
                 ruleInfo.setFieldName(field.getName());

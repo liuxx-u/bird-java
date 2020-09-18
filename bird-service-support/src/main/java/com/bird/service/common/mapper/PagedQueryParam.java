@@ -1,10 +1,9 @@
 package com.bird.service.common.mapper;
 
 import com.bird.core.session.SessionContext;
-import com.bird.core.utils.NumberHelper;
 import com.bird.core.SpringContextHolder;
-import com.bird.service.common.mapper.permission.IDataRuleProvider;
-import com.bird.service.common.mapper.permission.IDataRuleStore;
+import com.bird.service.common.datarule.IDataRuleProvider;
+import com.bird.service.common.datarule.IDataRuleStore;
 import com.bird.service.common.service.query.FilterGroup;
 import com.bird.service.common.service.query.FilterRule;
 import com.bird.service.common.service.query.PagedListQuery;

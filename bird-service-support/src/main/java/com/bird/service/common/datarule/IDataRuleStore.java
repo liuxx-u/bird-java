@@ -1,4 +1,4 @@
-package com.bird.service.common.mapper.permission;
+package com.bird.service.common.datarule;
 
 import com.bird.service.common.service.query.FilterGroup;
 
@@ -16,7 +16,7 @@ public interface IDataRuleStore {
      * 存储规则元信息
      * @param rules 规则元信息
      */
-    void store(Set<DataRuleInfo> rules);
+    void store(Set<DataRuleDefinition> rules);
 
     /**
      * 获取用户对指定表中的查询规则

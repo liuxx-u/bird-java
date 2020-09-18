@@ -32,7 +32,7 @@ public class ClassHelper {
      * @return 指定类型集合
      * @throws IOException ex
      */
-    private static Set<Class<?>> scanClasses(String packagePatterns, Class<?> assignableType) throws IOException {
+    public static Set<Class<?>> scanClasses(String packagePatterns, Class<?> assignableType) throws IOException {
         Set<Class<?>> classes = new HashSet<>();
         String[] packagePatternArray = StringUtils.tokenizeToStringArray(packagePatterns, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
         for (String packagePattern : packagePatternArray) {

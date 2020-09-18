@@ -1,4 +1,4 @@
-package com.bird.service.common.mapper.permission;
+package com.bird.service.common.datarule;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class DataRuleInfo implements Serializable {
+public class DataRuleDefinition implements Serializable {
     /**
      * 应用名
      */
@@ -60,9 +60,9 @@ public class DataRuleInfo implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof DataRuleInfo)) return false;
+        if (!(obj instanceof DataRuleDefinition)) return false;
 
-        DataRuleInfo other = (DataRuleInfo) obj;
+        DataRuleDefinition other = (DataRuleDefinition) obj;
         return EqualsBuilder.reflectionEquals(this, other);
     }
 }

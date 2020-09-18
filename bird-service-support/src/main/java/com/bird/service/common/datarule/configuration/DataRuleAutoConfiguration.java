@@ -1,7 +1,9 @@
-package com.bird.service.common.configure.permission;
+package com.bird.service.common.datarule.configuration;
 
-import com.bird.service.common.mapper.permission.DataRuleInitializer;
-import com.bird.service.common.mapper.permission.IDataRuleStore;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
+import com.bird.service.common.datarule.DataRuleInitializer;
+import com.bird.service.common.datarule.IDataRuleStore;
+import com.bird.service.common.datarule.NullDataRuleStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -15,20 +17,19 @@ import org.springframework.context.annotation.Configuration;
  * @date 2018/10/10
  */
 @Configuration
-@ConditionalOnProperty(value = DataRuleConstant.BASE_PACKAGE_PROPERTY_NAME)
-@EnableConfigurationProperties(DataRuleProperties.class)
-public class DataRuleConfigurer {
+@ConditionalOnProperty(value = "bird.service.data-rule.enable",havingValue = "true")
+@EnableConfigurationProperties(MybatisPlusProperties.class)
+public class DataRuleAutoConfiguration {
 
-    @Value("spring.application.name")
+    @Value("${spring.application.name:}")
     private String applicationName;
 
-    private final DataRuleProperties properties;
+    private final MybatisPlusProperties properties;
 
     @Autowired
-    public DataRuleConfigurer(DataRuleProperties properties) {
+    public DataRuleAutoConfiguration(MybatisPlusProperties properties) {
         this.properties = properties;
     }
-
 
     @Bean
     @ConditionalOnMissingBean
@@ -38,7 +39,7 @@ public class DataRuleConfigurer {
 
     @Bean
     public DataRuleInitializer dataRuleInitializePipe(IDataRuleStore dataRuleStore) {
-        DataRuleInitializer dataRuleInitializer = new DataRuleInitializer(properties.getBasePackages(), applicationName, dataRuleStore);
+        DataRuleInitializer dataRuleInitializer = new DataRuleInitializer(properties.getTypeAliasesPackage(), applicationName, dataRuleStore);
         dataRuleInitializer.init();
 
         return dataRuleInitializer;
