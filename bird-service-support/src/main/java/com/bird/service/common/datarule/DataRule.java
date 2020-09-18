@@ -15,24 +15,28 @@ import java.lang.annotation.Target;
 public @interface DataRule {
     /**
      * 规则元名称
+     *
      * @return 规则元名称
      */
     String name() default "";
 
     /**
      * 规则元值来源类型
+     *
      * @return 数据来源类型
      */
     RuleSourceStrategy strategy() default RuleSourceStrategy.TEXT;
 
     /**
      * 当数据来源是用户选择时{@code RuleSourceStrategy.CHOICE}
+     *
      * @return 数据地址
      */
     String url() default "";
 
     /**
      * 当数据来源是系统提供时{@code RuleSourceStrategy.SYSTEM}
+     *
      * @return 提供器类名
      */
     Class<? extends IDataRuleProvider> provider() default NullDataRuleProvider.class;

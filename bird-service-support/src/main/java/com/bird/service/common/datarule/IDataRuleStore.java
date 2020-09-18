@@ -14,15 +14,17 @@ public interface IDataRuleStore {
 
     /**
      * 存储规则元信息
+     *
      * @param rules 规则元信息
      */
     void store(Set<DataRuleDefinition> rules);
 
     /**
      * 获取用户对指定表中的查询规则
+     *
      * @param userId 用户id
      * @param tables 表名
      * @return 查询规则
      */
-    FilterGroup get(String userId,String ...tables);
+    FilterGroup get(String userId, String... tables);
 }

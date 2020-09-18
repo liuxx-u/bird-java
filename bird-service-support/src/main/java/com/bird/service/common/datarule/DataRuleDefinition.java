@@ -59,8 +59,12 @@ public class DataRuleDefinition implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (!(obj instanceof DataRuleDefinition)) return false;
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof DataRuleDefinition)) {
+            return false;
+        }
 
         DataRuleDefinition other = (DataRuleDefinition) obj;
         return EqualsBuilder.reflectionEquals(this, other);

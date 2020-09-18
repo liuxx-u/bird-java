@@ -18,9 +18,10 @@ public abstract class AbstractDataRuleProvider implements IDataRuleProvider {
 
     /**
      * 从线程中获取当前登录用户的票据信息
+     *
      * @return session
      */
-    protected BirdSession getSession(){
+    protected BirdSession getSession() {
         return SessionContext.getSession();
     }
 
@@ -35,11 +36,12 @@ public abstract class AbstractDataRuleProvider implements IDataRuleProvider {
 
     /**
      * 返回空的结果
+     *
      * @return id = -1 的查询规则
      */
-    protected FilterGroup empty(){
+    protected FilterGroup empty() {
         List<FilterRule> rules = new ArrayList<>();
-        rules.add(new FilterRule("id","-1"));
+        rules.add(new FilterRule("id", "-1"));
 
         return new FilterGroup(rules);
     }

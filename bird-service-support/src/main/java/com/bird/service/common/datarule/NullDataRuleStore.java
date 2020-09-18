@@ -1,7 +1,5 @@
 package com.bird.service.common.datarule;
 
-import com.bird.service.common.datarule.DataRuleDefinition;
-import com.bird.service.common.datarule.IDataRuleStore;
 import com.bird.service.common.service.query.FilterGroup;
 
 import java.util.Set;
