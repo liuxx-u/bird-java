@@ -1,4 +1,4 @@
-package com.bird.service.common.configure;
+package com.bird.service.common.configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.bird.service.common.datasource.DynamicDataSource;
@@ -32,11 +32,11 @@ import java.util.Map;
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties(DynamicDataSourceProperties.class)
 @ConditionalOnProperty(value = "spring.datasource.dynamic.enable", havingValue = "true")
-public class DynamicDataSourceAutoConfigurer {
+public class DynamicDataSourceAutoConfiguration {
 
     private IDataSourceCustomizer dataSourceCustomizer;
 
-    public DynamicDataSourceAutoConfigurer(ObjectProvider<IDataSourceCustomizer> dataSourceCustomizerObjectProvider) {
+    public DynamicDataSourceAutoConfiguration(ObjectProvider<IDataSourceCustomizer> dataSourceCustomizerObjectProvider) {
         dataSourceCustomizer = dataSourceCustomizerObjectProvider.getIfAvailable();
     }
 

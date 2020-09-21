@@ -1,11 +1,10 @@
-package com.bird.service.common.configure;
+package com.bird.service.common.configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import javax.sql.DataSource;
 import java.util.Map;
 
 /**
