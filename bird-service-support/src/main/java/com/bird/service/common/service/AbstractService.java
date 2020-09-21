@@ -36,13 +36,13 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
 
     /**
      * 自定义通用分页查询方法
-     * @param queryDTO 分页查询参数
+     * @param query 分页查询参数
      * @param cls DTO类名
      * @return 查询结果
      */
     @Override
-    public PagedListResult queryPagedList(PagedListQuery queryDTO, Class cls) {
-        PagedQueryParam param = new PagedQueryParam(queryDTO, cls);
+    public PagedListResult queryPagedList(PagedListQuery query, Class cls) {
+        PagedQueryParam param = new PagedQueryParam(query, cls);
         return this.queryPagedList(param);
     }
 
