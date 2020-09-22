@@ -1,32 +1,64 @@
 {
-  "hints": [],
   "groups": [
     {
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
-      "name": "spring.datasource",
-      "type": "com.bird.service.common.configuration.DynamicDataSourceProperties"
+      "name": "bird.service",
+      "type": "com.bird.service.common.ServiceProperties",
+      "sourceType": "com.bird.service.common.ServiceProperties"
+    },
+    {
+      "name": "spring.datasource.dynamic",
+      "type": "com.bird.service.common.configuration.DynamicDataSourceProperties",
+      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties"
     }
   ],
   "properties": [
     {
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
-      "name": "spring.datasource.collection",
+      "name": "bird.service.audit-meta-object",
+      "type": "java.lang.Boolean",
+      "description": "是否开启 审计字段自动填充",
+      "sourceType": "com.bird.service.common.ServiceProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.service.block-attack",
+      "type": "java.lang.Boolean",
+      "description": "是否开启 防止全表更新与删除",
+      "sourceType": "com.bird.service.common.ServiceProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.service.global-logic-delete-field",
+      "type": "java.lang.String",
+      "description": "全局逻辑删除字段，默认：delFlag",
+      "sourceType": "com.bird.service.common.ServiceProperties",
+      "defaultValue": "delFlag"
+    },
+    {
+      "name": "bird.service.optimistic-lock-check",
+      "type": "java.lang.Boolean",
+      "description": "是否开启 乐观锁检测 支持的数据类型只有:int,Integer,long,Long,Date,Timestamp,LocalDateTime 整数类型下 newVersion = oldVersion + 1, newVersion 会回写到 entity 中 仅支持 updateById(id) 与 update(entity, wrapper) 方法 在 update(entity, wrapper) 方法下, wrapper 不能复用!!!",
+      "sourceType": "com.bird.service.common.ServiceProperties"
+    },
+    {
+      "name": "spring.datasource.dynamic.collection",
+      "type": "java.util.Map<java.lang.String,com.alibaba.druid.pool.DruidDataSource>",
       "description": "数据源集合",
-      "type": "java.util.Map<java.lang.String,javax.sql.DataSource>"
+      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties"
     },
     {
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
-      "defaultValue": "default",
-      "name": "spring.datasource.default-data-source",
+      "name": "spring.datasource.dynamic.default-data-source",
+      "type": "java.lang.String",
       "description": "默认的数据源",
-      "type": "java.lang.String"
+      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
+      "defaultValue": "default"
     },
     {
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
-      "defaultValue": false,
-      "name": "spring.datasource.dynamic",
+      "name": "spring.datasource.dynamic.enable",
+      "type": "java.lang.Boolean",
       "description": "是否启用",
-      "type": "java.lang.Boolean"
+      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
+      "defaultValue": false
     }
-  ]
+  ],
+  "hints": []
 }
