@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.parser.JsqlParserSupport;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.Parenthesis;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
@@ -22,6 +23,8 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import java.sql.Connection;
 
 /**
+ * 阻止全表更新、删除操作的拦截器
+ *
  * @author liuxx
  * @since 2020/9/22
  */
@@ -92,6 +95,10 @@ public class OptimizeBlockAttackInnerInterceptor extends JsqlParserSupport imple
             Expression left = andExpression.getLeftExpression();
             Expression right = andExpression.getRightExpression();
             return fullMatch(left) && fullMatch(right);
+        } else if (where instanceof Parenthesis) {
+            // example: (1 = 1)
+            Parenthesis parenthesis = (Parenthesis) where;
+            return fullMatch(parenthesis.getExpression());
         }
 
         return false;
