@@ -1,11 +1,11 @@
-package com.bird.service.common.mapper.record;
+package com.bird.service.common.trace;
 
 import java.sql.Connection;
 
 /**
  * @author shaojie
  */
-public interface DatabaseOperateHandler {
+public interface IDatabaseOperateHandler {
     /**
      * 记录数据库操作
      * @param connection 数据库连接

@@ -1,8 +1,8 @@
-package com.bird.service.common.mapper.record;
+package com.bird.service.common.trace;
 
-import com.bird.service.common.mapper.record.handler.DeleteOperateHandler;
-import com.bird.service.common.mapper.record.handler.InsertOperateHandler;
-import com.bird.service.common.mapper.record.handler.UpdateOperateHandler;
+import com.bird.service.common.trace.handler.DeleteOperateHandler;
+import com.bird.service.common.trace.handler.InsertOperateHandler;
+import com.bird.service.common.trace.handler.UpdateOperateHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,11 +23,11 @@ public enum DatabaseOperateEnum {
     /**  */
     DELETE(DeleteOperateHandler.class);
 
-    private Class<? extends DatabaseOperateHandler> operateClass;
+    private Class<? extends IDatabaseOperateHandler> operateClass;
 
-    public static Map<String,DatabaseOperateHandler> operateHandlers(DatabaseOperateHandler defaultHandler){
+    public static Map<String, IDatabaseOperateHandler> operateHandlers(IDatabaseOperateHandler defaultHandler){
         return Arrays.stream(DatabaseOperateEnum.values()).collect(Collectors.toMap(DatabaseOperateEnum::toString,item-> {
-            Class<? extends DatabaseOperateHandler> operateClass = item.operateClass;
+            Class<? extends IDatabaseOperateHandler> operateClass = item.operateClass;
             try {
                 return operateClass.newInstance();
             } catch (Exception e) {

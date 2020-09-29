@@ -1,5 +1,6 @@
-package com.bird.service.common.mapper.record.handler;
+package com.bird.service.common.trace.handler;
 
+import com.bird.service.common.trace.define.ColumnDefinition;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsListVisitor;
@@ -26,7 +27,7 @@ public class InsertOperateHandler extends AbstractDatabaseOperateHandler{
     }
 
     @Override
-    protected List<String[]> getOldValue(Connection connection,String table,  String[] columns, Statement statement) {
+    protected List<String[]> getOldValue(Connection connection, String table, ColumnDefinition[] columns, Statement statement) {
         return Collections.emptyList();
     }
 

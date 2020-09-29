@@ -1,12 +1,13 @@
-package com.bird.service.common.mapper.record.handler;
+package com.bird.service.common.trace.handler;
 
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.bird.service.common.mapper.record.DatabaseOperateHandler;
-import com.bird.service.common.mapper.record.OperateField;
-import com.bird.service.common.mapper.record.RecordExchanger;
-import com.bird.service.common.mapper.record.TableFieldRecord;
+import com.bird.service.common.trace.IDatabaseOperateHandler;
+import com.bird.service.common.trace.ColumnTrace;
+import com.bird.service.common.trace.ColumnTraceExchanger;
+import com.bird.service.common.trace.define.ColumnDefinition;
+import com.bird.service.common.trace.define.ColumnTraceDefinition;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -22,12 +23,12 @@ import java.util.*;
  * @author shaojie
  */
 @Slf4j
-public abstract class AbstractDatabaseOperateHandler implements DatabaseOperateHandler {
+public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperateHandler {
 
     public static final String SELECT_TEMPLATE = "SELECT %s FROM %s WHERE %s";
     /**  */
     private static final Map<String,Map<String,Integer>> RECORD_COLUMN_MAPPING = new HashMap<>();
-    private static final Map<String,String[]> RECORD_COLUMNS = new HashMap<>();
+    private static final Map<String,ColumnDefinition[]> RECORD_COLUMNS = new HashMap<>();
 
     @Override
     public void record(Connection connection,String operateSql,String operate) {
@@ -37,16 +38,16 @@ public abstract class AbstractDatabaseOperateHandler implements DatabaseOperateH
             // 获取表名
             String table = getTableName(stmt);
             // 获取要记录的列信息
-            String[] columns = getRecordColumns(table);
+            ColumnDefinition[] columns = getRecordColumns(table);
             if(columns == null || columns.length == 0){
                 return;
             }
-            TableFieldRecord tableFieldRecord = new TableFieldRecord(operate, columns, table);
+            ColumnTraceDefinition columnTraceDefinition = new ColumnTraceDefinition(operate, columns, table);
             List<String[]> oldValues = getOldValue(connection,table,columns,stmt);
             List<String[]> newValues = getNewValue(table,stmt);
-            tableFieldRecord.setOld(oldValues).setNews(newValues);
+            columnTraceDefinition.setOld(oldValues).setNews(newValues);
             // 放入队列中, 等待被记录
-            RecordExchanger.offer(tableFieldRecord);
+            ColumnTraceExchanger.offer(columnTraceDefinition);
         } catch (Exception e) {
             log.error(e.getMessage(),e);
         }
@@ -68,7 +69,7 @@ public abstract class AbstractDatabaseOperateHandler implements DatabaseOperateH
      * @param statement 操作SQL
      * @return 对应的之前的值
      */
-    protected abstract List<String[]> getOldValue(Connection connection,String table, String[] columns, Statement statement);
+    protected abstract List<String[]> getOldValue(Connection connection,String table, ColumnDefinition[] columns, Statement statement);
 
 
     public List<String[]> query(Connection connection,String querySql,int length){
@@ -126,37 +127,39 @@ public abstract class AbstractDatabaseOperateHandler implements DatabaseOperateH
     protected abstract String getTableName(Statement statement);
 
 
-    public static String[] getRecordColumns(String table){
+    public static ColumnDefinition[] getRecordColumns(String table){
         return RECORD_COLUMNS.computeIfAbsent(table,key->{
             List<TableInfo> tableInfos = TableInfoHelper.getTableInfos();
             Optional<TableInfo> optional = tableInfos.stream().filter(info -> table.equals(info.getTableName())).findFirst();
             if(optional.isPresent()){
                 TableInfo tableInfo = optional.get();
                 List<TableFieldInfo> fieldList = tableInfo.getFieldList();
-                return (String[]) fieldList.stream().filter(field-> field.getField().isAnnotationPresent(OperateField.class)).map(field-> field.getField().getName()).toArray();
+                return (ColumnDefinition[]) fieldList.stream().filter(field-> field.getField().isAnnotationPresent(ColumnTrace.class))
+                        .map(field-> new ColumnDefinition(field.getField()))
+                        .toArray();
             }
-            return new String[]{};
+            return new ColumnDefinition[]{};
         });
     }
 
     public static Map<String,Integer> getTableColumnMapping(String table){
         return RECORD_COLUMN_MAPPING.computeIfAbsent(table,key->{
-            String[] columns = getRecordColumns(key);
-            Map<String,Integer> map = new HashMap<>();
+            ColumnDefinition[] columns = getRecordColumns(key);
+            Map<String,Integer> map = new HashMap<>(columns.length);
             for (int i = 0; i < columns.length; i++) {
-                map.put(columns[i],i);
+                map.put(columns[i].getName(),i);
             }
             return map;
         });
     }
 
-    public static String toColumnQuery(String[] columns){
+    public static String toColumnQuery(ColumnDefinition[] columns){
         StringBuilder stb = new StringBuilder();
         for (int i =0;i < columns.length;i++){
             if(i != 0){
                 stb.append(",");
             }
-            stb.append(columns[i]);
+            stb.append(columns[i].getName());
         }
         return stb.toString();
     }
