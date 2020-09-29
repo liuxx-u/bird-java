@@ -22,11 +22,11 @@ public class ColumnTraceExchanger {
     /**
      * 阈值模式: 到达阈值后, 触发
      */
-    public static final int MODE_THRESHOLD = 1;
+    private static final int MODE_THRESHOLD = 1;
     /**
      * 周期模式: 指定周期后, 执行一次
      */
-    public static final int MODE_PERIOD = 2;
+    private static final int MODE_PERIOD = 2;
     /**
      * 混合模式: 周期执行的同时, 如果指定周期内, 到达了阈值. 主动触发一次
      */
@@ -34,13 +34,13 @@ public class ColumnTraceExchanger {
 
     private static final Queue<ColumnTraceDefinition> MPSC_QUEUE = PlatformDependent.newMpscQueue(DEFAULT_SIZE);
 
+    private static Exchanger exchanger;
 
     /**
      * 是否启用
      */
     private volatile boolean enabled;
 
-    private static Exchanger exchanger;
     private IColumnTraceRecorder recorder;
 
     public ColumnTraceExchanger(ColumnTraceProperties properties, IColumnTraceRecorder recorder) {
@@ -59,7 +59,7 @@ public class ColumnTraceExchanger {
         } else if (MODE_PERIOD == mode) {
             exchanger = new PeriodExchanger(properties);
         } else {
-            exchanger = new MixedExchanger(properties);
+            exchanger = new Exchanger(properties);
         }
         // 创建后台线程, 用于执行记录
         Thread thread = new Thread(exchanger, properties.getThreadName());
@@ -85,15 +85,18 @@ public class ColumnTraceExchanger {
         return MPSC_QUEUE.poll();
     }
 
-    public abstract class Exchanger implements Runnable {
+    public class Exchanger implements Runnable {
 
         protected int threshold;
+        /*** 记录周期, 单位: 毫秒数         */
+        private long interval;
 
         protected ReentrantLock lock = new ReentrantLock();
         protected Condition condition = lock.newCondition();
 
-        public Exchanger(int threshold) {
-            this.threshold = threshold;
+        public Exchanger(ColumnTraceProperties properties) {
+            this.threshold = properties.getThreshold();
+            this.interval = properties.getInterval();
         }
 
         public void afterOffer(Queue<ColumnTraceDefinition> queue) {
@@ -113,17 +116,29 @@ public class ColumnTraceExchanger {
             }
         }
 
-        /**
-         * 实际的交互
-         */
-        protected abstract void exchange();
+        public void exchange() {
+            record();
+            // 先获取当前对象的锁, 只有获取了锁之后, 才可以进行等待或唤醒操作
+            lock.lock();
+            // current doesn't have any update record, wait
+            try {
+                // 每次记录完之后, 等待一个周期
+                condition.await(interval, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                // 恢复中断状态
+                Thread.interrupted();
+                log.error(e.getMessage(), e);
+            }finally {
+                lock.unlock();
+            }
+        }
 
     }
 
     public class ThresholdExchanger extends Exchanger {
 
         private ThresholdExchanger(ColumnTraceProperties properties) {
-            super(properties.getThreshold());
+            super(properties);
         }
 
         @Override
@@ -145,12 +160,8 @@ public class ColumnTraceExchanger {
 
     public class PeriodExchanger extends Exchanger {
 
-        /*** 记录周期, 单位: 毫秒数*/
-        private long interval;
-
         public PeriodExchanger(ColumnTraceProperties properties) {
-            super(properties.getThreshold());
-            interval = properties.getInterval();
+            super(properties);
         }
 
         @Override
@@ -158,55 +169,7 @@ public class ColumnTraceExchanger {
 
         }
 
-        @Override
-        public void exchange() {
-            record();
-            // 先获取当前对象的锁, 只有获取了锁之后, 才可以进行等待或唤醒操作
-            lock.lock();
-            // current doesn't have any update record, wait
-            try {
-                // 每次记录完之后, 等待一个周期
-                condition.await(interval, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                // 恢复中断状态
-                Thread.interrupted();
-                log.error(e.getMessage(), e);
-            }finally {
-                lock.unlock();
-            }
-        }
     }
-
-    public class MixedExchanger extends Exchanger {
-
-        /*** 记录周期, 单位: 毫秒数         */
-        private long interval;
-
-
-        public MixedExchanger(ColumnTraceProperties properties) {
-            super(properties.getThreshold());
-            interval = properties.getInterval();
-        }
-
-        @Override
-        public void exchange() {
-            record();
-            // 先获取当前对象的锁, 只有获取了锁之后, 才可以进行等待或唤醒操作
-            lock.lock();
-            // current doesn't have any update record, wait
-            try {
-                // 每次记录完之后, 等待一个周期
-                condition.await(interval,TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                // 恢复中断状态
-                Thread.interrupted();
-                log.error(e.getMessage(), e);
-            }finally {
-                lock.unlock();
-            }
-        }
-    }
-
 
     public void record() {
         ColumnTraceDefinition record;

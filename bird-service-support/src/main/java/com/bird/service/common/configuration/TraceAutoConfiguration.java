@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * @author shaojie
  */
 @Configuration
-@ConditionalOnProperty(value = "bird.service.trace.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "bird.service.trace.column.enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(ColumnTraceProperties.class)
 public class TraceAutoConfiguration {
 
