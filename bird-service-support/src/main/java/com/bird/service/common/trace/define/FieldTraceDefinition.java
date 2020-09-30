@@ -57,8 +57,10 @@ public class FieldTraceDefinition {
 
     public FieldTraceDefinition(String operate, FieldDefinition[] fields, String table) {
         BirdSession session = SessionContext.getSession();
-        this.operator = StringUtils.defaultIfEmpty(session.getRealName(), session.getUserName());
-        this.operatorId = session.getUserId().toString();
+        if (session.getUserId() != null) {
+            this.operator = StringUtils.defaultIfEmpty(session.getRealName(), session.getUserName());
+            this.operatorId = session.getUserId().toString();
+        }
         this.operate = operate;
         this.table = table;
         this.fields = fields;

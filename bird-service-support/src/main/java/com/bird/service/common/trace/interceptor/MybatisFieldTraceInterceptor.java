@@ -1,10 +1,12 @@
 package com.bird.service.common.trace.interceptor;
 
-import com.bird.service.common.trace.FieldTraceProperties;
+import com.bird.core.utils.AopHelper;
 import com.bird.service.common.trace.DatabaseOperateEnum;
 import com.bird.service.common.trace.IDatabaseOperateHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.logging.jdbc.PreparedStatementLogger;
+import org.apache.ibatis.logging.jdbc.StatementLogger;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -23,32 +25,42 @@ import java.util.Map;
 public class MybatisFieldTraceInterceptor implements Interceptor {
 
     private Map<String, IDatabaseOperateHandler> handlers;
-    private boolean enabled;
 
     public MybatisFieldTraceInterceptor(Map<String, IDatabaseOperateHandler> handlers) {
         this.handlers = handlers;
     }
 
 
-    public MybatisFieldTraceInterceptor(FieldTraceProperties properties) {
-        enabled = properties.isEnabled();
+    public MybatisFieldTraceInterceptor() {
         this.handlers = DatabaseOperateEnum.operateHandlers(null);
     }
 
-
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        if(enabled){
-            Statement statement = (Statement) invocation.getArgs()[0];
+        Object arg = AopHelper.getTarget(invocation.getArgs()[0]);
+        Statement statement = null;
+        if (arg instanceof Statement) {
+            statement = (Statement) arg;
+        } else if (arg instanceof PreparedStatementLogger) {
+            statement = ((PreparedStatementLogger) arg).getPreparedStatement();
+        } else if (arg instanceof StatementLogger) {
+            statement = ((StatementLogger) arg).getStatement();
+        }
+
+        if (statement != null) {
             String sql = resolveSql(statement);
-            String operate = sql.substring(0, sql.indexOf(" ")).toUpperCase();
-            IDatabaseOperateHandler handler = handlers.get(operate);
-            if(handler  != null){
-                handler.record(statement.getConnection(),sql,operate);
-            }else{
-                log.warn("Current update sql {} cannot find operateHandler, will skip operate record.",sql);
+            int spaceIndex = sql.indexOf(" ");
+            if (spaceIndex > 0) {
+                String operate = sql.substring(0, spaceIndex).toUpperCase();
+                IDatabaseOperateHandler handler = handlers.get(operate);
+                if (handler != null) {
+                    handler.record(statement.getConnection(), sql, operate);
+                } else {
+                    log.warn("Current update sql {} cannot find operateHandler, will skip operate record.", sql);
+                }
             }
         }
+
         // 调用实际的方法
         return invocation.proceed();
     }

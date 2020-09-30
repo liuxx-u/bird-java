@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author shaojie
@@ -134,16 +135,22 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
 
     private static FieldDefinition[] getTraceFields(String table) {
         return TABLE_TRACE_FIELD_MAP.computeIfAbsent(table, key -> {
+            FieldDefinition[] fieldDefinitions = new FieldDefinition[]{};
+
             List<TableInfo> tableInfos = TableInfoHelper.getTableInfos();
             Optional<TableInfo> optional = tableInfos.stream().filter(info -> table.equals(info.getTableName())).findFirst();
             if (optional.isPresent()) {
                 TableInfo tableInfo = optional.get();
                 List<TableFieldInfo> fieldList = tableInfo.getFieldList();
-                return (FieldDefinition[]) fieldList.stream().filter(field -> field.getField().isAnnotationPresent(TraceField.class))
+
+
+                return fieldList.stream()
+                        .filter(field -> field.getField().isAnnotationPresent(TraceField.class))
                         .map(field -> new FieldDefinition(field.getField()))
-                        .toArray();
+                        .collect(Collectors.toList())
+                        .toArray(fieldDefinitions);
             }
-            return new FieldDefinition[]{};
+            return fieldDefinitions;
         });
     }
 

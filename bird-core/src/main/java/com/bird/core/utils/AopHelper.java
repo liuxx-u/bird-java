@@ -1,10 +1,10 @@
 package com.bird.core.utils;
 
 import org.springframework.aop.framework.AdvisedSupport;
-import org.springframework.aop.framework.AopProxy;
-import org.springframework.aop.support.AopUtils;
+import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 
 /**
  * @author liuxx
@@ -22,18 +22,25 @@ public final class AopHelper {
      * @return 目标对象
      */
     public static Object getTarget(Object proxy) {
-        if (!AopUtils.isAopProxy(proxy)) {
-            return proxy;
-        }
         try {
-            Object target = AopUtils.isJdkDynamicProxy(proxy)
-                    ? getJdkDynamicProxyTargetObject(proxy)
-                    : getCglibProxyTargetObject(proxy);
-
-            return getTarget(target);
+            if (isJdkDynamicProxy(proxy)) {
+                return getTarget(getJdkDynamicProxyTargetObject(proxy));
+            } else if (isCglibProxy(proxy)) {
+                return getTarget(getCglibProxyTargetObject(proxy));
+            } else {
+                return proxy;
+            }
         } catch (Exception ex) {
             return proxy;
         }
+    }
+
+    private static boolean isJdkDynamicProxy(@Nullable Object object) {
+        return object != null && Proxy.isProxyClass(object.getClass());
+    }
+
+    private static boolean isCglibProxy(@Nullable Object object) {
+        return object != null && object.getClass().getName().contains("$$");
     }
 
     private static Object getCglibProxyTargetObject(Object proxy) throws Exception {
@@ -46,13 +53,17 @@ public final class AopHelper {
     private static Object getJdkDynamicProxyTargetObject(Object proxy) throws Exception {
         Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
         h.setAccessible(true);
-        AopProxy aopProxy = (AopProxy) h.get(proxy);
+        Object aopProxy = h.get(proxy);
         return getProxyTargetObject(aopProxy);
     }
 
-    private static Object getProxyTargetObject(Object proxy) throws Exception {
-        Field advised = proxy.getClass().getDeclaredField("advised");
-        advised.setAccessible(true);
-        return ((AdvisedSupport) advised.get(proxy)).getTargetSource().getTarget();
+    private static Object getProxyTargetObject(Object proxy) {
+        try {
+            Field advised = proxy.getClass().getDeclaredField("advised");
+            advised.setAccessible(true);
+            return ((AdvisedSupport) advised.get(proxy)).getTargetSource().getTarget();
+        } catch (Exception ex) {
+            return proxy;
+        }
     }
 }

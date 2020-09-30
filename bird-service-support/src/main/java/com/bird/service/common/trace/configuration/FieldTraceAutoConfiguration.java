@@ -22,8 +22,8 @@ public class FieldTraceAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(MybatisFieldTraceInterceptor.class)
-    public MybatisFieldTraceInterceptor fieldTraceInterceptor(FieldTraceProperties properties){
-        return new MybatisFieldTraceInterceptor(properties);
+    public MybatisFieldTraceInterceptor fieldTraceInterceptor(){
+        return new MybatisFieldTraceInterceptor();
     }
 
 
