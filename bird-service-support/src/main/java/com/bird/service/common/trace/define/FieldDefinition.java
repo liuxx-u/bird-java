@@ -1,8 +1,11 @@
 package com.bird.service.common.trace.define;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.bird.service.common.trace.TraceField;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -23,7 +26,14 @@ public class FieldDefinition implements Serializable {
     private String description;
 
     public FieldDefinition(Field field) {
-        name = field.getName();
+        if (field.isAnnotationPresent(TableField.class)) {
+            TableField tableField = field.getAnnotation(TableField.class);
+            this.name = tableField.value();
+        } else {
+            this.name = field.getName();
+        }
+        this.name = StringUtils.strip(this.name, StringPool.BACKTICK);
+
         if (field.isAnnotationPresent(TraceField.class)) {
             TraceField traceField = field.getAnnotation(TraceField.class);
             description = traceField.value();

@@ -3,6 +3,7 @@ package com.bird.service.common.trace.handler;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.bird.service.common.trace.IDatabaseOperateHandler;
 import com.bird.service.common.trace.TraceField;
 import com.bird.service.common.trace.FieldTraceExchanger;
@@ -13,6 +14,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -39,7 +41,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
             // 解析SQL
             Statement stmt = CCJSqlParserUtil.parse(operateSql);
             // 获取表名
-            String table = getTableName(stmt);
+            String table = StringUtils.strip(getTableName(stmt), StringPool.BACKTICK);
             // 获取要记录的列信息
             FieldDefinition[] traceFields = getTraceFields(table);
             if (traceFields == null || traceFields.length == 0) {
@@ -114,7 +116,8 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         String[] values = new String[fieldIndexMap.size()];
         Integer index;
         for (int i = 0; i < updateColumns.size(); i++) {
-            index = fieldIndexMap.get(updateColumns.get(i).toString());
+            String columnName = StringUtils.strip(updateColumns.get(i).toString(), StringPool.BACKTICK);
+            index = fieldIndexMap.get(columnName);
             if (index != null) {
                 // 本次更新有要记录的字段
                 Expression expression = expressions.get(i);
