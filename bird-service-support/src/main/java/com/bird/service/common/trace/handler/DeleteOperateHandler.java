@@ -1,6 +1,6 @@
 package com.bird.service.common.trace.handler;
 
-import com.bird.service.common.trace.define.ColumnDefinition;
+import com.bird.service.common.trace.define.FieldDefinition;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author shaojie
  */
 @Slf4j
-public class DeleteOperateHandler extends AbstractDatabaseOperateHandler{
+public class DeleteOperateHandler extends AbstractDatabaseOperateHandler {
 
     @Override
     protected String getTableName(Statement statement) {
@@ -21,10 +21,10 @@ public class DeleteOperateHandler extends AbstractDatabaseOperateHandler{
     }
 
     @Override
-    protected List<String[]> getOldValue(Connection connection, String table, ColumnDefinition[] columns, Statement statement) {
+    protected List<String[]> getOldValue(Connection connection, String table, FieldDefinition[] fields, Statement statement) {
         Delete delete = (Delete) statement;
-        String querySql = String.format(SELECT_TEMPLATE, toColumnQuery(columns),table,delete.getWhere().toString());
-        return query(connection,querySql,columns.length);
+        String querySql = String.format(SELECT_TEMPLATE, toFieldsQuery(fields),table,delete.getWhere().toString());
+        return query(connection,querySql, fields.length);
     }
 
     @Override

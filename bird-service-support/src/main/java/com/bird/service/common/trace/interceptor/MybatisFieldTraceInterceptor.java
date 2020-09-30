@@ -1,6 +1,6 @@
 package com.bird.service.common.trace.interceptor;
 
-import com.bird.service.common.trace.ColumnTraceProperties;
+import com.bird.service.common.trace.FieldTraceProperties;
 import com.bird.service.common.trace.DatabaseOperateEnum;
 import com.bird.service.common.trace.IDatabaseOperateHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +20,17 @@ import java.util.Map;
 @Intercepts({
         @Signature(type = StatementHandler.class,method = "update",args = {Statement.class})
 })
-public class MybatisColumnTraceInterceptor implements Interceptor {
+public class MybatisFieldTraceInterceptor implements Interceptor {
 
     private Map<String, IDatabaseOperateHandler> handlers;
     private boolean enabled;
 
-    public MybatisColumnTraceInterceptor(Map<String, IDatabaseOperateHandler> handlers) {
+    public MybatisFieldTraceInterceptor(Map<String, IDatabaseOperateHandler> handlers) {
         this.handlers = handlers;
     }
 
 
-    public MybatisColumnTraceInterceptor(ColumnTraceProperties properties) {
+    public MybatisFieldTraceInterceptor(FieldTraceProperties properties) {
         enabled = properties.isEnabled();
         this.handlers = DatabaseOperateEnum.operateHandlers(null);
     }

@@ -8,11 +8,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
-public @interface ColumnTrace {
+public @interface TraceField {
 
     /**
      * 列描述
      * @return 描述信息
      */
-    String value();
+    String value() default "";
 }

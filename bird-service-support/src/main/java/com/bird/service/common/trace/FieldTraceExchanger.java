@@ -1,12 +1,12 @@
 package com.bird.service.common.trace;
 
-import com.bird.service.common.trace.define.ColumnTraceDefinition;
-import io.netty.util.internal.PlatformDependent;
+import com.bird.service.common.trace.define.FieldTraceDefinition;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author shaojie
  */
 @Slf4j
-public class ColumnTraceExchanger {
+public class FieldTraceExchanger {
 
     private static final int DEFAULT_SIZE = 1024;
 
@@ -32,7 +32,7 @@ public class ColumnTraceExchanger {
      */
     static final int MODE_MIXED = 3;
 
-    private static final Queue<ColumnTraceDefinition> MPSC_QUEUE = PlatformDependent.newMpscQueue(DEFAULT_SIZE);
+    private static final Queue<FieldTraceDefinition> TRACE_QUEUE = new LinkedBlockingDeque<>(DEFAULT_SIZE);
 
     private static Exchanger exchanger;
 
@@ -41,9 +41,9 @@ public class ColumnTraceExchanger {
      */
     private volatile boolean enabled;
 
-    private IColumnTraceRecorder recorder;
+    private IFieldTraceRecorder recorder;
 
-    public ColumnTraceExchanger(ColumnTraceProperties properties, IColumnTraceRecorder recorder) {
+    public FieldTraceExchanger(FieldTraceProperties properties, IFieldTraceRecorder recorder) {
         this.enabled = properties.isEnabled();
         this.recorder = recorder;
         if (enabled) {
@@ -52,7 +52,7 @@ public class ColumnTraceExchanger {
         }
     }
 
-    private void initExchanger(ColumnTraceProperties properties) {
+    private void initExchanger(FieldTraceProperties properties) {
         int mode = properties.getMode();
         if (MODE_THRESHOLD == mode) {
             exchanger = new ThresholdExchanger(properties);
@@ -69,20 +69,20 @@ public class ColumnTraceExchanger {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> this.enabled = false));
     }
 
-    public static void offer(ColumnTraceDefinition record) {
+    public static void offer(FieldTraceDefinition record) {
         // 放入队列, 如果放入失败不报错
-        if (!MPSC_QUEUE.offer(record)) {
+        if (!TRACE_QUEUE.offer(record)) {
             log.warn("offer record failed. it mostly happened when the queue is full. current record info : {}", record);
         }
         // 放入之后, 记录一下
         if (exchanger != null) {
-            exchanger.afterOffer(MPSC_QUEUE);
+            exchanger.afterOffer(TRACE_QUEUE);
         }
     }
 
-    private static ColumnTraceDefinition poll() {
+    private static FieldTraceDefinition poll() {
         // 从队列中取, 如果取不到不报错
-        return MPSC_QUEUE.poll();
+        return TRACE_QUEUE.poll();
     }
 
     public class Exchanger implements Runnable {
@@ -94,12 +94,12 @@ public class ColumnTraceExchanger {
         ReentrantLock lock = new ReentrantLock();
         Condition condition = lock.newCondition();
 
-        Exchanger(ColumnTraceProperties properties) {
+        Exchanger(FieldTraceProperties properties) {
             this.threshold = properties.getThreshold();
             this.interval = properties.getInterval();
         }
 
-        public void afterOffer(Queue<ColumnTraceDefinition> queue) {
+        public void afterOffer(Queue<FieldTraceDefinition> queue) {
             if (queue.size() >= threshold) {
                 // 尝试获取锁,如果获取成功,则唤醒. 如果获取失败,说明线程正在处理, 那就不通知了
                 if (lock.tryLock()) {
@@ -137,7 +137,7 @@ public class ColumnTraceExchanger {
 
     public class ThresholdExchanger extends Exchanger {
 
-        private ThresholdExchanger(ColumnTraceProperties properties) {
+        private ThresholdExchanger(FieldTraceProperties properties) {
             super(properties);
         }
 
@@ -160,21 +160,21 @@ public class ColumnTraceExchanger {
 
     public class PeriodExchanger extends Exchanger {
 
-        PeriodExchanger(ColumnTraceProperties properties) {
+        PeriodExchanger(FieldTraceProperties properties) {
             super(properties);
         }
 
         @Override
-        public void afterOffer(Queue<ColumnTraceDefinition> queue) {
+        public void afterOffer(Queue<FieldTraceDefinition> queue) {
 
         }
 
     }
 
     private void record() {
-        ColumnTraceDefinition record;
+        FieldTraceDefinition record;
         // 一直读, 知道读完为止
-        List<ColumnTraceDefinition> records = new ArrayList<>();
+        List<FieldTraceDefinition> records = new ArrayList<>();
         while ((record = poll()) != null) {
             records.add(record);
         }

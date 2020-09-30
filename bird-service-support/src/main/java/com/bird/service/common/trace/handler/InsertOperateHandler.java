@@ -1,6 +1,6 @@
 package com.bird.service.common.trace.handler;
 
-import com.bird.service.common.trace.define.ColumnDefinition;
+import com.bird.service.common.trace.define.FieldDefinition;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsListVisitor;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author shaojie
  */
-public class InsertOperateHandler extends AbstractDatabaseOperateHandler{
+public class InsertOperateHandler extends AbstractDatabaseOperateHandler {
 
     @Override
     protected String getTableName(Statement statement) {
@@ -27,7 +27,7 @@ public class InsertOperateHandler extends AbstractDatabaseOperateHandler{
     }
 
     @Override
-    protected List<String[]> getOldValue(Connection connection, String table, ColumnDefinition[] columns, Statement statement) {
+    protected List<String[]> getOldValue(Connection connection, String table, FieldDefinition[] fields, Statement statement) {
         return Collections.emptyList();
     }
 

@@ -1,6 +1,6 @@
 package com.bird.service.common.trace.handler;
 
-import com.bird.service.common.trace.define.ColumnDefinition;
+import com.bird.service.common.trace.define.FieldDefinition;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.update.Update;
 
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author shaojie
  */
-public class UpdateOperateHandler extends AbstractDatabaseOperateHandler{
+public class UpdateOperateHandler extends AbstractDatabaseOperateHandler {
 
     @Override
     protected String getTableName(Statement statement) {
@@ -27,9 +27,9 @@ public class UpdateOperateHandler extends AbstractDatabaseOperateHandler{
     }
 
     @Override
-    protected List<String[]> getOldValue(Connection connection, String table, ColumnDefinition[] columns, Statement statement) {
+    protected List<String[]> getOldValue(Connection connection, String table, FieldDefinition[] fields, Statement statement) {
         Update update = (Update) statement;
-        String querySql = String.format(SELECT_TEMPLATE, toColumnQuery(columns),table,update.getWhere().toString());
-        return query(connection,querySql,columns.length);
+        String querySql = String.format(SELECT_TEMPLATE, toFieldsQuery(fields),table,update.getWhere().toString());
+        return query(connection,querySql, fields.length);
     }
 }

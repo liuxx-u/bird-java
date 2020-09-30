@@ -1,6 +1,6 @@
 package com.bird.service.common.trace.define;
 
-import com.bird.service.common.trace.ColumnTrace;
+import com.bird.service.common.trace.TraceField;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
  * @author shaojie
  */
 @Setter@Getter
-public class ColumnDefinition implements Serializable {
+public class FieldDefinition implements Serializable {
 
     /**
      * 列名
@@ -22,11 +22,11 @@ public class ColumnDefinition implements Serializable {
      */
     private String description;
 
-    public ColumnDefinition(Field field) {
+    public FieldDefinition(Field field) {
         name = field.getName();
-        if (field.isAnnotationPresent(ColumnTrace.class)) {
-            ColumnTrace columnTrace = field.getAnnotation(ColumnTrace.class);
-            description = columnTrace.value();
+        if (field.isAnnotationPresent(TraceField.class)) {
+            TraceField traceField = field.getAnnotation(TraceField.class);
+            description = traceField.value();
         }
     }
 }

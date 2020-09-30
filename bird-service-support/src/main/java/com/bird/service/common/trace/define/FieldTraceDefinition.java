@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString@Accessors(chain = true)
-public class ColumnTraceDefinition {
+public class FieldTraceDefinition {
 
     /**
      * 跟踪ID
@@ -45,7 +45,7 @@ public class ColumnTraceDefinition {
     /**
      * 记录的列
      */
-    private ColumnDefinition[] column;
+    private FieldDefinition[] fields;
     /**
      * 原始值
      */
@@ -55,12 +55,12 @@ public class ColumnTraceDefinition {
      */
     private List<String[]> news;
 
-    public ColumnTraceDefinition(String operate, ColumnDefinition[] column, String table) {
+    public FieldTraceDefinition(String operate, FieldDefinition[] fields, String table) {
         BirdSession session = SessionContext.getSession();
         this.operator = StringUtils.defaultIfEmpty(session.getRealName(), session.getUserName());
         this.operatorId = session.getUserId().toString();
         this.operate = operate;
         this.table = table;
-        this.column = column;
+        this.fields = fields;
     }
 }

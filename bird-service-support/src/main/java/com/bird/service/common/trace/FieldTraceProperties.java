@@ -8,8 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author shaojie
  */
 @Setter@Getter
-@ConfigurationProperties("bird.service.trace.column")
-public class ColumnTraceProperties {
+@ConfigurationProperties("bird.service.db-field-trace")
+public class FieldTraceProperties {
 
     /**
      * 是否启用, 默认启用
@@ -26,10 +26,10 @@ public class ColumnTraceProperties {
     /**
      * 模式, 默认是混合模式
      */
-    private int mode = ColumnTraceExchanger.MODE_MIXED;
+    private int mode = FieldTraceExchanger.MODE_MIXED;
     /**
-     * 线程名称, 默认Column-Trace
+     * 线程名称, 默认Table-Field-Trace
      */
-    private String threadName = "Column-Trace";
+    private String threadName = "Table-Field-Trace";
 
 }

@@ -46,11 +46,6 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-            <version>4.1.51.Final</version>
-        </dependency>
         <!-- aspectj -->
         <dependency>
             <groupId>org.aspectj</groupId>

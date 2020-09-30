@@ -6,6 +6,11 @@
       "sourceType": "com.bird.service.common.ServiceProperties"
     },
     {
+      "name": "bird.service.db-field-trace",
+      "type": "com.bird.service.common.trace.FieldTraceProperties",
+      "sourceType": "com.bird.service.common.trace.FieldTraceProperties"
+    },
+    {
       "name": "spring.datasource.dynamic",
       "type": "com.bird.service.common.configuration.DynamicDataSourceProperties",
       "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties"
@@ -25,6 +30,40 @@
       "description": "是否开启 防止全表更新与删除",
       "sourceType": "com.bird.service.common.ServiceProperties",
       "defaultValue": true
+    },
+    {
+      "name": "bird.service.db-field-trace.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用, 默认启用",
+      "sourceType": "com.bird.service.common.trace.FieldTraceProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.service.db-field-trace.interval",
+      "type": "java.lang.Integer",
+      "description": "记录周期, 默认5秒",
+      "sourceType": "com.bird.service.common.trace.FieldTraceProperties",
+      "defaultValue": 5000
+    },
+    {
+      "name": "bird.service.db-field-trace.mode",
+      "type": "java.lang.Integer",
+      "description": "模式, 默认是混合模式",
+      "sourceType": "com.bird.service.common.trace.FieldTraceProperties"
+    },
+    {
+      "name": "bird.service.db-field-trace.thread-name",
+      "type": "java.lang.String",
+      "description": "线程名称, 默认Table-Field-Trace",
+      "sourceType": "com.bird.service.common.trace.FieldTraceProperties",
+      "defaultValue": "Table-Field-Trace"
+    },
+    {
+      "name": "bird.service.db-field-trace.threshold",
+      "type": "java.lang.Integer",
+      "description": "记录阈值, 默认1000",
+      "sourceType": "com.bird.service.common.trace.FieldTraceProperties",
+      "defaultValue": 1000
     },
     {
       "name": "bird.service.global-logic-delete-field",
