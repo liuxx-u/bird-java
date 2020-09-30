@@ -1,6 +1,5 @@
 package com.bird.service.common.trace.recorder;
 
-
 import com.bird.service.common.trace.define.ColumnTraceDefinition;
 import com.bird.service.common.trace.IColumnTraceRecorder;
 

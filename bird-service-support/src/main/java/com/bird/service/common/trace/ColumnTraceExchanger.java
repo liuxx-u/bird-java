@@ -30,7 +30,7 @@ public class ColumnTraceExchanger {
     /**
      * 混合模式: 周期执行的同时, 如果指定周期内, 到达了阈值. 主动触发一次
      */
-    public static final int MODE_MIXED = 3;
+    static final int MODE_MIXED = 3;
 
     private static final Queue<ColumnTraceDefinition> MPSC_QUEUE = PlatformDependent.newMpscQueue(DEFAULT_SIZE);
 
@@ -80,21 +80,21 @@ public class ColumnTraceExchanger {
         }
     }
 
-    public static ColumnTraceDefinition poll() {
+    private static ColumnTraceDefinition poll() {
         // 从队列中取, 如果取不到不报错
         return MPSC_QUEUE.poll();
     }
 
     public class Exchanger implements Runnable {
 
-        protected int threshold;
+        int threshold;
         /*** 记录周期, 单位: 毫秒数         */
         private long interval;
 
-        protected ReentrantLock lock = new ReentrantLock();
-        protected Condition condition = lock.newCondition();
+        ReentrantLock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
 
-        public Exchanger(ColumnTraceProperties properties) {
+        Exchanger(ColumnTraceProperties properties) {
             this.threshold = properties.getThreshold();
             this.interval = properties.getInterval();
         }
@@ -160,7 +160,7 @@ public class ColumnTraceExchanger {
 
     public class PeriodExchanger extends Exchanger {
 
-        public PeriodExchanger(ColumnTraceProperties properties) {
+        PeriodExchanger(ColumnTraceProperties properties) {
             super(properties);
         }
 
@@ -171,7 +171,7 @@ public class ColumnTraceExchanger {
 
     }
 
-    public void record() {
+    private void record() {
         ColumnTraceDefinition record;
         // 一直读, 知道读完为止
         List<ColumnTraceDefinition> records = new ArrayList<>();

@@ -58,5 +58,4 @@ public class MybatisColumnTraceInterceptor implements Interceptor {
         int i = stmt.indexOf(":");
         return i > 0 ? stmt.substring(i + 1).trim() : stmt.trim();
     }
-
 }

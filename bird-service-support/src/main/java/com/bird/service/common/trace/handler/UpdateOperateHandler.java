@@ -1,6 +1,5 @@
 package com.bird.service.common.trace.handler;
 
-
 import com.bird.service.common.trace.define.ColumnDefinition;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.update.Update;

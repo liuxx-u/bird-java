@@ -18,32 +18,49 @@ import java.util.List;
 @ToString@Accessors(chain = true)
 public class ColumnTraceDefinition {
 
-    /** 跟踪ID */
+    /**
+     * 跟踪ID
+     */
     private String traceId;
-    /** 操作人 */
+    /**
+     * 操作人
+     */
     private String operator;
-    /** 操作人标识 */
+    /**
+     * 操作人标识
+     */
     private String operatorId;
-    /** 操作 */
+    /**
+     * 操作
+     */
     private String operate;
-    /** 本次记录的表 */
+    /**
+     * 本次记录的表
+     */
     private String table;
-    /** 拓展信息 */
+    /**
+     * 拓展信息
+     */
     private String extend;
-    /** 记录的列 */
+    /**
+     * 记录的列
+     */
     private ColumnDefinition[] column;
-    /** 原始值 */
+    /**
+     * 原始值
+     */
     private List<String[]> old;
-    /** 更新后的值 */
+    /**
+     * 更新后的值
+     */
     private List<String[]> news;
 
     public ColumnTraceDefinition(String operate, ColumnDefinition[] column, String table) {
         BirdSession session = SessionContext.getSession();
-        this.operator = StringUtils.defaultIfEmpty(session.getRealName(),session.getUserName());
+        this.operator = StringUtils.defaultIfEmpty(session.getRealName(), session.getUserName());
         this.operatorId = session.getUserId().toString();
         this.operate = operate;
         this.table = table;
         this.column = column;
     }
-
 }

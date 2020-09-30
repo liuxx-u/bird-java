@@ -16,22 +16,28 @@ import java.util.stream.Collectors;
 @Slf4j
 @AllArgsConstructor
 public enum DatabaseOperateEnum {
-    /**  */
+    /**
+     * INSERT
+     */
     INSERT(InsertOperateHandler.class),
-    /**  */
+    /**
+     * UPDATE
+     */
     UPDATE(UpdateOperateHandler.class),
-    /**  */
+    /**
+     * DELETE
+     */
     DELETE(DeleteOperateHandler.class);
 
     private Class<? extends IDatabaseOperateHandler> operateClass;
 
-    public static Map<String, IDatabaseOperateHandler> operateHandlers(IDatabaseOperateHandler defaultHandler){
-        return Arrays.stream(DatabaseOperateEnum.values()).collect(Collectors.toMap(DatabaseOperateEnum::toString,item-> {
+    public static Map<String, IDatabaseOperateHandler> operateHandlers(IDatabaseOperateHandler defaultHandler) {
+        return Arrays.stream(DatabaseOperateEnum.values()).collect(Collectors.toMap(DatabaseOperateEnum::toString, item -> {
             Class<? extends IDatabaseOperateHandler> operateClass = item.operateClass;
             try {
                 return operateClass.newInstance();
             } catch (Exception e) {
-                log.error(e.getMessage(),e);
+                log.error(e.getMessage(), e);
             }
             return defaultHandler;
         }));

@@ -11,6 +11,7 @@ public interface IColumnTraceRecorder {
 
     /**
      * 记录信息
+     *
      * @param record 字段更新记录列表
      */
     void record(List<ColumnTraceDefinition> record);

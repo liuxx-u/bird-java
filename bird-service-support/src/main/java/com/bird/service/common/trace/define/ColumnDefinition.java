@@ -13,17 +13,20 @@ import java.lang.reflect.Field;
 @Setter@Getter
 public class ColumnDefinition implements Serializable {
 
-    /** 列名 */
+    /**
+     * 列名
+     */
     private String name;
-    /** 描述信息 */
+    /**
+     * 描述信息
+     */
     private String description;
 
     public ColumnDefinition(Field field) {
         name = field.getName();
-        if(field.isAnnotationPresent(ColumnTrace.class)){
+        if (field.isAnnotationPresent(ColumnTrace.class)) {
             ColumnTrace columnTrace = field.getAnnotation(ColumnTrace.class);
             description = columnTrace.value();
         }
     }
-
 }

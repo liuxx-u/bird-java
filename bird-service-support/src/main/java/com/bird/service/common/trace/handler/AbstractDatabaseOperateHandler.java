@@ -25,7 +25,7 @@ import java.util.*;
 @Slf4j
 public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperateHandler {
 
-    public static final String SELECT_TEMPLATE = "SELECT %s FROM %s WHERE %s";
+    static final String SELECT_TEMPLATE = "SELECT %s FROM %s WHERE %s";
     /**  */
     private static final Map<String,Map<String,Integer>> RECORD_COLUMN_MAPPING = new HashMap<>();
     private static final Map<String,ColumnDefinition[]> RECORD_COLUMNS = new HashMap<>();
@@ -104,7 +104,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
     }
 
 
-    public static String[] findValues(String table,List<Column> updateColumns,List<Expression> expressions){
+    static String[] findValues(String table, List<Column> updateColumns, List<Expression> expressions){
         Map<String, Integer> columnMapping = getTableColumnMapping(table);
         String[] values = new String[columnMapping.size()];
         Integer index;
@@ -127,7 +127,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
     protected abstract String getTableName(Statement statement);
 
 
-    public static ColumnDefinition[] getRecordColumns(String table){
+    private static ColumnDefinition[] getRecordColumns(String table){
         return RECORD_COLUMNS.computeIfAbsent(table,key->{
             List<TableInfo> tableInfos = TableInfoHelper.getTableInfos();
             Optional<TableInfo> optional = tableInfos.stream().filter(info -> table.equals(info.getTableName())).findFirst();
@@ -142,7 +142,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         });
     }
 
-    public static Map<String,Integer> getTableColumnMapping(String table){
+    private static Map<String,Integer> getTableColumnMapping(String table){
         return RECORD_COLUMN_MAPPING.computeIfAbsent(table,key->{
             ColumnDefinition[] columns = getRecordColumns(key);
             Map<String,Integer> map = new HashMap<>(columns.length);
@@ -153,7 +153,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         });
     }
 
-    public static String toColumnQuery(ColumnDefinition[] columns){
+    static String toColumnQuery(ColumnDefinition[] columns){
         StringBuilder stb = new StringBuilder();
         for (int i =0;i < columns.length;i++){
             if(i != 0){
