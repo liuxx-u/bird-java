@@ -50,7 +50,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
             FieldTraceDefinition fieldTraceDefinition = new FieldTraceDefinition(operate, traceFields, table);
             List<String[]> oldValues = getOldValue(connection, table, traceFields, stmt);
             List<String[]> newValues = getNewValue(table, stmt);
-            fieldTraceDefinition.setOld(oldValues).setNews(newValues);
+            fieldTraceDefinition.setSql(operateSql).setOld(oldValues).setNews(newValues);
             // 放入队列中, 等待被记录
             FieldTraceExchanger.offer(fieldTraceDefinition);
         } catch (Exception e) {

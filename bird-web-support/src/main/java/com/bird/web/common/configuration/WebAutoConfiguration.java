@@ -1,6 +1,5 @@
 package com.bird.web.common.configuration;
 
-import com.bird.core.SpringContextHolder;
 import com.bird.web.common.WebProperties;
 import com.bird.web.common.advice.GlobalExceptionAdvice;
 import com.bird.web.common.advice.RestJsonWrapperAdvice;
@@ -33,14 +32,6 @@ public class WebAutoConfiguration {
 
     public WebAutoConfiguration(WebProperties webProperties) {
         this.webProperties = webProperties;
-    }
-
-    /**
-     * 注册 SpringContextHolder
-     */
-    @Bean
-    public SpringContextHolder springContextHolder() {
-        return new SpringContextHolder();
     }
 
     /**

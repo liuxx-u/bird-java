@@ -2,6 +2,7 @@ package com.bird.service.common.trace.define;
 
 import com.bird.core.session.BirdSession;
 import com.bird.core.session.SessionContext;
+import com.bird.core.trace.TraceContext;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -43,6 +44,10 @@ public class FieldTraceDefinition {
      */
     private String extend;
     /**
+     * 执行的sql语句
+     */
+    private String sql;
+    /**
      * 记录的列
      */
     private FieldDefinition[] fields;
@@ -61,6 +66,8 @@ public class FieldTraceDefinition {
             this.operator = StringUtils.defaultIfEmpty(session.getRealName(), session.getUserName());
             this.operatorId = session.getUserId().toString();
         }
+        this.traceId = TraceContext.currentTraceId();
+
         this.operate = operate;
         this.table = table;
         this.fields = fields;

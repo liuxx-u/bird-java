@@ -1,0 +1,119 @@
+package com.bird.core.trace;
+
+import com.bird.core.SpringContextHolder;
+import com.bird.core.trace.dispatch.ITraceLogDispatcher;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * @author liuxx
+ * @since 2020/10/9
+ */
+@Slf4j
+public class TraceContext {
+
+    private static final ThreadLocal<TraceMap> LOCAL = ThreadLocal.withInitial(TraceMap::new);
+
+    private TraceContext() {
+    }
+
+    /**
+     * 获取当前操作的轨迹信息
+     *
+     * @return trace
+     */
+    public static TraceDefinition current() {
+        TraceMap traceMap = LOCAL.get();
+        return traceMap.current();
+    }
+
+    /**
+     * 获取当前操作的trace id
+     *
+     * @return trace id
+     */
+    public static String currentTraceId() {
+        TraceDefinition traceDefinition = current();
+        return traceDefinition == null ? StringUtils.EMPTY : traceDefinition.getTraceId();
+    }
+
+    /**
+     * 进入
+     *
+     * @param entrance 入口
+     * @param params   参数
+     * @param description   描述
+     */
+    public static void enter(String entrance, Object[] params,String description) {
+
+        TraceDefinition current = current();
+        TraceDefinition next = current == null ? TraceDefinition.initWithDefault() : current.next(entrance, params);
+        next.setDescription(description);
+
+        TraceMap traceMap = LOCAL.get();
+        traceMap.setCurrentTraceId(next.getTraceId());
+        traceMap.put(next.getTraceId(), next);
+    }
+
+    /**
+     * 获取当前轨迹信息中的摘要信息
+     *
+     * @param key 摘要Key
+     * @return value
+     */
+    public static Object getClaim(String key) {
+        TraceDefinition current = current();
+        if (current == null) {
+            return null;
+        }
+        return current.getClaim(key);
+    }
+
+    /**
+     * 向轨迹信息中设置摘要信息
+     *
+     * @param key   摘要Key
+     * @param value value
+     */
+    public static void setClaim(String key, Object value) {
+        TraceDefinition current = current();
+        if (current == null) {
+            log.warn("当前跟踪信息为NULL");
+            return;
+        }
+        current.setClaim(key, value);
+    }
+
+    /**
+     * 退出方法
+     *
+     * @param returnValue 返回值
+     */
+    public static void exit(Object returnValue) {
+
+        TraceDefinition current = current();
+        if (current == null) {
+            log.warn("当前跟踪信息为NULL");
+            return;
+        }
+        current.setEndTime(System.currentTimeMillis());
+        if (returnValue != null) {
+            current.setReturnValue(returnValue);
+        }
+
+        TraceMap traceMap = LOCAL.get();
+        TraceDefinition parent = traceMap.get(current.getParentTraceId());
+        if (parent != null) {
+            traceMap.setCurrentTraceId(parent.getTraceId());
+        } else {
+            try {
+                ITraceLogDispatcher dispatcher = SpringContextHolder.getBean(ITraceLogDispatcher.class);
+                dispatcher.dispatch(traceMap.values());
+            } catch (Exception ex) {
+                log.error("轨迹信息保存失败", ex);
+            }
+
+            LOCAL.remove();
+        }
+    }
+}
