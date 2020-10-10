@@ -4,6 +4,9 @@ import com.bird.core.SpringContextHolder;
 import com.bird.core.trace.dispatch.ITraceLogDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
 
 /**
  * @author liuxx
@@ -40,14 +43,14 @@ public class TraceContext {
     /**
      * 进入
      *
-     * @param entrance 入口
-     * @param params   参数
-     * @param description   描述
+     * @param entrance    入口
+     * @param params      参数
+     * @param description 描述
      */
-    public static void enter(String entrance, Object[] params,String description) {
+    public static void enter(String entrance, Object[] params, String description) {
 
         TraceDefinition current = current();
-        TraceDefinition next = current == null ? TraceDefinition.initWithDefault() : current.next(entrance, params);
+        TraceDefinition next = current == null ? TraceDefinition.initWithDefault(entrance, params) : current.next(entrance, params);
         next.setDescription(description);
 
         TraceMap traceMap = LOCAL.get();
@@ -102,18 +105,43 @@ public class TraceContext {
         }
 
         TraceMap traceMap = LOCAL.get();
+        if (traceMap == null) {
+            return;
+        }
         TraceDefinition parent = traceMap.get(current.getParentTraceId());
         if (parent != null) {
             traceMap.setCurrentTraceId(parent.getTraceId());
         } else {
-            try {
-                ITraceLogDispatcher dispatcher = SpringContextHolder.getBean(ITraceLogDispatcher.class);
-                dispatcher.dispatch(traceMap.values());
-            } catch (Exception ex) {
-                log.error("轨迹信息保存失败", ex);
+            clear();
+        }
+    }
+
+    /**
+     * 退出方法并强制清除线程信息
+     *
+     * @param returnValue 返回值
+     */
+    public static void exitAndClear(Object returnValue){
+        exit(returnValue);
+        clear();
+    }
+
+    /**
+     * 清除轨迹信息
+     */
+    private static void clear() {
+        try {
+            Collection<TraceDefinition> traceLogs = LOCAL.get().values();
+            if(CollectionUtils.isEmpty(traceLogs)){
+                return;
             }
 
-            LOCAL.remove();
+            ITraceLogDispatcher dispatcher = SpringContextHolder.getBean(ITraceLogDispatcher.class);
+            dispatcher.dispatch(traceLogs);
+        } catch (Exception ex) {
+            log.error("轨迹信息保存失败", ex);
         }
+
+        LOCAL.remove();
     }
 }

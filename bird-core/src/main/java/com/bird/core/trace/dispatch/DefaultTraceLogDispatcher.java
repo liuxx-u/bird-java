@@ -36,7 +36,7 @@ public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
                 .build();
 
         ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(this.dispatcherProperties.getPoolSize(), threadFactory);
-        poolExecutor.scheduleAtFixedRate(traceLogStoreConsumer, 0, this.dispatcherProperties.getPeriod(), TimeUnit.SECONDS);
+        poolExecutor.scheduleAtFixedRate(traceLogStoreConsumer, this.dispatcherProperties.getPeriod(), this.dispatcherProperties.getPeriod(), TimeUnit.SECONDS);
 
         // JVM退出时再执行一次保存操作
         Runtime.getRuntime().addShutdownHook(new Thread(traceLogStoreConsumer));
@@ -62,7 +62,7 @@ public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
     }
 
     /**
-     * 事件处理结果存储结果消费者
+     * 跟踪日志存储消费者
      */
     private class DefaultTraceLogStoreConsumer implements Runnable {
         @Override
@@ -79,7 +79,7 @@ public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
                     traceLogStore.store(traceLogs);
                 }
             } catch (Exception ex) {
-                log.error("保存EventBus消费结果失败.", ex);
+                log.error("跟踪日志保存失败.", ex);
             }
         }
     }

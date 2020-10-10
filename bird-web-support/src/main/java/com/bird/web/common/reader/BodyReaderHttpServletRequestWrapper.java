@@ -1,4 +1,4 @@
-package com.bird.web.common.security.signature;
+package com.bird.web.common.reader;
 
 import org.springframework.util.StreamUtils;
 
@@ -22,7 +22,7 @@ public class BodyReaderHttpServletRequestWrapper extends HttpServletRequestWrapp
      */
     private byte[] requestBody;
 
-    public BodyReaderHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
+    BodyReaderHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         requestBody = StreamUtils.copyToByteArray(request.getInputStream());
     }

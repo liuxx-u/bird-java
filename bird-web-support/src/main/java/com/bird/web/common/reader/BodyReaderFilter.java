@@ -1,9 +1,11 @@
-package com.bird.web.common.security.signature;
+package com.bird.web.common.reader;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,7 +20,7 @@ import java.util.List;
  */
 public class BodyReaderFilter extends OncePerRequestFilter {
 
-    final static List<HttpMethod> SUPPORT_HTTP_METHODS = new ArrayList<>();
+    private final static List<HttpMethod> SUPPORT_HTTP_METHODS = new ArrayList<>();
 
     static {
         SUPPORT_HTTP_METHODS.add(HttpMethod.POST);
@@ -28,11 +30,20 @@ public class BodyReaderFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        HttpMethod method = HttpMethod.resolve(request.getMethod());
-        if(SUPPORT_HTTP_METHODS.contains(method)){
+        if(canReadBody(request)){
             filterChain.doFilter(new BodyReaderHttpServletRequestWrapper(request), response);
         }else {
             filterChain.doFilter(request, response);
         }
+    }
+
+    /**
+     * 是否支持读取body内容
+     * @param request 请求
+     * @return 是否允许读取body内容
+     */
+    public static boolean canReadBody(HttpServletRequest request){
+        HttpMethod method = HttpMethod.resolve(request.getMethod());
+        return SUPPORT_HTTP_METHODS.contains(method) && !(request instanceof MultipartHttpServletRequest);
     }
 }

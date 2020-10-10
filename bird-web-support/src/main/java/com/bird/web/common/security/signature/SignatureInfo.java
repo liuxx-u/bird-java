@@ -1,5 +1,6 @@
 package com.bird.web.common.security.signature;
 
+import com.bird.web.common.reader.BodyReaderFilter;
 import com.bird.web.common.utils.RequestHelper;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -51,8 +52,7 @@ public class SignatureInfo implements Serializable {
         signatureInfo.setTimestamp(request.getHeader(TIMESTAMP_HEADER_NAME));
         signatureInfo.setSign(request.getHeader(SIGN_HEADER_NAME));
 
-        HttpMethod method = HttpMethod.resolve(request.getMethod());
-        if(BodyReaderFilter.SUPPORT_HTTP_METHODS.contains(method)){
+        if(BodyReaderFilter.canReadBody(request)){
             signatureInfo.setParams(RequestHelper.getBodyString(request));
         }else {
             signatureInfo.setParams(request.getQueryString());

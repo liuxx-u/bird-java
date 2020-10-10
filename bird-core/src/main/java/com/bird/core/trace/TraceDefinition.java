@@ -73,18 +73,18 @@ public class TraceDefinition implements Serializable {
     }
 
     public TraceDefinition next(String entrance, Object[] params) {
-        TraceDefinition next = initWithDefault();
+        TraceDefinition next = initWithDefault(entrance,params);
         next.globalTraceId = this.globalTraceId;
         next.parentTraceId = this.traceId;
-        next.entrance = entrance;
-        next.params = params;
         return next;
     }
 
-    public static TraceDefinition initWithDefault() {
+    public static TraceDefinition initWithDefault(String entrance, Object[] params) {
         TraceDefinition definition = new TraceDefinition();
         definition.traceId = UUID.randomUUID().toString();
         definition.startTime = System.currentTimeMillis();
+        definition.entrance = entrance;
+        definition.params = params;
 
         BirdSession session = SessionContext.getSession();
         if (session != null && session.getUserId() != null) {

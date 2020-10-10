@@ -7,9 +7,11 @@ import com.bird.web.common.cors.CorsFilter;
 import com.bird.web.common.cors.CorsProperties;
 import com.bird.web.common.idempotency.IdempotencyController;
 import com.bird.web.common.idempotency.IdempotencyInterceptor;
+import com.bird.web.common.reader.BodyReaderFilter;
 import com.bird.web.common.security.ip.DefaultIpListProvider;
 import com.bird.web.common.security.ip.IIpListProvider;
 import com.bird.web.common.security.ip.IpCheckInterceptor;
+import com.bird.web.common.trace.TraceInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -87,6 +89,21 @@ public class WebAutoConfiguration {
     }
 
     /**
+     * 注册 跨域资源共享过滤器
+     */
+    @Bean
+    @ConditionalOnProperty(value = PREFIX + "body-read.enable", havingValue = "true", matchIfMissing = true)
+    public FilterRegistrationBean<BodyReaderFilter> bodyReaderFilterRegistration() {
+
+        FilterRegistrationBean<BodyReaderFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new BodyReaderFilter());
+        registration.addUrlPatterns("/*");
+        registration.setName("bodyReaderFilter");
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
+        return registration;
+    }
+
+    /**
      * 注册 默认的ip配置提供者
      */
     @Bean
@@ -103,5 +120,14 @@ public class WebAutoConfiguration {
     @ConditionalOnProperty(value = PREFIX + "ip-check.enable", havingValue = "true")
     public IpCheckInterceptor ipCheckInterceptor(IIpListProvider ipListProvider) {
         return new IpCheckInterceptor(ipListProvider);
+    }
+
+    /**
+     * 注册 Trace信息拦截器
+     */
+    @Bean
+    @ConditionalOnProperty(value = "bird.trace.enable", havingValue = "true", matchIfMissing = true)
+    public TraceInterceptor traceInterceptor() {
+        return new TraceInterceptor();
     }
 }
