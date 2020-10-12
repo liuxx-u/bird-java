@@ -12,7 +12,7 @@ public class CorsProperties {
     /**
      * 是否开启跨域资源共享功能
      */
-    private Boolean enable;
+    private Boolean enabled;
 
     private String urlPatterns = "/*";
 

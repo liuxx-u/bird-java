@@ -58,7 +58,7 @@ public DemoBO testJson(){
 ```yaml
 bird:
   web:
-    global-exception-enable: true
+    global-exception-enabled: true
 ```
 
 - 是否开启全局异常处理：默认：true
@@ -174,13 +174,13 @@ spring:
 bird:
   web:
     idempotency:
-      enable: true
+      enabled: true
       expire: 120
       header-name: bird-idempotency
       error-message: 该操作已失效，请刷新后重试
 ```
 
-- enable：启动幂等性相关功能，必填，默认：false
+- enabled：启动幂等性相关功能，必填，默认：false
 - expire：token有效期，单位：分钟；默认：120
 - header-name：前端回传token的请求头名称，默认：bird-idempotency
 - error-message：token验证失败时，返回的错误消息
@@ -202,7 +202,7 @@ bird:
 bird:
   web:
     cors:
-      enable: true
+      enabled: true
       url-patterns: /*
       allow-origin: default
       allow-methods: POST,GET,OPTIONS,DELETE
@@ -211,7 +211,7 @@ bird:
       allow-credentials: true
 ```
 
-- enable：是否启用CORS跨域资源共享，默认：false
+- enabled：是否启用CORS跨域资源共享，默认：false
 - allow-origin：允许的来源网站，default表示不限制
 - allow-methods：允许的请求方式
 - allow-headers：允许传递的请求头
@@ -225,7 +225,7 @@ bird:
 bird:
   web:
     ip-check:
-      enable: true
+      enabled: true
       ip-list:
         - uri-pattern: /test/*
           ips: 10.10.200.226
@@ -233,7 +233,7 @@ bird:
           ips: 10.10.129.7/0,10.10.129.8/0
 ```
 
- - enable：是否启用ip白名单配置，默认：false
+ - enabled：是否启用ip白名单配置，默认：false
  - ip-list：ip白名单配置
     - uri-pattern：uri模式
     - ips：允许的ip集合，多个ip用逗号分隔，支持设置ip段（掩码）

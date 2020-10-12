@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2018/10/10
  */
 @Configuration
-@ConditionalOnProperty(value = "bird.service.data-rule.enable",havingValue = "true")
+@ConditionalOnProperty(value = "bird.service.data-rule.enabled",havingValue = "true")
 @EnableConfigurationProperties(MybatisPlusProperties.class)
 public class DataRuleAutoConfiguration {
 

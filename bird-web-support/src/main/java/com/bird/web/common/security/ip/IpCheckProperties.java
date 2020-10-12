@@ -16,7 +16,7 @@ public class IpCheckProperties {
     /**
      * 是否启用ip白名单校验
      */
-    private Boolean enable = false;
+    private Boolean enabled = false;
     /**
      * ip白名单配置集合
      */

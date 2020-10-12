@@ -31,7 +31,7 @@ import java.util.Map;
 @ConditionalOnClass({Aspect.class, DruidDataSource.class})
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties(DynamicDataSourceProperties.class)
-@ConditionalOnProperty(value = "spring.datasource.dynamic.enable", havingValue = "true")
+@ConditionalOnProperty(value = "spring.datasource.dynamic.enabled", havingValue = "true")
 public class DynamicDataSourceAutoConfiguration {
 
     private IDataSourceCustomizer dataSourceCustomizer;

@@ -18,7 +18,7 @@ public class DynamicDataSourceProperties {
     /**
      * 是否启用
      */
-    private boolean enable;
+    private boolean enabled;
 
     /**
      * 数据源集合

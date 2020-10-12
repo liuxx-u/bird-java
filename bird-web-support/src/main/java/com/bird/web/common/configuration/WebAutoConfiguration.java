@@ -50,7 +50,7 @@ public class WebAutoConfiguration {
      * 注册 统一的异常处理组件
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "global-exception-enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = PREFIX + "global-exception-enabled", havingValue = "true", matchIfMissing = true)
     public GlobalExceptionAdvice globalExceptionAdvice() {
         return new GlobalExceptionAdvice();
     }
@@ -59,7 +59,7 @@ public class WebAutoConfiguration {
      * 注册 幂等性操作码接口
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true")
+    @ConditionalOnProperty(value = PREFIX + "idempotency.enabled", havingValue = "true")
     public IdempotencyController idempotencyController() {
         return new IdempotencyController(webProperties.getIdempotency());
     }
@@ -68,7 +68,7 @@ public class WebAutoConfiguration {
      * 注册 幂等性校验拦截器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "idempotency.enable", havingValue = "true")
+    @ConditionalOnProperty(value = PREFIX + "idempotency.enabled", havingValue = "true")
     public IdempotencyInterceptor idempotencyInterceptor() {
         return new IdempotencyInterceptor(webProperties.getIdempotency());
     }
@@ -77,7 +77,7 @@ public class WebAutoConfiguration {
      * 注册 跨域资源共享过滤器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "cors.enable", havingValue = "true")
+    @ConditionalOnProperty(value = PREFIX + "cors.enabled", havingValue = "true")
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         CorsProperties corsProperties = webProperties.getCors();
 
@@ -93,7 +93,7 @@ public class WebAutoConfiguration {
      * 注册 请求Body重复读取过滤器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "body-read.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = PREFIX + "body-read.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<BodyReaderFilter> bodyReaderFilterRegistration() {
 
         FilterRegistrationBean<BodyReaderFilter> registration = new FilterRegistrationBean<>();
@@ -108,7 +108,7 @@ public class WebAutoConfiguration {
      * 注册 默认的ip配置提供者
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "ip-check.enable", havingValue = "true")
+    @ConditionalOnProperty(value = PREFIX + "ip-check.enabled", havingValue = "true")
     @ConditionalOnMissingBean(IIpListProvider.class)
     public IIpListProvider ipListProvider() {
         return new DefaultIpListProvider(this.webProperties.getIpCheck().getIpList());
@@ -118,7 +118,7 @@ public class WebAutoConfiguration {
      * 注册 ip校验拦截器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "ip-check.enable", havingValue = "true")
+    @ConditionalOnProperty(value = PREFIX + "ip-check.enabled", havingValue = "true")
     public IpCheckInterceptor ipCheckInterceptor(IIpListProvider ipListProvider) {
         return new IpCheckInterceptor(ipListProvider);
     }
