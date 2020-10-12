@@ -1,7 +1,10 @@
 package com.bird.core.trace.configuration;
 
 import com.bird.core.trace.TraceableAspect;
-import com.bird.core.trace.dispatch.*;
+import com.bird.core.trace.dispatch.DefaultTraceDispatcherProperties;
+import com.bird.core.trace.dispatch.DefaultTraceLogDispatcher;
+import com.bird.core.trace.dispatch.ITraceLogDispatcher;
+import com.bird.core.trace.dispatch.ITraceLogStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -16,7 +19,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-@ConditionalOnProperty(value = "bird.trace.enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnClass(name = "org.aspectj.lang.annotation.Aspect")
+@ConditionalOnProperty(value = "bird.trace.enabled", havingValue = "true", matchIfMissing = true)
 public class TraceAutoConfiguration {
 
     @Bean
@@ -41,7 +45,6 @@ public class TraceAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass(name = "org.aspectj.lang.annotation.Pointcut")
     public TraceableAspect traceableAspect() {
         return new TraceableAspect();
     }

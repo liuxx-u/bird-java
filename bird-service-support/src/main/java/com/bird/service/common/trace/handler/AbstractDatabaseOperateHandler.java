@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.bird.service.common.trace.FieldTraceAppender;
 import com.bird.service.common.trace.IDatabaseOperateHandler;
 import com.bird.service.common.trace.TraceField;
-import com.bird.service.common.trace.FieldTraceExchanger;
 import com.bird.service.common.trace.define.FieldDefinition;
 import com.bird.service.common.trace.define.FieldTraceDefinition;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
             List<String[]> newValues = getNewValue(table, stmt);
             fieldTraceDefinition.setSql(operateSql).setOld(oldValues).setNews(newValues);
             // 放入队列中, 等待被记录
-            FieldTraceExchanger.offer(fieldTraceDefinition);
+            FieldTraceAppender.append(fieldTraceDefinition);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

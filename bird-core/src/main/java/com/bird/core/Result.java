@@ -2,6 +2,7 @@ package com.bird.core;
 
 import com.bird.core.exception.AbstractException;
 import com.bird.core.exception.ErrorCode;
+import com.bird.core.trace.TraceContext;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public class Result<T> implements Serializable {
     private String code;
     private String message;
     private Long timestamp;
+    private String traceId;
     private T data;
 
     public static <T> Result<T> success(String message, T data) {
@@ -32,7 +34,8 @@ public class Result<T> implements Serializable {
     }
 
     public Result() {
-        timestamp = System.currentTimeMillis();
+        this.traceId = TraceContext.currentTraceId();
+        this.timestamp = System.currentTimeMillis();
     }
 
     public Result(String message, T result) {

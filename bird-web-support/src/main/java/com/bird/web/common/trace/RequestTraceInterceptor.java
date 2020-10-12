@@ -4,9 +4,7 @@ import com.bird.core.trace.HttpParam;
 import com.bird.core.trace.TraceContext;
 import com.bird.web.common.reader.BodyReaderFilter;
 import com.bird.web.common.utils.RequestHelper;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +17,7 @@ import java.util.Map;
  * @author liuxx
  * @since 2020/10/10
  */
-public class TraceInterceptor extends HandlerInterceptorAdapter {
+public class RequestTraceInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * 拦截器处理方法，记录请求的trace信息

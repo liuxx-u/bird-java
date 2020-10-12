@@ -11,7 +11,8 @@ import com.bird.web.common.reader.BodyReaderFilter;
 import com.bird.web.common.security.ip.DefaultIpListProvider;
 import com.bird.web.common.security.ip.IIpListProvider;
 import com.bird.web.common.security.ip.IpCheckInterceptor;
-import com.bird.web.common.trace.TraceInterceptor;
+import com.bird.web.common.trace.RequestTraceInterceptor;
+import com.bird.web.common.trace.RequestTraceProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,7 +26,7 @@ import org.springframework.core.Ordered;
  * @since 2020/8/31
  */
 @Configuration
-@EnableConfigurationProperties(WebProperties.class)
+@EnableConfigurationProperties({WebProperties.class, RequestTraceProperties.class})
 public class WebAutoConfiguration {
 
     private final static String PREFIX = "bird.web.";
@@ -89,7 +90,7 @@ public class WebAutoConfiguration {
     }
 
     /**
-     * 注册 跨域资源共享过滤器
+     * 注册 请求Body重复读取过滤器
      */
     @Bean
     @ConditionalOnProperty(value = PREFIX + "body-read.enable", havingValue = "true", matchIfMissing = true)
@@ -126,8 +127,8 @@ public class WebAutoConfiguration {
      * 注册 Trace信息拦截器
      */
     @Bean
-    @ConditionalOnProperty(value = "bird.trace.enable", havingValue = "true", matchIfMissing = true)
-    public TraceInterceptor traceInterceptor() {
-        return new TraceInterceptor();
+    @ConditionalOnProperty(value = "bird.trace.request.enabled", havingValue = "true")
+    public RequestTraceInterceptor traceInterceptor() {
+        return new RequestTraceInterceptor();
     }
 }
