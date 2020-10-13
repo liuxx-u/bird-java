@@ -28,7 +28,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperateHandler {
 
-    static final String SELECT_TEMPLATE = "SELECT %s FROM %s WHERE %s";
+    final static String SELECT_TEMPLATE = "SELECT %s FROM %s WHERE %s";
+    private final static String PK_DESCRIPTION = "PK";
+
     /**
      *
      */
@@ -51,7 +53,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
             List<String[]> oldValues = getOldValue(connection, table, traceFields, stmt);
             List<String[]> newValues = getNewValue(table, stmt);
             fieldTraceDefinition.setSql(operateSql).setOld(oldValues).setNews(newValues);
-            // 放入队列中, 等待被记录
+            // 放入当前的trace信息中
             FieldTraceAppender.append(fieldTraceDefinition);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -146,12 +148,14 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
                 TableInfo tableInfo = optional.get();
                 List<TableFieldInfo> fieldList = tableInfo.getFieldList();
 
-
-                return fieldList.stream()
+                List<FieldDefinition> traceFields = fieldList.stream()
                         .filter(field -> field.getField().isAnnotationPresent(TraceField.class))
                         .map(field -> new FieldDefinition(field.getField()))
-                        .collect(Collectors.toList())
-                        .toArray(fieldDefinitions);
+                        .collect(Collectors.toList());
+
+                //默认添加主键的跟踪
+                traceFields.add(new FieldDefinition(tableInfo.getKeyColumn(), PK_DESCRIPTION));
+                return traceFields.toArray(fieldDefinitions);
             }
             return fieldDefinitions;
         });

@@ -25,6 +25,11 @@ public class FieldDefinition implements Serializable {
      */
     private String description;
 
+    public FieldDefinition(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public FieldDefinition(Field field) {
         if (field.isAnnotationPresent(TableField.class)) {
             TableField tableField = field.getAnnotation(TableField.class);
