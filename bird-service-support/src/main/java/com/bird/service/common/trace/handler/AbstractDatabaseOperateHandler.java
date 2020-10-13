@@ -9,6 +9,7 @@ import com.bird.service.common.trace.IDatabaseOperateHandler;
 import com.bird.service.common.trace.TraceField;
 import com.bird.service.common.trace.define.FieldDefinition;
 import com.bird.service.common.trace.define.FieldTraceDefinition;
+import com.bird.service.common.trace.transaction.FieldTraceTransactionSynchronization;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -49,16 +50,30 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
             if (traceFields == null || traceFields.length == 0) {
                 return;
             }
-            FieldTraceDefinition fieldTraceDefinition = new FieldTraceDefinition(operate, traceFields, table);
+            FieldTraceDefinition traceDefinition = new FieldTraceDefinition(operate, traceFields, table);
             List<String[]> oldValues = getOldValue(connection, table, traceFields, stmt);
             List<String[]> newValues = getNewValue(table, stmt);
-            fieldTraceDefinition.setSql(operateSql).setOld(oldValues).setNews(newValues);
-            // 放入当前的trace信息中
-            FieldTraceAppender.append(fieldTraceDefinition);
+            traceDefinition.setSql(operateSql).setOld(oldValues).setNews(newValues);
+
+            if (connection.getAutoCommit()) {
+                // 如果是自动提交,说明不存在事务 直接放入当前的trace信息中
+                FieldTraceAppender.append(traceDefinition);
+            } else {
+                // 手动提交, 说明存在事务, 此时需要通过Spring的事务框架来进行拓展
+                FieldTraceTransactionSynchronization.appendResource(traceDefinition);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
+
+    /**
+     * 根据SQL获取表名
+     *
+     * @param statement SQL语句信息
+     * @return 表名
+     */
+    protected abstract String getTableName(Statement statement);
 
     /**
      * 获取操作之后的值
@@ -80,8 +95,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
      */
     protected abstract List<String[]> getOldValue(Connection connection, String table, FieldDefinition[] fields, Statement statement);
 
-
-    public List<String[]> query(Connection connection, String querySql, int length) {
+    List<String[]> queryOldValues(Connection connection, String querySql, int length) {
         java.sql.Statement sqlStatement = null;
         try {
             sqlStatement = connection.createStatement();
@@ -101,19 +115,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         return list;
     }
 
-    private static void resolveResult(ResultSet resultSet, List<String[]> list, int length) throws SQLException {
-        String[] value;
-        while (resultSet.next()) {
-            value = new String[length];
-            for (int i = 0; i < length; i++) {
-                value[i] = resultSet.getString(i + 1);
-            }
-            list.add(value);
-        }
-    }
-
-
-    static String[] findValues(String table, List<Column> updateColumns, List<Expression> expressions) {
+    String[] findNewValues(String table, List<Column> updateColumns, List<Expression> expressions) {
         Map<String, Integer> fieldIndexMap = getTableFieldMapping(table);
         String[] values = new String[fieldIndexMap.size()];
         Integer index;
@@ -129,16 +131,29 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         return values;
     }
 
-    /**
-     * 根据SQL获取表名
-     *
-     * @param statement SQL语句信息
-     * @return 表名
-     */
-    protected abstract String getTableName(Statement statement);
+    String toFieldsQuery(FieldDefinition[] fields) {
+        StringBuilder stb = new StringBuilder();
+        for (int i = 0; i < fields.length; i++) {
+            if (i != 0) {
+                stb.append(",");
+            }
+            stb.append(fields[i].getName());
+        }
+        return stb.toString();
+    }
 
+    private void resolveResult(ResultSet resultSet, List<String[]> list, int length) throws SQLException {
+        String[] value;
+        while (resultSet.next()) {
+            value = new String[length];
+            for (int i = 0; i < length; i++) {
+                value[i] = resultSet.getString(i + 1);
+            }
+            list.add(value);
+        }
+    }
 
-    private static FieldDefinition[] getTraceFields(String table) {
+    private FieldDefinition[] getTraceFields(String table) {
         return TABLE_TRACE_FIELD_MAP.computeIfAbsent(table, key -> {
             FieldDefinition[] fieldDefinitions = new FieldDefinition[]{};
 
@@ -161,7 +176,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         });
     }
 
-    private static Map<String, Integer> getTableFieldMapping(String table) {
+    private Map<String, Integer> getTableFieldMapping(String table) {
         return TABLE_TRACE_FIELD_INDEX_MAP.computeIfAbsent(table, key -> {
             FieldDefinition[] fields = getTraceFields(key);
             Map<String, Integer> map = new HashMap<>(fields.length);
@@ -170,16 +185,5 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
             }
             return map;
         });
-    }
-
-    static String toFieldsQuery(FieldDefinition[] fields) {
-        StringBuilder stb = new StringBuilder();
-        for (int i = 0; i < fields.length; i++) {
-            if (i != 0) {
-                stb.append(",");
-            }
-            stb.append(fields[i].getName());
-        }
-        return stb.toString();
     }
 }

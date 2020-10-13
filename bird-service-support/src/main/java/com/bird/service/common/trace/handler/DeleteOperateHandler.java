@@ -24,7 +24,7 @@ public class DeleteOperateHandler extends AbstractDatabaseOperateHandler {
     protected List<String[]> getOldValue(Connection connection, String table, FieldDefinition[] fields, Statement statement) {
         Delete delete = (Delete) statement;
         String querySql = String.format(SELECT_TEMPLATE, toFieldsQuery(fields),table,delete.getWhere().toString());
-        return query(connection,querySql, fields.length);
+        return queryOldValues(connection,querySql, fields.length);
     }
 
     @Override

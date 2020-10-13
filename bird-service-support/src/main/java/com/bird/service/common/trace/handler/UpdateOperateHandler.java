@@ -22,7 +22,7 @@ public class UpdateOperateHandler extends AbstractDatabaseOperateHandler {
     protected List<String[]> getNewValue(String table,Statement statement) {
         Update update = (Update) statement;
         List<String[]> list = new ArrayList<>();
-        list.add(findValues(table,update.getColumns(),update.getExpressions()));
+        list.add(findNewValues(table,update.getColumns(),update.getExpressions()));
         return list;
     }
 
@@ -30,6 +30,6 @@ public class UpdateOperateHandler extends AbstractDatabaseOperateHandler {
     protected List<String[]> getOldValue(Connection connection, String table, FieldDefinition[] fields, Statement statement) {
         Update update = (Update) statement;
         String querySql = String.format(SELECT_TEMPLATE, toFieldsQuery(fields),table,update.getWhere().toString());
-        return query(connection,querySql, fields.length);
+        return queryOldValues(connection,querySql, fields.length);
     }
 }

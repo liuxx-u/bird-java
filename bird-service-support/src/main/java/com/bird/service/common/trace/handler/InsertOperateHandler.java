@@ -62,8 +62,8 @@ public class InsertOperateHandler extends AbstractDatabaseOperateHandler {
         return result;
     }
 
-    private static void resolveExpressions(List<String[]> result,String table, List<Column> fullColumns,  List<Expression> expressions) {
-        String[] values = findValues(table,fullColumns,expressions);
+    private void resolveExpressions(List<String[]> result,String table, List<Column> fullColumns,  List<Expression> expressions) {
+        String[] values = findNewValues(table,fullColumns,expressions);
         result.add(values);
     }
 }
