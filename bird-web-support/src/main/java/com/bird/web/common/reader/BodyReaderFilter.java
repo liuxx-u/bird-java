@@ -1,5 +1,7 @@
 package com.bird.web.common.reader;
 
+import com.bird.core.SpringContextHolder;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 前置Filter，保留请求中的body数据，可多次读取
@@ -20,6 +23,8 @@ import java.util.List;
  */
 public class BodyReaderFilter extends OncePerRequestFilter {
 
+    private final static String BODY_READ_PROPERTY = "bird.web.body-read.enabled";
+    private final static String TRUE = "true";
     private final static List<HttpMethod> SUPPORT_HTTP_METHODS = new ArrayList<>();
 
     static {
@@ -30,19 +35,25 @@ public class BodyReaderFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        if(canReadBody(request)){
+        if (canReadBody(request)) {
             filterChain.doFilter(new BodyReaderHttpServletRequestWrapper(request), response);
-        }else {
+        } else {
             filterChain.doFilter(request, response);
         }
     }
 
     /**
      * 是否支持读取body内容
+     *
      * @param request 请求
      * @return 是否允许读取body内容
      */
-    public static boolean canReadBody(HttpServletRequest request){
+    public static boolean canReadBody(HttpServletRequest request) {
+        Environment environment = SpringContextHolder.getBean(Environment.class);
+        if (!Objects.equals(TRUE, environment.getProperty(BODY_READ_PROPERTY))) {
+            return false;
+        }
+
         HttpMethod method = HttpMethod.resolve(request.getMethod());
         return SUPPORT_HTTP_METHODS.contains(method) && !(request instanceof MultipartHttpServletRequest);
     }

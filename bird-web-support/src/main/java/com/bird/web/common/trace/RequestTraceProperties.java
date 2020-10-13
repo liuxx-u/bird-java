@@ -1,5 +1,6 @@
 package com.bird.web.common.trace;
 
+import com.bird.core.trace.TraceTypeEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -12,7 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class RequestTraceProperties {
 
     /**
-     * 是否启用请求参数跟踪, 默认不启用
+     * 请求跟踪类型
      */
-    private boolean enabled;
+    private TraceTypeEnum traceType;
 }

@@ -41,13 +41,13 @@ import java.util.List;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnClass({ Servlet.class, DispatcherServlet.class, org.springframework.web.servlet.config.annotation.WebMvcConfigurer.class })
-@AutoConfigureAfter(name = {"com.bird.web.common.configuration.WebAutoConfiguration","com.bird.web.sso.client.configuration.SsoClientAutoConfiguration"})
+@AutoConfigureAfter(name = {"com.bird.web.common.configuration.WebAutoConfiguration","com.bird.web.sso.client.configuration.SsoClientAutoConfiguration","com.bird.trace.skywalking.configuration.SkywalkingTraceAutoConfiguration"})
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
 @EnableConfigurationProperties({ WebMvcProperties.class, ResourceProperties.class })
 public class WebMvcConfigurer extends WebMvcConfigurationSupport {
 
-    private static final String[] SERVLET_LOCATIONS = { "/" };
+    private static final String[] SERVLET_LOCATIONS = {"/"};
 
     private final WebMvcProperties mvcProperties;
     private final ResourceProperties resourceProperties;

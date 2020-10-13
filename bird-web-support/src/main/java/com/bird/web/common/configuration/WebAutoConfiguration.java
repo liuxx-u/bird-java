@@ -93,7 +93,7 @@ public class WebAutoConfiguration {
      * 注册 请求Body重复读取过滤器
      */
     @Bean
-    @ConditionalOnProperty(value = PREFIX + "body-read.enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = PREFIX + "body-read.enabled", havingValue = "true")
     public FilterRegistrationBean<BodyReaderFilter> bodyReaderFilterRegistration() {
 
         FilterRegistrationBean<BodyReaderFilter> registration = new FilterRegistrationBean<>();
@@ -127,7 +127,7 @@ public class WebAutoConfiguration {
      * 注册 Trace信息拦截器
      */
     @Bean
-    @ConditionalOnProperty(value = "bird.trace.request.enabled", havingValue = "true")
+    @ConditionalOnProperty(value = "bird.trace.request.trace-type", havingValue = "default")
     public RequestTraceInterceptor traceInterceptor() {
         return new RequestTraceInterceptor();
     }

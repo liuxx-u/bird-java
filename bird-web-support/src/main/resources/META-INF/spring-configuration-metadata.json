@@ -33,11 +33,10 @@
   ],
   "properties": [
     {
-      "name": "bird.trace.request.enabled",
-      "type": "java.lang.Boolean",
-      "description": "是否启用请求参数跟踪, 默认不启用",
-      "sourceType": "com.bird.web.common.trace.RequestTraceProperties",
-      "defaultValue": false
+      "name": "bird.trace.request.trace-type",
+      "type": "com.bird.core.trace.TraceTypeEnum",
+      "description": "请求跟踪类型",
+      "sourceType": "com.bird.web.common.trace.RequestTraceProperties"
     },
     {
       "name": "bird.web.base-packages",
@@ -89,7 +88,7 @@
       "defaultValue": "\/*"
     },
     {
-      "name": "bird.web.global-exception-enabled",
+      "name": "bird.web.global-exception-enable",
       "type": "java.lang.Boolean",
       "description": "是否开启全局异常处理",
       "sourceType": "com.bird.web.common.WebProperties",

@@ -12,7 +12,7 @@
     <artifactId>bird-trace</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>bird-trace-client</module>
+        <module>bird-trace-skywalking</module>
     </modules>
 
 

@@ -77,7 +77,7 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
-                <artifactId>bird-trace-client</artifactId>
+                <artifactId>bird-trace-skywalking</artifactId>
                 <version>${bird.version}</version>
             </dependency>
         </dependencies>
