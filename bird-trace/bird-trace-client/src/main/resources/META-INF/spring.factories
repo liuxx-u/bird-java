@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.bird.trace.client.configure.TraceClientAutoConfigurer
