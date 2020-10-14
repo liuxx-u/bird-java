@@ -41,6 +41,7 @@ public class CommonSaveProvider {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    @SuppressWarnings("unchecked")
     public String insert(CommonSaveParam param) {
 
         Map<String, String> fieldValueMap = this.getFieldValueMap(param);
@@ -48,6 +49,7 @@ public class CommonSaveProvider {
             String id = param.getEntityDTO().getId().toString();
             if (StringUtils.isBlank(id)) {
                 id = UUIDHexGenerator.generate();
+                param.getEntityDTO().setId(id);
             }
             fieldValueMap.put("`id`", "'" + id + "'");
         }
