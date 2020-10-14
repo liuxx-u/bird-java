@@ -31,7 +31,7 @@ public class RestJsonWrapperAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converter) {
-        if (methodParameter.getMethodAnnotation(JsonWrapperIgnore.class) != null || methodParameter.getDeclaringClass().isAnnotationPresent(JsonWrapperIgnore.class)) {
+        if (methodParameter.getMethodAnnotation(JsonWrapperIgnore.class) != null || methodParameter.getContainingClass().isAnnotationPresent(JsonWrapperIgnore.class)) {
             return false;
         }
 
