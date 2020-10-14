@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperateHandler {
 
-    final static String SELECT_TEMPLATE = "SELECT %s FROM %s WHERE %s";
+    final static String SELECT_TEMPLATE = "SELECT %s FROM `%s` WHERE %s";
     private final static String PK_DESCRIPTION = "PK";
 
     /**
