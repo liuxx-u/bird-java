@@ -95,27 +95,18 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
      */
     protected abstract List<String[]> getOldValue(Connection connection, String table, FieldDefinition[] fields, Statement statement);
 
-    List<String[]> queryOldValues(Connection connection, String querySql, int length) {
-        java.sql.Statement sqlStatement = null;
-        try {
-            sqlStatement = connection.createStatement();
+    protected static List<String[]> queryOldValues(Connection connection, String querySql, int length) {
+        try (java.sql.Statement sqlStatement = connection.createStatement()){
+            sqlStatement.execute(querySql);
+            ResultSet resultSet = sqlStatement.getResultSet();
+            return resolveResult(resultSet,length);
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
-        List<String[]> list = new ArrayList<>();
-        Optional.ofNullable(sqlStatement).ifPresent(stmt -> {
-            try {
-                stmt.execute(querySql);
-                ResultSet resultSet = stmt.getResultSet();
-                resolveResult(resultSet, list, length);
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-            }
-        });
-        return list;
+        return Collections.emptyList();
     }
 
-    String[] findNewValues(String table, List<Column> updateColumns, List<Expression> expressions) {
+    protected static String[] findNewValues(String table, List<Column> updateColumns, List<Expression> expressions) {
         Map<String, Integer> fieldIndexMap = getTableFieldMapping(table);
         String[] values = new String[fieldIndexMap.size()];
         Integer index;
@@ -131,7 +122,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         return values;
     }
 
-    String toFieldsQuery(FieldDefinition[] fields) {
+    protected static String toFieldsQuery(FieldDefinition[] fields) {
         StringBuilder stb = new StringBuilder();
         for (int i = 0; i < fields.length; i++) {
             if (i != 0) {
@@ -142,23 +133,25 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         return stb.toString();
     }
 
-    private void resolveResult(ResultSet resultSet, List<String[]> list, int length) throws SQLException {
+    private static List<String[]> resolveResult(ResultSet resultSet,int length) throws SQLException {
+        List<String[]> result = new ArrayList<>();
         String[] value;
         while (resultSet.next()) {
             value = new String[length];
             for (int i = 0; i < length; i++) {
                 value[i] = resultSet.getString(i + 1);
             }
-            list.add(value);
+            result.add(value);
         }
+        return result;
     }
 
-    private FieldDefinition[] getTraceFields(String table) {
+    private static FieldDefinition[] getTraceFields(String table) {
         return TABLE_TRACE_FIELD_MAP.computeIfAbsent(table, key -> {
             FieldDefinition[] fieldDefinitions = new FieldDefinition[]{};
 
             List<TableInfo> tableInfos = TableInfoHelper.getTableInfos();
-            Optional<TableInfo> optional = tableInfos.stream().filter(info -> table.equals(info.getTableName())).findFirst();
+            Optional<TableInfo> optional = tableInfos.stream().filter(info -> table.equals(StringUtils.strip(info.getTableName(),StringPool.BACKTICK))).findFirst();
             if (optional.isPresent()) {
                 TableInfo tableInfo = optional.get();
                 List<TableFieldInfo> fieldList = tableInfo.getFieldList();
@@ -176,7 +169,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
         });
     }
 
-    private Map<String, Integer> getTableFieldMapping(String table) {
+    private static Map<String, Integer> getTableFieldMapping(String table) {
         return TABLE_TRACE_FIELD_INDEX_MAP.computeIfAbsent(table, key -> {
             FieldDefinition[] fields = getTraceFields(key);
             Map<String, Integer> map = new HashMap<>(fields.length);
