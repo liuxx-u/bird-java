@@ -14,11 +14,12 @@ bird-java是以Spring Boot为基础的开发增强组件包。
 
 bird-java提供了一些简单的功能特性，包括：
 
- 1. [Spring Boot 功能增强；](https://github.com/liuxx001/bird-java/tree/master/bird-web-support)
- 2. 全自动CRUD，表格增删查改、筛选、排序、分页均从框架层面解决，业务编码量不到20行；
- 3. 自研轻量级SSO组件，设计优雅，可扩展；
- 4. 多数据源支持；
- 5. Long类型主键、String类型主键支持；
+ 1. [Spring Boot 功能增强；](https://www.yuque.com/docs/share/701ca7d4-dc0e-46a4-9fd0-371f4eb65313)
+ 2. [业务层开发指南；](https://www.yuque.com/docs/share/35e51fb5-8e2b-4d92-953f-5708174baa63)
+ 3. [异常处理机制；](https://www.yuque.com/docs/share/d934b703-e855-4bb6-80f4-36f82ab6a700)
+ 4. [执行链路追踪 - Trace；](https://www.yuque.com/docs/share/3e32797a-e123-4771-9e28-1860ccdeb481)
+ 5. [状态机使用指南；](https://www.yuque.com/docs/share/0d35016a-e5aa-4107-9e93-d6ed03fdb2de)
+ 6. [SSO使用指南；](https://www.yuque.com/docs/share/3c246bc0-0137-47c5-b019-d93a98c0d99e)
 
  只做一些通用功能的封装。
 
