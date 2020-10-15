@@ -12,7 +12,7 @@
 bird:
   trace:
     request:
-    	trace-type: default
+      trace-type: default
 ```
 
 - trace-type ：跟踪方式，default表示开启默认的请求记录跟踪
@@ -151,10 +151,10 @@ bird:
 bird:
   trace:
     dispatcher:
-    	threshold: 100
-        period: 20
-        poolSize: 1
-        daemon: true
+      threshold: 100
+      period: 20
+      poolSize: 1
+      daemon: true
 ```
 
 - threshold：阈值，当队列中数量达到阈值时，触发一次保存，默认：100；
@@ -189,7 +189,7 @@ SkyWalking 是观察性分析平台和应用性能管理系统。提供分布式
 bird:
   trace:
     request:
-    	trace-type: skywalking
+      trace-type: skywalking
 ```
 
 - trace-type ：跟踪方式，skywalking表示开启Skywalking的请求记录跟踪，将在我们的Trace信息中关联Skywalking的traceId。
