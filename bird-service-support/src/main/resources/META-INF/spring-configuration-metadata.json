@@ -9,11 +9,6 @@
       "name": "bird.trace.db-field",
       "type": "com.bird.service.common.trace.FieldTraceProperties",
       "sourceType": "com.bird.service.common.trace.FieldTraceProperties"
-    },
-    {
-      "name": "spring.datasource.dynamic",
-      "type": "com.bird.service.common.configuration.DynamicDataSourceProperties",
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties"
     }
   ],
   "properties": [
@@ -47,28 +42,8 @@
     {
       "name": "bird.trace.db-field.enabled",
       "type": "java.lang.Boolean",
-      "description": "是否启用, 默认不启用",
+      "description": "是否启用数据库字段变更记录跟踪, 默认不启用",
       "sourceType": "com.bird.service.common.trace.FieldTraceProperties",
-      "defaultValue": false
-    },
-    {
-      "name": "spring.datasource.dynamic.collection",
-      "type": "java.util.Map<java.lang.String,com.alibaba.druid.pool.DruidDataSource>",
-      "description": "数据源集合",
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties"
-    },
-    {
-      "name": "spring.datasource.dynamic.default-data-source",
-      "type": "java.lang.String",
-      "description": "默认的数据源",
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
-      "defaultValue": "default"
-    },
-    {
-      "name": "spring.datasource.dynamic.enabled",
-      "type": "java.lang.Boolean",
-      "description": "是否启用",
-      "sourceType": "com.bird.service.common.configuration.DynamicDataSourceProperties",
       "defaultValue": false
     }
   ],
