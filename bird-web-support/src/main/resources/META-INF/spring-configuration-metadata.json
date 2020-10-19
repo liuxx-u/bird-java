@@ -33,10 +33,28 @@
   ],
   "properties": [
     {
+      "name": "bird.trace.request.trace-headers",
+      "type": "java.lang.String[]",
+      "description": "跟踪的请求头，默认跟踪所有的请求头",
+      "sourceType": "com.bird.web.common.trace.RequestTraceProperties",
+      "defaultValue": [
+        "all"
+      ]
+    },
+    {
       "name": "bird.trace.request.trace-type",
       "type": "com.bird.core.trace.TraceTypeEnum",
       "description": "请求跟踪类型",
       "sourceType": "com.bird.web.common.trace.RequestTraceProperties"
+    },
+    {
+      "name": "bird.trace.request.url-patterns",
+      "type": "java.lang.String[]",
+      "description": "跟踪的uri",
+      "sourceType": "com.bird.web.common.trace.RequestTraceProperties",
+      "defaultValue": [
+        "\/**"
+      ]
     },
     {
       "name": "bird.web.base-packages",
@@ -83,9 +101,11 @@
     },
     {
       "name": "bird.web.cors.url-patterns",
-      "type": "java.lang.String",
+      "type": "java.lang.String[]",
       "sourceType": "com.bird.web.common.cors.CorsProperties",
-      "defaultValue": "\/*"
+      "defaultValue": [
+        "\/**"
+      ]
     },
     {
       "name": "bird.web.global-exception-enable",

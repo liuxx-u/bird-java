@@ -100,7 +100,7 @@ public class WebAutoConfiguration {
 
         FilterRegistrationBean<BodyReaderFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new BodyReaderFilter());
-        registration.addUrlPatterns("/*");
+        registration.addUrlPatterns("/**");
         registration.setName("bodyReaderFilter");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
         return registration;

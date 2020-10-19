@@ -23,7 +23,7 @@ public class RequestTraceProperties {
     /**
      * 跟踪的uri
      */
-    private String[] urlPatterns = {"/*"};
+    private String[] urlPatterns = {"/**"};
     /**
      * 跟踪的请求头，默认跟踪所有的请求头
      */

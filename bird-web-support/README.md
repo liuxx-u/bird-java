@@ -203,7 +203,7 @@ bird:
   web:
     cors:
       enabled: true
-      url-patterns: /*
+      url-patterns: /**
       allow-origin: default
       allow-methods: POST,GET,OPTIONS,DELETE
       allow-headers: Origin,X-Requested-With,Content-Type,Accept,Sso-Token,bird-idempotency,appId,tenantId,JSESSIONID
@@ -227,9 +227,9 @@ bird:
     ip-check:
       enabled: true
       ip-list:
-        - uri-pattern: /test/*
+        - uri-pattern: /test/**
           ips: 10.10.200.226
-        - uri-pattern: /v1/test/*
+        - uri-pattern: /v1/test/**
           ips: 10.10.129.7/0,10.10.129.8/0
 ```
 
