@@ -3,10 +3,7 @@ package com.bird.core.trace;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,6 +22,8 @@ import java.lang.reflect.Method;
 @Aspect
 @Order(Ordered.HIGHEST_PRECEDENCE + 2)
 public class TraceableAspect {
+
+    private final static String ERROR = "error:";
 
     /**
      * 定义切点 @Pointcut
@@ -55,5 +54,10 @@ public class TraceableAspect {
     @AfterReturning(value = "logPointCut()", returning = "returnValue")
     public void afterReturning(Object returnValue) {
         TraceContext.exit(returnValue);
+    }
+
+    @AfterThrowing(value = "logPointCut()", throwing = "ex")
+    public void afterThrowing(Throwable ex) {
+        TraceContext.exit(ERROR + ex.getMessage());
     }
 }
