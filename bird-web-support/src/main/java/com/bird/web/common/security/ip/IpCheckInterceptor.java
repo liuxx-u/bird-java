@@ -1,14 +1,11 @@
 package com.bird.web.common.security.ip;
 
-import com.bird.core.SpringContextHolder;
+import com.bird.web.common.interceptor.PathMatchInterceptorAdapter;
 import com.bird.web.common.utils.IpHelper;
 import com.bird.web.common.utils.RequestHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.PathMatcher;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +18,7 @@ import java.io.IOException;
  * @since 2020/9/4
  */
 @Slf4j
-public class IpCheckInterceptor extends HandlerInterceptorAdapter {
+public class IpCheckInterceptor extends PathMatchInterceptorAdapter {
 
     private final IIpListProvider ipListProvider;
 
@@ -38,11 +35,9 @@ public class IpCheckInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        String uri = request.getRequestURI();
-        PathMatcher pathMatcher = this.getPathMatcher();
         boolean isMatchUri = false;
         for (IpConfProperties ipConf : ipListProvider.listIps()) {
-            if (pathMatcher.match(ipConf.getUriPattern(), uri)) {
+            if (super.match(request, ipConf.getUriPattern())) {
                 isMatchUri = true;
                 String ip = RequestHelper.getRealIp(request);
                 for (String ipPattern : ipConf.listIps()) {
@@ -57,15 +52,5 @@ public class IpCheckInterceptor extends HandlerInterceptorAdapter {
         }
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "ip访问限制");
         return false;
-    }
-
-    private PathMatcher getPathMatcher() {
-        PathMatcher pathMatcher;
-        try {
-            pathMatcher = SpringContextHolder.getBean(PathMatcher.class);
-        } catch (Exception ex) {
-            pathMatcher = new AntPathMatcher();
-        }
-        return pathMatcher;
     }
 }

@@ -1,11 +1,13 @@
 package com.bird.web.common.trace;
 
 import com.bird.core.trace.HttpParam;
+import com.bird.core.trace.IGlobalTraceIdProvider;
 import com.bird.core.trace.TraceContext;
+import com.bird.web.common.interceptor.PathMatchInterceptorAdapter;
 import com.bird.web.common.reader.BodyReaderFilter;
 import com.bird.web.common.utils.RequestHelper;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +19,15 @@ import java.util.Map;
  * @author liuxx
  * @since 2020/10/10
  */
-public class RequestTraceInterceptor extends HandlerInterceptorAdapter {
+public class RequestTraceInterceptor extends PathMatchInterceptorAdapter {
+
+    private final RequestTraceProperties requestTraceProperties;
+    private final IGlobalTraceIdProvider globalTraceIdProvider;
+
+    public RequestTraceInterceptor(RequestTraceProperties requestTraceProperties,IGlobalTraceIdProvider globalTraceIdProvider){
+        this.requestTraceProperties = requestTraceProperties;
+        this.globalTraceIdProvider = globalTraceIdProvider;
+    }
 
     /**
      * 拦截器处理方法，记录请求的trace信息
@@ -34,21 +44,28 @@ public class RequestTraceInterceptor extends HandlerInterceptorAdapter {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
-        HttpParam httpParam = new HttpParam();
+        if(super.match(request,requestTraceProperties.getUrlPatterns())){
+            HttpParam httpParam = new HttpParam();
 
-        Map<String, String> headers = new HashMap<>(16);
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            headers.put(headerName, request.getHeader(headerName));
-        }
+            boolean traceAllHeaders = this.requestTraceProperties.traceAllHeaders();
+            Map<String, String> headers = new HashMap<>(16);
+            Enumeration<String> headerNames = request.getHeaderNames();
 
-        httpParam.setHeaders(headers);
-        httpParam.setParams(request.getQueryString());
-        if (BodyReaderFilter.canReadBody(request)) {
-            httpParam.setBody(RequestHelper.getBodyString(request));
+            while (headerNames.hasMoreElements()) {
+                String headerName = headerNames.nextElement();
+                if(traceAllHeaders || ArrayUtils.contains(this.requestTraceProperties.getTraceHeaders(),headerName)){
+                    headers.put(headerName, request.getHeader(headerName));
+                }
+            }
+
+            httpParam.setHeaders(headers);
+            httpParam.setParams(request.getQueryString());
+            if (BodyReaderFilter.canReadBody(request)) {
+                httpParam.setBody(RequestHelper.getBodyString(request));
+            }
+            TraceContext.enter(request.getMethod() + ":" + request.getRequestURI(), new Object[]{httpParam}, null);
+            TraceContext.current().setGlobalTraceId(globalTraceIdProvider.globalTraceId());
         }
-        TraceContext.enter(request.getMethod() + ":" + request.getRequestURI(), new Object[]{httpParam}, null);
         return true;
     }
 

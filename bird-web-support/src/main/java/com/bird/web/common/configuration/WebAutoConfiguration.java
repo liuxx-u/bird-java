@@ -1,5 +1,6 @@
 package com.bird.web.common.configuration;
 
+import com.bird.core.trace.IGlobalTraceIdProvider;
 import com.bird.web.common.WebProperties;
 import com.bird.web.common.advice.GlobalExceptionAdvice;
 import com.bird.web.common.advice.RestJsonWrapperAdvice;
@@ -13,6 +14,7 @@ import com.bird.web.common.security.ip.IIpListProvider;
 import com.bird.web.common.security.ip.IpCheckInterceptor;
 import com.bird.web.common.trace.RequestTraceInterceptor;
 import com.bird.web.common.trace.RequestTraceProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -124,11 +126,20 @@ public class WebAutoConfiguration {
     }
 
     /**
+     * 注册 默认的globalTraceId提供器
+     */
+    @Bean
+    @ConditionalOnMissingBean(IGlobalTraceIdProvider.class)
+    public IGlobalTraceIdProvider defaultGlobalTraceIdProvider() {
+        return () -> StringUtils.EMPTY;
+    }
+
+    /**
      * 注册 Trace信息拦截器
      */
     @Bean
     @ConditionalOnProperty(value = "bird.trace.request.trace-type", havingValue = "default")
-    public RequestTraceInterceptor traceInterceptor() {
-        return new RequestTraceInterceptor();
+    public RequestTraceInterceptor traceInterceptor(RequestTraceProperties requestTraceProperties, IGlobalTraceIdProvider globalTraceIdProvider) {
+        return new RequestTraceInterceptor(requestTraceProperties, globalTraceIdProvider);
     }
 }

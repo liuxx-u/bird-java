@@ -14,7 +14,7 @@ public class CorsProperties {
      */
     private Boolean enabled;
 
-    private String urlPatterns = "/*";
+    private String[] urlPatterns = {"/*"};
 
     private String allowOrigin = "default";
 
