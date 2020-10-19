@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.Date;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 适用于base64文件流的MultipartFile
@@ -76,7 +76,7 @@ public class Base64MultipartFile implements MultipartFile {
         }
         this.fileName = String.format("%s_%d.%s"
                 , DateHelper.format(new Date(), "yyyyMMddHHmmss")
-                , new Random().nextInt(1000)
+                , ThreadLocalRandom.current().nextInt(1000)
                 , suffix);
     }
 

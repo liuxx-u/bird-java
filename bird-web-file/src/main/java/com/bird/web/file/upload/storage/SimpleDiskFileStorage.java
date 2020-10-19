@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author liuxx
@@ -99,7 +99,7 @@ public class SimpleDiskFileStorage implements IFileStorage {
         String fileName = file.getOriginalFilename();
         return String.format("%s_%d.%s"
                 , DateHelper.format(new Date(), "yyyyMMddHHmmss")
-                , new Random().nextInt(1000)
+                , ThreadLocalRandom.current().nextInt(1000)
                 , FileHelper.getSuffix(fileName));
     }
 
