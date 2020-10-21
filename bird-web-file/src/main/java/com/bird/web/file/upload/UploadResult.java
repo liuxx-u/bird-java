@@ -2,6 +2,8 @@ package com.bird.web.file.upload;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,23 +23,42 @@ public class UploadResult implements Serializable {
     private String path;
     private List<String> paths;
 
-    public UploadResult(){
+    public UploadResult() {
         paths = new ArrayList<>();
     }
 
-    public UploadResult(boolean success,String message,String path) {
+    public UploadResult(boolean success, String message, String path) {
         this();
 
         this.success = success;
         this.message = message;
         this.path = path;
+        if (StringUtils.hasText(path)) {
+            this.paths.add(path);
+        }
     }
 
-    public static UploadResult success(String path){
-        return new UploadResult(true,"上传成功",path);
+    public UploadResult(boolean success, String message, List<String> paths) {
+        this();
+
+        this.success = success;
+        this.message = message;
+        this.paths = paths;
+
+        if (!CollectionUtils.isEmpty(paths)) {
+            this.path = paths.get(0);
+        }
     }
 
-    public static UploadResult fail(String message){
-        return new UploadResult(false,message,null);
+    public static UploadResult success(String path) {
+        return new UploadResult(true, "上传成功", path);
+    }
+
+    public static UploadResult success(List<String> paths) {
+        return new UploadResult(true, "上传成功", paths);
+    }
+
+    public static UploadResult fail(String message) {
+        return new UploadResult(false, message, "");
     }
 }

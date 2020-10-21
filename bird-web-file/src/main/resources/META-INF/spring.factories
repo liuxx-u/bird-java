@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+  com.bird.web.file.upload.configuration.FileAutoConfiguration,\
+  com.bird.web.file.upload.storage.disk.DiskFileStorageAutoConfiguration

@@ -12,8 +12,8 @@ public interface IFileValidator {
 
     /**
      * 验证文件是否合法
-     * @param file
-     * @return
+     * @param file file
+     * @return 验证结果
      */
     ValidateResult validate(MultipartFile file);
 }

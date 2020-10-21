@@ -53,6 +53,7 @@ public interface IUploadListener {
      * 在文件存储成功后执行
      * @param file 文件
      * @param context 上下文信息
+     * @param url 上传后文件url地址
      */
-    void afterStorage(MultipartFile file,IUploadContext context,UploadResult result);
+    void afterStorage(MultipartFile file,IUploadContext context,String url);
 }

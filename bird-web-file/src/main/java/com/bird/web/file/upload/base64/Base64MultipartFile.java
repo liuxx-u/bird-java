@@ -20,6 +20,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * @date 2018/6/15
  */
 public class Base64MultipartFile implements MultipartFile {
+    /**
+     * 日志记录器
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(Base64MultipartFile.class);
 
     /**
      * base64文件流分隔符
@@ -39,15 +43,7 @@ public class Base64MultipartFile implements MultipartFile {
      * 默认保存的文件类型
      */
     private static final String DEFAULT_SUFFIX = "png";
-    /**
-     * 日志记录器
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(Base64MultipartFile.class);
 
-    /**
-     * base64文件头
-     */
-    private String header;
     /**
      * 请求的Content-Type
      */
@@ -62,16 +58,15 @@ public class Base64MultipartFile implements MultipartFile {
     private byte[] content;
 
     private Base64MultipartFile(String header, byte[] imgContent) {
-        this.header = header;
         this.content = imgContent;
 
         String suffix = DEFAULT_SUFFIX;
-        if (StringUtils.isNotBlank(this.header)) {
-            if (this.header.contains(SUFFIX_DELIMITER)) {
-                suffix = FileHelper.getSuffix(this.header.split(SUFFIX_DELIMITER)[1].split(";")[0]);
+        if (StringUtils.isNotBlank(header)) {
+            if (header.contains(SUFFIX_DELIMITER)) {
+                suffix = FileHelper.getSuffix(header.split(SUFFIX_DELIMITER)[1].split(";")[0]);
             }
-            if (this.header.contains(CONTENT_TYPE_DELIMITER)) {
-                this.contentType = this.header.split(CONTENT_TYPE_DELIMITER)[1].split(";")[0];
+            if (header.contains(CONTENT_TYPE_DELIMITER)) {
+                this.contentType = header.split(CONTENT_TYPE_DELIMITER)[1].split(";")[0];
             }
         }
         this.fileName = String.format("%s_%d.%s"
@@ -132,12 +127,12 @@ public class Base64MultipartFile implements MultipartFile {
     }
 
     @Override
-    public byte[] getBytes() throws IOException {
+    public byte[] getBytes() {
         return this.content;
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         return new ByteArrayInputStream(this.content);
     }
 

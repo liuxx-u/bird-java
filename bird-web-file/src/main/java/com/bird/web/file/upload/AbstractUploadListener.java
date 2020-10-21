@@ -3,6 +3,8 @@ package com.bird.web.file.upload;
 import com.bird.web.file.upload.validator.ValidateResult;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * 定义抽象的文件上传监听器基类
  * @author liuxx
@@ -35,7 +37,7 @@ public class AbstractUploadListener implements IUploadListener {
     }
 
     @Override
-    public void afterStorage(MultipartFile file, IUploadContext context, UploadResult result) {
+    public void afterStorage(MultipartFile file, IUploadContext context, String url) {
 
     }
 }

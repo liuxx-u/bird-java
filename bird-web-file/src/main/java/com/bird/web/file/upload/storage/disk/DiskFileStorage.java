@@ -1,8 +1,9 @@
-package com.bird.web.file.upload.storage;
+package com.bird.web.file.upload.storage.disk;
 
 import com.bird.core.utils.DateHelper;
 import com.bird.web.file.upload.IUploadContext;
 import com.bird.web.file.upload.UploadException;
+import com.bird.web.file.upload.storage.IFileStorage;
 import com.bird.web.file.utils.FileHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -20,20 +21,22 @@ import java.util.concurrent.ThreadLocalRandom;
  * @date 2018/4/25
  *
  * 简单的磁盘存储器
+ * 公共文件夹示例：/public/image/20180502/
+ * 私有文件夹示例：/private/2/image/20180502/
  */
-public class SimpleDiskFileStorage implements IFileStorage {
+public class DiskFileStorage implements IFileStorage {
 
     private static final String SEPARATOR = "/";
+    private static final String DIR_PUBLIC = "/public";
+    private static final String DIR_PRIVATE = "/private";
 
-    /**
-     * 文件保存路径
-     */
-    private String dir;
+    private final DiskFileStorageProperties storageProperties;
+    private final IFileSuffixDirectoryMapping fileSuffixDirectoryMapping;
 
-    /**
-     * URL前缀
-     */
-    private String urlPrefix;
+    public DiskFileStorage(DiskFileStorageProperties storageProperties,IFileSuffixDirectoryMapping fileSuffixDirectoryMapping) {
+        this.storageProperties = storageProperties;
+        this.fileSuffixDirectoryMapping = fileSuffixDirectoryMapping;
+    }
 
     /**
      * 文件保存
@@ -45,16 +48,19 @@ public class SimpleDiskFileStorage implements IFileStorage {
      */
     @Override
     public String save(MultipartFile file, byte[] bytes, IUploadContext context) throws UploadException, IOException {
-        if (StringUtils.isBlank(this.dir)) {
+        String uploadDir = this.storageProperties.getUploadDir();
+        if (StringUtils.isBlank(uploadDir)) {
             throw new UploadException("文件保存路径不存在");
         }
+
+        String urlPrefix = this.storageProperties.getUrlPrefix();
         if (StringUtils.isBlank(urlPrefix)) {
             urlPrefix = String.format("%s://%s/", context.getSchema(), context.getHeader(HttpHeaders.HOST));
         }
 
-        String newFileName = getNewFileName(file, context);
+        String newFileName = getNewFileName(file);
         String additionalPath = getSafePath(StringUtils.stripStart(getAdditionalPath(file, context), SEPARATOR));
-        String saveDir = getSafePath(this.dir) + additionalPath;
+        String saveDir = getSafePath(uploadDir) + additionalPath;
         File dir = new File(saveDir);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -63,17 +69,11 @@ public class SimpleDiskFileStorage implements IFileStorage {
             throw new IOException("上传目录没有写权限");
         }
 
-        BufferedOutputStream buffStream = null;
-        try {
-            buffStream = new BufferedOutputStream(new FileOutputStream(saveDir + newFileName));
+        try (BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(saveDir + newFileName))) {
             buffStream.write(bytes);
-        } finally {
-            if (buffStream != null) {
-                buffStream.close();
-            }
         }
 
-        return getSafePath(this.urlPrefix) + additionalPath + newFileName;
+        return getSafePath(urlPrefix) + additionalPath + newFileName;
     }
 
     /**
@@ -81,20 +81,23 @@ public class SimpleDiskFileStorage implements IFileStorage {
      *
      * @param file    文件
      * @param context 上下文信息
-     * @return
+     * @return 自定义路径
      */
-    protected String getAdditionalPath(MultipartFile file, IUploadContext context) {
-        return null;
+    private String getAdditionalPath(MultipartFile file, IUploadContext context) {
+        String suffix = FileHelper.getSuffix(file.getOriginalFilename());
+        String privateDirName = context.getHeader(this.storageProperties.getUploadDirHead());
+        String dir = StringUtils.isBlank(privateDirName) ? DIR_PUBLIC : String.format("%s/%s", DIR_PRIVATE, privateDirName);
+
+        return String.format("%s/%s/%s/", dir, this.fileSuffixDirectoryMapping.getSuffixDirectory(suffix), DateHelper.format(new Date(), "yyyyMMdd"));
     }
 
     /**
      * 获取保存的文件的名称
      *
      * @param file    文件
-     * @param context 上下文信息
-     * @return
+     * @return 存储的文件名
      */
-    protected String getNewFileName(MultipartFile file, IUploadContext context) {
+    private String getNewFileName(MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
         return String.format("%s_%d.%s"
@@ -104,34 +107,19 @@ public class SimpleDiskFileStorage implements IFileStorage {
     }
 
     /**
-     * 获取正确的路径
+     * 获取格式化的的路径
      *
      * @param path 路径
-     * @return
+     * @return 格式化后的路径
      */
     private String getSafePath(String path) {
-        if (StringUtils.isBlank(path)) return "";
+        if (StringUtils.isBlank(path)) {
+            return "";
+        }
 
         if (!StringUtils.endsWith(path, SEPARATOR)) {
             return path + "/";
         }
         return path;
-    }
-
-
-    public String getDir() {
-        return this.dir;
-    }
-
-    public void setDir(String dir) {
-        this.dir = dir;
-    }
-
-    public String getUrlPrefix() {
-        return urlPrefix;
-    }
-
-    public void setUrlPrefix(String urlPrefix) {
-        this.urlPrefix = urlPrefix;
     }
 }

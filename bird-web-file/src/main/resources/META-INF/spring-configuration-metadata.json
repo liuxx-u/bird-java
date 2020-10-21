@@ -1,0 +1,31 @@
+{
+  "groups": [
+    {
+      "name": "bird.file.disk",
+      "type": "com.bird.web.file.upload.storage.disk.DiskFileStorageProperties",
+      "sourceType": "com.bird.web.file.upload.storage.disk.DiskFileStorageProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bird.file.disk.upload-dir",
+      "type": "java.lang.String",
+      "description": "文件存储目录",
+      "sourceType": "com.bird.web.file.upload.storage.disk.DiskFileStorageProperties"
+    },
+    {
+      "name": "bird.file.disk.upload-dir-head",
+      "type": "java.lang.String",
+      "description": "指定存储目录请求头",
+      "sourceType": "com.bird.web.file.upload.storage.disk.DiskFileStorageProperties",
+      "defaultValue": "bird-upload-dir"
+    },
+    {
+      "name": "bird.file.disk.url-prefix",
+      "type": "java.lang.String",
+      "description": "URL前缀",
+      "sourceType": "com.bird.web.file.upload.storage.disk.DiskFileStorageProperties"
+    }
+  ],
+  "hints": []
+}

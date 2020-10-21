@@ -5,7 +5,7 @@ import com.bird.web.file.upload.storage.IFileStorage;
 import com.bird.web.file.upload.validator.IFileValidator;
 import com.bird.web.file.upload.validator.ValidateResult;
 import com.bird.web.file.utils.FileHelper;
-import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,43 +30,23 @@ public abstract class AbstractUploader {
     /**
      * 文件验证器
      */
-    protected IFileValidator validator;
+    private IFileValidator validator;
 
     /**
      * 文件处理器
      */
-    protected Map<String, List<IFileHandler>> fileHandlerMap = new HashMap<>(16);
+    private Map<String, List<IFileHandler>> fileHandlerMap = new HashMap<>(16);
 
     /**
      * 文件存储器
      */
-    protected IFileStorage storage;
-
-    /**
-     * 设置文件处理器
-     *
-     * @param handler 处理器
-     * @param suffixes 对应的文件后缀名集合
-     */
-    public synchronized void setFileHandler(IFileHandler handler, String... suffixes) {
-        if (handler == null) {
-            return;
-        }
-        if (ArrayUtils.isEmpty(suffixes)) {
-            return;
-        }
-        for (String suffix : suffixes) {
-            List<IFileHandler> handlers = fileHandlerMap.getOrDefault(suffix, new ArrayList<>());
-            handlers.add(handler);
-            fileHandlerMap.put(suffix, handlers);
-        }
-    }
+    private IFileStorage storage;
 
     /**
      * 文件上传
      *
-     * @param context
-     * @return
+     * @param context context
+     * @return upload result
      */
     protected UploadResult upload(IUploadContext context) throws IOException {
         if (storage == null) {
@@ -74,8 +54,7 @@ public abstract class AbstractUploader {
         }
         boolean listenerEnable = uploadListener != null;
 
-        //TODO:请求验证
-
+        List<String> urls = new ArrayList<>();
         for (MultipartFile file : context.getFileMap().values()) {
 
             //文件验证
@@ -85,14 +64,13 @@ public abstract class AbstractUploader {
                 }
                 ValidateResult validateResult = validator.validate(file);
                 if (validateResult != null && !validateResult.isSuccess()) {
-                    return UploadResult.fail(validateResult.getErrorInfo());
+                    continue;
                 }
                 if (listenerEnable) {
                     uploadListener.afterValidate(file, context, validateResult);
                 }
             }
             byte[] bytes = file.getBytes();
-
 
 
             //文件处理
@@ -115,25 +93,45 @@ public abstract class AbstractUploader {
                 uploadListener.beforeStorage(file, context);
             }
             String url = storage.save(file, bytes, context);
-            UploadResult result = UploadResult.success(url);
+            urls.add(url);
             if (listenerEnable) {
-                uploadListener.afterStorage(file, context, result);
+                uploadListener.afterStorage(file, context, url);
             }
-            return result;
         }
-
-        return null;
+        if (CollectionUtils.isEmpty(urls)) {
+            return UploadResult.fail("上传文件为空");
+        } else {
+            return UploadResult.success(urls);
+        }
     }
 
     public void setUploadListener(IUploadListener uploadListener) {
         this.uploadListener = uploadListener;
     }
 
-    public void setValidator(IFileValidator validator){
+    public void setValidator(IFileValidator validator) {
         this.validator = validator;
     }
 
-    public void setStorage(IFileStorage storage){
+    public void setStorage(IFileStorage storage) {
         this.storage = storage;
+    }
+
+    /**
+     * 设置文件处理器
+     *
+     * @param handlers 处理器集合
+     */
+    public synchronized void setFileHandlers(List<IFileHandler> handlers) {
+        if (CollectionUtils.isEmpty(handlers)) {
+            return;
+        }
+        for (IFileHandler handler : handlers) {
+            for (String suffix : handler.suffixes()) {
+                List<IFileHandler> suffixHandlers = fileHandlerMap.getOrDefault(suffix, new ArrayList<>());
+                suffixHandlers.add(handler);
+                fileHandlerMap.put(suffix, suffixHandlers);
+            }
+        }
     }
 }

@@ -14,4 +14,10 @@ public interface IFileHandler {
      * @return 处理完成的文件信息
      */
     byte[] handle(byte[] bytes);
+
+    /**
+     * 处理的文件格式
+     * @return 文件格式集合
+     */
+    String[] suffixes();
 }
