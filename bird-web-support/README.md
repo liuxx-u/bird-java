@@ -203,7 +203,7 @@ bird:
   web:
     cors:
       enabled: true
-      url-patterns: /**
+      url-patterns: /*
       allow-origin: default
       allow-methods: POST,GET,OPTIONS,DELETE
       allow-headers: Origin,X-Requested-With,Content-Type,Accept,Sso-Token,bird-idempotency,appId,tenantId,JSESSIONID

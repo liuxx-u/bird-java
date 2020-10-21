@@ -22,12 +22,14 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 /**
  * @author liuxx
  * @since 2020/8/31
  */
 @Configuration
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @EnableConfigurationProperties({WebProperties.class, RequestTraceProperties.class})
 public class WebAutoConfiguration {
 
@@ -100,7 +102,7 @@ public class WebAutoConfiguration {
 
         FilterRegistrationBean<BodyReaderFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new BodyReaderFilter());
-        registration.addUrlPatterns("/**");
+        registration.addUrlPatterns("/*");
         registration.setName("bodyReaderFilter");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
         return registration;
