@@ -21,5 +21,5 @@ public class DiskFileStorageProperties {
     /**
      * 指定存储目录请求头
      */
-    private String uploadDirHead = "bird-upload-dir";
+    private String uploadDirHeader = "bird-upload-dir";
 }

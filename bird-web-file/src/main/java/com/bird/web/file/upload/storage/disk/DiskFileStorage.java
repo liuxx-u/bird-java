@@ -85,7 +85,7 @@ public class DiskFileStorage implements IFileStorage {
      */
     private String getAdditionalPath(MultipartFile file, IUploadContext context) {
         String suffix = FileHelper.getSuffix(file.getOriginalFilename());
-        String privateDirName = context.getHeader(this.storageProperties.getUploadDirHead());
+        String privateDirName = context.getHeader(this.storageProperties.getUploadDirHeader());
         String dir = StringUtils.isBlank(privateDirName) ? DIR_PUBLIC : String.format("%s/%s", DIR_PRIVATE, privateDirName);
 
         return String.format("%s/%s/%s/", dir, this.fileSuffixDirectoryMapping.getSuffixDirectory(suffix), DateHelper.format(new Date(), "yyyyMMdd"));
