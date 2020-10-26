@@ -18,6 +18,7 @@
         <module>bird-service-support</module>
         <module>bird-web-support</module>
         <module>bird-statemachine</module>
+        <module>bird-lock</module>
     </modules>
 
     <properties>
