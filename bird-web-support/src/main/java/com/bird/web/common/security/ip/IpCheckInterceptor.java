@@ -4,6 +4,8 @@ import com.bird.web.common.interceptor.PathMatchInterceptorAdapter;
 import com.bird.web.common.utils.IpHelper;
 import com.bird.web.common.utils.RequestHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.HandlerMethod;
 
@@ -18,6 +20,7 @@ import java.io.IOException;
  * @since 2020/9/4
  */
 @Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class IpCheckInterceptor extends PathMatchInterceptorAdapter {
 
     private final IIpListProvider ipListProvider;

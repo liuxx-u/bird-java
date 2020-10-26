@@ -5,6 +5,7 @@ import com.bird.core.session.SessionContext;
 import com.bird.web.sso.client.SsoClient;
 import com.bird.web.sso.client.permission.IUserPermissionChecker;
 import com.bird.web.sso.ticket.ClientTicket;
+import org.springframework.core.annotation.Order;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author liuxx
  * @date 2019/5/15
  */
+@Order(0)
 public class SsoClientAuthorizeInterceptor extends AbstractAuthorizeInterceptor {
 
     private final SsoClient ssoClient;
