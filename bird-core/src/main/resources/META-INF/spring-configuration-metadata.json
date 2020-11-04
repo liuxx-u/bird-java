@@ -1,0 +1,73 @@
+{
+  "groups": [
+    {
+      "name": "bird.task.pool",
+      "type": "com.bird.core.async.AsyncTaskProperties",
+      "sourceType": "com.bird.core.async.AsyncTaskProperties"
+    },
+    {
+      "name": "bird.trace.dispatcher",
+      "type": "com.bird.core.trace.dispatch.DefaultTraceDispatcherProperties",
+      "sourceType": "com.bird.core.trace.configuration.TraceAutoConfiguration",
+      "sourceMethod": "defaultTraceDispatcherProperties()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bird.task.pool.core-pool-size",
+      "type": "java.lang.Integer",
+      "description": "核心线程数",
+      "sourceType": "com.bird.core.async.AsyncTaskProperties",
+      "defaultValue": 5
+    },
+    {
+      "name": "bird.task.pool.keep-alive-seconds",
+      "type": "java.lang.Integer",
+      "description": "存活时间，单位：秒",
+      "sourceType": "com.bird.core.async.AsyncTaskProperties",
+      "defaultValue": 10
+    },
+    {
+      "name": "bird.task.pool.max-pool-size",
+      "type": "java.lang.Integer",
+      "description": "最大线程数",
+      "sourceType": "com.bird.core.async.AsyncTaskProperties",
+      "defaultValue": 5
+    },
+    {
+      "name": "bird.task.pool.queue-capacity",
+      "type": "java.lang.Integer",
+      "description": "队列长度",
+      "sourceType": "com.bird.core.async.AsyncTaskProperties"
+    },
+    {
+      "name": "bird.trace.dispatcher.daemon",
+      "type": "java.lang.Boolean",
+      "description": "是否守护线程",
+      "sourceType": "com.bird.core.trace.dispatch.DefaultTraceDispatcherProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.trace.dispatcher.period",
+      "type": "java.lang.Integer",
+      "description": "触发保存的时间间隔，默认：20秒",
+      "sourceType": "com.bird.core.trace.dispatch.DefaultTraceDispatcherProperties",
+      "defaultValue": 20
+    },
+    {
+      "name": "bird.trace.dispatcher.pool-size",
+      "type": "java.lang.Short",
+      "description": "消费线程数，默认：1",
+      "sourceType": "com.bird.core.trace.dispatch.DefaultTraceDispatcherProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "bird.trace.dispatcher.threshold",
+      "type": "java.lang.Integer",
+      "description": "触发保存的阈值，默认：100",
+      "sourceType": "com.bird.core.trace.dispatch.DefaultTraceDispatcherProperties",
+      "defaultValue": 100
+    }
+  ],
+  "hints": []
+}

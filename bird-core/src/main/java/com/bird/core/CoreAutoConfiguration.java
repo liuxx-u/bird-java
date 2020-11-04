@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CoreAutoConfiguration {
 
-
     /**
      * 注册 SpringContextHolder
      */
