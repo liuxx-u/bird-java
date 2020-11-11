@@ -1,9 +1,14 @@
 {
   "groups": [
     {
-      "name": "bird.task.pool",
-      "type": "com.bird.core.async.AsyncTaskProperties",
-      "sourceType": "com.bird.core.async.AsyncTaskProperties"
+      "name": "bird.task.executor",
+      "type": "com.bird.core.concurrent.TaskExecutorProperties",
+      "sourceType": "com.bird.core.concurrent.TaskExecutorProperties"
+    },
+    {
+      "name": "bird.task.scheduler",
+      "type": "com.bird.core.concurrent.TaskSchedulerProperties",
+      "sourceType": "com.bird.core.concurrent.TaskSchedulerProperties"
     },
     {
       "name": "bird.trace.dispatcher",
@@ -14,31 +19,58 @@
   ],
   "properties": [
     {
-      "name": "bird.task.pool.core-pool-size",
+      "name": "bird.task.executor.core-pool-size",
       "type": "java.lang.Integer",
       "description": "核心线程数",
-      "sourceType": "com.bird.core.async.AsyncTaskProperties",
-      "defaultValue": 5
+      "sourceType": "com.bird.core.concurrent.TaskExecutorProperties",
+      "defaultValue": 1
     },
     {
-      "name": "bird.task.pool.keep-alive-seconds",
+      "name": "bird.task.executor.daemon",
+      "type": "java.lang.Boolean",
+      "description": "是否守护",
+      "sourceType": "com.bird.core.concurrent.TaskExecutorProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "bird.task.executor.keep-alive-seconds",
       "type": "java.lang.Integer",
       "description": "存活时间，单位：秒",
-      "sourceType": "com.bird.core.async.AsyncTaskProperties",
-      "defaultValue": 10
+      "sourceType": "com.bird.core.concurrent.TaskExecutorProperties",
+      "defaultValue": 60
     },
     {
-      "name": "bird.task.pool.max-pool-size",
+      "name": "bird.task.executor.max-pool-size",
       "type": "java.lang.Integer",
       "description": "最大线程数",
-      "sourceType": "com.bird.core.async.AsyncTaskProperties",
-      "defaultValue": 5
+      "sourceType": "com.bird.core.concurrent.TaskExecutorProperties"
     },
     {
-      "name": "bird.task.pool.queue-capacity",
+      "name": "bird.task.executor.queue-capacity",
       "type": "java.lang.Integer",
       "description": "队列长度",
-      "sourceType": "com.bird.core.async.AsyncTaskProperties"
+      "sourceType": "com.bird.core.concurrent.TaskExecutorProperties"
+    },
+    {
+      "name": "bird.task.scheduler.daemon",
+      "type": "java.lang.Boolean",
+      "description": "daemon",
+      "sourceType": "com.bird.core.concurrent.TaskSchedulerProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "bird.task.scheduler.pool-size",
+      "type": "java.lang.Integer",
+      "description": "线程数",
+      "sourceType": "com.bird.core.concurrent.TaskSchedulerProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "bird.task.scheduler.remove-on-cancel-policy",
+      "type": "java.lang.Boolean",
+      "description": "remove-on-cancel",
+      "sourceType": "com.bird.core.concurrent.TaskSchedulerProperties",
+      "defaultValue": false
     },
     {
       "name": "bird.trace.dispatcher.daemon",
