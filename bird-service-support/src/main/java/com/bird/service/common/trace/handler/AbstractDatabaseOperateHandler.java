@@ -15,6 +15,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
@@ -151,7 +152,7 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
             FieldDefinition[] fieldDefinitions = new FieldDefinition[]{};
 
             List<TableInfo> tableInfos = TableInfoHelper.getTableInfos();
-            Optional<TableInfo> optional = tableInfos.stream().filter(info -> table.equals(StringUtils.strip(info.getTableName(),StringPool.BACKTICK))).findFirst();
+            Optional<TableInfo> optional = tableInfos.stream().filter(info -> table.equals(StringUtils.strip(info.getTableName(), StringPool.BACKTICK))).findFirst();
             if (optional.isPresent()) {
                 TableInfo tableInfo = optional.get();
                 List<TableFieldInfo> fieldList = tableInfo.getFieldList();
@@ -161,8 +162,10 @@ public abstract class AbstractDatabaseOperateHandler implements IDatabaseOperate
                         .map(field -> new FieldDefinition(field.getField()))
                         .collect(Collectors.toList());
 
-                //默认添加主键的跟踪
-                traceFields.add(new FieldDefinition(tableInfo.getKeyColumn(), PK_DESCRIPTION));
+                if (CollectionUtils.isNotEmpty(traceFields)) {
+                    //默认添加主键的跟踪
+                    traceFields.add(new FieldDefinition(tableInfo.getKeyColumn(), PK_DESCRIPTION));
+                }
                 return traceFields.toArray(fieldDefinitions);
             }
             return fieldDefinitions;
