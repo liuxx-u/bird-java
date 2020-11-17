@@ -63,11 +63,11 @@ public interface IDistributedLock {
     /**
      * 确保结果只有有且仅有一个
      *
-     * @param key        加锁key
+     * @param lockKey    加锁key
      * @param query      查询函数
      * @param createFunc 创建函数
      * @param <T>        返回结果
      * @return 查询到的或创建的结果
      */
-    <T> T withUnique(String key, Supplier<T> query, Supplier<T> createFunc);
+    <T> T withUnique(String lockKey, Supplier<T> query, Supplier<T> createFunc);
 }

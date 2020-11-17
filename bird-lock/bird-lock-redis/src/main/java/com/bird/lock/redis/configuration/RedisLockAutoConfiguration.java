@@ -2,6 +2,8 @@ package com.bird.lock.redis.configuration;
 
 import com.bird.lock.IDistributedLock;
 import com.bird.lock.redis.RedisDistributedLock;
+import com.bird.lock.reentrant.ILockReentrance;
+import com.bird.lock.reentrant.ThreadLockReentrance;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -21,8 +23,14 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 public class RedisLockAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(ILockReentrance.class)
+    public ILockReentrance lockReentrance() {
+        return new ThreadLockReentrance();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(IDistributedLock.class)
-    public IDistributedLock distributedLock(StringRedisTemplate stringRedisTemplate){
-        return new RedisDistributedLock(stringRedisTemplate);
+    public IDistributedLock distributedLock(StringRedisTemplate stringRedisTemplate, ILockReentrance lockReentrance) {
+        return new RedisDistributedLock(stringRedisTemplate, lockReentrance);
     }
 }

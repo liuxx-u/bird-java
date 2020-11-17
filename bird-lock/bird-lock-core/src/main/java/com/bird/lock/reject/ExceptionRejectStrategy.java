@@ -8,7 +8,7 @@ import com.bird.lock.exception.DistributedLockException;
  */
 public class ExceptionRejectStrategy<T> implements RejectStrategy<T>{
 
-    private static final String DEFAULT_MESSAGE = "系统繁忙, 请稍后重试";
+    private static final String DEFAULT_MESSAGE = "操作正在进行中, 请稍后重试";
 
     private String message;
 

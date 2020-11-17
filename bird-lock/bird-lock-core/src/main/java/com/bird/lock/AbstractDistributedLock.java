@@ -1,7 +1,9 @@
 package com.bird.lock;
 
+import com.bird.lock.reentrant.ILockReentrance;
 import com.bird.lock.reject.RejectStrategy;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
@@ -13,57 +15,59 @@ import java.util.function.Supplier;
 @Slf4j
 public abstract class AbstractDistributedLock implements IDistributedLock {
 
+    private final ILockReentrance lockReentrance;
+
+    public AbstractDistributedLock(ILockReentrance lockReentrance){
+        this.lockReentrance = lockReentrance;
+    }
+
     @Override
     public <T> T withLock(String lockKey, Supplier<T> supplier, int retry, int retryInterval, int expire, RejectStrategy<T> rejectStrategy) {
-        if (lockKey == null) {
-            throw new RuntimeException("lock key cannot be null");
+        if (StringUtils.isBlank(lockKey)) {
+            throw new RuntimeException("lock key cannot be empty");
         }
+
+        if(lockReentrance.reentry(lockKey)){
+            return executeAndExitReentry(lockKey, supplier);
+        }
+
         // 生成一个随机字符串, 用于加锁
         String lockValue = getLockValue();
-        // 尝试获取锁
-        boolean locked = tryLock(lockKey, lockValue, expire);
-        if (locked) {
-            // 如果获取成功, 继续往下执行
-            return executeAndRelease(lockKey, lockValue, supplier);
-        } else {
-            // 获取失败, 并且重试次数
-            while (retry > 0 || retry == -1) {
-                // 如果不是无限重试, 重试次数减1
-                retry = retry == -1 ? retry : retry - 1;
-                // 阻塞一个周期开始下一次尝试
+
+        do {
+            boolean locked = tryLock(lockKey, lockValue, expire);
+            if (locked) {
+                lockReentrance.initialize(lockKey);
+                // 如果获取成功, 继续往下执行
+                return executeAndRelease(lockKey, lockValue, supplier);
+            }
+
+            if (retry > 0) {
                 try {
                     Thread.sleep(retryInterval);
                 } catch (InterruptedException ex) {
-                    log.error("",ex);
-                }
-                // 开始尝试重试获取锁
-                locked = tryLock(lockKey, lockValue, expire);
-                if (locked) {
-                    // 如果获取到锁, 则执行并释放
-                    return executeAndRelease(lockKey, lockValue, supplier);
+                    log.error("", ex);
                 }
             }
-        }
-        // 最终执行拒绝策略
+        } while (retry-- > 0);
+
+        // 未获取到锁，执行拒绝策略
         return rejectStrategy.reject(lockKey);
     }
 
     @Override
-    public <T> T withUnique(String key, Supplier<T> query, Supplier<T> createFunc) {
-        if (query == null) {
-            throw new RuntimeException("query cannot be null");
-        }
+    public <T> T withUnique(String lockKey, Supplier<T> query, Supplier<T> createFunc) {
         // 先尝试获取一次
         T value = query.get();
         if (value != null) {
             // 获取成功, 快速返回
             return value;
         }
-        if (key == null) {
-            throw new RuntimeException("unique key cannot be null");
+        if (StringUtils.isBlank(lockKey)) {
+            throw new RuntimeException("lock key cannot be empty");
         }
         // 加锁
-        return withLock(key, () -> {
+        return withLock(lockKey, () -> {
             // 双重检查
             T val = query.get();
             if (val != null) {
@@ -74,17 +78,37 @@ public abstract class AbstractDistributedLock implements IDistributedLock {
         });
     }
 
+    /**
+     * 执行方法并退出重入锁
+     * @param lockKey 锁的Key
+     * @param supplier 执行方法体
+     * @param <T> 返回参数类型
+     * @return 返回值
+     */
+    private <T> T executeAndExitReentry(String lockKey, Supplier<T> supplier){
+        try {
+            return supplier.get();
+        } finally {
+            lockReentrance.exit(lockKey);
+        }
+    }
 
+    /**
+     * 执行方法并释放锁
+     * @param lockKey 锁的Key
+     * @param lockValue 锁的Value
+     * @param supplier 执行方法体
+     * @param <T> 返回参数类型
+     * @return 返回值
+     */
     private <T> T executeAndRelease(String lockKey, String lockValue, Supplier<T> supplier) {
         try {
             // 进行真正的执行
             return supplier.get();
-        } catch (Exception e) {
-            // 如果有错, 释放锁, 然后抛出异常
-            releaseLock(lockKey, lockValue);
-            throw e;
         } finally {
-            // 正常执行完毕, 释放锁
+            //清除线程中的重入状态信息
+            lockReentrance.remove(lockKey);
+            // 执行完毕, 释放锁
             releaseLock(lockKey, lockValue);
         }
     }
