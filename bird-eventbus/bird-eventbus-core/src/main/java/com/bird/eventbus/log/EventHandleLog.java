@@ -1,10 +1,9 @@
-package com.bird.eventbus.handler;
+package com.bird.eventbus.log;
 
 import com.alibaba.fastjson.JSON;
 import com.bird.eventbus.arg.IEventArg;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,27 +12,16 @@ import java.util.List;
 
 /**
  * @author liuxx
- * @date 2019/1/16
+ * @since 2020/11/19
  */
 @Data
-public class EventHandleResult implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class EventHandleLog extends AbstractEventLog {
 
-    /**
-     * 事件id
-     */
-    private String eventId;
-    /**
-     * 事件名称
-     */
-    private String event;
     /**
      * 所属消费者组
      */
     private String group;
-    /**
-     * 事件参数JSON结果
-     */
-    private String eventJson;
     /**
      * 接收时间
      */
@@ -43,32 +31,32 @@ public class EventHandleResult implements Serializable {
      */
     private EventHandleStatusEnum status;
     /**
-     * 消费者处理结果集合
+     * 方法执行日志集合
      */
-    private List<ConsumerResult> items;
+    private List<EventHandleLog.MethodInvokeLog> items;
 
-    public EventHandleResult(){
+    public EventHandleLog(){
         receiveTime = new Date();
         items = new ArrayList<>();
     }
 
-    public EventHandleResult(IEventArg eventArg){
+    public EventHandleLog(IEventArg eventArg){
         this();
-        this.eventId = eventArg.getEventId();
-        this.event = eventArg.getClass().getName();
-        this.eventJson = JSON.toJSONString(eventArg);
+        this.setEventId(eventArg.getEventId());
+        this.setEvent(eventArg.getClass().getName());
+        this.setEventJson(JSON.toJSONString(eventArg));
     }
 
     /**
      * 添加消费结果明细
      * @param item 消费结果
      */
-    public void addItem(ConsumerResult item){
+    public void addItem(EventHandleLog.MethodInvokeLog item){
         this.items.add(item);
     }
 
     @Data
-    public class ConsumerResult implements Serializable{
+    public class MethodInvokeLog implements Serializable {
         /**
          * 是否成功
          */

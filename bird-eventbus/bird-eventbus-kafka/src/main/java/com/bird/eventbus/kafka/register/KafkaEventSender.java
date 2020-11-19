@@ -2,11 +2,9 @@ package com.bird.eventbus.kafka.register;
 
 import com.alibaba.fastjson.JSON;
 import com.bird.eventbus.arg.IEventArg;
-import com.bird.eventbus.register.IEventRegister;
-import com.bird.eventbus.register.EventRegisterResult;
-import com.bird.eventbus.register.IEventRegisterStore;
+import com.bird.eventbus.log.EventSendLog;
+import com.bird.eventbus.sender.IEventSender;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.FailureCallback;
@@ -21,10 +19,10 @@ import java.util.Map;
  * @author liuxx
  */
 @Slf4j
-public class KafkaRegister implements IEventRegister {
+public class KafkaEventSender implements IEventSender {
 
-    @Autowired(required = false)
-    private IEventRegisterStore registerStore;
+//    @Autowired(required = false)
+//    private IEventSendStore registerStore;
 
     private KafkaTemplate<String, IEventArg> kafkaTemplate;
 
@@ -34,29 +32,29 @@ public class KafkaRegister implements IEventRegister {
      * @param eventArg 事件参数
      */
     @Override
-    public void regist(IEventArg eventArg) {
+    public void fire(IEventArg eventArg) {
         ListenableFuture<SendResult<String, IEventArg>> listenableFuture = kafkaTemplate.send(getTopic(eventArg), eventArg);
 
-        EventRegisterResult registerResult = new EventRegisterResult(eventArg);
+        EventSendLog sendLog = new EventSendLog(eventArg);
         //发送成功回调
         SuccessCallback<SendResult<String, IEventArg>> successCallback = result -> {
-            if (registerStore == null) return;
-            registerResult.setSuccess(true);
+//            if (registerStore == null) return;
+            sendLog.setSuccess(true);
             Map<String, Object> map = new HashMap<>(2);
             if (result != null) {
                 map.put("producerRecord", result.getProducerRecord());
                 map.put("metadata", result.getRecordMetadata());
             }
-            registerResult.setExtJson(JSON.toJSONString(map));
-            registerStore.register(registerResult);
+            sendLog.setExtJson(JSON.toJSONString(map));
+//            sendLog.register(registerResult);
         };
 
-        //发送失败回调
+        // 发送失败回调
         FailureCallback failureCallback = ex -> {
-            if (registerStore == null) return;
-            registerResult.setSuccess(false);
-            registerResult.setMessage(ex.getMessage());
-            registerStore.register(registerResult);
+//            if (registerStore == null) return;
+            sendLog.setSuccess(false);
+            sendLog.setMessage(ex.getMessage());
+//            registerStore.register(registerResult);
 
             log.error(ex.getMessage());
         };

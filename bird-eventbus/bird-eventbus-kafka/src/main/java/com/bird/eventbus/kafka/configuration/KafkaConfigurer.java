@@ -1,17 +1,21 @@
 package com.bird.eventbus.kafka.configuration;
 
 import com.bird.eventbus.EventBus;
+import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.arg.EventArg;
-import com.bird.eventbus.handler.EventDispatcher;
+import com.bird.eventbus.configuration.EventCoreAutoConfiguration;
+import com.bird.eventbus.handler.EventMethodInvoker;
 import com.bird.eventbus.kafka.handler.EventArgDeserializer;
 import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
 import com.bird.eventbus.kafka.register.EventArgSerializer;
-import com.bird.eventbus.kafka.register.KafkaRegister;
-import com.bird.eventbus.register.IEventRegister;
-import com.bird.eventbus.EventbusConstant;
+import com.bird.eventbus.kafka.register.KafkaEventSender;
+import com.bird.eventbus.registry.IEventRegistry;
+import com.bird.eventbus.sender.IEventSender;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -33,6 +37,7 @@ import java.util.HashMap;
 @Configuration
 @ConditionalOnProperty(value = EventbusConstant.Kafka.HOST_PROPERTY_NAME)
 @EnableConfigurationProperties(KafkaProperties.class)
+@AutoConfigureAfter(EventCoreAutoConfiguration.class)
 public class KafkaConfigurer {
 
     @Autowired
@@ -40,14 +45,14 @@ public class KafkaConfigurer {
 
     @Bean
     @ConditionalOnMissingBean(EventBus.class)
-    public EventBus eventBus(){
+    public EventBus eventBus() {
         return new EventBus();
     }
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
     public KafkaTemplate kafkaTemplate() {
-        HashMap<String,Object> properties = new HashMap<>(8);
+        HashMap<String, Object> properties = new HashMap<>(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
         KafkaProviderProperties providerProperties = kafkaProperties.getProvider();
@@ -58,7 +63,7 @@ public class KafkaConfigurer {
         properties.put("key.serializer", StringSerializer.class);
         properties.put("value.serializer", EventArgSerializer.class);
 
-        DefaultKafkaProducerFactory<String,EventArg> producerFactory = new DefaultKafkaProducerFactory<>(properties);
+        DefaultKafkaProducerFactory<String, EventArg> producerFactory = new DefaultKafkaProducerFactory<>(properties);
 
         KafkaTemplate kafkaTemplate = new KafkaTemplate<>(producerFactory, true);
         kafkaTemplate.setDefaultTopic(providerProperties.getDefaultTopic());
@@ -67,30 +72,22 @@ public class KafkaConfigurer {
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
-    public IEventRegister eventRegister(KafkaTemplate kafkaTemplate) {
-        KafkaRegister eventRegister = new KafkaRegister();
+    public IEventSender eventSender(KafkaTemplate kafkaTemplate) {
+        KafkaEventSender eventRegister = new KafkaEventSender();
         eventRegister.setKafkaTemplate(kafkaTemplate);
         return eventRegister;
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.Kafka.LISTENER_PACKAGES)
-    public EventDispatcher eventDispatcher(){
-        EventDispatcher dispatcher = new EventDispatcher();
-        dispatcher.initWithPackage(kafkaProperties.getListener().getBasePackages());
-        return dispatcher;
-    }
+    @ConditionalOnBean({EventMethodInvoker.class, IEventRegistry.class})
+    public KafkaMessageListenerContainer kafkaListenerContainer(EventMethodInvoker eventMethodInvoker, IEventRegistry eventRegistry) {
 
-    @Bean
-    @ConditionalOnProperty(value = EventbusConstant.Kafka.LISTENER_PACKAGES)
-    public KafkaMessageListenerContainer kafkaListenerContainer(EventDispatcher eventDispatcher) {
-
-        KafkaEventArgListener listener = new KafkaEventArgListener(eventDispatcher);
-        ContainerProperties containerProperties = new ContainerProperties(eventDispatcher.getAllTopics());
+        KafkaEventArgListener listener = new KafkaEventArgListener(eventMethodInvoker);
+        ContainerProperties containerProperties = new ContainerProperties(eventRegistry.getAllTopics());
         containerProperties.setMessageListener(listener);
         containerProperties.setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);
 
-        HashMap<String,Object> properties = new HashMap<>(8);
+        HashMap<String, Object> properties = new HashMap<>(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
         KafkaListenerProperties listenerProperties = kafkaProperties.getListener();
@@ -101,7 +98,7 @@ public class KafkaConfigurer {
         properties.put("session.timeout.ms", 15000);
         properties.put("key.deserializer", StringDeserializer.class);
         properties.put("value.deserializer", EventArgDeserializer.class);
-        DefaultKafkaConsumerFactory<String,EventArg> consumerFactory = new DefaultKafkaConsumerFactory<>(properties);
+        DefaultKafkaConsumerFactory<String, EventArg> consumerFactory = new DefaultKafkaConsumerFactory<>(properties);
 
         return new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
     }

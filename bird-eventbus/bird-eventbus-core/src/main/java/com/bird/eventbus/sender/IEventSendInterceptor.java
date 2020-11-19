@@ -1,4 +1,4 @@
-package com.bird.eventbus.register;
+package com.bird.eventbus.sender;
 
 import com.bird.eventbus.arg.IEventArg;
 
@@ -8,12 +8,12 @@ import com.bird.eventbus.arg.IEventArg;
  * @author liuxx
  * @date 2019/7/31
  */
-public interface IEventRegisterInterceptor {
+public interface IEventSendInterceptor {
 
     /**
      * 事件发送拦截处理方法
      * @param eventArg 事件参数
      * @param eventRegister 发送器
      */
-    void intercept(IEventArg eventArg, IEventRegister eventRegister);
+    void intercept(IEventArg eventArg, IEventSender eventRegister);
 }

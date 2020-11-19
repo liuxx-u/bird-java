@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * @author liuxx
  * @date 2019/7/31
  */
-public interface IEventHandlerInterceptor {
+public interface IEventMethodInvokerInterceptor {
 
     /**
      * 事件处理前置执行方法

@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date 2019/1/16
  */
 @Data
-public class EventHandlerDefinition implements Serializable {
+public class EventMethodDefinition implements Serializable {
     /**
      * 事件名称
      */

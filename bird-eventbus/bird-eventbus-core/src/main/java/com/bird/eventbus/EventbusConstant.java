@@ -10,6 +10,17 @@ public interface EventbusConstant {
      */
     String PREFIX = "bird.eventbus";
 
+    interface Handler {
+        /**
+         * Handler 配置前缀
+         */
+        String PREFIX = EventbusConstant.PREFIX + ".handler";
+        /**
+         * 事件处理方法 包扫码路径
+         */
+        String SCAN_PACKAGES = PREFIX + ".scan-packages";
+    }
+
     interface Kafka {
         /**
          * kafka 配置前缀
@@ -25,11 +36,6 @@ public interface EventbusConstant {
          * kafka 提供者默认的topic
          */
         String PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME = PREFIX + ".provider.defaultTopic";
-
-        /**
-         * kafka 扫描消费者 路径
-         */
-        String LISTENER_PACKAGES = PREFIX + ".listener.base-packages";
     }
 
     interface Rabbit {
@@ -42,11 +48,6 @@ public interface EventbusConstant {
          * kafka broker地址
          */
         String ADDRESS_PROPERTY_NAME = PREFIX + ".address";
-
-        /**
-         * kafka 扫描消费者 路径
-         */
-        String LISTENER_PACKAGES = PREFIX + ".listener-packages";
 
     }
 }

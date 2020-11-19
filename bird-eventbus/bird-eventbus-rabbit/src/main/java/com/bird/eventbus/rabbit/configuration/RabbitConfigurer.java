@@ -2,11 +2,16 @@ package com.bird.eventbus.rabbit.configuration;
 
 import com.bird.eventbus.EventBus;
 import com.bird.eventbus.EventbusConstant;
-import com.bird.eventbus.handler.EventDispatcher;
+import com.bird.eventbus.configuration.EventCoreAutoConfiguration;
+import com.bird.eventbus.handler.EventMethodInvoker;
 import com.bird.eventbus.rabbit.handler.RabbitEventArgListener;
-import com.bird.eventbus.rabbit.register.RabbitRegister;
-import com.bird.eventbus.register.IEventRegister;
-import org.springframework.amqp.core.*;
+import com.bird.eventbus.rabbit.register.RabbitEventSender;
+import com.bird.eventbus.registry.IEventRegistry;
+import com.bird.eventbus.sender.IEventSender;
+import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -18,6 +23,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,6 +42,7 @@ import java.util.HashMap;
 @Configuration
 @ConditionalOnProperty(value = EventbusConstant.Rabbit.ADDRESS_PROPERTY_NAME)
 @EnableConfigurationProperties(RabbitProperties.class)
+@AutoConfigureAfter(EventCoreAutoConfiguration.class)
 public class RabbitConfigurer {
 
     @Value("${spring.application.name:}")
@@ -78,28 +86,20 @@ public class RabbitConfigurer {
     }
 
     @Bean
-    public IEventRegister eventRegister(RabbitTemplate rabbitTemplate) {
-        return new RabbitRegister(rabbitTemplate);
+    public IEventSender eventSender(RabbitTemplate rabbitTemplate) {
+        return new RabbitEventSender(rabbitTemplate);
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.Rabbit.LISTENER_PACKAGES)
-    public EventDispatcher eventDispatcher() {
-        EventDispatcher dispatcher = new EventDispatcher();
-        dispatcher.initWithPackage(rabbitProperties.getListenerPackages());
-        return dispatcher;
-    }
-
-    @Bean
-    @ConditionalOnProperty(value = EventbusConstant.Rabbit.LISTENER_PACKAGES)
+    @ConditionalOnBean({IEventRegistry.class,EventMethodInvoker.class})
     public Queue queue() {
         return new Queue(application, true);
     }
 
     @Bean
-    @ConditionalOnProperty(value = EventbusConstant.Rabbit.LISTENER_PACKAGES)
-    public SimpleMessageListenerContainer messageContainer(Queue queue, EventDispatcher eventDispatcher) {
-        for (String topic : eventDispatcher.getAllTopics()) {
+    @ConditionalOnBean({IEventRegistry.class,EventMethodInvoker.class})
+    public SimpleMessageListenerContainer messageContainer(Queue queue, IEventRegistry eventRegistry, EventMethodInvoker eventMethodInvoker) {
+        for (String topic : eventRegistry.getAllTopics()) {
             this.initExchange(topic,queue);
         }
 
@@ -109,9 +109,10 @@ public class RabbitConfigurer {
         container.setExposeListenerChannel(true);
         container.setMaxConcurrentConsumers(1);
         container.setConcurrentConsumers(1);
-        container.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
+        //设置确认模式手工确认
+        container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
 
-        RabbitEventArgListener listener = new RabbitEventArgListener(eventDispatcher);
+        RabbitEventArgListener listener = new RabbitEventArgListener(eventMethodInvoker);
         container.setMessageListener(listener);
         return container;
     }

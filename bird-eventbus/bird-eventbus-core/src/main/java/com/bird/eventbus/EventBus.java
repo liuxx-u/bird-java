@@ -1,8 +1,8 @@
 package com.bird.eventbus;
 
 import com.bird.eventbus.arg.IEventArg;
-import com.bird.eventbus.register.IEventRegisterInterceptor;
-import com.bird.eventbus.register.IEventRegister;
+import com.bird.eventbus.sender.IEventSendInterceptor;
+import com.bird.eventbus.sender.IEventSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,10 +16,10 @@ import java.util.Collection;
 public class EventBus {
 
     @Autowired(required = false)
-    private IEventRegister eventRegister;
+    private IEventSender eventRegister;
 
     @Autowired(required = false)
-    private Collection<IEventRegisterInterceptor> interceptors;
+    private Collection<IEventSendInterceptor> interceptors;
 
     /**
      * 向EventBus中推送消息
@@ -32,10 +32,10 @@ public class EventBus {
             return;
         }
         if (interceptors != null) {
-            for (IEventRegisterInterceptor interceptor : interceptors) {
+            for (IEventSendInterceptor interceptor : interceptors) {
                 interceptor.intercept(eventArg, eventRegister);
             }
         }
-        eventRegister.regist(eventArg);
+        eventRegister.fire(eventArg);
     }
 }

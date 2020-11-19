@@ -2,7 +2,7 @@ package com.bird.eventbus.rabbit.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.bird.eventbus.arg.IEventArg;
-import com.bird.eventbus.handler.EventDispatcher;
+import com.bird.eventbus.handler.EventMethodInvoker;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -17,10 +17,10 @@ import java.nio.charset.Charset;
 @Slf4j
 public class RabbitEventArgListener implements ChannelAwareMessageListener {
 
-    private EventDispatcher dispatcher;
+    private EventMethodInvoker eventMethodInvoker;
 
-    public RabbitEventArgListener(EventDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+    public RabbitEventArgListener(EventMethodInvoker eventMethodInvoker) {
+        this.eventMethodInvoker = eventMethodInvoker;
     }
 
     @Override
@@ -40,7 +40,9 @@ public class RabbitEventArgListener implements ChannelAwareMessageListener {
         String body = new String(message.getBody(), Charset.forName("utf8"));
         IEventArg eventArg = (IEventArg) JSON.parseObject(body,clazz);
 
-        dispatcher.enqueue(eventArg);
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false); //确认消息成功消费
+        eventMethodInvoker.invoke(eventArg);
+
+        //确认消息成功消费
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     }
 }
