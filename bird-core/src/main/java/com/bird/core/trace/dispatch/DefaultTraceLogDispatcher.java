@@ -30,6 +30,10 @@ public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
     }
 
     public void init() {
+        if (traceLogStore instanceof NullTraceLogStore) {
+            return;
+        }
+
         ThreadFactory threadFactory = new BasicThreadFactory.Builder()
                 .namingPattern(DEFAULT_THREAD_NAME_PATTERN)
                 .daemon(this.dispatcherProperties.getDaemon())
@@ -54,6 +58,10 @@ public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
      */
     @Override
     public void dispatch(Collection<TraceDefinition> traceLogs) {
+        if (traceLogStore instanceof NullTraceLogStore || CollectionUtils.isEmpty(traceLogs)) {
+            return;
+        }
+
         traceQueue.addAll(traceLogs);
 
         if (traceQueue.size() >= this.dispatcherProperties.getThreshold()) {

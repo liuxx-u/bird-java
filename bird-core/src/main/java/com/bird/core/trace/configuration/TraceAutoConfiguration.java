@@ -1,10 +1,7 @@
 package com.bird.core.trace.configuration;
 
 import com.bird.core.trace.TraceableAspect;
-import com.bird.core.trace.dispatch.DefaultTraceDispatcherProperties;
-import com.bird.core.trace.dispatch.DefaultTraceLogDispatcher;
-import com.bird.core.trace.dispatch.ITraceLogDispatcher;
-import com.bird.core.trace.dispatch.ITraceLogStore;
+import com.bird.core.trace.dispatch.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -26,7 +23,7 @@ public class TraceAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean({ITraceLogStore.class, ITraceLogDispatcher.class})
     public ITraceLogStore traceLogStore() {
-        return logs -> log.warn("未注入ITraceLogStore实例，丢弃跟踪日志信息");
+        return new NullTraceLogStore();
     }
 
     @Bean
