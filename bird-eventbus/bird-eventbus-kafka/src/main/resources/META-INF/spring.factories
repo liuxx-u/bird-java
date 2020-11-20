@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.bird.eventbus.kafka.configuration.KafkaConfigurer
+  com.bird.eventbus.kafka.configuration.EventKafkaAutoConfiguration

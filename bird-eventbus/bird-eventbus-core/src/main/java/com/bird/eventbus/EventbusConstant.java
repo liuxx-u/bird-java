@@ -21,23 +21,6 @@ public interface EventbusConstant {
         String SCAN_PACKAGES = PREFIX + ".scan-packages";
     }
 
-    interface Kafka {
-        /**
-         * kafka 配置前缀
-         */
-        String PREFIX = EventbusConstant.PREFIX + ".kafka";
-
-        /**
-         * kafka broker地址
-         */
-        String HOST_PROPERTY_NAME = PREFIX + ".host";
-
-        /**
-         * kafka 提供者默认的topic
-         */
-        String PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME = PREFIX + ".provider.defaultTopic";
-    }
-
     interface Rabbit {
         /**
          * rabbit 配置前缀

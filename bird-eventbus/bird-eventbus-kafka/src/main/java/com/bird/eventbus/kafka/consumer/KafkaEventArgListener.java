@@ -1,4 +1,4 @@
-package com.bird.eventbus.kafka.handler;
+package com.bird.eventbus.kafka.consumer;
 
 import com.bird.eventbus.arg.EventArg;
 import com.bird.eventbus.handler.EventMethodInvoker;

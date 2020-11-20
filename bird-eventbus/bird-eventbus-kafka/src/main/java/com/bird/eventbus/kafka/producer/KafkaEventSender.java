@@ -1,4 +1,4 @@
-package com.bird.eventbus.kafka.register;
+package com.bird.eventbus.kafka.producer;
 
 import com.alibaba.fastjson.JSON;
 import com.bird.eventbus.arg.IEventArg;
