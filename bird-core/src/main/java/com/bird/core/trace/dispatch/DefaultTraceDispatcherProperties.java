@@ -25,4 +25,8 @@ public class DefaultTraceDispatcherProperties {
      * 是否守护线程
      */
     private Boolean daemon = true;
+    /**
+     * 线程名称
+     */
+    private String threadNamePattern = "trace-consumer-%d";
 }

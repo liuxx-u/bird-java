@@ -18,7 +18,6 @@ import java.util.concurrent.*;
 public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
 
     private final static int DEFAULT_QUEUE_SIZE = 1024;
-    private final static String DEFAULT_THREAD_NAME_PATTERN = "trace-consumer-%d";
 
     private final ITraceLogStore traceLogStore;
     private final DefaultTraceDispatcherProperties dispatcherProperties;
@@ -35,7 +34,7 @@ public class DefaultTraceLogDispatcher implements ITraceLogDispatcher {
         }
 
         ThreadFactory threadFactory = new BasicThreadFactory.Builder()
-                .namingPattern(DEFAULT_THREAD_NAME_PATTERN)
+                .namingPattern(this.dispatcherProperties.getThreadNamePattern())
                 .daemon(this.dispatcherProperties.getDaemon())
                 .build();
 
