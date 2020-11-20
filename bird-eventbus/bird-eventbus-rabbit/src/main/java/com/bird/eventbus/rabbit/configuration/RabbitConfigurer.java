@@ -55,12 +55,6 @@ public class RabbitConfigurer {
     private ConfigurableApplicationContext applicationContext;
 
     @Bean
-    @ConditionalOnMissingBean(EventBus.class)
-    public EventBus eventBus(){
-        return new EventBus();
-    }
-
-    @Bean
     public CachingConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
         connectionFactory.setAddresses(rabbitProperties.getAddress());

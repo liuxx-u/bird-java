@@ -1,6 +1,5 @@
 package com.bird.eventbus.kafka.configuration;
 
-import com.bird.eventbus.EventBus;
 import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.arg.EventArg;
 import com.bird.eventbus.arg.IEventArg;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +25,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.AbstractMessageListenerContainer;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
-import org.springframework.kafka.listener.config.ContainerProperties;
 
 import java.util.HashMap;
 
@@ -45,12 +42,6 @@ public class KafkaConfigurer {
 
     @Autowired
     private KafkaProperties kafkaProperties;
-
-    @Bean
-    @ConditionalOnMissingBean(EventBus.class)
-    public EventBus eventBus() {
-        return new EventBus();
-    }
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
@@ -86,7 +77,7 @@ public class KafkaConfigurer {
         KafkaEventArgListener listener = new KafkaEventArgListener(eventMethodInvoker);
         ContainerProperties containerProperties = new ContainerProperties(eventRegistry.getAllTopics());
         containerProperties.setMessageListener(listener);
-        containerProperties.setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);
+        containerProperties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
 
         HashMap<String, Object> properties = new HashMap<>(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());

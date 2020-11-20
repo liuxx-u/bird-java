@@ -1,0 +1,71 @@
+{
+  "groups": [
+    {
+      "name": "bird.eventbus.handler",
+      "type": "com.bird.eventbus.handler.EventHandlerProperties",
+      "sourceType": "com.bird.eventbus.handler.EventHandlerProperties"
+    },
+    {
+      "name": "bird.eventbus.log",
+      "type": "com.bird.eventbus.log.EventLogProperties",
+      "sourceType": "com.bird.eventbus.log.EventLogProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bird.eventbus.handler.group",
+      "type": "java.lang.String",
+      "description": "消费者组",
+      "sourceType": "com.bird.eventbus.handler.EventHandlerProperties"
+    },
+    {
+      "name": "bird.eventbus.handler.scan-packages",
+      "type": "java.lang.String",
+      "description": "事件处理方法扫描路径",
+      "sourceType": "com.bird.eventbus.handler.EventHandlerProperties"
+    },
+    {
+      "name": "bird.eventbus.log.daemon",
+      "type": "java.lang.Boolean",
+      "description": "是否守护线程",
+      "sourceType": "com.bird.eventbus.log.EventLogProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.eventbus.log.default-queue-size",
+      "type": "java.lang.Integer",
+      "description": "默认队列长度",
+      "sourceType": "com.bird.eventbus.log.EventLogProperties",
+      "defaultValue": 1024
+    },
+    {
+      "name": "bird.eventbus.log.period",
+      "type": "java.lang.Integer",
+      "description": "触发保存的时间间隔，默认：20秒",
+      "sourceType": "com.bird.eventbus.log.EventLogProperties",
+      "defaultValue": 20
+    },
+    {
+      "name": "bird.eventbus.log.pool-size",
+      "type": "java.lang.Short",
+      "description": "消费线程数，默认：1",
+      "sourceType": "com.bird.eventbus.log.EventLogProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "bird.eventbus.log.thread-name-pattern",
+      "type": "java.lang.String",
+      "description": "线程名称",
+      "sourceType": "com.bird.eventbus.log.EventLogProperties",
+      "defaultValue": "event-log-%d"
+    },
+    {
+      "name": "bird.eventbus.log.threshold",
+      "type": "java.lang.Integer",
+      "description": "触发保存的阈值，默认：100",
+      "sourceType": "com.bird.eventbus.log.EventLogProperties",
+      "defaultValue": 100
+    }
+  ],
+  "hints": []
+}

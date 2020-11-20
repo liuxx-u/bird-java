@@ -1,10 +1,13 @@
 package com.bird.eventbus.configuration;
 
+import com.bird.eventbus.EventBus;
 import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.handler.*;
 import com.bird.eventbus.log.*;
 import com.bird.eventbus.registry.IEventRegistry;
 import com.bird.eventbus.registry.MapEventRegistry;
+import com.bird.eventbus.sender.IEventSendInterceptor;
+import com.bird.eventbus.sender.IEventSender;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -14,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -53,20 +57,11 @@ public class EventCoreAutoConfiguration {
     }
 
     /**
-     * 注册 默认的事件发送日志存储器
+     * 注册 默认的事件日志存储器
      */
     @Bean
-    @ConditionalOnMissingBean({IEventSendLogStore.class, IEventLogDispatcher.class})
-    public IEventSendLogStore eventSendLogStore() {
-        return new NullEventLogStore();
-    }
-
-    /**
-     * 注册 默认的事件处理日志存储器
-     */
-    @Bean
-    @ConditionalOnMissingBean({IEventHandleLogStore.class, IEventLogDispatcher.class})
-    public IEventHandleLogStore eventHandleLogStore() {
+    @ConditionalOnMissingBean({IEventSendLogStore.class, IEventHandleLogStore.class, IEventLogDispatcher.class})
+    public NullEventLogStore eventLogStore() {
         return new NullEventLogStore();
     }
 
@@ -93,7 +88,15 @@ public class EventCoreAutoConfiguration {
      * 注册 事件处理方法执行器
      */
     @Bean
-    public EventMethodInvoker eventMethodInvoker(IEventMethodExecutor eventMethodExecutor, IEventRegistry eventRegistry, ObjectProvider<List<IEventMethodInvokerInterceptor>> invokerInterceptors) {
-        return new EventMethodInvoker(this.handlerProperties, eventMethodExecutor, eventRegistry, invokerInterceptors.getIfAvailable());
+    public EventMethodInvoker eventMethodInvoker(IEventMethodExecutor eventMethodExecutor, IEventRegistry eventRegistry, ObjectProvider<List<IEventMethodInvokerInterceptor>> invokerInterceptors, IEventLogDispatcher eventLogDispatcher) {
+        return new EventMethodInvoker(this.handlerProperties, eventMethodExecutor, eventRegistry, invokerInterceptors.getIfAvailable(), eventLogDispatcher);
+    }
+
+    /**
+     * 注册 Eventbus
+     */
+    @Bean
+    public EventBus eventBus(ObjectProvider<IEventSender> eventSender, ObjectProvider<Collection<IEventSendInterceptor>> interceptors) {
+        return new EventBus(eventSender.getIfAvailable(), interceptors.getIfAvailable());
     }
 }

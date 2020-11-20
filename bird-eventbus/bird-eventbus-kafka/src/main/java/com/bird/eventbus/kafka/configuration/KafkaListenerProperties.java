@@ -11,5 +11,4 @@ import lombok.Setter;
 @Setter
 public class KafkaListenerProperties {
     private String groupId;
-    private String basePackages;
 }
