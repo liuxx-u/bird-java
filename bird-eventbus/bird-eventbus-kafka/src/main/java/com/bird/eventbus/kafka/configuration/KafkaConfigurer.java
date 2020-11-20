@@ -3,16 +3,19 @@ package com.bird.eventbus.kafka.configuration;
 import com.bird.eventbus.EventBus;
 import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.arg.EventArg;
+import com.bird.eventbus.arg.IEventArg;
 import com.bird.eventbus.configuration.EventCoreAutoConfiguration;
 import com.bird.eventbus.handler.EventMethodInvoker;
 import com.bird.eventbus.kafka.handler.EventArgDeserializer;
 import com.bird.eventbus.kafka.handler.KafkaEventArgListener;
 import com.bird.eventbus.kafka.register.EventArgSerializer;
 import com.bird.eventbus.kafka.register.KafkaEventSender;
+import com.bird.eventbus.log.IEventLogDispatcher;
 import com.bird.eventbus.registry.IEventRegistry;
 import com.bird.eventbus.sender.IEventSender;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -51,7 +54,7 @@ public class KafkaConfigurer {
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
-    public KafkaTemplate kafkaTemplate() {
+    public KafkaTemplate<String, IEventArg> kafkaTemplate() {
         HashMap<String, Object> properties = new HashMap<>(8);
         properties.put("bootstrap.servers", kafkaProperties.getHost());
 
@@ -63,19 +66,17 @@ public class KafkaConfigurer {
         properties.put("key.serializer", StringSerializer.class);
         properties.put("value.serializer", EventArgSerializer.class);
 
-        DefaultKafkaProducerFactory<String, EventArg> producerFactory = new DefaultKafkaProducerFactory<>(properties);
+        DefaultKafkaProducerFactory<String, IEventArg> producerFactory = new DefaultKafkaProducerFactory<>(properties);
 
-        KafkaTemplate kafkaTemplate = new KafkaTemplate<>(producerFactory, true);
+        KafkaTemplate<String, IEventArg> kafkaTemplate = new KafkaTemplate<>(producerFactory, true);
         kafkaTemplate.setDefaultTopic(providerProperties.getDefaultTopic());
         return kafkaTemplate;
     }
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Kafka.PROVIDER_DEFAULT_TOPIC_PROPERTY_NAME)
-    public IEventSender eventSender(KafkaTemplate kafkaTemplate) {
-        KafkaEventSender eventRegister = new KafkaEventSender();
-        eventRegister.setKafkaTemplate(kafkaTemplate);
-        return eventRegister;
+    public IEventSender eventSender(ObjectProvider<IEventLogDispatcher> eventLogDispatcher, KafkaTemplate<String, IEventArg> kafkaTemplate) {
+        return new KafkaEventSender(eventLogDispatcher.getIfAvailable(), kafkaTemplate);
     }
 
     @Bean

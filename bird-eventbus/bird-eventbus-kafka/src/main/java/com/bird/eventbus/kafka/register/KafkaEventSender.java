@@ -3,6 +3,7 @@ package com.bird.eventbus.kafka.register;
 import com.alibaba.fastjson.JSON;
 import com.bird.eventbus.arg.IEventArg;
 import com.bird.eventbus.log.EventSendLog;
+import com.bird.eventbus.log.IEventLogDispatcher;
 import com.bird.eventbus.sender.IEventSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,10 +22,13 @@ import java.util.Map;
 @Slf4j
 public class KafkaEventSender implements IEventSender {
 
-//    @Autowired(required = false)
-//    private IEventSendStore registerStore;
+    private final IEventLogDispatcher eventLogDispatcher;
+    private final KafkaTemplate<String, IEventArg> kafkaTemplate;
 
-    private KafkaTemplate<String, IEventArg> kafkaTemplate;
+    public KafkaEventSender(IEventLogDispatcher eventLogDispatcher, KafkaTemplate<String, IEventArg> kafkaTemplate) {
+        this.eventLogDispatcher = eventLogDispatcher;
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     /**
      * 事件注册
@@ -38,7 +42,9 @@ public class KafkaEventSender implements IEventSender {
         EventSendLog sendLog = new EventSendLog(eventArg);
         //发送成功回调
         SuccessCallback<SendResult<String, IEventArg>> successCallback = result -> {
-//            if (registerStore == null) return;
+            if (eventLogDispatcher == null) {
+                return;
+            }
             sendLog.setSuccess(true);
             Map<String, Object> map = new HashMap<>(2);
             if (result != null) {
@@ -46,16 +52,17 @@ public class KafkaEventSender implements IEventSender {
                 map.put("metadata", result.getRecordMetadata());
             }
             sendLog.setExtJson(JSON.toJSONString(map));
-//            sendLog.register(registerResult);
+            this.eventLogDispatcher.dispatch(sendLog);
         };
 
         // 发送失败回调
         FailureCallback failureCallback = ex -> {
-//            if (registerStore == null) return;
+            if (eventLogDispatcher == null) {
+                return;
+            }
             sendLog.setSuccess(false);
             sendLog.setMessage(ex.getMessage());
-//            registerStore.register(registerResult);
-
+            this.eventLogDispatcher.dispatch(sendLog);
             log.error(ex.getMessage());
         };
         listenableFuture.addCallback(successCallback, failureCallback);
@@ -69,9 +76,5 @@ public class KafkaEventSender implements IEventSender {
      */
     private String getTopic(IEventArg eventArg) {
         return eventArg.getClass().getName();
-    }
-
-    public void setKafkaTemplate(KafkaTemplate<String, IEventArg> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
     }
 }

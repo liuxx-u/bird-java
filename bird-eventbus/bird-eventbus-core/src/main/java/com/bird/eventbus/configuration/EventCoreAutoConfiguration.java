@@ -2,6 +2,7 @@ package com.bird.eventbus.configuration;
 
 import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.handler.*;
+import com.bird.eventbus.log.*;
 import com.bird.eventbus.registry.IEventRegistry;
 import com.bird.eventbus.registry.MapEventRegistry;
 import org.springframework.beans.factory.ObjectProvider;
@@ -20,14 +21,16 @@ import java.util.List;
  * @since 2020/11/19
  */
 @Configuration
-@EnableConfigurationProperties(EventHandlerProperties.class)
+@EnableConfigurationProperties({EventHandlerProperties.class, EventLogProperties.class})
 @ConditionalOnProperty(value = EventbusConstant.Handler.SCAN_PACKAGES)
 @AutoConfigureAfter(name = "org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor")
 public class EventCoreAutoConfiguration {
 
+    private final EventLogProperties logProperties;
     private final EventHandlerProperties handlerProperties;
 
-    public EventCoreAutoConfiguration(EventHandlerProperties handlerProperties) {
+    public EventCoreAutoConfiguration(EventLogProperties logProperties, EventHandlerProperties handlerProperties) {
+        this.logProperties = logProperties;
         this.handlerProperties = handlerProperties;
     }
 
@@ -44,10 +47,36 @@ public class EventCoreAutoConfiguration {
      * 注册 事件处理方法注册中心
      */
     @Bean
-
     @ConditionalOnMissingBean(IEventRegistry.class)
     public IEventRegistry eventRegistry() {
         return new MapEventRegistry();
+    }
+
+    /**
+     * 注册 默认的事件发送日志存储器
+     */
+    @Bean
+    @ConditionalOnMissingBean({IEventSendLogStore.class, IEventLogDispatcher.class})
+    public IEventSendLogStore eventSendLogStore() {
+        return new NullEventLogStore();
+    }
+
+    /**
+     * 注册 默认的事件处理日志存储器
+     */
+    @Bean
+    @ConditionalOnMissingBean({IEventHandleLogStore.class, IEventLogDispatcher.class})
+    public IEventHandleLogStore eventHandleLogStore() {
+        return new NullEventLogStore();
+    }
+
+    /**
+     * 注册 默认的事件日志调度器
+     */
+    @Bean
+    @ConditionalOnMissingBean(IEventLogDispatcher.class)
+    public IEventLogDispatcher eventLogDispatcher(IEventSendLogStore sendLogStore, IEventHandleLogStore handleLogStore) {
+        return new EventLogDispatcher(sendLogStore, handleLogStore, logProperties);
     }
 
     /**

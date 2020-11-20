@@ -10,6 +10,9 @@ import java.io.Serializable;
  */
 @Data
 public class EventMethodDefinition implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * 事件名称
      */

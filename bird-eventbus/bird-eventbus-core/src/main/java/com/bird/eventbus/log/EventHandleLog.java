@@ -18,6 +18,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class EventHandleLog extends AbstractEventLog {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * 所属消费者组
      */
@@ -57,6 +59,9 @@ public class EventHandleLog extends AbstractEventLog {
 
     @Data
     public class MethodInvokeLog implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
         /**
          * 是否成功
          */

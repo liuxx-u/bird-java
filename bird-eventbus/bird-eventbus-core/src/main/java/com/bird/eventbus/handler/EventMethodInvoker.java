@@ -3,6 +3,7 @@ package com.bird.eventbus.handler;
 import com.bird.eventbus.arg.IEventArg;
 import com.bird.eventbus.log.EventHandleLog;
 import com.bird.eventbus.log.EventHandleStatusEnum;
+import com.bird.eventbus.log.IEventLogDispatcher;
 import com.bird.eventbus.registry.IEventRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -28,12 +29,18 @@ public class EventMethodInvoker implements ApplicationContextAware {
     private final IEventMethodExecutor executor;
     private final IEventRegistry eventRegistry;
     private final List<IEventMethodInvokerInterceptor> invokerInterceptors;
+    private final IEventLogDispatcher eventLogDispatcher;
 
-    public EventMethodInvoker(EventHandlerProperties handlerProperties,IEventMethodExecutor executor,IEventRegistry eventRegistry, List<IEventMethodInvokerInterceptor> invokerInterceptors) {
+    public EventMethodInvoker(EventHandlerProperties handlerProperties
+            , IEventMethodExecutor executor
+            , IEventRegistry eventRegistry
+            , List<IEventMethodInvokerInterceptor> invokerInterceptors
+            , IEventLogDispatcher eventLogDispatcher) {
         this.handlerProperties = handlerProperties;
         this.executor = executor;
         this.eventRegistry = eventRegistry;
         this.invokerInterceptors = invokerInterceptors;
+        this.eventLogDispatcher = eventLogDispatcher;
     }
 
     /**
@@ -77,13 +84,7 @@ public class EventMethodInvoker implements ApplicationContextAware {
             }
         }
         handleLog.setStatus(status);
-//        if (handlerStore != null) {
-//            try {
-//                resultQueue.put(handleResult);
-//            } catch (InterruptedException ex) {
-//                log.error("事件消费结果入队失败", ex);
-//            }
-//        }
+        eventLogDispatcher.dispatch(handleLog);
     }
 
     /**
