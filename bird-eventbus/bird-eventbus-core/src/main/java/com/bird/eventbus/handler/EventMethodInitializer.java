@@ -19,6 +19,7 @@ import java.util.Set;
 @Slf4j
 public class EventMethodInitializer {
 
+    private boolean initialized = false;
     private final EventHandlerProperties handlerProperties;
     private final IEventRegistry eventRegistry;
     private final IEventMethodInitializeListener initializeListener;
@@ -30,6 +31,9 @@ public class EventMethodInitializer {
     }
 
     public void initialize() {
+        if(!this.initialized){
+            return;
+        }
         String scanPackages = this.handlerProperties.getScanPackages();
         if (StringUtils.isBlank(scanPackages)) {
             log.warn("事件处理方法扫码包路径不存在");
@@ -67,5 +71,6 @@ public class EventMethodInitializer {
         if (initializeListener != null && !CollectionUtils.isEmpty(definitions)) {
             initializeListener.initialize(definitions);
         }
+        this.initialized = true;
     }
 }
