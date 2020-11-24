@@ -37,8 +37,7 @@
         <mybatisplus.version>3.4.0</mybatisplus.version>
         <mysql-connector.version>8.0.21</mysql-connector.version>
         <druid.version>1.1.22</druid.version>
-        <fastjson.version>1.2.72</fastjson.version>
-        <poi.version>3.17</poi.version>
+        <fastjson.version>1.2.75</fastjson.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
