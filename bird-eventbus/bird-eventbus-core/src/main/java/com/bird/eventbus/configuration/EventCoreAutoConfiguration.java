@@ -42,9 +42,9 @@ public class EventCoreAutoConfiguration {
      * 注册 事件处理方法执行线程池
      */
     @Bean
-    @ConditionalOnMissingBean(IEventMethodExecutor.class)
-    public IEventMethodExecutor eventMethodExecutor(ObjectProvider<ThreadPoolTaskExecutor> taskExecutor) {
-        return new DefaultEventMethodExecutor(taskExecutor.getIfAvailable(ThreadPoolTaskExecutor::new));
+    @ConditionalOnMissingBean(IEventMethodAsyncConfigurer.class)
+    public IEventMethodAsyncConfigurer eventMethodAsyncConfigurer(ObjectProvider<ThreadPoolTaskExecutor> taskExecutor) {
+        return new DefaultEventMethodAsyncConfigurer(taskExecutor.getIfAvailable(ThreadPoolTaskExecutor::new));
     }
 
     /**
@@ -88,7 +88,7 @@ public class EventCoreAutoConfiguration {
      * 注册 事件处理方法执行器
      */
     @Bean
-    public EventMethodInvoker eventMethodInvoker(IEventMethodExecutor eventMethodExecutor, IEventRegistry eventRegistry, ObjectProvider<List<IEventMethodInvokerInterceptor>> invokerInterceptors, IEventLogDispatcher eventLogDispatcher) {
+    public EventMethodInvoker eventMethodInvoker(IEventMethodAsyncConfigurer eventMethodExecutor, IEventRegistry eventRegistry, ObjectProvider<List<IEventMethodInvokerInterceptor>> invokerInterceptors, IEventLogDispatcher eventLogDispatcher) {
         return new EventMethodInvoker(this.handlerProperties, eventMethodExecutor, eventRegistry, invokerInterceptors.getIfAvailable(), eventLogDispatcher);
     }
 

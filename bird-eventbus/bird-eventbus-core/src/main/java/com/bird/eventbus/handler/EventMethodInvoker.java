@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
 
 /**
  * @author liuxx
@@ -26,18 +27,18 @@ public class EventMethodInvoker implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     private final EventHandlerProperties handlerProperties;
-    private final IEventMethodExecutor executor;
+    private final IEventMethodAsyncConfigurer asyncConfigurer;
     private final IEventRegistry eventRegistry;
     private final List<IEventMethodInvokerInterceptor> invokerInterceptors;
     private final IEventLogDispatcher eventLogDispatcher;
 
     public EventMethodInvoker(EventHandlerProperties handlerProperties
-            , IEventMethodExecutor executor
+            , IEventMethodAsyncConfigurer asyncConfigurer
             , IEventRegistry eventRegistry
             , List<IEventMethodInvokerInterceptor> invokerInterceptors
             , IEventLogDispatcher eventLogDispatcher) {
         this.handlerProperties = handlerProperties;
-        this.executor = executor;
+        this.asyncConfigurer = asyncConfigurer;
         this.eventRegistry = eventRegistry;
         this.invokerInterceptors = invokerInterceptors;
         this.eventLogDispatcher = eventLogDispatcher;
@@ -54,10 +55,15 @@ public class EventMethodInvoker implements ApplicationContextAware {
             return;
         }
 
-        this.executor.execute(() -> this.handleEvent(eventArg));
+        if (this.asyncConfigurer == null || this.asyncConfigurer.getAsyncExecutor(eventArg) == null) {
+            this.handleEvent(eventArg);
+        } else {
+            Executor executor = this.asyncConfigurer.getAsyncExecutor(eventArg);
+            executor.execute(() -> this.handleEvent(eventArg));
+        }
     }
 
-    private void handleEvent(IEventArg eventArg){
+    private void handleEvent(IEventArg eventArg) {
         EventHandleLog handleLog = new EventHandleLog(eventArg);
         handleLog.setGroup(this.handlerProperties.getGroup());
         EventHandleStatusEnum status = EventHandleStatusEnum.FAIL;
