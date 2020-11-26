@@ -9,13 +9,11 @@ import com.bird.eventbus.registry.MapEventRegistry;
 import com.bird.eventbus.sender.IEventSendInterceptor;
 import com.bird.eventbus.sender.IEventSender;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +25,6 @@ import java.util.List;
 @Configuration
 @EnableConfigurationProperties({EventHandlerProperties.class, EventLogProperties.class})
 @ConditionalOnProperty(value = EventbusConstant.Handler.SCAN_PACKAGES)
-@AutoConfigureAfter(name = "org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor")
 public class EventCoreAutoConfiguration {
 
     private final EventLogProperties logProperties;
@@ -43,8 +40,8 @@ public class EventCoreAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(IEventMethodAsyncConfigurer.class)
-    public IEventMethodAsyncConfigurer eventMethodAsyncConfigurer(ObjectProvider<ThreadPoolTaskExecutor> taskExecutor) {
-        return new DefaultEventMethodAsyncConfigurer(taskExecutor.getIfAvailable(ThreadPoolTaskExecutor::new));
+    public IEventMethodAsyncConfigurer eventMethodAsyncConfigurer() {
+        return new DefaultEventMethodAsyncConfigurer();
     }
 
     /**
