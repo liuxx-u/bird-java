@@ -1,7 +1,8 @@
 package com.bird.eventbus.kafka.configuration;
 
+import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.arg.IEventArg;
-import com.bird.eventbus.configuration.EventCoreAutoConfiguration;
+import com.bird.eventbus.configuration.EventHandlerAutoConfiguration;
 import com.bird.eventbus.handler.EventMethodInvoker;
 import com.bird.eventbus.kafka.consumer.KafkaEventArgListener;
 import com.bird.eventbus.kafka.consumer.KafkaEventConsumerFactoryCustomizer;
@@ -27,15 +28,13 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 
-import java.util.Arrays;
-
 /**
  * @author liuxx
  * @date 2018/3/23
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(KafkaTemplate.class)
-@AutoConfigureAfter({EventCoreAutoConfiguration.class, KafkaAutoConfiguration.class})
+@AutoConfigureAfter({KafkaAutoConfiguration.class,EventHandlerAutoConfiguration.class})
 public class EventKafkaAutoConfiguration {
 
     @Bean
@@ -53,14 +52,14 @@ public class EventKafkaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DefaultKafkaConsumerFactoryCustomizer.class)
-    @ConditionalOnProperty(value = "spring.kafka.consumer.bootstrap-servers")
+    @ConditionalOnProperty(value = {"spring.kafka.consumer.bootstrap-servers", EventbusConstant.Handler.GROUP})
     public DefaultKafkaConsumerFactoryCustomizer kafkaConsumerFactoryCustomizer(IEventRegistry eventRegistry) {
         return new KafkaEventConsumerFactoryCustomizer(eventRegistry);
     }
 
     @Bean
     @ConditionalOnBean({EventMethodInvoker.class, IEventRegistry.class})
-    @ConditionalOnProperty(value = "spring.kafka.consumer.bootstrap-servers")
+    @ConditionalOnProperty(value = {"spring.kafka.consumer.bootstrap-servers", EventbusConstant.Handler.GROUP})
     public KafkaMessageListenerContainer kafkaListenerContainer(ConsumerFactory<String, IEventArg> consumerFactory, EventMethodInvoker eventMethodInvoker, IEventRegistry eventRegistry) {
 
         KafkaEventArgListener listener = new KafkaEventArgListener(eventMethodInvoker);

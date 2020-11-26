@@ -16,6 +16,10 @@ public interface EventbusConstant {
          */
         String PREFIX = EventbusConstant.PREFIX + ".handler";
         /**
+         * 消费者组
+         */
+        String GROUP = PREFIX + ".group";
+        /**
          * 事件处理方法 包扫码路径
          */
         String SCAN_PACKAGES = PREFIX + ".scan-packages";

@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.bird.eventbus.configuration.EventCoreAutoConfiguration
+  com.bird.eventbus.configuration.EventCoreAutoConfiguration,\
+  com.bird.eventbus.configuration.EventHandlerAutoConfiguration

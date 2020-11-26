@@ -1,6 +1,7 @@
 package com.bird.eventbus.rocketmq.configuration;
 
-import com.bird.eventbus.configuration.EventCoreAutoConfiguration;
+import com.bird.eventbus.EventbusConstant;
+import com.bird.eventbus.configuration.EventHandlerAutoConfiguration;
 import com.bird.eventbus.handler.EventMethodInvoker;
 import com.bird.eventbus.log.IEventLogDispatcher;
 import com.bird.eventbus.registry.IEventRegistry;
@@ -16,6 +17,7 @@ import org.apache.rocketmq.spring.support.RocketMQMessageConverter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +27,9 @@ import org.springframework.core.env.Environment;
  * @author liuxx
  * @since 2020/11/25
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(RocketEventHandlerProperties.class)
-@AutoConfigureAfter({RocketMQAutoConfiguration.class, EventCoreAutoConfiguration.class})
+@AutoConfigureAfter({RocketMQAutoConfiguration.class, EventHandlerAutoConfiguration.class})
 public class RocketEventAutoConfiguration {
 
     private final Environment environment;
@@ -45,13 +47,16 @@ public class RocketEventAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(value = EventbusConstant.Handler.GROUP)
     public EventListenerConcurrently eventListenerConcurrently(EventMethodInvoker eventMethodInvoker, RocketMQMessageConverter rocketMQMessageConverter) {
         return new EventListenerConcurrently(this.rocketEventHandlerProperties, eventMethodInvoker, rocketMQMessageConverter.getMessageConverter());
     }
 
     @Bean
+    @ConditionalOnProperty(value = EventbusConstant.Handler.GROUP)
     public RocketEventConsumerContainer rocketEventConsumerContainer(EventListenerConcurrently eventListenerConcurrently, IEventRegistry eventRegistry) throws MQClientException {
-        RocketEventConsumerContainer consumerContainer = new RocketEventConsumerContainer(environment.getProperty("spring.application.name"), this.rocketEventHandlerProperties, eventListenerConcurrently);
+        String consumerGroup = environment.resolvePlaceholders("${bird.eventbus.handler.group:}");
+        RocketEventConsumerContainer consumerContainer = new RocketEventConsumerContainer(consumerGroup, this.rocketEventHandlerProperties, eventListenerConcurrently);
         consumerContainer.initialize(eventRegistry.getAllTopics());
         return consumerContainer;
     }
