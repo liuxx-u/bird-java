@@ -1,6 +1,5 @@
 package com.bird.eventbus.rabbit.configuration;
 
-import com.bird.eventbus.EventBus;
 import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.configuration.EventCoreAutoConfiguration;
 import com.bird.eventbus.handler.EventMethodInvoker;
@@ -18,20 +17,18 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.ContentTypeDelegatingMessageConverter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 
 import java.util.HashMap;
 
@@ -43,16 +40,17 @@ import java.util.HashMap;
 @ConditionalOnProperty(value = EventbusConstant.Rabbit.ADDRESS_PROPERTY_NAME)
 @EnableConfigurationProperties(RabbitProperties.class)
 @AutoConfigureAfter(EventCoreAutoConfiguration.class)
-public class RabbitConfigurer {
+public class RabbitEventAutoConfiguration {
 
-    @Value("${spring.application.name:}")
-    private String application;
+    private final Environment environment;
+    private final RabbitProperties rabbitProperties;
+    private final ConfigurableApplicationContext applicationContext;
 
-    @Autowired
-    private RabbitProperties rabbitProperties;
-
-    @Autowired
-    private ConfigurableApplicationContext applicationContext;
+    public RabbitEventAutoConfiguration(Environment environment, RabbitProperties rabbitProperties, ConfigurableApplicationContext applicationContext) {
+        this.environment = environment;
+        this.rabbitProperties = rabbitProperties;
+        this.applicationContext = applicationContext;
+    }
 
     @Bean
     public CachingConnectionFactory connectionFactory() {
@@ -85,16 +83,18 @@ public class RabbitConfigurer {
     }
 
     @Bean
-    @ConditionalOnBean({IEventRegistry.class,EventMethodInvoker.class})
+    @ConditionalOnProperty(value = EventbusConstant.Handler.GROUP)
     public Queue queue() {
-        return new Queue(application, true);
+        String consumerGroup = environment.resolvePlaceholders("${bird.eventbus.handler.group:}");
+        return new Queue(consumerGroup, true);
     }
 
     @Bean
-    @ConditionalOnBean({IEventRegistry.class,EventMethodInvoker.class})
+    @ConditionalOnProperty(value = EventbusConstant.Handler.GROUP)
+    @ConditionalOnBean({IEventRegistry.class, EventMethodInvoker.class})
     public SimpleMessageListenerContainer messageContainer(Queue queue, IEventRegistry eventRegistry, EventMethodInvoker eventMethodInvoker) {
         for (String topic : eventRegistry.getAllTopics()) {
-            this.initExchange(topic,queue);
+            this.initExchange(topic, queue);
         }
 
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory());

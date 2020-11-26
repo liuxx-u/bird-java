@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-    com.bird.eventbus.rabbit.configuration.RabbitConfigurer
+    com.bird.eventbus.rabbit.configuration.RabbitEventAutoConfiguration
