@@ -41,7 +41,9 @@ public class EventCoreAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(IEventLogDispatcher.class)
     public IEventLogDispatcher eventLogDispatcher(IEventSendLogStore sendLogStore, IEventHandleLogStore handleLogStore) {
-        return new EventLogDispatcher(sendLogStore, handleLogStore, logProperties);
+        EventLogDispatcher eventLogDispatcher = new EventLogDispatcher(sendLogStore, handleLogStore, logProperties);
+        eventLogDispatcher.init();
+        return eventLogDispatcher;
     }
 
     /**

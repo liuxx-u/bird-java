@@ -30,7 +30,7 @@ public class EventLogProperties {
     /**
      * 默认队列长度
      */
-    private Integer defaultQueueSize = 1024;
+    private Integer defaultQueueSize = 10240;
     /**
      * 线程名称
      */

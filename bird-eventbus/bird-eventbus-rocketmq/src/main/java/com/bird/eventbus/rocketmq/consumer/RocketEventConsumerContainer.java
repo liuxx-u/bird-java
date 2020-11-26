@@ -26,6 +26,7 @@ public class RocketEventConsumerContainer implements SmartLifecycle {
         consumer.setConsumeThreadMin(rocketProperties.getConsumeThreadMin());
         consumer.setConsumeThreadMax(rocketProperties.getConsumeThreadMax());
         consumer.setConsumeTimeout(rocketProperties.getConsumeTimeout());
+        consumer.setMessageModel(rocketProperties.getMessageModel());
         consumer.setMessageListener(listenerConcurrently);
     }
 
