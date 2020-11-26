@@ -31,7 +31,7 @@ public class EventMethodInitializer {
     }
 
     public void initialize() {
-        if(!this.initialized){
+        if(this.initialized){
             return;
         }
         String scanPackages = this.handlerProperties.getScanPackages();

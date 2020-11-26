@@ -1,7 +1,6 @@
 package com.bird.eventbus.registry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -59,9 +58,6 @@ public class MapEventRegistry implements IEventRegistry {
     @Override
     public String[] getAllTopics() {
         Set<String> keys = EVENT_HANDLER_CONTAINER.keySet();
-        if (CollectionUtils.isEmpty(keys)) {
-            return new String[]{"none-topic"};
-        }
         return keys.toArray(new String[0]);
     }
 }

@@ -15,5 +15,6 @@
         <module>bird-eventbus-core</module>
         <module>bird-eventbus-kafka</module>
         <module>bird-eventbus-rabbit</module>
+        <module>bird-eventbus-rocketmq</module>
     </modules>
 </project>

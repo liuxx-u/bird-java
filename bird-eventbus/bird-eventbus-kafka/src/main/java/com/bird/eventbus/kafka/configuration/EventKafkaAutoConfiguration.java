@@ -10,6 +10,7 @@ import com.bird.eventbus.kafka.producer.KafkaEventSender;
 import com.bird.eventbus.log.IEventLogDispatcher;
 import com.bird.eventbus.registry.IEventRegistry;
 import com.bird.eventbus.sender.IEventSender;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -26,6 +27,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 
+import java.util.Arrays;
+
 /**
  * @author liuxx
  * @date 2018/3/23
@@ -38,7 +41,7 @@ public class EventKafkaAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(DefaultKafkaProducerFactoryCustomizer.class)
     @ConditionalOnProperty(value = "spring.kafka.producer.bootstrap-servers")
-    public DefaultKafkaProducerFactoryCustomizer kafkaProducerFactoryCustomizer(){
+    public DefaultKafkaProducerFactoryCustomizer kafkaProducerFactoryCustomizer() {
         return new KafkaEventProducerFactoryCustomizer();
     }
 
@@ -51,17 +54,21 @@ public class EventKafkaAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(DefaultKafkaConsumerFactoryCustomizer.class)
     @ConditionalOnProperty(value = "spring.kafka.consumer.bootstrap-servers")
-    public DefaultKafkaConsumerFactoryCustomizer kafkaConsumerFactoryCustomizer(IEventRegistry eventRegistry){
+    public DefaultKafkaConsumerFactoryCustomizer kafkaConsumerFactoryCustomizer(IEventRegistry eventRegistry) {
         return new KafkaEventConsumerFactoryCustomizer(eventRegistry);
     }
 
     @Bean
     @ConditionalOnBean({EventMethodInvoker.class, IEventRegistry.class})
     @ConditionalOnProperty(value = "spring.kafka.consumer.bootstrap-servers")
-    public KafkaMessageListenerContainer kafkaListenerContainer(ConsumerFactory<String,IEventArg> consumerFactory, EventMethodInvoker eventMethodInvoker, IEventRegistry eventRegistry) {
+    public KafkaMessageListenerContainer kafkaListenerContainer(ConsumerFactory<String, IEventArg> consumerFactory, EventMethodInvoker eventMethodInvoker, IEventRegistry eventRegistry) {
 
         KafkaEventArgListener listener = new KafkaEventArgListener(eventMethodInvoker);
-        ContainerProperties containerProperties = new ContainerProperties(eventRegistry.getAllTopics());
+        String[] topics = eventRegistry.getAllTopics();
+        if (ArrayUtils.isEmpty(topics)) {
+            topics = new String[]{"none-topic"};
+        }
+        ContainerProperties containerProperties = new ContainerProperties(topics);
         containerProperties.setMessageListener(listener);
         containerProperties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
 
