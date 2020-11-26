@@ -1,0 +1,52 @@
+{
+  "groups": [
+    {
+      "name": "bird.eventbus.handler.rocketmq",
+      "type": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties",
+      "sourceType": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bird.eventbus.handler.rocketmq.consume-thread-max",
+      "type": "java.lang.Integer",
+      "description": "最大消费线程数",
+      "sourceType": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties",
+      "defaultValue": 20
+    },
+    {
+      "name": "bird.eventbus.handler.rocketmq.consume-thread-min",
+      "type": "java.lang.Integer",
+      "description": "最小消费线程数",
+      "sourceType": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties",
+      "defaultValue": 20
+    },
+    {
+      "name": "bird.eventbus.handler.rocketmq.consume-timeout",
+      "type": "java.lang.Integer",
+      "description": "消费超时时间，单位：分钟",
+      "sourceType": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties",
+      "defaultValue": 15
+    },
+    {
+      "name": "bird.eventbus.handler.rocketmq.delay-level-when-next-consume",
+      "type": "java.lang.Integer",
+      "description": "消费者重试策略 <br> -1,no retry,put into DLQ directly<br> 0,broker control retry frequency<br> >0,client control retry frequency",
+      "sourceType": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "bird.eventbus.handler.rocketmq.message-model",
+      "type": "org.apache.rocketmq.common.protocol.heartbeat.MessageModel",
+      "description": "消费模式：默认：集群消费",
+      "sourceType": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties"
+    },
+    {
+      "name": "bird.eventbus.handler.rocketmq.name-server",
+      "type": "java.lang.String",
+      "description": "RocketMQ Name Server",
+      "sourceType": "com.bird.eventbus.rocketmq.consumer.RocketEventHandlerProperties"
+    }
+  ],
+  "hints": []
+}
