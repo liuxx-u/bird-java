@@ -1,14 +1,13 @@
-package com.bird.eventbus.rabbit.handler;
+package com.bird.eventbus.rabbit.consumer;
 
-import com.alibaba.fastjson.JSON;
 import com.bird.eventbus.arg.IEventArg;
 import com.bird.eventbus.handler.EventMethodInvoker;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
-
-import java.nio.charset.Charset;
+import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.amqp.support.converter.SimpleMessageConverter;
 
 /**
  * @author liuxx
@@ -18,31 +17,29 @@ import java.nio.charset.Charset;
 public class RabbitEventArgListener implements ChannelAwareMessageListener {
 
     private EventMethodInvoker eventMethodInvoker;
+    private MessageConverter messageConverter;
 
     public RabbitEventArgListener(EventMethodInvoker eventMethodInvoker) {
         this.eventMethodInvoker = eventMethodInvoker;
+        this.messageConverter =  new SimpleMessageConverter();
+    }
+
+    public void setMessageConverter(MessageConverter messageConverter){
+        this.messageConverter = messageConverter;
     }
 
     @Override
-    public void onMessage(Message message, Channel channel) throws Exception {
+    public void onMessage(Message message, Channel channel) {
         Class<?> clazz;
         String className = message.getMessageProperties().getReceivedExchange();
         try {
             clazz = Class.forName(className);
-            if (!IEventArg.class.isAssignableFrom(clazz)) {
-                log.error("事件处理失败：" + className + "不是IEventArg的子类");
+            if (IEventArg.class.isAssignableFrom(clazz)) {
+                IEventArg eventArg = (IEventArg) messageConverter.fromMessage(message);
+                eventMethodInvoker.invoke(eventArg);
             }
         } catch (ClassNotFoundException ex) {
             log.error("事件处理失败：", ex);
-            return;
         }
-
-        String body = new String(message.getBody(), Charset.forName("utf8"));
-        IEventArg eventArg = (IEventArg) JSON.parseObject(body,clazz);
-
-        eventMethodInvoker.invoke(eventArg);
-
-        //确认消息成功消费
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     }
 }

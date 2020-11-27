@@ -1,4 +1,4 @@
-package com.bird.eventbus.rabbit.register;
+package com.bird.eventbus.rabbit.producer;
 
 import com.bird.eventbus.arg.IEventArg;
 import com.bird.eventbus.sender.IEventSender;

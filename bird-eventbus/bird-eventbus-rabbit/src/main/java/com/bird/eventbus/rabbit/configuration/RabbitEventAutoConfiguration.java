@@ -3,31 +3,29 @@ package com.bird.eventbus.rabbit.configuration;
 import com.bird.eventbus.EventbusConstant;
 import com.bird.eventbus.configuration.EventCoreAutoConfiguration;
 import com.bird.eventbus.handler.EventMethodInvoker;
-import com.bird.eventbus.rabbit.handler.RabbitEventArgListener;
-import com.bird.eventbus.rabbit.register.RabbitEventSender;
+import com.bird.eventbus.rabbit.consumer.RabbitEventArgListener;
+import com.bird.eventbus.rabbit.producer.RabbitEventSender;
 import com.bird.eventbus.registry.IEventRegistry;
 import com.bird.eventbus.sender.IEventSender;
+import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.support.converter.ContentTypeDelegatingMessageConverter;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 
 import java.util.HashMap;
@@ -37,54 +35,27 @@ import java.util.HashMap;
  * @date 2019/1/18
  */
 @Configuration
-@ConditionalOnProperty(value = EventbusConstant.Rabbit.ADDRESS_PROPERTY_NAME)
-@EnableConfigurationProperties(RabbitProperties.class)
-@AutoConfigureAfter(EventCoreAutoConfiguration.class)
+@ConditionalOnClass({ RabbitTemplate.class, Channel.class })
+@AutoConfigureAfter({EventCoreAutoConfiguration.class, RabbitAutoConfiguration.class})
 public class RabbitEventAutoConfiguration {
 
     private final Environment environment;
-    private final RabbitProperties rabbitProperties;
     private final ConfigurableApplicationContext applicationContext;
 
-    public RabbitEventAutoConfiguration(Environment environment, RabbitProperties rabbitProperties, ConfigurableApplicationContext applicationContext) {
+    public RabbitEventAutoConfiguration(Environment environment, ConfigurableApplicationContext applicationContext) {
         this.environment = environment;
-        this.rabbitProperties = rabbitProperties;
         this.applicationContext = applicationContext;
     }
 
     @Bean
-    public CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses(rabbitProperties.getAddress());
-        connectionFactory.setUsername(rabbitProperties.getUser());
-        connectionFactory.setPassword(rabbitProperties.getPassword());
-        connectionFactory.setVirtualHost(rabbitProperties.getVirtualHost());
-        connectionFactory.setPublisherConfirms(true);
-        return connectionFactory;
-    }
-
-    @Bean
-    public MessageConverter messageConverter() {
-        return new ContentTypeDelegatingMessageConverter(new Jackson2JsonMessageConverter());
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public RabbitTemplate rabbitTemplate() {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory());
-        template.setMessageConverter(messageConverter());
-
-        return template;
-    }
-
-    @Bean
+    @ConditionalOnBean(RabbitTemplate.class)
     public IEventSender eventSender(RabbitTemplate rabbitTemplate) {
         return new RabbitEventSender(rabbitTemplate);
     }
 
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Handler.GROUP)
-    public Queue queue() {
+    public Queue eventGroupQueue() {
         String consumerGroup = environment.resolvePlaceholders("${bird.eventbus.handler.group:}");
         return new Queue(consumerGroup, true);
     }
@@ -92,22 +63,22 @@ public class RabbitEventAutoConfiguration {
     @Bean
     @ConditionalOnProperty(value = EventbusConstant.Handler.GROUP)
     @ConditionalOnBean({IEventRegistry.class, EventMethodInvoker.class})
-    public SimpleMessageListenerContainer messageContainer(Queue queue, IEventRegistry eventRegistry, EventMethodInvoker eventMethodInvoker) {
+    public SimpleMessageListenerContainer messageContainer(SimpleRabbitListenerContainerFactory containerFactory, IEventRegistry eventRegistry, EventMethodInvoker eventMethodInvoker) {
+        Queue eventQueue = eventGroupQueue();
+
         for (String topic : eventRegistry.getAllTopics()) {
-            this.initExchange(topic, queue);
+            this.initExchange(topic, eventQueue);
         }
-
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory());
-        container.setQueues(queue);
-        container.setMessageConverter(messageConverter());
-        container.setExposeListenerChannel(true);
-        container.setMaxConcurrentConsumers(1);
-        container.setConcurrentConsumers(1);
-        //设置确认模式手工确认
-        container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
-
         RabbitEventArgListener listener = new RabbitEventArgListener(eventMethodInvoker);
-        container.setMessageListener(listener);
+
+        SimpleRabbitListenerEndpoint endpoint = new SimpleRabbitListenerEndpoint();
+        endpoint.setQueues(eventQueue);
+        endpoint.setMessageListener(listener);
+
+        SimpleMessageListenerContainer container = containerFactory.createListenerContainer(endpoint);
+        if(endpoint.getMessageConverter() != null){
+            listener.setMessageConverter(endpoint.getMessageConverter());
+        }
         return container;
     }
 
@@ -125,11 +96,11 @@ public class RabbitEventAutoConfiguration {
         beanFactory.registerBeanDefinition("rabbit.exchange#" + topic, exchangeBeanBuilder.getRawBeanDefinition());
 
         BeanDefinitionBuilder bindingBeanBuilder = BeanDefinitionBuilder.genericBeanDefinition(Binding.class);
-        bindingBeanBuilder.addConstructorArgValue(queue.getName());
-        bindingBeanBuilder.addConstructorArgValue(Binding.DestinationType.QUEUE);
-        bindingBeanBuilder.addConstructorArgValue(topic);
-        bindingBeanBuilder.addConstructorArgValue("");
-        bindingBeanBuilder.addConstructorArgValue(new HashMap<>());
+        bindingBeanBuilder.addConstructorArgValue(queue.getName())
+                .addConstructorArgValue(Binding.DestinationType.QUEUE)
+                .addConstructorArgValue(topic)
+                .addConstructorArgValue("")
+                .addConstructorArgValue(new HashMap<>(4));
         beanFactory.registerBeanDefinition("rabbit.binding#" + topic, bindingBeanBuilder.getRawBeanDefinition());
     }
 }
