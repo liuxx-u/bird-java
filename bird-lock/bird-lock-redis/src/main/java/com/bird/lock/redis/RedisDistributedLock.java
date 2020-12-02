@@ -1,7 +1,7 @@
 package com.bird.lock.redis;
 
 import com.bird.lock.AbstractDistributedLock;
-import com.bird.lock.reentrant.ILockReentrance;
+import com.bird.lock.redis.configuration.RedisLockProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -15,27 +15,48 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisDistributedLock  extends AbstractDistributedLock {
 
-    private static final String DEFAULT_LOCK_PREFIX = "bird:lock:";
+    private final StringRedisTemplate redisTemplate;
+    private final RedisLockProperties redisLockProperties;
 
-    private StringRedisTemplate redisTemplate;
-
-    private String lockPrefix = DEFAULT_LOCK_PREFIX;
-
-    public RedisDistributedLock(StringRedisTemplate redisTemplate, ILockReentrance lockReentrance) {
-        super(lockReentrance);
-
+    public RedisDistributedLock(StringRedisTemplate redisTemplate, RedisLockProperties redisLockProperties) {
         this.redisTemplate = redisTemplate;
+        this.redisLockProperties = redisLockProperties;
     }
 
     @Override
-    public boolean tryLock(String lockKey, String lockValue, int expire) {
+    public void lock(String lockKey) {
+        this.lock(lockKey, this.redisLockProperties.getKeyExpire());
+    }
+
+    @Override
+    public void lock(String lockKey, long keyExpire) {
+        super.lock(lockKey, keyExpire, this.redisLockProperties.getRetryInterval());
+    }
+
+    @Override
+    public boolean tryLock(String lockKey) {
+        return this.tryLock(lockKey, this.redisLockProperties.getKeyExpire());
+    }
+
+    @Override
+    public boolean tryLock(String lockKey, long keyExpire) {
+        return this.tryLock(lockKey, keyExpire, this.redisLockProperties.getRetryExpire());
+    }
+
+    @Override
+    public boolean tryLock(String lockKey, long keyExpire, long retryExpire) {
+        return super.tryLock(lockKey, keyExpire, this.redisLockProperties.getRetryInterval(), retryExpire);
+    }
+
+    @Override
+    public boolean tryLock(String lockKey, String lockValue, long expire) {
         // 尝试加锁
-        return redisTemplate.opsForValue().setIfAbsent(lockPrefix + lockKey, lockValue, expire, TimeUnit.MILLISECONDS);
+        return redisTemplate.opsForValue().setIfAbsent(this.redisLockProperties.getKeyPrefix() + lockKey, lockValue, expire, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public boolean releaseLock(String lockKey, String lockValue) {
-        String key = lockPrefix + lockKey;
+        String key = this.redisLockProperties.getKeyPrefix() + lockKey;
         // 获取锁的值
         String value = redisTemplate.opsForValue().get(key);
         if (StringUtils.equals(value, lockValue)) {

@@ -1,10 +1,5 @@
 package com.bird.lock;
 
-import com.bird.lock.reject.ExceptionRejectStrategy;
-import com.bird.lock.reject.RejectStrategy;
-
-import java.util.function.Supplier;
-
 /**
  * 分布式锁接口
  *
@@ -14,60 +9,110 @@ import java.util.function.Supplier;
 public interface IDistributedLock {
 
     /**
-     * 默认的重试次数: 1次
+     * 默认的锁过期时间：1分钟
      */
-    int DEFAULT_RETRY = 1;
+    int DEFAULT_KEY_EXPIRE = 60 * 1000;
     /**
-     * 默认的重试周期. 1秒
+     * 默认的重试周期：1秒
      */
     int DEFAULT_RETRY_INTERVAL = 1000;
     /**
      * 默认的过期时间: 1分钟,
      */
-    int DEFAULT_EXPIRE = 60 * 1000;
+    int DEFAULT_RETRY_EXPIRE = 60 * 1000;
 
-    default <T> T withLock(String lockKey, Supplier<T> supplier) {
-        return withLock(lockKey, supplier, DEFAULT_RETRY, DEFAULT_RETRY_INTERVAL, DEFAULT_EXPIRE, new ExceptionRejectStrategy<>());
-    }
-
-    default <T> T withLock(String lockKey, Supplier<T> supplier, RejectStrategy<T> rejectStrategy) {
-        return withLock(lockKey, supplier, DEFAULT_RETRY, DEFAULT_RETRY_INTERVAL, DEFAULT_EXPIRE, rejectStrategy);
-    }
-
-    default <T> T withLock(String lockKey, Supplier<T> supplier, int expire) {
-        return withLock(lockKey, supplier, DEFAULT_RETRY, DEFAULT_RETRY_INTERVAL, expire, new ExceptionRejectStrategy<>());
-    }
-
-    default <T> T withLock(String lockKey, Supplier<T> supplier, int retry, int retryInterval) {
-        return withLock(lockKey, supplier, retry, retryInterval, DEFAULT_EXPIRE, new ExceptionRejectStrategy<>());
-    }
-
-    default <T> T justOne(String lockKey, Supplier<T> supplier) {
-        return withLock(lockKey, supplier, 0, 0, DEFAULT_EXPIRE, new ExceptionRejectStrategy<>());
+    /**
+     * 获取锁
+     * <p>
+     * 如果锁被其他方持有，一直重试直到获取锁成功，默认重试周期：1秒
+     *
+     * @param lockKey 锁的Key
+     */
+    default void lock(String lockKey) {
+        lock(lockKey, DEFAULT_KEY_EXPIRE);
     }
 
     /**
-     * 加锁执行
+     * 获取锁
+     * <p>
+     * 如果锁被其他方持有，一直重试直到获取锁成功，默认重试周期：1秒
      *
-     * @param lockKey        锁的key
-     * @param supplier       要执行的函数
-     * @param retry          重试次数
-     * @param retryInterval  重试时间间隔
-     * @param expire         锁过期时间
-     * @param rejectStrategy 拒绝策略, 如果加锁失败, 并且超过重试次数的时候. 执行拒绝策略
-     * @param <T>            返回类型
-     * @return 执行结果
+     * @param lockKey 锁的Key
+     * @param keyExpire 锁过期时间
      */
-    <T> T withLock(String lockKey, Supplier<T> supplier, int retry, int retryInterval, int expire, RejectStrategy<T> rejectStrategy);
+    default void lock(String lockKey, long keyExpire) {
+        lock(lockKey, keyExpire, DEFAULT_RETRY_INTERVAL);
+    }
 
     /**
-     * 确保结果只有有且仅有一个
+     * 获取锁
+     * <p>
+     * 如果锁被其他方持有，按指定的周期一直重试直到获取锁成功
      *
-     * @param lockKey    加锁key
-     * @param query      查询函数
-     * @param createFunc 创建函数
-     * @param <T>        返回结果
-     * @return 查询到的或创建的结果
+     * @param lockKey       锁的Key
+     * @param keyExpire 锁过期时间
+     * @param retryInterval 重试周期，单位：毫秒
      */
-    <T> T withUnique(String lockKey, Supplier<T> query, Supplier<T> createFunc);
+     default void lock(String lockKey, long keyExpire, long retryInterval) {
+         tryLock(lockKey, keyExpire, retryInterval, Long.MAX_VALUE);
+     }
+
+    /**
+     * 尝试获取锁
+     *
+     * 如果锁被其他方持有，在一分钟内进行重试，默认重试周期：1秒
+     *
+     * @param lockKey 锁的Key
+     * @return 是否获取成功
+     */
+    default boolean tryLock(String lockKey) {
+        return tryLock(lockKey, DEFAULT_KEY_EXPIRE, DEFAULT_RETRY_INTERVAL, DEFAULT_RETRY_EXPIRE);
+    }
+
+    /**
+     * 尝试获取锁
+     *
+     * 如果锁被其他方持有，在一分钟内进行重试，默认重试周期：1秒
+     *
+     * @param lockKey 锁的Key
+     * @param keyExpire 锁过期时间
+     * @return 是否获取成功
+     */
+    default boolean tryLock(String lockKey, long keyExpire) {
+        return tryLock(lockKey, keyExpire, DEFAULT_RETRY_INTERVAL, DEFAULT_RETRY_EXPIRE);
+    }
+
+    /**
+     * 尝试获取锁
+     *
+     * 如果锁被其他方持有，在指定时间范围内进行重试，默认重试周期：1秒
+     *
+     * @param lockKey 锁的Key
+     * @param keyExpire 锁过期时间
+     * @param retryExpire    等待时间，单位：毫秒
+     * @return 是否获取成功
+     */
+    default boolean tryLock(String lockKey, long keyExpire,long retryExpire) {
+        return tryLock(lockKey, keyExpire, DEFAULT_RETRY_INTERVAL, retryExpire);
+    }
+
+    /**
+     * 尝试获取锁
+     *
+     * 如果锁被其他方持有，按指定周期重试，在等待时间范围内获取锁成功则返回成功
+     *
+     * @param lockKey 锁的Key
+     * @param keyExpire 锁过期时间
+     * @param retryInterval    重试周期，单位：毫秒
+     * @param retryExpire    等待时间，单位：毫秒
+     * @return 是否获取成功
+     */
+    boolean tryLock(String lockKey, long keyExpire, long retryInterval, long retryExpire);
+
+    /**
+     * 释放锁
+     *
+     * @param lockKey 锁的Key
+     */
+    void unLock(String lockKey);
 }
