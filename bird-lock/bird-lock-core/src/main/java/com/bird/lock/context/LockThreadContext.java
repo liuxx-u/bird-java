@@ -68,10 +68,11 @@ public class LockThreadContext {
 
     /**
      * 根据Key获取线程中持有的分布式锁信息
+     *
      * @param lockKey 锁的Key
      * @return 分布式锁信息
      */
-    public static LockValue getLockValue(String lockKey){
+    public static LockValue getLockValue(String lockKey) {
         Map<String, LockValue> lockStateMap = lockStateMap();
         return lockStateMap.get(lockKey);
     }

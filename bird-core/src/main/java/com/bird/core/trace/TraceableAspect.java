@@ -13,14 +13,14 @@ import java.lang.reflect.Method;
 /**
  * 轨迹信息记录切面
  *
- * 切面紧跟在 {@link org.springframework.aop.interceptor.ExposeInvocationInterceptor} 之后执行
+ * 切面在 {@link org.springframework.aop.interceptor.ExposeInvocationInterceptor} 之后执行，在事务拦截器之后执行
  *
  * @author liuxx
  * @date 2019/8/4
  */
 @Slf4j
 @Aspect
-@Order(Ordered.HIGHEST_PRECEDENCE + 2)
+@Order(Ordered.HIGHEST_PRECEDENCE + 3)
 public class TraceableAspect {
 
     private final static String ERROR = "error:";
