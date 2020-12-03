@@ -1,0 +1,40 @@
+{
+  "groups": [
+    {
+      "name": "bird.lock.redis",
+      "type": "com.bird.lock.redis.configuration.RedisLockProperties",
+      "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bird.lock.redis.key-expire",
+      "type": "java.lang.Long",
+      "description": "锁过期时间，默认：1分钟",
+      "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
+      "defaultValue": 60000
+    },
+    {
+      "name": "bird.lock.redis.key-prefix",
+      "type": "java.lang.String",
+      "description": "分布式锁",
+      "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
+      "defaultValue": "bird:lock:"
+    },
+    {
+      "name": "bird.lock.redis.retry-expire",
+      "type": "java.lang.Long",
+      "description": "tryLock失败时最大重试时间，默认：1分钟",
+      "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
+      "defaultValue": 60000
+    },
+    {
+      "name": "bird.lock.redis.retry-interval",
+      "type": "java.lang.Long",
+      "description": "获取锁失败时重试周期，默认：1秒",
+      "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
+      "defaultValue": 1000
+    }
+  ],
+  "hints": []
+}
