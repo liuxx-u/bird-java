@@ -1,5 +1,6 @@
 package com.bird.web.common;
 
+import com.bird.web.common.interceptor.ConfigurableHandlerInterceptorAdapter;
 import com.bird.web.common.version.ApiVersionRequestHandlerMapping;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -146,10 +147,22 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         this.interceptorsProvider.ifAvailable(interceptors ->
-                interceptors.forEach(interceptor ->
-                        registry.addInterceptor(interceptor)
-                                .addPathPatterns("/**")
-                                .excludePathPatterns("/*.ico", "/*.htm", "/*.html", "/*.css", "/*.js", "/*.txt", "/*.json", "/*/api-docs", "/swagger**", "/webjars/**", "/configuration/**")));
+                interceptors.forEach(interceptor -> {
+                    String[] pathPatterns;
+                    String[] excludePathPatterns;
+                    if (interceptor instanceof ConfigurableHandlerInterceptorAdapter) {
+                        ConfigurableHandlerInterceptorAdapter configurableInterceptor = (ConfigurableHandlerInterceptorAdapter) interceptor;
+                        pathPatterns = configurableInterceptor.pathPatterns();
+                        excludePathPatterns = configurableInterceptor.excludePathPatterns();
+                    } else {
+                        pathPatterns = ConfigurableHandlerInterceptorAdapter.DEFAULT_PATH_PATTERNS;
+                        excludePathPatterns = ConfigurableHandlerInterceptorAdapter.DEFAULT_EXCLUDE_PATH_PATTERNS;
+                    }
+
+                    registry.addInterceptor(interceptor)
+                            .addPathPatterns(pathPatterns)
+                            .excludePathPatterns(excludePathPatterns);
+                }));
     }
 
     private Integer getSeconds(Duration cachePeriod) {
