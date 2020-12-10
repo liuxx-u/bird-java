@@ -18,6 +18,7 @@ public final class UUIDHexGenerator {
 
     private final static int RADIX = 36;
     private final static int TIME_BACK_OFFSET = 1000;
+    private final static int MAX_PID = 1000000;
     private final static String DELIMITER = "-";
     private final static String MACHINE_ID = formatMachineId();
     private final static String JVM_PID = formatJvmPid();
@@ -122,9 +123,9 @@ public final class UUIDHexGenerator {
             }
         }
 
-        String formatted = Integer.toString(pid, RADIX);
-        StringBuilder buf = new StringBuilder("000000");
-        buf.replace(6 - formatted.length(), 6, formatted);
+        String formatted = Integer.toString(pid % MAX_PID, RADIX);
+        StringBuilder buf = new StringBuilder("0000");
+        buf.replace(4 - formatted.length(), 4, formatted);
         return buf.toString();
     }
 
