@@ -5,6 +5,7 @@ import com.bird.web.sso.client.remote.IRemoteTicketHandler;
 import com.bird.web.sso.ticket.ClientTicket;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,16 +43,18 @@ public class DefaultClientTicketCache implements IClientTicketCache {
         try {
             ClientTicket ticket = cache.get(token, () -> ticketHandler.getTicket(token));
             //客户端缓存时间超过一半，重新获取票据
-            if(ticket != null){
+            if (ticket != null) {
                 long span = System.currentTimeMillis() - ticket.getCreateTime().getTime();
-                if(span > this.halfCacheMillis ){
+                if (span > this.halfCacheMillis) {
                     ticket = ticketHandler.getTicket(token);
-                    if(ticket != null){
-                        cache.put(token,ticket);
+                    if (ticket != null) {
+                        cache.put(token, ticket);
                     }
                 }
             }
             return ticket;
+        } catch (CacheLoader.InvalidCacheLoadException ex) {
+            return null;
         } catch (Exception e) {
             log.error("客户端获取Ticket出错", e);
             return null;
