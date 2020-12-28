@@ -1,5 +1,6 @@
 package com.bird.core.trace.dispatch;
 
+import com.bird.core.json.JsonSerializer;
 import com.bird.core.trace.TraceDefinition;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +13,12 @@ import java.util.List;
 @Slf4j
 public class NullTraceLogStore implements ITraceLogStore {
 
+    private final JsonSerializer jsonSerializer;
+
+    public NullTraceLogStore(JsonSerializer jsonSerializer) {
+        this.jsonSerializer = jsonSerializer;
+    }
+
     /**
      * 存储轨迹信息
      *
@@ -19,6 +26,20 @@ public class NullTraceLogStore implements ITraceLogStore {
      */
     @Override
     public void store(List<TraceDefinition> traceLogs) {
-        log.warn("未注入ITraceLogStore实例，丢弃跟踪日志信息");
+        for (TraceDefinition traceDefinition : traceLogs) {
+
+            String content = "========================================== Start ==========================================\n" +
+                    "Entrance       : {}" + traceDefinition.getEntrance() + "\n" +
+                    "Description    : {}" + traceDefinition.getDescription() + "\n" +
+                    "User           : {} -> {}" + traceDefinition.getUserId() + traceDefinition.getUserName() + "\n" +
+                    "time           : {} ~ {}" + traceDefinition.getStartTime() + traceDefinition.getEndTime() + "\n" +
+                    "TraceId        : {} -> {}" + traceDefinition.getParentTraceId() + traceDefinition.getTraceId() + "\n" +
+                    "GlobalTraceId  : {}" + traceDefinition.getGlobalTraceId() + "\n" +
+                    "Params         : {}" + this.jsonSerializer.serialize(traceDefinition.getParams()) + "\n" +
+                    "ReturnValue    : {}" + this.jsonSerializer.serialize(traceDefinition.getReturnValue()) + "\n" +
+                    "Claims         : {}" + this.jsonSerializer.serialize(traceDefinition.getClaims()) + "\n";
+
+            log.trace(content);
+        }
     }
 }
