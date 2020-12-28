@@ -4,8 +4,7 @@ bird-java是以Spring Boot为基础的开发增强组件包。
 
 ## 技术选型
 
- - 基础框架：Spring Framework 5.2.6.RELEASE
- - web层：Spring Boot 2.3.0.RELEASE
+ - 基础框架：Spring Boot 2.3.0.RELEASE、Spring Framework 5.2.6.RELEASE、
  - 数据访问：Mybatis-Plus 3.4.0
  - 数据库连接池：druid
  - 身份认证：自研单点登录
