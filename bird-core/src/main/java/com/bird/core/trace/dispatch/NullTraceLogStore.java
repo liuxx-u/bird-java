@@ -28,16 +28,16 @@ public class NullTraceLogStore implements ITraceLogStore {
     public void store(List<TraceDefinition> traceLogs) {
         for (TraceDefinition traceDefinition : traceLogs) {
 
-            String content = "========================================== Start ==========================================\n" +
-                    "Entrance       : {}" + traceDefinition.getEntrance() + "\n" +
-                    "Description    : {}" + traceDefinition.getDescription() + "\n" +
-                    "User           : {} -> {}" + traceDefinition.getUserId() + traceDefinition.getUserName() + "\n" +
-                    "time           : {} ~ {}" + traceDefinition.getStartTime() + traceDefinition.getEndTime() + "\n" +
-                    "TraceId        : {} -> {}" + traceDefinition.getParentTraceId() + traceDefinition.getTraceId() + "\n" +
-                    "GlobalTraceId  : {}" + traceDefinition.getGlobalTraceId() + "\n" +
-                    "Params         : {}" + this.jsonSerializer.serialize(traceDefinition.getParams()) + "\n" +
-                    "ReturnValue    : {}" + this.jsonSerializer.serialize(traceDefinition.getReturnValue()) + "\n" +
-                    "Claims         : {}" + this.jsonSerializer.serialize(traceDefinition.getClaims()) + "\n";
+            String content = "========================================== Trace ==========================================\n" +
+                    "Entrance       : " + traceDefinition.getEntrance() + "\n" +
+                    "Description    : " + traceDefinition.getDescription() + "\n" +
+                    "User           : " + traceDefinition.getUserId() + "->" + traceDefinition.getUserName() + "\n" +
+                    "time           : " + traceDefinition.getStartTime() + "->" + traceDefinition.getEndTime() + "\n" +
+                    "TraceId        : " + traceDefinition.getParentTraceId() + "->" + traceDefinition.getTraceId() + "\n" +
+                    "GlobalTraceId  : " + traceDefinition.getGlobalTraceId() + "\n" +
+                    "Params         : " + this.jsonSerializer.serialize(traceDefinition.getParams()) + "\n" +
+                    "ReturnValue    : " + this.jsonSerializer.serialize(traceDefinition.getReturnValue()) + "\n" +
+                    "Claims         : " + this.jsonSerializer.serialize(traceDefinition.getClaims()) + "\n";
 
             log.trace(content);
         }
