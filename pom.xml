@@ -19,6 +19,7 @@
         <module>bird-web-support</module>
         <module>bird-statemachine</module>
         <module>bird-lock</module>
+        <module>bird-websocket-support</module>
     </modules>
 
     <properties>
