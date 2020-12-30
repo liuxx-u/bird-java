@@ -1,7 +1,10 @@
 package com.bird.websocket.common.configuration;
 
+import com.bird.websocket.common.server.DefaultSessionDirectory;
 import com.bird.websocket.common.authorize.IAuthorizeResolver;
 import com.bird.websocket.common.authorize.NullAuthorizeResolver;
+import com.bird.websocket.common.server.ISessionDirectory;
+import com.bird.websocket.common.server.WebSocketPublisher;
 import com.bird.websocket.common.server.WebSocketServer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -37,10 +40,26 @@ public class WebSocketAutoConfiguration {
     }
 
     /**
+     * 注册 Token-User 字典
+     */
+    @Bean
+    public ISessionDirectory defaultSessionDirectory(IAuthorizeResolver authorizeResolver){
+        return new DefaultSessionDirectory(authorizeResolver);
+    }
+
+    /**
      * 注册 默认的websocket服务端
      */
     @Bean
     public WebSocketServer webSocketServer() {
         return new WebSocketServer();
+    }
+
+    /**
+     * 注册 websocket消息发送者
+     */
+    @Bean
+    public WebSocketPublisher webSocketPublisher(WebSocketServer socketServer,ISessionDirectory sessionDirectory){
+        return new WebSocketPublisher(socketServer,sessionDirectory);
     }
 }
