@@ -32,6 +32,11 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
+                <artifactId>bird-eventbus-rocketmq</artifactId>
+                <version>${bird.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
                 <artifactId>bird-eventbus-kafka</artifactId>
                 <version>${bird.version}</version>
             </dependency>
@@ -42,12 +47,22 @@
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
+                <artifactId>bird-lock-redis</artifactId>
+                <version>2.0.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
                 <artifactId>bird-service-support</artifactId>
                 <version>${bird.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.bird</groupId>
                 <artifactId>bird-web-support</artifactId>
+                <version>${bird.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
+                <artifactId>bird-websocket-support</artifactId>
                 <version>${bird.version}</version>
             </dependency>
             <dependency>
