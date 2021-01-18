@@ -20,7 +20,7 @@ public class CorsProperties {
 
     private String allowMethods = "POST, GET, OPTIONS, DELETE";
 
-    private String allowHeaders = "Origin,X-Requested-With,Content-Type,Accept,Sso-Token,bird-idempotency,appId,tenantId,JSESSIONID";
+    private String allowHeaders = "Origin,X-Requested-With,Content-Type,Accept,Cache-Control,Sso-Token,bird-idempotency,appId,tenantId,JSESSIONID";
 
     private String maxAge = "3600";
 
