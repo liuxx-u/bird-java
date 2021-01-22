@@ -1,6 +1,7 @@
 package com.bird.core.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -12,8 +13,10 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author liuxx
@@ -27,12 +30,30 @@ public class ClassHelper {
 
     /**
      * 扫描包中的类（包含子类）
+     *
      * @param packagePatterns 包路径
-     * @param assignableType 指定类型
+     * @param assignableType  指定类型
      * @return 指定类型集合
      * @throws IOException ex
      */
     public static Set<Class<?>> scanClasses(String packagePatterns, Class<?> assignableType) throws IOException {
+        return scanClasses(packagePatterns, clazz -> assignableType == null || assignableType.isAssignableFrom(clazz));
+    }
+
+    /**
+     * 扫描包中带有指定注解的类
+     *
+     * @param packagePatterns 包路径
+     * @param annotationType  注解类型
+     * @return 类型集合
+     * @throws IOException ex
+     */
+    public static Set<Class<?>> scanAnnotationClasses(String packagePatterns, Class<? extends Annotation> annotationType) throws IOException {
+        return scanClasses(packagePatterns, clazz -> clazz != null && clazz.isAnnotationPresent(annotationType));
+    }
+
+
+    private static Set<Class<?>> scanClasses(String packagePatterns, Function<Class<?>, Boolean> filter) throws IOException {
         Set<Class<?>> classes = new HashSet<>();
         String[] packagePatternArray = StringUtils.tokenizeToStringArray(packagePatterns, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
         for (String packagePattern : packagePatternArray) {
@@ -42,7 +63,7 @@ public class ClassHelper {
                 try {
                     ClassMetadata classMetadata = METADATA_READER_FACTORY.getMetadataReader(resource).getClassMetadata();
                     Class<?> clazz = Class.forName(classMetadata.getClassName());
-                    if (assignableType == null || assignableType.isAssignableFrom(clazz)) {
+                    if (BooleanUtils.isTrue(filter.apply(clazz))) {
                         classes.add(clazz);
                     }
                 } catch (Throwable e) {
