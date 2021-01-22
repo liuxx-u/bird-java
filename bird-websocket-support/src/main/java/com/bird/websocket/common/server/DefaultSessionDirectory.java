@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import javax.websocket.Session;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
@@ -114,5 +116,10 @@ public class DefaultSessionDirectory implements ISessionDirectory {
             return null;
         }
         return TOKEN_SESSION_MAP.get(token);
+    }
+
+    @Override
+    public List<Session> getAllSession() {
+        return new ArrayList<>(TOKEN_SESSION_MAP.values());
     }
 }

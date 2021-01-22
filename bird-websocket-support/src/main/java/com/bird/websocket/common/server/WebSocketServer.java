@@ -1,6 +1,8 @@
 package com.bird.websocket.common.server;
 
 import com.bird.core.SpringContextHolder;
+import com.bird.websocket.common.message.MessageSendUtil;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.*;
@@ -13,6 +15,7 @@ import java.io.IOException;
  * @since 2020/12/29
  */
 @Slf4j
+@NoArgsConstructor
 @ServerEndpoint("/websocket/{token}")
 public class WebSocketServer {
 
@@ -28,7 +31,7 @@ public class WebSocketServer {
         ISessionDirectory directory = this.getSessionDirectory();
         if (!directory.add(token, session)) {
             // 当前token已经建立连接
-            this.sendMessage(session, "用户未登录或当前token已经建立连接");
+            MessageSendUtil.sendMessage(session, "用户未登录或当前token已经建立连接");
             session.close();
         }
     }
@@ -52,7 +55,9 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(@PathParam(value = "token") String token, String message) {
-        //TODO: 暂不处理
+        ISessionDirectory directory = this.getSessionDirectory();
+        Session session = directory.getSession(token);
+        MessageSendUtil.sendMessage(session, message);
     }
 
     /**
@@ -66,22 +71,6 @@ public class WebSocketServer {
         log.error(throwable.getMessage(), throwable);
     }
 
-    /**
-     * 向客户端发送消息
-     *
-     * @param session 客户端session
-     * @param message 消息体
-     */
-    void sendMessage(Session session, String message) {
-        if (session != null) {
-            try {
-                session.getBasicRemote().sendText(message);
-            } catch (IOException ex) {
-                log.error("ws消息发送失败:{}", ex.getMessage(), ex);
-            }
-        }
-    }
-
     private ISessionDirectory getSessionDirectory() {
         if (this.sessionDirectory == null) {
             synchronized (WebSocketServer.class) {
@@ -92,4 +81,5 @@ public class WebSocketServer {
         }
         return this.sessionDirectory;
     }
+
 }

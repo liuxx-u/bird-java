@@ -42,4 +42,11 @@ public interface ISessionDirectory {
      * @return session
      */
     Session getSession(String token);
+
+    /**
+     * 获取所有Session
+     *
+     * @return session集合
+     */
+    List<Session> getAllSession();
 }
