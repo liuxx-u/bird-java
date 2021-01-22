@@ -1,10 +1,7 @@
 package com.bird.websocket.common.server;
 
-import com.bird.websocket.common.ITokenSessionStorage;
-import com.bird.websocket.common.ITokenUserStorage;
-import com.bird.websocket.common.IUserTokensStorage;
 import com.bird.websocket.common.authorize.IAuthorizeResolver;
-import lombok.AllArgsConstructor;
+import com.bird.websocket.common.storage.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -17,7 +14,6 @@ import java.util.stream.Collectors;
 /**
  * @author yuanjian
  */
-@AllArgsConstructor
 public class BasicSessionDirectory implements ISessionDirectory {
 
     /** user - Tokens */
@@ -28,6 +24,13 @@ public class BasicSessionDirectory implements ISessionDirectory {
     private final ITokenSessionStorage tokenSessionStorage;
     /** token - userId 解析器 */
     private final IAuthorizeResolver authorizeResolver;
+
+    public BasicSessionDirectory(IAuthorizeResolver authorizeResolver) {
+        this.authorizeResolver = authorizeResolver;
+        this.userTokensStorage = new InternalUserTokensStorage();
+        this.tokenUserStorage = new InternalTokenUserStorage();
+        this.tokenSessionStorage = new InternalTokenSessionStorage();
+    }
 
     @Override
     public boolean add(String token, Session session) {
@@ -75,7 +78,7 @@ public class BasicSessionDirectory implements ISessionDirectory {
 
     @Override
     public Session getSession(String token) {
-        if(StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             return null;
         }
         return tokenSessionStorage.get(token);

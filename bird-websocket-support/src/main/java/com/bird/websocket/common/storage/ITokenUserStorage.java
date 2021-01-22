@@ -1,4 +1,4 @@
-package com.bird.websocket.common;
+package com.bird.websocket.common.storage;
 
 /**
  * Token - 用户 映射

@@ -1,4 +1,4 @@
-package com.bird.websocket.common;
+package com.bird.websocket.common.storage;
 
 import javax.websocket.Session;
 import java.util.List;

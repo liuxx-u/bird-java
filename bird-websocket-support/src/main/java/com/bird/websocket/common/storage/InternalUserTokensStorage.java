@@ -1,7 +1,5 @@
 package com.bird.websocket.common.storage;
 
-import com.bird.websocket.common.IUserTokensStorage;
-
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;

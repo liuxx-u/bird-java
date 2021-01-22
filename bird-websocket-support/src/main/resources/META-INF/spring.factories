@@ -1,4 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-  com.bird.websocket.common.configuration.WebSocketStorageAutoConfiguration,\
   com.bird.websocket.common.configuration.WebSocketAutoConfiguration,\
   com.bird.websocket.common.configuration.SsoClientWebSocketAutoConfiguration

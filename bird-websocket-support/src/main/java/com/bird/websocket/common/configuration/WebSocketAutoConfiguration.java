@@ -1,16 +1,15 @@
 package com.bird.websocket.common.configuration;
 
-import com.bird.websocket.common.ITokenSessionStorage;
-import com.bird.websocket.common.ITokenUserStorage;
-import com.bird.websocket.common.IUserTokensStorage;
 import com.bird.websocket.common.authorize.IAuthorizeResolver;
 import com.bird.websocket.common.authorize.NullAuthorizeResolver;
+import com.bird.websocket.common.message.handler.MessageHandlerFactory;
 import com.bird.websocket.common.server.BasicSessionDirectory;
 import com.bird.websocket.common.server.ISessionDirectory;
 import com.bird.websocket.common.server.WebSocketPublisher;
 import com.bird.websocket.common.server.WebSocketServer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
@@ -20,7 +19,8 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * @since 2020/12/29
  */
 @Configuration
-@AutoConfigureAfter({SsoClientWebSocketAutoConfiguration.class, WebSocketStorageAutoConfiguration.class})
+@EnableConfigurationProperties(WebSocketProperties.class)
+@AutoConfigureAfter({SsoClientWebSocketAutoConfiguration.class})
 public class WebSocketAutoConfiguration {
 
     /**
@@ -34,6 +34,14 @@ public class WebSocketAutoConfiguration {
     }
 
     /**
+     * 注册 默认的websocket服务端
+     */
+    @Bean
+    public WebSocketServer webSocketServer() {
+        return new WebSocketServer();
+    }
+
+    /**
      * 注册 默认的token解析器
      */
     @Bean
@@ -43,29 +51,26 @@ public class WebSocketAutoConfiguration {
     }
 
     /**
-     * 注册 Token-User 字典
+     * 注册 session 仓库字典
      */
     @Bean
-    public ISessionDirectory defaultSessionDirectory(IAuthorizeResolver authorizeResolver,
-                                                     IUserTokensStorage userTokensStorage,
-                                                     ITokenUserStorage tokenUserStorage,
-                                                     ITokenSessionStorage tokenSessionStorage) {
-        return new BasicSessionDirectory(userTokensStorage, tokenUserStorage, tokenSessionStorage, authorizeResolver);
+    public ISessionDirectory sessionDirectory(IAuthorizeResolver authorizeResolver) {
+        return new BasicSessionDirectory(authorizeResolver);
     }
 
     /**
-     * 注册 默认的websocket服务端
+     * 注册 消息处理器工厂
      */
     @Bean
-    public WebSocketServer webSocketServer() {
-        return new WebSocketServer();
+    public MessageHandlerFactory messageHandlerFactory(ISessionDirectory sessionDirectory) {
+        return new MessageHandlerFactory(sessionDirectory);
     }
 
     /**
      * 注册 websocket消息发送者
      */
     @Bean
-    public WebSocketPublisher webSocketPublisher(ISessionDirectory sessionDirectory) {
-        return new WebSocketPublisher(sessionDirectory);
+    public WebSocketPublisher webSocketPublisher(MessageHandlerFactory messageHandlerFactory) {
+        return new WebSocketPublisher(messageHandlerFactory);
     }
 }

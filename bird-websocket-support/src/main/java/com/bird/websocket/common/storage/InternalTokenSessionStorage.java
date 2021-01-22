@@ -1,7 +1,5 @@
 package com.bird.websocket.common.storage;
 
-import com.bird.websocket.common.ITokenSessionStorage;
-
 import javax.websocket.Session;
 import java.util.ArrayList;
 import java.util.List;
