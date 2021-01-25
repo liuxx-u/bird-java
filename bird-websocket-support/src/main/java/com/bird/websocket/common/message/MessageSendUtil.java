@@ -40,7 +40,7 @@ public class MessageSendUtil {
         try {
             basic.sendText(messageContent);
         } catch (IOException e) {
-            log.warn(MessageFormat.format("[webSocket sendMessage]session({}) 发送消息({}) send error", session, messageContent), e);
+            log.warn(MessageFormat.format("[webSocket sendMessage] session({}) 发送消息({}) send error", session, messageContent), e);
             return false;
         }
         return true;

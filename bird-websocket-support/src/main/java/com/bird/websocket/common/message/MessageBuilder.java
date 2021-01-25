@@ -55,7 +55,7 @@ public class MessageBuilder {
             return this;
         }
 
-        public SingleMessage builder() {
+        public SingleMessage build() {
             super.validate();
             if (StringUtils.isBlank(token) && StringUtils.isBlank(userId)) {
                 throw new NullPointerException("message token and userId cannot be both empty");
@@ -90,7 +90,7 @@ public class MessageBuilder {
             return this;
         }
 
-        public MultipartMessage builder() {
+        public MultipartMessage build() {
             super.validate();
             if (CollectionUtils.isEmpty(tokens) && CollectionUtils.isEmpty(userIds)) {
                 throw new NullPointerException("message tokens and userIds cannot be both empty");
@@ -112,7 +112,7 @@ public class MessageBuilder {
             return this;
         }
 
-        public BroadcastMessage builder() {
+        public BroadcastMessage build() {
             super.validate();
             BroadcastMessage multipartMessage = new BroadcastMessage();
             multipartMessage.setContent(this.content);
