@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWra
 import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.bird.service.common.model.IDO;
 import com.bird.service.common.service.dto.IEntityBO;
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedListResult;
+import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.grid.query.PagedListResult;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,6 +27,7 @@ public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
      * @param cls DTO类名
      * @return 查询结果
      */
+    @Deprecated
     PagedListResult queryPagedList(PagedListQuery queryDTO, Class cls);
 
     /**
@@ -119,6 +120,7 @@ public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
      * @param dto dto
      * @return 保存后主键值
      */
+    @Deprecated
     TKey save(IEntityBO<TKey> dto);
 
     /**
@@ -126,6 +128,7 @@ public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
      * @param dto 数据
      * @return 新增后的主键值
      */
+    @Deprecated
     TKey insert(IEntityBO<TKey> dto);
 
     /**
@@ -133,6 +136,7 @@ public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
      * @param dto 数据
      * @return 更新后的主键值
      */
+    @Deprecated
     TKey update(IEntityBO<TKey> dto);
 
     /**

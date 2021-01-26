@@ -1,5 +1,6 @@
-package com.bird.service.common.service.query;
+package com.bird.service.common.grid.query;
 
+import com.bird.service.common.grid.query.ListQuery;
 import lombok.Getter;
 import lombok.Setter;
 

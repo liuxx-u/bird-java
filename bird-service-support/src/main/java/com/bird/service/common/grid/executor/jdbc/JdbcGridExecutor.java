@@ -1,12 +1,14 @@
 package com.bird.service.common.grid.executor.jdbc;
 
 import com.bird.service.common.grid.executor.IGridExecutor;
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedResult;
+import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.grid.query.PagedResult;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 
 /**
@@ -21,12 +23,16 @@ public class JdbcGridExecutor implements IGridExecutor {
         this.dataSourceSelector = dataSourceSelector;
     }
 
-    Connection connection() throws SQLException {
+    private Connection connection() {
         DataSource dataSource = this.dataSourceSelector.gridDataSource();
-        if(dataSource == null){
+        if (dataSource == null) {
             throw new RuntimeException("dataSource is null");
         }
-        return dataSource.getConnection();
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException("获取数据库连接失败", e);
+        }
     }
 
     /**
@@ -38,6 +44,13 @@ public class JdbcGridExecutor implements IGridExecutor {
      */
     @Override
     public PagedResult<Map<String, Object>> listPaged(Class<?> gridClass, PagedListQuery query) {
+        Connection connection = connection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 

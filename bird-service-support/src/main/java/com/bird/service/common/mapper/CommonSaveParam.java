@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @author liuxx
  * @date 2017/10/20
  */
+@Deprecated
 public class CommonSaveParam<TKey extends Serializable> implements Serializable {
     public CommonSaveParam(IEntityBO<TKey> entityDTO, Class<?> tClass) {
         this.entityDTO = entityDTO;

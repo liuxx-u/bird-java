@@ -4,9 +4,9 @@ import com.bird.core.session.SessionContext;
 import com.bird.core.SpringContextHolder;
 import com.bird.service.common.datarule.IDataRuleProvider;
 import com.bird.service.common.datarule.IDataRuleStore;
-import com.bird.service.common.service.query.FilterGroup;
-import com.bird.service.common.service.query.FilterRule;
-import com.bird.service.common.service.query.PagedListQuery;
+import com.bird.service.common.grid.query.FilterGroup;
+import com.bird.service.common.grid.query.FilterRule;
+import com.bird.service.common.grid.query.PagedListQuery;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author liuxx
  * @date 2017/10/10
  */
+@Deprecated
 public class PagedQueryParam implements Serializable {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());

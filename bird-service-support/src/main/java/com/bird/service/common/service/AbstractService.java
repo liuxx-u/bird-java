@@ -12,8 +12,8 @@ import com.bird.service.common.mapper.CommonSaveParam;
 import com.bird.service.common.mapper.PagedQueryParam;
 import com.bird.service.common.model.IDO;
 import com.bird.service.common.service.dto.IEntityBO;
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedListResult;
+import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.grid.query.PagedListResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -354,6 +354,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
      * @param param 分页查询参数
      * @return 查询结果
      */
+    @Deprecated
     protected PagedListResult queryPagedList(PagedQueryParam param) {
         Map<String, Number> sum = mapper.queryPagedSum(param);
         Long totalCount = sum.getOrDefault("totalCount", 0L).longValue();

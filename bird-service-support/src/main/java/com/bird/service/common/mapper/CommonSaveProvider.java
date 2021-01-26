@@ -21,6 +21,7 @@ import java.util.*;
  * @date 2017/10/20
  */
 @Slf4j
+@Deprecated
 public class CommonSaveProvider {
 
     private static final List<String> EXCLUDE_FIELD_NAMES;

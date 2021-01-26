@@ -1,8 +1,11 @@
 package com.bird.service.common.grid.executor;
 
 import com.bird.service.common.grid.GridClassContainer;
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedResult;
+import com.bird.service.common.grid.annotation.AutoGrid;
+import com.bird.service.common.grid.exception.GridException;
+import com.bird.service.common.grid.executor.jdbc.JdbcGridExecutor;
+import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.grid.query.PagedResult;
 
 import java.util.Map;
 
@@ -14,7 +17,7 @@ public class GridExecutorFactory {
 
     private final GridClassContainer container;
 
-    public GridExecutorFactory(GridClassContainer container){
+    public GridExecutorFactory(GridClassContainer container) {
         this.container = container;
     }
 
@@ -26,7 +29,9 @@ public class GridExecutorFactory {
      * @return 查询结果
      */
     public PagedResult<Map<String, Object>> listPaged(String gridName, PagedListQuery query) {
-        return null;
+        Class<?> gridClass = this.container.getGridClass(gridName);
+        IGridExecutor gridExecutor = this.gridExecutor(gridClass);
+        return gridExecutor.listPaged(gridClass, query);
     }
 
     /**
@@ -62,10 +67,23 @@ public class GridExecutorFactory {
 
     /**
      * 获取表格查询执行器
+     *
      * @param gridClass 表格定义类
      * @return 执行器
      */
-    private IGridExecutor gridExecutor(Class<?> gridClass){
-        return null;
+    private IGridExecutor gridExecutor(Class<?> gridClass) {
+        AutoGrid autoGrid = gridClass.getAnnotation(AutoGrid.class);
+        if (autoGrid == null) {
+            throw new GridException(gridClass.getName() + "未标记@AutoGrid注解，执行失败");
+        }
+        DialectType dialectType = autoGrid.dialectType();
+        switch (dialectType){
+            case MYSQL:
+                return new JdbcGridExecutor(null);
+            default:
+                throw new GridException("不支持的表格处理器");
+        }
     }
+
+
 }

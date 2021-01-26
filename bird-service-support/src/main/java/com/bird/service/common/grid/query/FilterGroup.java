@@ -1,4 +1,4 @@
-package com.bird.service.common.service.query;
+package com.bird.service.common.grid.query;
 
 import lombok.Getter;
 import org.apache.commons.collections.CollectionUtils;

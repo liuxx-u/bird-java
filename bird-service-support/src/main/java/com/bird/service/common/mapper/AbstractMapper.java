@@ -22,6 +22,7 @@ public interface AbstractMapper<T extends IDO> extends BaseMapper<T> {
      * @param param 筛选条件
      * @return 查询的结果
      */
+    @Deprecated
     @SelectProvider(type = PagedQueryProvider.class, method = "queryPagedList")
     List<Map> queryPagedList(PagedQueryParam param);
 
@@ -30,6 +31,7 @@ public interface AbstractMapper<T extends IDO> extends BaseMapper<T> {
      * @param param 筛选条件
      * @return 合计信息
      */
+    @Deprecated
     @SelectProvider(type = PagedQueryProvider.class, method = "queryPagedSum")
     Map<String,Number> queryPagedSum(PagedQueryParam param);
 
@@ -38,6 +40,7 @@ public interface AbstractMapper<T extends IDO> extends BaseMapper<T> {
      *
      * @param param
      */
+    @Deprecated
     @InsertProvider(type = CommonSaveProvider.class, method = "insert")
     @Options(useGeneratedKeys = true,keyColumn = "id",keyProperty = "entityDTO.id")
     void insertDto(CommonSaveParam param);
@@ -47,6 +50,7 @@ public interface AbstractMapper<T extends IDO> extends BaseMapper<T> {
      *
      * @param param 保存参数
      */
+    @Deprecated
     @UpdateProvider(type = CommonSaveProvider.class, method = "update")
     void updateDto(CommonSaveParam param);
 }
