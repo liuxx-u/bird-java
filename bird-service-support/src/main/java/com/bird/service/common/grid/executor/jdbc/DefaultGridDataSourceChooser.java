@@ -6,7 +6,7 @@ import javax.sql.DataSource;
  * @author liuxx
  * @since 2021/1/20
  */
-public class DefaultGridDataSourceChooser implements IDataSourceChooser {
+public class DefaultGridDataSourceChooser implements IGridDataSourceChooser {
 
     private final DataSource dataSource;
 

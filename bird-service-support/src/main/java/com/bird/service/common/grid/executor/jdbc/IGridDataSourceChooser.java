@@ -6,7 +6,7 @@ import javax.sql.DataSource;
  * @author liuxx
  * @since 2021/1/20
  */
-public interface IDataSourceChooser {
+public interface IGridDataSourceChooser {
 
     /**
      * 表格操作的数据源

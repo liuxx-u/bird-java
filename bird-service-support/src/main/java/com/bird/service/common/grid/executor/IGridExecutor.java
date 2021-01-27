@@ -1,5 +1,6 @@
 package com.bird.service.common.grid.executor;
 
+import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.query.PagedListQuery;
 import com.bird.service.common.grid.query.PagedResult;
 
@@ -14,36 +15,36 @@ public interface IGridExecutor {
     /**
      * 分页查询
      *
-     * @param gridClass 表格定义类
+     * @param gridDefinition 表格描述符
      * @param query     分页查询参数
      * @return 查询结果
      */
-    PagedResult<Map<String, Object>> listPaged(Class<?> gridClass, PagedListQuery query);
+    PagedResult<Map<String, Object>> listPaged(GridDefinition gridDefinition, PagedListQuery query);
 
     /**
      * 新增
      *
-     * @param gridClass 表格定义类
+     * @param gridDefinition 表格描述符
      * @param pojo      新增数据
      * @return 主键
      */
-    Object add(Class<?> gridClass, Map<String, Object> pojo);
+    Object add(GridDefinition gridDefinition, Map<String, Object> pojo);
 
     /**
      * 编辑
      *
-     * @param gridClass 表格定义类
+     * @param gridDefinition 表格描述符
      * @param pojo      更新的数据
      * @return 主键
      */
-    Object edit(Class<?> gridClass, Map<String, Object> pojo);
+    Object edit(GridDefinition gridDefinition, Map<String, Object> pojo);
 
     /**
      * 删除
      *
-     * @param gridClass 表格定义类
+     * @param gridDefinition 表格描述符
      * @param id        主键
      * @return 是否删除成功
      */
-    boolean delete(Class<?> gridClass, Object id);
+    boolean delete(GridDefinition gridDefinition, Object id);
 }

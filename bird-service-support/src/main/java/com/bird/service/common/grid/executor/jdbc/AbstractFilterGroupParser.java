@@ -1,73 +1,30 @@
-package com.bird.service.common.grid.query;
+package com.bird.service.common.grid.executor.jdbc;
 
-import lombok.Getter;
+import com.bird.service.common.grid.query.FilterGroup;
+import com.bird.service.common.grid.query.FilterOperate;
+import com.bird.service.common.grid.query.FilterRule;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 筛选条件组
  * @author liuxx
- * @date 2018/9/29
+ * @since 2021/1/27
  */
-@Getter
-public class FilterGroup implements Serializable {
-    /**
-     * 组内筛选条件
-     */
-    private List<FilterRule> rules;
+@SuppressWarnings("Duplicates")
+public abstract class AbstractFilterGroupParser implements IFilterGroupParser {
 
-    /**
-     * 连接符，支持and、or
-     */
-    private String operate;
-
-    /**
-     * 连接的组
-     */
-    private List<FilterGroup> groups;
-
-    public FilterGroup(List<FilterRule> rules) {
-        this.rules = rules;
-    }
-
-    public void and(List<FilterGroup> groups) {
-        this.operate = FilterOperate.AND.getValue();
-        this.groups = groups;
-    }
-
-    public void or(List<FilterGroup> groups) {
-        this.operate = FilterOperate.OR.getValue();
-        this.groups = groups;
-    }
-
-    /**
-     * 解析为SQL语句
-     *
-     * @return sql
-     */
-    public String formatSQL() {
-        return this.formatSQL(new HashMap<>());
-    }
-
-    /**
-     * 解析为SQL语句
-     *
-     * @param fieldNameMap map
-     * @return sql
-     */
-    public String formatSQL(Map<String, String> fieldNameMap) {
-        String where = formatRules(this.rules, fieldNameMap);
+    @Override
+    public String formatSQL(FilterGroup filterGroup, Map<String, String> fieldNameMap) {
+        String where = formatRules(filterGroup.getRules(), fieldNameMap);
 
         boolean isStart = true;
         StringBuilder groupBuilder = new StringBuilder();
-        if (CollectionUtils.isNotEmpty(this.groups)) {
-            for (FilterGroup innerGroup : this.groups) {
+        if (CollectionUtils.isNotEmpty(filterGroup.getGroups())) {
+            for (FilterGroup innerGroup : filterGroup.getGroups()) {
                 if (innerGroup == null) {
                     continue;
                 }
@@ -89,7 +46,7 @@ public class FilterGroup implements Serializable {
             return groupWhere;
         } else {
             StringBuilder sb = new StringBuilder();
-            FilterOperate groupOperate = FilterOperate.resolveOrDefault(this.operate, FilterOperate.AND);
+            FilterOperate groupOperate = FilterOperate.resolveOrDefault(filterGroup.getOperate(), FilterOperate.AND);
             if (groupOperate == null) {
                 groupOperate = FilterOperate.AND;
             }

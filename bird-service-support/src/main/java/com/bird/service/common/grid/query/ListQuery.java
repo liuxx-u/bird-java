@@ -1,6 +1,5 @@
 package com.bird.service.common.grid.query;
 
-import com.bird.service.common.grid.query.FilterRule;
 import com.bird.service.common.service.dto.AbstractBO;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,7 @@
 package com.bird.service.common.grid.scanner;
 
+import com.bird.service.common.grid.GridDefinition;
+
 import java.util.Map;
 
 /**
@@ -14,5 +16,5 @@ public interface IGridDefinitionScanner {
      * @param packagePatterns 包名
      * @return 表格定义数据
      */
-    Map<String, Class<?>> scan(String... packagePatterns);
+    Map<String, GridDefinition> scan(String... packagePatterns);
 }

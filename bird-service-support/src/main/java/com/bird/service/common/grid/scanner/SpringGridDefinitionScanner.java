@@ -1,6 +1,7 @@
 package com.bird.service.common.grid.scanner;
 
 import com.bird.core.utils.ClassHelper;
+import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.annotation.AutoGrid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -27,13 +28,18 @@ public class SpringGridDefinitionScanner implements IGridDefinitionScanner {
      * @return 表格定义数据
      */
     @Override
-    public Map<String, Class<?>> scan(String... packagePatterns) {
+    public Map<String, GridDefinition> scan(String... packagePatterns) {
         Set<Class<?>> classes = this.scanClasses(packagePatterns);
 
-        Map<String, Class<?>> map = new HashMap<>(DEFAULT_CAPACITY);
+        Map<String, GridDefinition> map = new HashMap<>(DEFAULT_CAPACITY);
         for (Class<?> clazz : classes) {
             AutoGrid autoGrid = clazz.getAnnotation(AutoGrid.class);
             if (autoGrid == null) {
+                continue;
+            }
+
+            GridDefinition gridDefinition = GridDefinition.parse(clazz);
+            if (gridDefinition == null) {
                 continue;
             }
 
@@ -41,7 +47,9 @@ public class SpringGridDefinitionScanner implements IGridDefinitionScanner {
             if (StringUtils.isBlank(gridName)) {
                 gridName = clazz.getName();
             }
-            map.put(gridName, clazz);
+
+
+            map.put(gridName, gridDefinition);
         }
 
         return map;
