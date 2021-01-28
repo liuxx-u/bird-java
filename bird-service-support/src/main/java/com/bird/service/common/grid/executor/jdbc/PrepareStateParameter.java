@@ -1,7 +1,10 @@
 package com.bird.service.common.grid.executor.jdbc;
 
+import com.bird.service.common.grid.GridFieldType;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,5 +21,75 @@ public class PrepareStateParameter {
     /**
      * 参数集合
      */
-    private List<Object> parameters;
+    private List<TypedParameter> parameters;
+
+    public PrepareStateParameter() {
+        this.parameters = new ArrayList<>();
+    }
+
+    public PrepareStateParameter(String sql) {
+        this();
+        this.sql = sql;
+    }
+
+    public PrepareStateParameter(String sql, List<TypedParameter> parameters) {
+        this.sql = sql;
+        this.parameters = parameters;
+    }
+
+    /**
+     * 添加参数
+     *
+     * @param fieldType 参数类型
+     * @param parameter 参数值
+     */
+    public void addParameter(GridFieldType fieldType, Object parameter) {
+        TypedParameter typedParameter = new TypedParameter();
+        typedParameter.fieldType = fieldType;
+        typedParameter.parameter = parameter;
+        parameters.add(typedParameter);
+    }
+
+    /**
+     * 连接SQL字符串
+     *
+     * @param sql sql
+     */
+    public PrepareStateParameter append(String sql) {
+        this.sql += sql;
+        return this;
+    }
+
+    /**
+     * 连接{@link PrepareStateParameter} 参数
+     *
+     * @param stateParameter 参数
+     */
+    public PrepareStateParameter append(PrepareStateParameter stateParameter) {
+        this.sql += stateParameter.sql;
+        this.parameters.addAll(stateParameter.parameters);
+        return this;
+    }
+
+    /**
+     * sql是否为空
+     *
+     * @return sql是否为空
+     */
+    public boolean isEmpty() {
+        return StringUtils.isEmpty(this.sql);
+    }
+
+
+    static class TypedParameter {
+
+        /**
+         * 字段类型
+         */
+        private GridFieldType fieldType;
+        /**
+         * 参数
+         */
+        private Object parameter;
+    }
 }

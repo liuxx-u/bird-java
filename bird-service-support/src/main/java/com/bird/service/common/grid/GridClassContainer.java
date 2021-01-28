@@ -30,7 +30,7 @@ public class GridClassContainer implements InitializingBean {
      * @param gridName 表格名称
      * @return {@link AutoGrid}类
      */
-    public GridDefinition getGridDescriptor(String gridName) {
+    public GridDefinition getGridDefinition(String gridName) {
         if (StringUtils.isBlank(gridName)) {
             return null;
         }

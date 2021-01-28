@@ -1,5 +1,6 @@
 package com.bird.service.common.grid.annotation;
 
+import com.bird.service.common.grid.enums.SortDirectionEnum;
 import com.bird.service.common.grid.executor.DialectType;
 
 import java.lang.annotation.ElementType;
@@ -43,4 +44,14 @@ public @interface AutoGrid {
      * appendSql ：附加的SQL语句
      */
     String appendSql() default "";
+
+    /**
+     * 默认的排序字段
+     */
+    String defaultSortField() default "id";
+
+    /**
+     * 默认的排序方式
+     */
+    SortDirectionEnum defaultSortDirection() default SortDirectionEnum.DESC;
 }

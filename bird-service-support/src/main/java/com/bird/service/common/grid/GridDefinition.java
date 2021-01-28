@@ -3,16 +3,20 @@ package com.bird.service.common.grid;
 import com.bird.service.common.grid.annotation.AutoGrid;
 import com.bird.service.common.grid.executor.DialectType;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author liuxx
  * @since 2021/1/27
  */
 @Data
+@Slf4j
 public class GridDefinition {
 
     /**
@@ -42,7 +46,7 @@ public class GridDefinition {
     /**
      * 字段集合
      */
-    private List<GridFieldDefinition> fields;
+    private Map<String, GridFieldDefinition> fields;
 
     /**
      * 解析表格类
@@ -54,7 +58,13 @@ public class GridDefinition {
         if (gridClass == null || gridClass.isAnnotationPresent(AutoGrid.class)) {
             return null;
         }
+
         AutoGrid autoGrid = gridClass.getAnnotation(AutoGrid.class);
+        if (StringUtils.isAnyBlank(autoGrid.name(), autoGrid.from())) {
+            log.warn("@AutoGrid注解name与from属性为空，忽略表格定义类:{}", gridClass.getName());
+            return null;
+        }
+
         GridDefinition gridDefinition = new GridDefinition();
         gridDefinition.setGridClass(gridClass);
         gridDefinition.setName(autoGrid.name());
@@ -64,19 +74,24 @@ public class GridDefinition {
         gridDefinition.setAppendSql(autoGrid.appendSql());
         gridDefinition.setFields(parseFields(gridClass));
 
+        if (CollectionUtils.isEmpty(gridDefinition.getFields())) {
+            log.warn("忽略表格定义类{}，未定义字段", gridClass.getName());
+            return null;
+        }
+
         return gridDefinition;
     }
 
-    private static List<GridFieldDefinition> parseFields(Class<?> gridClass) {
-        List<GridFieldDefinition> fieldDescriptors = new ArrayList<>();
+    private static Map<String, GridFieldDefinition> parseFields(Class<?> gridClass) {
+        Map<String, GridFieldDefinition> fieldDefinitions = new HashMap<>(32);
 
         Field[] fields = gridClass.getDeclaredFields();
         for (Field field : fields) {
-            GridFieldDefinition fieldDescriptor = GridFieldDefinition.parse(field);
-            if (fieldDescriptor != null) {
-                fieldDescriptors.add(fieldDescriptor);
+            GridFieldDefinition fieldDefinition = GridFieldDefinition.parse(field);
+            if (fieldDefinition != null) {
+                fieldDefinitions.put(field.getName(), fieldDefinition);
             }
         }
-        return fieldDescriptors;
+        return fieldDefinitions;
     }
 }

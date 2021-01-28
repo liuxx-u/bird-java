@@ -10,7 +10,7 @@ import java.util.Map;
  * @author liuxx
  * @since 2021/1/27
  */
-public interface IGridStatementParser {
+public interface IGridSqlParser {
 
     /**
      * 解析列表查询SQL语句
@@ -19,7 +19,7 @@ public interface IGridStatementParser {
      * @param query          分页查询参数
      * @return statement
      */
-    Statement listPaged(GridDefinition gridDefinition, PagedListQuery query);
+    PrepareStateParameter listPaged(GridDefinition gridDefinition, PagedListQuery query);
 
     /**
      * 解析新增SQL语句
@@ -28,7 +28,7 @@ public interface IGridStatementParser {
      * @param pojo           新增数据
      * @return statement
      */
-    Statement add(GridDefinition gridDefinition, Map<String, Object> pojo);
+    PrepareStateParameter add(GridDefinition gridDefinition, Map<String, Object> pojo);
 
     /**
      * 解析更新SQL语句
@@ -37,7 +37,7 @@ public interface IGridStatementParser {
      * @param pojo           新增数据
      * @return statement
      */
-    Statement edit(GridDefinition gridDefinition, Map<String, Object> pojo);
+    PrepareStateParameter edit(GridDefinition gridDefinition, Map<String, Object> pojo);
 
     /**
      * 解析删除SQL语句
@@ -46,5 +46,5 @@ public interface IGridStatementParser {
      * @param id             主键
      * @return statement
      */
-    Statement delete(GridDefinition gridDefinition, Object id);
+    PrepareStateParameter delete(GridDefinition gridDefinition, Object id);
 }

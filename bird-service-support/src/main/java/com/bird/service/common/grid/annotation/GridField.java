@@ -1,6 +1,7 @@
 package com.bird.service.common.grid.annotation;
 
 import com.bird.service.common.grid.GridFieldType;
+import com.bird.service.common.grid.enums.QueryStrategyEnum;
 import com.bird.service.common.grid.enums.SaveStrategyEnum;
 
 import java.lang.annotation.ElementType;
@@ -30,4 +31,9 @@ public @interface GridField {
      * 数据保存策略
      */
     SaveStrategyEnum saveStrategy() default SaveStrategyEnum.DEFAULT;
+
+    /**
+     * 字段查询策略
+     */
+    QueryStrategyEnum queryStrategy() default QueryStrategyEnum.ALLOW;
 }

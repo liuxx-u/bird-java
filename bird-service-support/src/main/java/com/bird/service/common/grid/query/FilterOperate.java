@@ -17,28 +17,53 @@ import java.util.Map;
 @RequiredArgsConstructor
 public enum  FilterOperate {
 
+    /**
+     * and
+     */
     AND("and","and"),
-
+    /**
+     * or
+     */
     OR("or","or"),
-
+    /**
+     * =
+     */
     EQUAL("equal","="),
-
+    /**
+     * !=
+     */
     NOTEQUAL("notequal","!="),
-
+    /**
+     * in
+     */
     IN("in","in"),
-
+    /**
+     * <
+     */
     LESS("less","<"),
-
+    /**
+     * <=
+     */
     LESS_OR_EQUAL("lessorequal","<="),
-
+    /**
+     * >
+     */
     GREATER("greater",">"),
-
+    /**
+     * >=
+     */
     GREATER_OR_EQUAL("greaterorequal",">="),
-
+    /**
+     * like
+     */
     START_WITH("startswith","like"),
-
+    /**
+     * like
+     */
     END_WITH("endswith","like"),
-
+    /**
+     * like
+     */
     CONTAINS("contains","like");
 
 
@@ -72,7 +97,9 @@ public enum  FilterOperate {
      */
     @Nullable
     public static FilterOperate resolveOrDefault(@Nullable String value, FilterOperate defaultOperate) {
-        if (value == null) return defaultOperate;
+        if (value == null) {
+            return defaultOperate;
+        }
         return mappings.getOrDefault(value.toLowerCase(), defaultOperate);
     }
 
@@ -82,7 +109,9 @@ public enum  FilterOperate {
      * @return true or false
      */
     public static Boolean containsValue(String value){
-        if(StringUtils.isBlank(value))return false;
+        if(StringUtils.isBlank(value)) {
+            return false;
+        }
 
         return mappings.keySet().contains(value);
     }

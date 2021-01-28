@@ -1,8 +1,11 @@
 package com.bird.service.common.grid;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bird.service.common.grid.annotation.GridField;
+import com.bird.service.common.grid.enums.QueryStrategyEnum;
 import com.bird.service.common.grid.enums.SaveStrategyEnum;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -32,6 +35,10 @@ public class GridFieldDefinition {
      * 数据保存策略
      */
     private SaveStrategyEnum saveStrategy;
+    /**
+     * 字段查询策略
+     */
+    private QueryStrategyEnum queryStrategy;
 
 
     /**
@@ -50,23 +57,30 @@ public class GridFieldDefinition {
             return null;
         }
 
-        GridFieldDefinition fieldDescriptor = new GridFieldDefinition();
-        fieldDescriptor.setFieldName(field.getName());
+        GridFieldDefinition fieldDefinition = new GridFieldDefinition();
+        fieldDefinition.setFieldName(field.getName());
+
+        fieldDefinition.setDbField(field.getName());
+        fieldDefinition.setFieldType(GridFieldType.NULL);
+        fieldDefinition.setSaveStrategy(SaveStrategyEnum.DEFAULT);
+        fieldDefinition.setQueryStrategy(QueryStrategyEnum.ALLOW);
 
         GridField gridField = field.getAnnotation(GridField.class);
-        if (gridField == null) {
-            fieldDescriptor.setDbField(field.getName());
-            fieldDescriptor.setSaveStrategy(SaveStrategyEnum.DEFAULT);
-        } else {
-            fieldDescriptor.setDbField(gridField.dbField());
-            fieldDescriptor.setFieldType(gridField.fieldType());
-            fieldDescriptor.setSaveStrategy(gridField.saveStrategy());
+        if (gridField != null) {
+            if (StringUtils.isNotBlank(gridField.dbField())) {
+                fieldDefinition.setDbField(gridField.dbField());
+            }
+            if (!Objects.equals(gridField.fieldType(), GridFieldType.NULL)) {
+                fieldDefinition.setFieldType(gridField.fieldType());
+            }
+            fieldDefinition.setSaveStrategy(gridField.saveStrategy());
+            fieldDefinition.setQueryStrategy(gridField.queryStrategy());
         }
 
-        if (Objects.equals(fieldDescriptor.fieldType, GridFieldType.NULL)) {
-            fieldDescriptor.setFieldType(GridFieldType.parse(field.getType().getName()));
+        if (Objects.equals(fieldDefinition.fieldType, GridFieldType.NULL)) {
+            fieldDefinition.setFieldType(GridFieldType.parse(field.getType().getName()));
         }
 
-        return fieldDescriptor;
+        return fieldDefinition;
     }
 }

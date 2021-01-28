@@ -29,9 +29,9 @@ public class GridExecutorFactory {
      * @return 查询结果
      */
     public PagedResult<Map<String, Object>> listPaged(String gridName, PagedListQuery query) {
-        GridDefinition descriptor = this.container.getGridDescriptor(gridName);
-        IGridExecutor gridExecutor = this.gridExecutor(descriptor);
-        return gridExecutor.listPaged(descriptor, query);
+        GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
+        return gridExecutor.listPaged(gridDefinition, query);
     }
 
     /**
