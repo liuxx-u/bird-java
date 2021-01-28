@@ -1,6 +1,7 @@
 package com.bird.service.common.grid;
 
 import com.bird.service.common.grid.annotation.AutoGrid;
+import com.bird.service.common.grid.enums.SortDirectionEnum;
 import com.bird.service.common.grid.executor.DialectType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,14 @@ public class GridDefinition {
      */
     private String appendSql;
     /**
+     * 默认的排序字段
+     */
+    private String defaultSortField;
+    /**
+     * 默认的排序方式
+     */
+    private SortDirectionEnum defaultSortDirection;
+    /**
      * 字段集合
      */
     private Map<String, GridFieldDefinition> fields;
@@ -55,11 +64,14 @@ public class GridDefinition {
      * @return 表格描述符
      */
     public static GridDefinition parse(Class<?> gridClass) {
-        if (gridClass == null || gridClass.isAnnotationPresent(AutoGrid.class)) {
+        if (gridClass == null) {
+            return null;
+        }
+        AutoGrid autoGrid = gridClass.getAnnotation(AutoGrid.class);
+        if (autoGrid == null) {
             return null;
         }
 
-        AutoGrid autoGrid = gridClass.getAnnotation(AutoGrid.class);
         if (StringUtils.isAnyBlank(autoGrid.name(), autoGrid.from())) {
             log.warn("@AutoGrid注解name与from属性为空，忽略表格定义类:{}", gridClass.getName());
             return null;
@@ -72,6 +84,8 @@ public class GridDefinition {
         gridDefinition.setFrom(autoGrid.from());
         gridDefinition.setWhere(autoGrid.where());
         gridDefinition.setAppendSql(autoGrid.appendSql());
+        gridDefinition.setDefaultSortField(autoGrid.defaultSortField());
+        gridDefinition.setDefaultSortDirection(autoGrid.defaultSortDirection());
         gridDefinition.setFields(parseFields(gridClass));
 
         if (CollectionUtils.isEmpty(gridDefinition.getFields())) {

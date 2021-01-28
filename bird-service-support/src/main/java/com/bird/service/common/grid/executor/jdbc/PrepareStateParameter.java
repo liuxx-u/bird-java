@@ -80,8 +80,8 @@ public class PrepareStateParameter {
         return StringUtils.isEmpty(this.sql);
     }
 
-
-    static class TypedParameter {
+    @Data
+    public static class TypedParameter {
 
         /**
          * 字段类型

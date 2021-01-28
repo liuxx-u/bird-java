@@ -4,10 +4,8 @@ import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.GridFieldDefinition;
 import com.bird.service.common.grid.GridFieldType;
 import com.bird.service.common.grid.enums.QueryStrategyEnum;
-import com.bird.service.common.grid.query.FilterGroup;
-import com.bird.service.common.grid.query.FilterOperate;
-import com.bird.service.common.grid.query.FilterRule;
-import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.grid.enums.SortDirectionEnum;
+import com.bird.service.common.grid.query.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -15,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author liuxx
@@ -28,9 +27,38 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
     @Override
     public PrepareStateParameter listPaged(GridDefinition gridDefinition, PagedListQuery query) {
         PrepareStateParameter stateParameter = this.select(gridDefinition.getFields());
-        stateParameter.append(this.from(gridDefinition));
+        stateParameter.append(this.from(gridDefinition)).append(this.where(gridDefinition,query));
+        if(StringUtils.isNotBlank(gridDefinition.getAppendSql())){
+            stateParameter.append(gridDefinition.getAppendSql());
+        }
+
+        String sortField = gridDefinition.getDefaultSortField();
+        int sortDirection = gridDefinition.getDefaultSortDirection().getCode();
+        if (StringUtils.isNotBlank(query.getSortField())) {
+            sortField = query.getSortField();
+            sortDirection = query.getSortDirection();
+        }
+        stateParameter.append(" order by ")
+                .append(this.formatDbField(sortField))
+                .append(Objects.equals(sortDirection,SortDirectionEnum.DESC.getCode()) ? " desc" : " asc")
+                .append(" limit " + (query.getPageIndex() - 1) * query.getPageSize() + "," + query.getPageSize());
 
         return stateParameter;
+    }
+
+    @Override
+    public PrepareStateParameter add(GridDefinition gridDefinition, Map<String, Object> pojo) {
+        return null;
+    }
+
+    @Override
+    public PrepareStateParameter edit(GridDefinition gridDefinition, Map<String, Object> pojo) {
+        return null;
+    }
+
+    @Override
+    public PrepareStateParameter delete(GridDefinition gridDefinition, Object id) {
+        return null;
     }
 
     /**
@@ -45,7 +73,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         for (Map.Entry<String, GridFieldDefinition> entry : fields.entrySet()) {
             GridFieldDefinition fieldDefinition = entry.getValue();
 
-            builder.append(fieldDefinition.getDbField());
+            builder.append(this.formatDbField(fieldDefinition.getDbField()));
             builder.append(" AS ");
             builder.append(fieldDefinition.getFieldName());
             builder.append(",");
@@ -76,14 +104,19 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         FilterGroup filterGroup = new FilterGroup(query.getFilters());
         PrepareStateParameter queryWhere = this.formatGroup(filterGroup, gridDefinition.getFields());
         PrepareStateParameter fixedWhere = new PrepareStateParameter(gridDefinition.getWhere());
+
+        PrepareStateParameter where;
         if (queryWhere.isEmpty()) {
-            return fixedWhere;
+            where = fixedWhere;
         } else if (fixedWhere.isEmpty()) {
-            return queryWhere;
+            where = queryWhere;
         } else {
-            PrepareStateParameter where = new PrepareStateParameter("(");
-            return where.append(fixedWhere).append(") and ").append(queryWhere);
+            where = new PrepareStateParameter("(").append(fixedWhere).append(") and ").append(queryWhere);
         }
+        if (!where.isEmpty()) {
+            where = new PrepareStateParameter(" where ").append(where);
+        }
+        return where;
     }
 
     /**
