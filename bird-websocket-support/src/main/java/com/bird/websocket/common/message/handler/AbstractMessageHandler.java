@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.websocket.Session;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -23,9 +25,10 @@ public abstract class AbstractMessageHandler<T extends BasicMessage> implements 
         if (CollectionUtils.isEmpty(sessions)) {
             return;
         }
-
+        sessions = new ArrayList<>(new HashSet<>(sessions));
         if (message.isAsync()) {
-            ThreadUtil.execute(() -> this.sendMessage(sessions, message.getContent()));
+            List<Session> finalSessions = sessions;
+            ThreadUtil.execute(() -> this.sendMessage(finalSessions, message.getContent()));
             return;
         }
         this.sendMessage(sessions, message.getContent());
