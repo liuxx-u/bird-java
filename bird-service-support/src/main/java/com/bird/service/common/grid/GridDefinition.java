@@ -10,7 +10,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author liuxx
@@ -37,6 +39,14 @@ public class GridDefinition {
      */
     private String from;
     /**
+     * 主表，多表关联时用于指定新增、删除数据的表
+     */
+    private String mainTable;
+    /**
+     * 主键列
+     */
+    private String primaryKey;
+    /**
      * where ：SQL的where部分，不包含前端传递的查询条件
      */
     private String where;
@@ -56,6 +66,17 @@ public class GridDefinition {
      * 字段集合
      */
     private Map<String, GridFieldDefinition> fields;
+
+    /**
+     * 获取主键列定义
+     * @return 主键列定义
+     */
+    public GridFieldDefinition getPrimaryField() {
+        if (CollectionUtils.isEmpty(this.fields) || StringUtils.isBlank(this.primaryKey)) {
+            return null;
+        }
+        return this.fields.get(this.primaryKey);
+    }
 
     /**
      * 解析表格类
@@ -82,6 +103,8 @@ public class GridDefinition {
         gridDefinition.setName(autoGrid.name());
         gridDefinition.setDialectType(autoGrid.dialectType());
         gridDefinition.setFrom(autoGrid.from());
+        gridDefinition.setMainTable(StringUtils.isBlank(autoGrid.mainTable()) ? autoGrid.from() : autoGrid.mainTable());
+        gridDefinition.setPrimaryKey(autoGrid.primaryKey());
         gridDefinition.setWhere(autoGrid.where());
         gridDefinition.setAppendSql(autoGrid.appendSql());
         gridDefinition.setDefaultSortField(autoGrid.defaultSortField());
@@ -97,7 +120,7 @@ public class GridDefinition {
     }
 
     private static Map<String, GridFieldDefinition> parseFields(Class<?> gridClass) {
-        Map<String, GridFieldDefinition> fieldDefinitions = new HashMap<>(32);
+        Map<String, GridFieldDefinition> fieldDefinitions = new LinkedHashMap<>(32);
 
         Field[] fields = gridClass.getDeclaredFields();
         for (Field field : fields) {

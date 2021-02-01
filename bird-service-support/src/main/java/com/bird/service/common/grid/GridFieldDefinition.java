@@ -28,6 +28,10 @@ public class GridFieldDefinition {
      */
     private String dbField;
     /**
+     * 是否主键列
+     */
+    private String isPrimaryKey;
+    /**
      * 数据源中字段类型
      */
     private GridFieldType fieldType;

@@ -24,6 +24,7 @@ public class PrepareStateParameter {
     private List<TypedParameter> parameters;
 
     public PrepareStateParameter() {
+        this.sql = StringUtils.EMPTY;
         this.parameters = new ArrayList<>();
     }
 

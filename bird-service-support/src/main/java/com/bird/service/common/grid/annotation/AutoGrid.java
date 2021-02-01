@@ -36,6 +36,16 @@ public @interface AutoGrid {
     String from();
 
     /**
+     * 主表，多表关联时用于指定新增、删除数据的表
+     */
+    String mainTable() default "";
+
+    /**
+     * 主键列
+     */
+    String primaryKey() default "id";
+
+    /**
      * where ：SQL的where部分，不包含前端传递的查询条件
      */
     String where() default "";

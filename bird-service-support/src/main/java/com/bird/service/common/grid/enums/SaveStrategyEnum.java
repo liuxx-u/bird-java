@@ -29,5 +29,23 @@ public enum SaveStrategyEnum {
     /**
      * 新增/编辑时都更新
      */
-    DEFAULT
+    DEFAULT;
+
+    /**
+     * 判断新增时是否忽略
+     * @param saveStrategy 保存策略
+     * @return 是否忽略新增
+     */
+    public static boolean isIgnoreInsert(SaveStrategyEnum saveStrategy){
+        return saveStrategy == IGNORE || saveStrategy == INSERT_IGNORE;
+    }
+
+    /**
+     * 判断编辑时是否忽略
+     * @param saveStrategy 保存策略
+     * @return 是否忽略编辑
+     */
+    public static boolean isIgnoreUpdate(SaveStrategyEnum saveStrategy){
+        return saveStrategy == IGNORE || saveStrategy == UPDATE_IGNORE;
+    }
 }

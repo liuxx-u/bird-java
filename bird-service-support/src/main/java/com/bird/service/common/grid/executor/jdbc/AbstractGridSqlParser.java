@@ -4,8 +4,13 @@ import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.GridFieldDefinition;
 import com.bird.service.common.grid.GridFieldType;
 import com.bird.service.common.grid.enums.QueryStrategyEnum;
+import com.bird.service.common.grid.enums.SaveStrategyEnum;
 import com.bird.service.common.grid.enums.SortDirectionEnum;
-import com.bird.service.common.grid.query.*;
+import com.bird.service.common.grid.exception.GridException;
+import com.bird.service.common.grid.query.FilterGroup;
+import com.bird.service.common.grid.query.FilterOperate;
+import com.bird.service.common.grid.query.FilterRule;
+import com.bird.service.common.grid.query.PagedListQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -27,8 +32,8 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
     @Override
     public PrepareStateParameter listPaged(GridDefinition gridDefinition, PagedListQuery query) {
         PrepareStateParameter stateParameter = this.select(gridDefinition.getFields());
-        stateParameter.append(this.from(gridDefinition)).append(this.where(gridDefinition,query));
-        if(StringUtils.isNotBlank(gridDefinition.getAppendSql())){
+        stateParameter.append(this.from(gridDefinition)).append(this.where(gridDefinition, query));
+        if (StringUtils.isNotBlank(gridDefinition.getAppendSql())) {
             stateParameter.append(gridDefinition.getAppendSql());
         }
 
@@ -40,7 +45,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         }
         stateParameter.append(" order by ")
                 .append(this.formatDbField(sortField))
-                .append(Objects.equals(sortDirection,SortDirectionEnum.DESC.getCode()) ? " desc" : " asc")
+                .append(Objects.equals(sortDirection, SortDirectionEnum.DESC.getCode()) ? " desc" : " asc")
                 .append(" limit " + (query.getPageIndex() - 1) * query.getPageSize() + "," + query.getPageSize());
 
         return stateParameter;
@@ -48,17 +53,91 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
     @Override
     public PrepareStateParameter add(GridDefinition gridDefinition, Map<String, Object> pojo) {
-        return null;
+        PrepareStateParameter stateParameter = new PrepareStateParameter("insert into ")
+                .append(gridDefinition.getMainTable())
+                .append(" (");
+
+        boolean isStart = true;
+        StringBuilder valueSql = new StringBuilder();
+        for (Map.Entry<String, GridFieldDefinition> entry : gridDefinition.getFields().entrySet()) {
+            GridFieldDefinition fieldDefinition = entry.getValue();
+            if (SaveStrategyEnum.isIgnoreInsert(fieldDefinition.getSaveStrategy())) {
+                continue;
+            }
+            if (!isStart) {
+                stateParameter.append(",");
+                valueSql.append(",");
+            }
+            stateParameter.append(this.formatDbField(fieldDefinition.getDbField()));
+            stateParameter.addParameter(fieldDefinition.getFieldType(), pojo.get(fieldDefinition.getFieldName()));
+            valueSql.append("?");
+            isStart = false;
+        }
+
+        stateParameter.append(") values (").append(valueSql.toString()).append(")");
+        return stateParameter;
     }
 
     @Override
     public PrepareStateParameter edit(GridDefinition gridDefinition, Map<String, Object> pojo) {
-        return null;
+        GridFieldDefinition primaryKey = gridDefinition.getPrimaryField();
+        if (primaryKey == null) {
+            throw new GridException("表格:" + gridDefinition.getName() + "更新失败,主键列未定义");
+        }
+        Object id = pojo.get(primaryKey.getFieldName());
+        if (id == null || StringUtils.isBlank(id.toString())) {
+            throw new GridException("表格:" + gridDefinition.getName() + "更新失败,更新的主键值为空");
+        }
+
+        Map<String, GridFieldDefinition> fieldMap = gridDefinition.getFields();
+        PrepareStateParameter stateParameter = new PrepareStateParameter("update " + gridDefinition.getMainTable() + " set ");
+
+        boolean isStart = true;
+        PrepareStateParameter updateParameter = new PrepareStateParameter();
+        for (Map.Entry<String, Object> entry : pojo.entrySet()) {
+            GridFieldDefinition fieldDefinition = fieldMap.get(entry.getKey());
+            if (Objects.equals(gridDefinition.getPrimaryKey(), fieldDefinition.getFieldName())) {
+                continue;
+            }
+            if (SaveStrategyEnum.isIgnoreUpdate(fieldDefinition.getSaveStrategy())) {
+                continue;
+            }
+            if (Objects.equals(fieldDefinition.getSaveStrategy(), SaveStrategyEnum.UPDATE_NULL_IGNORE) && Objects.isNull(entry.getValue())) {
+                continue;
+            }
+
+            if (!isStart) {
+                updateParameter.append(",");
+            }
+            updateParameter.append(this.formatDbField(fieldDefinition.getDbField())).append(" = ?");
+            updateParameter.addParameter(fieldDefinition.getFieldType(), entry.getValue());
+            isStart = false;
+        }
+
+        if (updateParameter.isEmpty()) {
+            log.info("未更新任何数据");
+            return null;
+        }
+
+        stateParameter.append(updateParameter).append(" where ").append(this.formatDbField(primaryKey.getDbField())).append(" = ?");
+        stateParameter.addParameter(primaryKey.getFieldType(), id);
+
+        return stateParameter;
     }
 
     @Override
     public PrepareStateParameter delete(GridDefinition gridDefinition, Object id) {
-        return null;
+        GridFieldDefinition primaryKey = gridDefinition.getPrimaryField();
+        if (primaryKey == null) {
+            throw new GridException("表格:" + gridDefinition.getName() + "删除失败,主键列未定义");
+        }
+        if (id == null || StringUtils.isBlank(id.toString())) {
+            throw new GridException("表格:" + gridDefinition.getName() + "删除失败,删除的主键值为空");
+        }
+
+        PrepareStateParameter stateParameter = new PrepareStateParameter("delete from " + gridDefinition.getMainTable() + " where " + this.formatDbField(primaryKey.getDbField()) + " = ?");
+        stateParameter.addParameter(primaryKey.getFieldType(), id);
+        return stateParameter;
     }
 
     /**
@@ -74,7 +153,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
             GridFieldDefinition fieldDefinition = entry.getValue();
 
             builder.append(this.formatDbField(fieldDefinition.getDbField()));
-            builder.append(" AS ");
+            builder.append(" as ");
             builder.append(fieldDefinition.getFieldName());
             builder.append(",");
         }
@@ -186,8 +265,8 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
                 continue;
             }
             GridFieldDefinition fieldDefinition = fieldMap.get(field);
-            if(fieldDefinition == null || fieldDefinition.getQueryStrategy() == QueryStrategyEnum.FORBID){
-                log.warn("表格中字段{}不允许查询",field);
+            if (fieldDefinition == null || fieldDefinition.getQueryStrategy() == QueryStrategyEnum.FORBID) {
+                log.warn("表格中字段{}不允许查询", field);
                 continue;
             }
             if (!isStart) {
@@ -203,7 +282,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
             if (ruleOperate == FilterOperate.IN) {
                 sb.append(String.format("FIND_IN_SET(%s,?)", dbFieldName));
-                stateParameter.addParameter(GridFieldType.VARCHAR,StringUtils.strip(value, ","));
+                stateParameter.addParameter(GridFieldType.VARCHAR, StringUtils.strip(value, ","));
             } else {
                 switch (ruleOperate) {
                     case START_WITH:
@@ -218,13 +297,13 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
                     default:
                         break;
                 }
-                stateParameter.addParameter(fieldDefinition.getFieldType(),value);
+                stateParameter.addParameter(fieldDefinition.getFieldType(), value);
                 sb.append(dbFieldName).append(" ").append(ruleOperate.getDbValue()).append(" ?");
             }
             isStart = false;
         }
         String where = sb.toString();
-        if(StringUtils.isNotBlank(where)){
+        if (StringUtils.isNotBlank(where)) {
             where = "(" + where + ")";
         }
         stateParameter.setSql(where);

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @since 2021/1/28
  */
 @Data
-@AutoGrid(name = "test",from = "table",where = "delFlag = 0")
+@AutoGrid(name = "test",from = "table1",where = "delFlag = 0")
 public class TestGrid {
 
     private String id;
