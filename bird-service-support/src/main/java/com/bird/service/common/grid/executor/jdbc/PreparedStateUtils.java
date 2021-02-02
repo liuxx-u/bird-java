@@ -26,9 +26,9 @@ public final class PreparedStateUtils {
     public static PreparedStatement prepareStatement(Connection connection, PreparedStateParameter stateParameter) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(stateParameter.getSql(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 
-        int index = 0;
+        int index = 1;
         for (PreparedStateParameter.TypedParameter typedParameter : stateParameter.getParameters()) {
-            statement.setObject(index++, typedParameter.getParameter(), typedParameter.getFieldType());
+            statement.setObject(index++, typedParameter.getParameter(), typedParameter.getFieldType().getType());
         }
 
         return statement;

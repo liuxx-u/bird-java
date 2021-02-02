@@ -1,5 +1,7 @@
 package com.bird.service.common.grid;
 
+import lombok.Getter;
+
 import java.sql.SQLType;
 import java.sql.Types;
 
@@ -9,6 +11,7 @@ import java.sql.Types;
  * @author liuxx
  * @since 2021/1/27
  */
+@Getter
 public enum GridFieldType implements SQLType {
 
     /**
@@ -36,9 +39,9 @@ public enum GridFieldType implements SQLType {
      */
     VARCHAR(Types.VARCHAR),
     /**
-     * Identifies the generic SQL type {@code DATE}.
+     * Identifies the generic SQL type {@code TIMESTAMP}.
      */
-    DATE(Types.DATE),
+    TIMESTAMP(Types.TIMESTAMP),
     /**
      * Identifies the generic SQL type {@code BOOLEAN}.
      */
@@ -114,7 +117,7 @@ public enum GridFieldType implements SQLType {
                 return GridFieldType.BOOLEAN;
             case "java.util.Date":
             case "java.sql.Date":
-                return GridFieldType.DATE;
+                return GridFieldType.TIMESTAMP;
             case "java.math.BigDecimal":
                 return GridFieldType.DECIMAL;
             default:
