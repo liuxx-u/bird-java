@@ -72,10 +72,19 @@ public class GridDefinition {
      * @return 主键列定义
      */
     public GridFieldDefinition getPrimaryField() {
+        return this.getFieldDefinition(this.primaryKey);
+    }
+
+    /**
+     * 根据字段名获取字段定义
+     * @param field 字段名称
+     * @return 字段定义
+     */
+    public GridFieldDefinition getFieldDefinition(String field){
         if (CollectionUtils.isEmpty(this.fields) || StringUtils.isBlank(this.primaryKey)) {
             return null;
         }
-        return this.fields.get(this.primaryKey);
+        return this.fields.get(field);
     }
 
     /**

@@ -18,7 +18,7 @@ public class PagedListResult extends PagedResult<Map> {
         super(totalCount, items);
     }
 
-    public PagedListResult(Long totalCount, List<Map> items, Map<String, Number> sum) {
+    public PagedListResult(Long totalCount, List<Map> items, Map<String, Object> sum) {
         super(totalCount, items, sum);
     }
 }

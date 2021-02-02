@@ -356,8 +356,8 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
      */
     @Deprecated
     protected PagedListResult queryPagedList(PagedQueryParam param) {
-        Map<String, Number> sum = mapper.queryPagedSum(param);
-        Long totalCount = sum.getOrDefault("totalCount", 0L).longValue();
+        Map<String, Object> sum = mapper.queryPagedSum(param);
+        Long totalCount = Long.parseLong(sum.getOrDefault("totalCount", 0L).toString());
         List<Map> items = new ArrayList<>();
         if (totalCount > 0) {
             items = mapper.queryPagedList(param);

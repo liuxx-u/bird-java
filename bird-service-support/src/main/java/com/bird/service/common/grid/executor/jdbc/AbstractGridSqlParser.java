@@ -28,6 +28,7 @@ import java.util.Objects;
 @SuppressWarnings("Duplicates")
 public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
+    private final static String GROUP_BY = "group by";
 
     @Override
     public PreparedStateParameter listPaged(GridDefinition gridDefinition, PagedListQuery query) {
@@ -48,6 +49,22 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
                 .append(Objects.equals(sortDirection, SortDirectionEnum.DESC.getCode()) ? " desc" : " asc")
                 .append(" limit " + (query.getPageIndex() - 1) * query.getPageSize() + "," + query.getPageSize());
 
+        return stateParameter;
+    }
+
+    @Override
+    public PreparedStateParameter listSum(GridDefinition gridDefinition, PagedListQuery query) {
+        PreparedStateParameter stateParameter = sum(gridDefinition, query, true);
+        stateParameter.append(this.from(gridDefinition)).append(this.where(gridDefinition, query));
+        if (StringUtils.isNotBlank(gridDefinition.getAppendSql())) {
+            stateParameter.append(gridDefinition.getAppendSql());
+        }
+
+        if (StringUtils.containsIgnoreCase(stateParameter.getSql(), GROUP_BY)) {
+            PreparedStateParameter groupStateParameter = this.sum(gridDefinition, query, false);
+            groupStateParameter.append(" from (").append(stateParameter).append(") as temp");
+            return groupStateParameter;
+        }
         return stateParameter;
     }
 
@@ -206,6 +223,30 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
      */
     protected String formatDbField(String dbField) {
         return dbField;
+    }
+
+    /**
+     * 解析sum语句
+     *
+     * @param gridDefinition 表格定义
+     * @param query          查询条件
+     * @param useAlias       是否使用别名
+     * @return {@link PreparedStateParameter}
+     */
+    private PreparedStateParameter sum(GridDefinition gridDefinition, PagedListQuery query, Boolean useAlias) {
+        StringBuilder sb = new StringBuilder("select count(1) as totalCount");
+        for (String field : query.getSumFields()) {
+            GridFieldDefinition fieldDefinition = gridDefinition.getFieldDefinition(field);
+            if (field == null || !GridFieldType.isSummable(fieldDefinition.getFieldType())) {
+                continue;
+            }
+            sb.append(",")
+                    .append("sum(")
+                    .append(useAlias ? this.formatDbField(fieldDefinition.getDbField()) : field)
+                    .append(") as ")
+                    .append(field);
+        }
+        return new PreparedStateParameter(sb.toString());
     }
 
     private PreparedStateParameter formatGroup(FilterGroup filterGroup, Map<String, GridFieldDefinition> fieldMap) {

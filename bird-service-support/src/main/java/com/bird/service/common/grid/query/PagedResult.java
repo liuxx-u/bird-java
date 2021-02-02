@@ -18,7 +18,7 @@ import java.util.Map;
 public class PagedResult<T> extends AbstractBO {
     private Long totalCount;
     private List<T> items;
-    private Map<String, Number> sum;
+    private Map<String, Object> sum;
 
     public PagedResult() {
         totalCount = 0L;
@@ -31,7 +31,7 @@ public class PagedResult<T> extends AbstractBO {
         this.items = items;
     }
 
-    public PagedResult(Long totalCount, List<T> items, Map<String, Number> sum) {
+    public PagedResult(Long totalCount, List<T> items, Map<String, Object> sum) {
         this.totalCount = totalCount;
         this.items = items;
         this.sum = sum;

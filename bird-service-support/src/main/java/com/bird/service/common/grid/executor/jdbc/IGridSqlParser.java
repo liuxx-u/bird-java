@@ -12,13 +12,22 @@ import java.util.Map;
 public interface IGridSqlParser {
 
     /**
-     * 解析列表查询SQL语句
+     * 解析分页查询SQL语句
      *
      * @param gridDefinition 表格描述符
      * @param query          分页查询参数
      * @return statement
      */
     PreparedStateParameter listPaged(GridDefinition gridDefinition, PagedListQuery query);
+
+    /**
+     * 解析分页查询中合计的SQL语句
+     *
+     * @param gridDefinition 表格描述符
+     * @param query          分页查询参数
+     * @return statement
+     */
+    PreparedStateParameter listSum(GridDefinition gridDefinition, PagedListQuery query);
 
     /**
      * 解析新增SQL语句

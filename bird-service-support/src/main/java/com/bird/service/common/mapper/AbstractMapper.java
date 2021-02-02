@@ -33,7 +33,7 @@ public interface AbstractMapper<T extends IDO> extends BaseMapper<T> {
      */
     @Deprecated
     @SelectProvider(type = PagedQueryProvider.class, method = "queryPagedSum")
-    Map<String,Number> queryPagedSum(PagedQueryParam param);
+    Map<String,Object> queryPagedSum(PagedQueryParam param);
 
     /**
      * 通用新增方法

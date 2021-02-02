@@ -3,7 +3,6 @@ package com.bird.service.common.grid.executor.jdbc;
 import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.executor.IGridExecutor;
 import com.bird.service.common.grid.query.PagedListQuery;
-import com.bird.service.common.grid.query.PagedListResult;
 import com.bird.service.common.grid.query.PagedResult;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author liuxx
@@ -23,7 +23,7 @@ public class JdbcGridExecutor implements IGridExecutor {
 
     private final JdbcGridContext jdbcGridContext;
 
-    public JdbcGridExecutor(JdbcGridContext jdbcGridContext){
+    public JdbcGridExecutor(JdbcGridContext jdbcGridContext) {
         this.jdbcGridContext = jdbcGridContext;
     }
 
@@ -42,20 +42,20 @@ public class JdbcGridExecutor implements IGridExecutor {
             return new PagedResult<>();
         }
 
-        PreparedStateParameter stateParameter = sqlParser.listPaged(gridDefinition, query);
-
-        try {
-            Connection connection = this.jdbcGridContext.getConnection();
-            PreparedStatement statement = PreparedStateUtils.prepareStatement(connection, stateParameter);
-
-            ResultSet resultSet = statement.executeQuery();
-            List<Map<String,Object>> list = PreparedStateUtils.readResultSet(resultSet);
-            return new PagedResult<>(10L, list);
-
-        } catch (SQLException e) {
-            log.error("表格:{}分页查询失败", e);
+        PreparedStateParameter sumStateParameter = sqlParser.listSum(gridDefinition, query);
+        Map<String, Object> sum = this.execute(sumStateParameter, PreparedStateUtils::readFirstRow);
+        if (sum == null) {
             return new PagedResult<>();
         }
+        long totalCount = Long.parseLong(sum.getOrDefault("totalCount", 0L).toString());
+        if (totalCount <= 0) {
+            return new PagedResult<>();
+        }
+
+        PreparedStateParameter stateParameter = sqlParser.listPaged(gridDefinition, query);
+        List<Map<String, Object>> list = this.execute(stateParameter, PreparedStateUtils::readResultSet);
+
+        return new PagedResult<>(totalCount, list, sum);
     }
 
     /**
@@ -92,5 +92,52 @@ public class JdbcGridExecutor implements IGridExecutor {
     @Override
     public boolean delete(GridDefinition gridDefinition, Object id) {
         return false;
+    }
+
+    /**
+     * 执行数据库操作
+     *
+     * @param stateParameter 执行的SQL及参数
+     * @param function       业务逻辑
+     * @param <T>            返回的数据类型
+     * @return 返回的数据
+     */
+    private <T> T execute(PreparedStateParameter stateParameter, Function<ResultSet, T> function) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = this.jdbcGridContext.getConnection();
+            statement = PreparedStateUtils.prepareStatement(connection, stateParameter);
+
+            resultSet = statement.executeQuery();
+            return function.apply(resultSet);
+        } catch (SQLException e) {
+            log.error("表格:{}分页查询失败", e);
+            return null;
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    log.error("ResultSet 关闭失败", e);
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    log.error("PreparedStatement 关闭失败", e);
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    log.error("Connection 关闭失败", e);
+                }
+            }
+        }
     }
 }

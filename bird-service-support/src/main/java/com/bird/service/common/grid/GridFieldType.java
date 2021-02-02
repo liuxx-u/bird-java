@@ -121,4 +121,13 @@ public enum GridFieldType implements SQLType {
                 return GridFieldType.NULL;
         }
     }
+
+    /**
+     * 是否可统计的类型
+     * @param fieldType 列类型
+     * @return 是否支持统计
+     */
+    public static boolean isSummable(GridFieldType fieldType){
+        return fieldType == INTEGER || fieldType == BIGINT || fieldType == FLOAT || fieldType == DOUBLE || fieldType == DECIMAL;
+    }
 }
