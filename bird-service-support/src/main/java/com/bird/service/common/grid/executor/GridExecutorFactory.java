@@ -3,7 +3,6 @@ package com.bird.service.common.grid.executor;
 import com.bird.service.common.grid.GridClassContainer;
 import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.exception.GridException;
-import com.bird.service.common.grid.executor.jdbc.JdbcGridExecutor;
 import com.bird.service.common.grid.query.PagedListQuery;
 import com.bird.service.common.grid.query.PagedResult;
 
@@ -16,9 +15,11 @@ import java.util.Map;
 public class GridExecutorFactory {
 
     private final GridClassContainer container;
+    private final Map<DialectType,IGridExecutor> gridExecutors;
 
-    public GridExecutorFactory(GridClassContainer container) {
+    public GridExecutorFactory(GridClassContainer container,IGridExecutorLoader gridExecutorLoader) {
         this.container = container;
+        this.gridExecutors = gridExecutorLoader.loadExecutors();
     }
 
     /**
@@ -76,13 +77,10 @@ public class GridExecutorFactory {
             throw new GridException("未找到对应的表格定义");
         }
         DialectType dialectType = gridDefinition.getDialectType();
-        switch (dialectType){
-            case MYSQL:
-                return new JdbcGridExecutor();
-            default:
-                throw new GridException("不支持的表格处理器");
+        IGridExecutor gridExecutor = gridExecutors.get(dialectType);
+        if(gridExecutor == null){
+            throw new GridException("不支持的表格处理器");
         }
+        return gridExecutor;
     }
-
-
 }

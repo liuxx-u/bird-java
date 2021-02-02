@@ -3,15 +3,29 @@ package com.bird.service.common.grid.executor.jdbc;
 import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.executor.IGridExecutor;
 import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.grid.query.PagedListResult;
 import com.bird.service.common.grid.query.PagedResult;
+import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author liuxx
  * @since 2021/1/20
  */
+@Slf4j
 public class JdbcGridExecutor implements IGridExecutor {
+
+    private final JdbcGridContext jdbcGridContext;
+
+    public JdbcGridExecutor(JdbcGridContext jdbcGridContext){
+        this.jdbcGridContext = jdbcGridContext;
+    }
 
     /**
      * 分页查询
@@ -22,9 +36,26 @@ public class JdbcGridExecutor implements IGridExecutor {
      */
     @Override
     public PagedResult<Map<String, Object>> listPaged(GridDefinition gridDefinition, PagedListQuery query) {
+        IGridSqlParser sqlParser = this.jdbcGridContext.getSqlParser(gridDefinition.getDialectType());
+        if (sqlParser == null) {
+            log.warn("表格:{}指定的数据源类型:{} 未设置SQL解析器", gridDefinition.getName(), gridDefinition.getDialectType());
+            return new PagedResult<>();
+        }
 
+        PreparedStateParameter stateParameter = sqlParser.listPaged(gridDefinition, query);
 
-        return null;
+        try {
+            Connection connection = this.jdbcGridContext.getConnection();
+            PreparedStatement statement = PreparedStateUtils.prepareStatement(connection, stateParameter);
+
+            ResultSet resultSet = statement.executeQuery();
+            List<Map<String,Object>> list = PreparedStateUtils.readResultSet(resultSet);
+            return new PagedResult<>(10L, list);
+
+        } catch (SQLException e) {
+            log.error("表格:{}分页查询失败", e);
+            return new PagedResult<>();
+        }
     }
 
     /**

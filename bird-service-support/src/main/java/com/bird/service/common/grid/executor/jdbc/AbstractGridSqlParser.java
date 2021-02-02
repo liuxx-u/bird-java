@@ -30,8 +30,8 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
 
     @Override
-    public PrepareStateParameter listPaged(GridDefinition gridDefinition, PagedListQuery query) {
-        PrepareStateParameter stateParameter = this.select(gridDefinition.getFields());
+    public PreparedStateParameter listPaged(GridDefinition gridDefinition, PagedListQuery query) {
+        PreparedStateParameter stateParameter = this.select(gridDefinition.getFields());
         stateParameter.append(this.from(gridDefinition)).append(this.where(gridDefinition, query));
         if (StringUtils.isNotBlank(gridDefinition.getAppendSql())) {
             stateParameter.append(gridDefinition.getAppendSql());
@@ -52,8 +52,8 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
     }
 
     @Override
-    public PrepareStateParameter add(GridDefinition gridDefinition, Map<String, Object> pojo) {
-        PrepareStateParameter stateParameter = new PrepareStateParameter("insert into ")
+    public PreparedStateParameter add(GridDefinition gridDefinition, Map<String, Object> pojo) {
+        PreparedStateParameter stateParameter = new PreparedStateParameter("insert into ")
                 .append(gridDefinition.getMainTable())
                 .append(" (");
 
@@ -79,7 +79,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
     }
 
     @Override
-    public PrepareStateParameter edit(GridDefinition gridDefinition, Map<String, Object> pojo) {
+    public PreparedStateParameter edit(GridDefinition gridDefinition, Map<String, Object> pojo) {
         GridFieldDefinition primaryKey = gridDefinition.getPrimaryField();
         if (primaryKey == null) {
             throw new GridException("表格:" + gridDefinition.getName() + "更新失败,主键列未定义");
@@ -90,10 +90,10 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         }
 
         Map<String, GridFieldDefinition> fieldMap = gridDefinition.getFields();
-        PrepareStateParameter stateParameter = new PrepareStateParameter("update " + gridDefinition.getMainTable() + " set ");
+        PreparedStateParameter stateParameter = new PreparedStateParameter("update " + gridDefinition.getMainTable() + " set ");
 
         boolean isStart = true;
-        PrepareStateParameter updateParameter = new PrepareStateParameter();
+        PreparedStateParameter updateParameter = new PreparedStateParameter();
         for (Map.Entry<String, Object> entry : pojo.entrySet()) {
             GridFieldDefinition fieldDefinition = fieldMap.get(entry.getKey());
             if (Objects.equals(gridDefinition.getPrimaryKey(), fieldDefinition.getFieldName())) {
@@ -126,7 +126,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
     }
 
     @Override
-    public PrepareStateParameter delete(GridDefinition gridDefinition, Object id) {
+    public PreparedStateParameter delete(GridDefinition gridDefinition, Object id) {
         GridFieldDefinition primaryKey = gridDefinition.getPrimaryField();
         if (primaryKey == null) {
             throw new GridException("表格:" + gridDefinition.getName() + "删除失败,主键列未定义");
@@ -135,7 +135,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
             throw new GridException("表格:" + gridDefinition.getName() + "删除失败,删除的主键值为空");
         }
 
-        PrepareStateParameter stateParameter = new PrepareStateParameter("delete from " + gridDefinition.getMainTable() + " where " + this.formatDbField(primaryKey.getDbField()) + " = ?");
+        PreparedStateParameter stateParameter = new PreparedStateParameter("delete from " + gridDefinition.getMainTable() + " where " + this.formatDbField(primaryKey.getDbField()) + " = ?");
         stateParameter.addParameter(primaryKey.getFieldType(), id);
         return stateParameter;
     }
@@ -144,9 +144,9 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
      * 解析select语句
      *
      * @param fields 字段定义集合
-     * @return {@link PrepareStateParameter}
+     * @return {@link PreparedStateParameter}
      */
-    protected PrepareStateParameter select(Map<String, GridFieldDefinition> fields) {
+    protected PreparedStateParameter select(Map<String, GridFieldDefinition> fields) {
         StringBuilder builder = new StringBuilder("select ");
 
         for (Map.Entry<String, GridFieldDefinition> entry : fields.entrySet()) {
@@ -159,17 +159,17 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         }
 
         String select = StringUtils.stripEnd(builder.toString(), ",");
-        return new PrepareStateParameter(select);
+        return new PreparedStateParameter(select);
     }
 
     /**
      * 解析from语句
      *
      * @param gridDefinition 表格定义
-     * @return {@link PrepareStateParameter}
+     * @return {@link PreparedStateParameter}
      */
-    protected PrepareStateParameter from(GridDefinition gridDefinition) {
-        return new PrepareStateParameter(" from " + gridDefinition.getFrom());
+    protected PreparedStateParameter from(GridDefinition gridDefinition) {
+        return new PreparedStateParameter(" from " + gridDefinition.getFrom());
     }
 
     /**
@@ -177,23 +177,23 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
      *
      * @param gridDefinition 表格定义
      * @param query          查询条件
-     * @return {@link PrepareStateParameter}
+     * @return {@link PreparedStateParameter}
      */
-    protected PrepareStateParameter where(GridDefinition gridDefinition, PagedListQuery query) {
+    protected PreparedStateParameter where(GridDefinition gridDefinition, PagedListQuery query) {
         FilterGroup filterGroup = new FilterGroup(query.getFilters());
-        PrepareStateParameter queryWhere = this.formatGroup(filterGroup, gridDefinition.getFields());
-        PrepareStateParameter fixedWhere = new PrepareStateParameter(gridDefinition.getWhere());
+        PreparedStateParameter queryWhere = this.formatGroup(filterGroup, gridDefinition.getFields());
+        PreparedStateParameter fixedWhere = new PreparedStateParameter(gridDefinition.getWhere());
 
-        PrepareStateParameter where;
+        PreparedStateParameter where;
         if (queryWhere.isEmpty()) {
             where = fixedWhere;
         } else if (fixedWhere.isEmpty()) {
             where = queryWhere;
         } else {
-            where = new PrepareStateParameter("(").append(fixedWhere).append(") and ").append(queryWhere);
+            where = new PreparedStateParameter("(").append(fixedWhere).append(") and ").append(queryWhere);
         }
         if (!where.isEmpty()) {
-            where = new PrepareStateParameter(" where ").append(where);
+            where = new PreparedStateParameter(" where ").append(where);
         }
         return where;
     }
@@ -208,17 +208,17 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         return dbField;
     }
 
-    private PrepareStateParameter formatGroup(FilterGroup filterGroup, Map<String, GridFieldDefinition> fieldMap) {
-        PrepareStateParameter where = formatRules(filterGroup.getRules(), fieldMap);
+    private PreparedStateParameter formatGroup(FilterGroup filterGroup, Map<String, GridFieldDefinition> fieldMap) {
+        PreparedStateParameter where = formatRules(filterGroup.getRules(), fieldMap);
 
         boolean isStart = true;
-        PrepareStateParameter groupWhere = new PrepareStateParameter();
+        PreparedStateParameter groupWhere = new PreparedStateParameter();
         if (CollectionUtils.isNotEmpty(filterGroup.getGroups())) {
             for (FilterGroup innerGroup : filterGroup.getGroups()) {
                 if (innerGroup == null) {
                     continue;
                 }
-                PrepareStateParameter innerWhere = this.formatGroup(innerGroup, fieldMap);
+                PreparedStateParameter innerWhere = this.formatGroup(innerGroup, fieldMap);
                 if (!innerWhere.isEmpty()) {
                     if (!isStart) {
                         groupWhere.append(" and ");
@@ -239,14 +239,14 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
                 groupOperate = FilterOperate.AND;
             }
 
-            PrepareStateParameter stateParameter = new PrepareStateParameter();
+            PreparedStateParameter stateParameter = new PreparedStateParameter();
             stateParameter.append("(").append(where).append(" ").append(groupOperate.getDbValue()).append(" ").append(groupWhere).append(")");
             return stateParameter;
         }
     }
 
-    private PrepareStateParameter formatRules(List<FilterRule> rules, Map<String, GridFieldDefinition> fieldMap) {
-        PrepareStateParameter stateParameter = new PrepareStateParameter();
+    private PreparedStateParameter formatRules(List<FilterRule> rules, Map<String, GridFieldDefinition> fieldMap) {
+        PreparedStateParameter stateParameter = new PreparedStateParameter();
 
         if (CollectionUtils.isEmpty(rules)) {
             return stateParameter;

@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2021/1/27
  */
 @Data
-public class PrepareStateParameter {
+public class PreparedStateParameter {
 
     /**
      * 参数化SQL
@@ -23,17 +23,17 @@ public class PrepareStateParameter {
      */
     private List<TypedParameter> parameters;
 
-    public PrepareStateParameter() {
+    public PreparedStateParameter() {
         this.sql = StringUtils.EMPTY;
         this.parameters = new ArrayList<>();
     }
 
-    public PrepareStateParameter(String sql) {
+    public PreparedStateParameter(String sql) {
         this();
         this.sql = sql;
     }
 
-    public PrepareStateParameter(String sql, List<TypedParameter> parameters) {
+    public PreparedStateParameter(String sql, List<TypedParameter> parameters) {
         this.sql = sql;
         this.parameters = parameters;
     }
@@ -56,17 +56,17 @@ public class PrepareStateParameter {
      *
      * @param sql sql
      */
-    public PrepareStateParameter append(String sql) {
+    public PreparedStateParameter append(String sql) {
         this.sql += sql;
         return this;
     }
 
     /**
-     * 连接{@link PrepareStateParameter} 参数
+     * 连接{@link PreparedStateParameter} 参数
      *
      * @param stateParameter 参数
      */
-    public PrepareStateParameter append(PrepareStateParameter stateParameter) {
+    public PreparedStateParameter append(PreparedStateParameter stateParameter) {
         this.sql += stateParameter.sql;
         this.parameters.addAll(stateParameter.parameters);
         return this;
