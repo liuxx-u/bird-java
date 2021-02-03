@@ -2,10 +2,11 @@ package com.bird.service.common.grid;
 
 import com.bird.service.common.grid.definition.TestGrid;
 import com.bird.service.common.grid.enums.SortDirectionEnum;
+import com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties;
 import com.bird.service.common.grid.executor.jdbc.PreparedStateParameter;
 import com.bird.service.common.grid.executor.jdbc.mysql.GridMySqlParser;
-import com.bird.service.common.grid.query.FilterRule;
-import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.service.query.FilterRule;
+import com.bird.service.common.service.query.PagedListQuery;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,6 +18,8 @@ import java.util.Map;
  * @since 2021/1/28
  */
 public class GridMySqlParserTests {
+
+    private AutoGridJdbcProperties gridJdbcProperties = new AutoGridJdbcProperties();
 
     private PagedListQuery generateQuery() {
         PagedListQuery query = new PagedListQuery();
@@ -45,10 +48,10 @@ public class GridMySqlParserTests {
         GridDefinition gridDefinition = GridDefinition.parse(TestGrid.class);
         PagedListQuery query = this.generateQuery();
 
-        GridMySqlParser parser = new GridMySqlParser();
+        GridMySqlParser parser = new GridMySqlParser(gridJdbcProperties);
         PreparedStateParameter stateParameter = parser.listPaged(gridDefinition, query);
 
-        String sql = "select `content` AS content,`money` AS money,`name` AS name,`id` AS id,`age2` AS age from table1 where (delFlag = 0) and (`name` = ? and `age2` < ?) order by `name` desc limit 10,10";
+        String sql = "select `id` as id,`name` as name,`content` as content,`age2` as age,`money` as money from table1 where (delFlag = 0) and (`name` = ? and `age2` < ?) order by `name` desc limit 10,10";
         Assert.assertEquals(stateParameter.getSql(), sql);
         Assert.assertEquals(stateParameter.getParameters().get(0).getParameter(), "liuxx");
         Assert.assertEquals(stateParameter.getParameters().get(1).getParameter(), "30");
@@ -60,7 +63,7 @@ public class GridMySqlParserTests {
 
         Map<String, Object> pojo = map();
 
-        GridMySqlParser parser = new GridMySqlParser();
+        GridMySqlParser parser = new GridMySqlParser(gridJdbcProperties);
         PreparedStateParameter stateParameter = parser.add(gridDefinition, pojo);
         Assert.assertEquals(stateParameter.getSql(), "insert into table1 (`id`,`name`,`content`,`age2`,`money`) values (?,?,?,?,?)");
     }
@@ -71,7 +74,7 @@ public class GridMySqlParserTests {
 
         Map<String, Object> pojo = map();
 
-        GridMySqlParser parser = new GridMySqlParser();
+        GridMySqlParser parser = new GridMySqlParser(gridJdbcProperties);
         PreparedStateParameter stateParameter = parser.edit(gridDefinition, pojo);
         Assert.assertEquals(stateParameter.getSql(), "update table1 set `name` = ?,`age2` = ? where `id` = ?");
     }
@@ -80,7 +83,7 @@ public class GridMySqlParserTests {
     public void deleteTest() {
         GridDefinition gridDefinition = GridDefinition.parse(TestGrid.class);
 
-        GridMySqlParser parser = new GridMySqlParser();
+        GridMySqlParser parser = new GridMySqlParser(gridJdbcProperties);
         PreparedStateParameter stateParameter = parser.delete(gridDefinition, 1);
         Assert.assertEquals(stateParameter.getSql(), "delete from table1 where `id` = ?");
     }

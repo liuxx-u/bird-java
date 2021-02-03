@@ -1,7 +1,7 @@
-package com.bird.service.common.grid.query;
+package com.bird.service.common.service.query;
 
-import com.bird.service.common.grid.query.ColumnInfo;
-import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.service.query.ColumnInfo;
+import com.bird.service.common.service.query.PagedListQuery;
 import com.bird.service.common.service.dto.AbstractBO;
 import lombok.Getter;
 import lombok.Setter;

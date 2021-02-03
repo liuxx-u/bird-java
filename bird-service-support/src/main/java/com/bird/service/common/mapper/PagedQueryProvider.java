@@ -1,7 +1,7 @@
 package com.bird.service.common.mapper;
 
-import com.bird.service.common.grid.query.ListSortDirection;
-import com.bird.service.common.grid.query.PagedListQuery;
+import com.bird.service.common.service.query.ListSortDirection;
+import com.bird.service.common.service.query.PagedListQuery;
 import org.apache.commons.lang3.StringUtils;
 
 /**

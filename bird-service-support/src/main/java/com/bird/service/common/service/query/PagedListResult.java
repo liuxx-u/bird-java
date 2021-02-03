@@ -1,4 +1,4 @@
-package com.bird.service.common.grid.query;
+package com.bird.service.common.service.query;
 
 import java.util.List;
 import java.util.Map;

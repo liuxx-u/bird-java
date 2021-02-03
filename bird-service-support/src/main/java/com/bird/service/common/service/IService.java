@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWra
 import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.bird.service.common.model.IDO;
 import com.bird.service.common.service.dto.IEntityBO;
-import com.bird.service.common.grid.query.PagedListQuery;
-import com.bird.service.common.grid.query.PagedListResult;
+import com.bird.service.common.service.query.PagedListQuery;
+import com.bird.service.common.service.query.PagedListResult;
 
 import java.io.Serializable;
 import java.util.Collection;

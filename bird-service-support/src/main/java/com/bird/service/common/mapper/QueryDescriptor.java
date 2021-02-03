@@ -2,7 +2,7 @@ package com.bird.service.common.mapper;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.bird.service.common.grid.query.FilterGroup;
+import com.bird.service.common.service.query.FilterGroup;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;

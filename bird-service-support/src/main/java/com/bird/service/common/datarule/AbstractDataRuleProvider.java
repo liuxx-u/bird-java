@@ -2,8 +2,8 @@ package com.bird.service.common.datarule;
 
 import com.bird.core.session.BirdSession;
 import com.bird.core.session.SessionContext;
-import com.bird.service.common.grid.query.FilterGroup;
-import com.bird.service.common.grid.query.FilterRule;
+import com.bird.service.common.service.query.FilterGroup;
+import com.bird.service.common.service.query.FilterRule;
 
 import java.util.ArrayList;
 import java.util.List;

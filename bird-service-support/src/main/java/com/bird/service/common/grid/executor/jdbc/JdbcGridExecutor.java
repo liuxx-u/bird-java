@@ -4,8 +4,8 @@ import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.GridFieldDefinition;
 import com.bird.service.common.grid.GridFieldType;
 import com.bird.service.common.grid.executor.IGridExecutor;
-import com.bird.service.common.grid.query.PagedListQuery;
-import com.bird.service.common.grid.query.PagedResult;
+import com.bird.service.common.service.query.PagedListQuery;
+import com.bird.service.common.service.query.PagedResult;
 import com.bird.service.common.incrementer.UUIDHexGenerator;
 import lombok.extern.slf4j.Slf4j;
 

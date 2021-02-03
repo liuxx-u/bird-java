@@ -1,6 +1,6 @@
 package com.bird.service.common.datarule;
 
-import com.bird.service.common.grid.query.FilterGroup;
+import com.bird.service.common.service.query.FilterGroup;
 
 /**
  * @author liuxx
