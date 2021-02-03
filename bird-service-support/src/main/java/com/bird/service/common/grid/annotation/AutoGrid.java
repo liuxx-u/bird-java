@@ -1,5 +1,6 @@
 package com.bird.service.common.grid.annotation;
 
+import com.bird.service.common.grid.enums.DbFieldMode;
 import com.bird.service.common.grid.enums.SortDirectionEnum;
 import com.bird.service.common.grid.executor.DialectType;
 
@@ -64,4 +65,9 @@ public @interface AutoGrid {
      * 默认的排序方式
      */
     SortDirectionEnum defaultSortDirection() default SortDirectionEnum.DESC;
+
+    /**
+     * 数据库字段模式，默认：与表格字段相同
+     */
+    DbFieldMode dbFeildMode() default DbFieldMode.SAME;
 }

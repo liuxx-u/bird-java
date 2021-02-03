@@ -28,6 +28,12 @@ import java.util.Objects;
 @SuppressWarnings("Duplicates")
 public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
+    private final AutoGridJdbcProperties gridJdbcProperties;
+
+    public AbstractGridSqlParser(AutoGridJdbcProperties gridJdbcProperties){
+        this.gridJdbcProperties = gridJdbcProperties;
+    }
+
     private final static String GROUP_BY = "group by";
 
     @Override
@@ -200,6 +206,14 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         FilterGroup filterGroup = new FilterGroup(query.getFilters());
         PreparedStateParameter queryWhere = this.formatGroup(filterGroup, gridDefinition.getFields());
         PreparedStateParameter fixedWhere = new PreparedStateParameter(gridDefinition.getWhere());
+        PreparedStateParameter logicDeleteWhere = this.filterLogicDelete(gridDefinition);
+        if (!logicDeleteWhere.isEmpty()) {
+            if (fixedWhere.isEmpty()) {
+                fixedWhere = logicDeleteWhere;
+            } else {
+                fixedWhere = fixedWhere.append(" and ").append(logicDeleteWhere);
+            }
+        }
 
         PreparedStateParameter where;
         if (queryWhere.isEmpty()) {
@@ -213,6 +227,26 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
             where = new PreparedStateParameter(" where ").append(where);
         }
         return where;
+    }
+
+    /**
+     * 解析逻辑删除语句
+     * @param gridDefinition 表格定义
+     * @return 逻辑删除语句
+     */
+    protected PreparedStateParameter filterLogicDelete(GridDefinition gridDefinition) {
+        PreparedStateParameter stateParameter = new PreparedStateParameter();
+
+        GridFieldDefinition logicDeleteField = gridDefinition.getFieldDefinition(gridDefinition.getLogicDeleteField());
+        if (logicDeleteField != null) {
+            Object logicNotDeleteValue = logicDeleteField.getLogicNotDeleteValue();
+            if (logicNotDeleteValue == null || StringUtils.isBlank(logicNotDeleteValue.toString())) {
+                logicNotDeleteValue = this.gridJdbcProperties.getLogicNotDeleteValue();
+            }
+            stateParameter.append(this.formatDbField(logicDeleteField.getDbField())).append(" = ?");
+            stateParameter.addParameter(logicDeleteField.getFieldType(), logicNotDeleteValue);
+        }
+        return stateParameter;
     }
 
     /**

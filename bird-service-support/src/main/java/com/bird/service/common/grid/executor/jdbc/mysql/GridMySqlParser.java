@@ -1,6 +1,7 @@
 package com.bird.service.common.grid.executor.jdbc.mysql;
 
 import com.bird.service.common.grid.executor.jdbc.AbstractGridSqlParser;
+import com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -8,6 +9,10 @@ import org.apache.commons.lang3.StringUtils;
  * @since 2021/1/28
  */
 public class GridMySqlParser extends AbstractGridSqlParser {
+
+    public GridMySqlParser(AutoGridJdbcProperties gridJdbcProperties){
+        super(gridJdbcProperties);
+    }
 
     @Override
     protected String formatDbField(String dbField) {

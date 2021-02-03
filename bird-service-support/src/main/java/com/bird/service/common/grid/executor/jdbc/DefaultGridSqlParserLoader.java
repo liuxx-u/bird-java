@@ -12,6 +12,12 @@ import java.util.Map;
  */
 public class DefaultGridSqlParserLoader implements IGridSqlParserLoader {
 
+    public final AutoGridJdbcProperties gridJdbcProperties;
+
+    public DefaultGridSqlParserLoader(AutoGridJdbcProperties gridJdbcProperties){
+        this.gridJdbcProperties = gridJdbcProperties;
+    }
+
     /**
      * 加载SQL解析器集合
      *
@@ -21,7 +27,7 @@ public class DefaultGridSqlParserLoader implements IGridSqlParserLoader {
     public Map<DialectType, IGridSqlParser> loadSqlParsers() {
         Map<DialectType, IGridSqlParser> sqlParserMap = new HashMap<>(4);
 
-        sqlParserMap.put(DialectType.MYSQL, new GridMySqlParser());
+        sqlParserMap.put(DialectType.MYSQL, new GridMySqlParser(this.gridJdbcProperties));
         return sqlParserMap;
     }
 }

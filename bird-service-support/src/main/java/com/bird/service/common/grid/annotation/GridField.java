@@ -1,5 +1,6 @@
 package com.bird.service.common.grid.annotation;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.bird.service.common.grid.GridFieldType;
 import com.bird.service.common.grid.enums.QueryStrategyEnum;
 import com.bird.service.common.grid.enums.SaveStrategyEnum;
@@ -36,4 +37,9 @@ public @interface GridField {
      * 字段查询策略
      */
     QueryStrategyEnum queryStrategy() default QueryStrategyEnum.ALLOW;
+
+    /**
+     * 字段自动填充策略
+     */
+    FieldFill fillStrategy() default FieldFill.DEFAULT;
 }

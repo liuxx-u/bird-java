@@ -1,6 +1,7 @@
 package com.bird.service.common.grid;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.bird.service.common.grid.annotation.GridField;
 import com.bird.service.common.grid.enums.QueryStrategyEnum;
 import com.bird.service.common.grid.enums.SaveStrategyEnum;
@@ -43,7 +44,22 @@ public class GridFieldDefinition {
      * 字段查询策略
      */
     private QueryStrategyEnum queryStrategy;
-
+    /**
+     * 自动填充策略
+     */
+    private FieldFill fillStrategy;
+    /**
+     * 是否逻辑删除字段
+     */
+    private Boolean isLogicDeleteField;
+    /**
+     * 逻辑删除值
+     */
+    private Object logicDeleteValue;
+    /**
+     * 逻辑删除值
+     */
+    private Object logicNotDeleteValue;
 
     /**
      * 排除的列
@@ -68,6 +84,16 @@ public class GridFieldDefinition {
         fieldDefinition.setFieldType(GridFieldType.NULL);
         fieldDefinition.setSaveStrategy(SaveStrategyEnum.DEFAULT);
         fieldDefinition.setQueryStrategy(QueryStrategyEnum.ALLOW);
+        fieldDefinition.setFillStrategy(FieldFill.DEFAULT);
+        fieldDefinition.setIsLogicDeleteField(false);
+
+        TableLogic tableLogic = field.getAnnotation(TableLogic.class);
+        if(tableLogic != null){
+            fieldDefinition.setIsLogicDeleteField(true);
+            fieldDefinition.setLogicDeleteValue(tableLogic.delval());
+            fieldDefinition.setLogicNotDeleteValue(tableLogic.value());
+        }
+        fieldDefinition.setIsLogicDeleteField(field.isAnnotationPresent(TableLogic.class));
 
         GridField gridField = field.getAnnotation(GridField.class);
         if (gridField != null) {
@@ -79,6 +105,7 @@ public class GridFieldDefinition {
             }
             fieldDefinition.setSaveStrategy(gridField.saveStrategy());
             fieldDefinition.setQueryStrategy(gridField.queryStrategy());
+            fieldDefinition.setFillStrategy(gridField.fillStrategy());
         }
 
         if (Objects.equals(fieldDefinition.fieldType, GridFieldType.NULL)) {

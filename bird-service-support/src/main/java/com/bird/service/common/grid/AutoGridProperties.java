@@ -15,4 +15,6 @@ public class AutoGridProperties {
      * 扫描的包路径
      */
     private String[] basePackages;
+
+
 }

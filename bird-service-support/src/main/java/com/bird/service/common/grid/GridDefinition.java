@@ -5,14 +5,13 @@ import com.bird.service.common.grid.enums.SortDirectionEnum;
 import com.bird.service.common.grid.executor.DialectType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author liuxx
@@ -21,6 +20,8 @@ import java.util.Objects;
 @Data
 @Slf4j
 public class GridDefinition {
+
+    private final static String OBJECT_CLASS_NAME = "java.lang.Object";
 
     /**
      * 表格定义类
@@ -47,6 +48,10 @@ public class GridDefinition {
      */
     private String primaryKey;
     /**
+     * 逻辑删除字段
+     */
+    private String logicDeleteField;
+    /**
      * where ：SQL的where部分，不包含前端传递的查询条件
      */
     private String where;
@@ -69,6 +74,7 @@ public class GridDefinition {
 
     /**
      * 获取主键列定义
+     *
      * @return 主键列定义
      */
     public GridFieldDefinition getPrimaryField() {
@@ -77,11 +83,12 @@ public class GridDefinition {
 
     /**
      * 根据字段名获取字段定义
+     *
      * @param field 字段名称
      * @return 字段定义
      */
-    public GridFieldDefinition getFieldDefinition(String field){
-        if (CollectionUtils.isEmpty(this.fields) || StringUtils.isBlank(this.primaryKey)) {
+    public GridFieldDefinition getFieldDefinition(String field) {
+        if (CollectionUtils.isEmpty(this.fields) || StringUtils.isBlank(field)) {
             return null;
         }
         return this.fields.get(field);
@@ -107,6 +114,29 @@ public class GridDefinition {
             return null;
         }
 
+        String logicDeleteField = StringUtils.EMPTY;
+        Map<String, GridFieldDefinition> fieldDefinitions = new LinkedHashMap<>(32);
+
+        Class tempClass = gridClass;
+        while (tempClass != null && !StringUtils.equals(tempClass.getName(), OBJECT_CLASS_NAME)) {
+            Field[] tempFields = tempClass.getDeclaredFields();
+            for (Field field : tempFields) {
+                GridFieldDefinition fieldDefinition = GridFieldDefinition.parse(field);
+                if (fieldDefinition != null) {
+                    if (BooleanUtils.isTrue(fieldDefinition.getIsLogicDeleteField())) {
+                        logicDeleteField = fieldDefinition.getFieldName();
+                    }
+                    fieldDefinitions.putIfAbsent(field.getName(), fieldDefinition);
+                }
+            }
+            tempClass = tempClass.getSuperclass();
+        }
+
+        if (CollectionUtils.isEmpty(fieldDefinitions)) {
+            log.warn("忽略表格定义类{}，未定义字段", gridClass.getName());
+            return null;
+        }
+
         GridDefinition gridDefinition = new GridDefinition();
         gridDefinition.setGridClass(gridClass);
         gridDefinition.setName(autoGrid.name());
@@ -118,26 +148,9 @@ public class GridDefinition {
         gridDefinition.setAppendSql(autoGrid.appendSql());
         gridDefinition.setDefaultSortField(autoGrid.defaultSortField());
         gridDefinition.setDefaultSortDirection(autoGrid.defaultSortDirection());
-        gridDefinition.setFields(parseFields(gridClass));
-
-        if (CollectionUtils.isEmpty(gridDefinition.getFields())) {
-            log.warn("忽略表格定义类{}，未定义字段", gridClass.getName());
-            return null;
-        }
+        gridDefinition.setFields(fieldDefinitions);
+        gridDefinition.setLogicDeleteField(logicDeleteField);
 
         return gridDefinition;
-    }
-
-    private static Map<String, GridFieldDefinition> parseFields(Class<?> gridClass) {
-        Map<String, GridFieldDefinition> fieldDefinitions = new LinkedHashMap<>(32);
-
-        Field[] fields = gridClass.getDeclaredFields();
-        for (Field field : fields) {
-            GridFieldDefinition fieldDefinition = GridFieldDefinition.parse(field);
-            if (fieldDefinition != null) {
-                fieldDefinitions.put(field.getName(), fieldDefinition);
-            }
-        }
-        return fieldDefinitions;
     }
 }
