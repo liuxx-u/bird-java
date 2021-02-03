@@ -15,5 +15,9 @@ public enum QueryStrategyEnum {
     /**
      * 拒绝查询
      */
-    FORBID
+    FORBID,
+    /**
+     * 隐藏，不显示
+     */
+    HIDE
 }

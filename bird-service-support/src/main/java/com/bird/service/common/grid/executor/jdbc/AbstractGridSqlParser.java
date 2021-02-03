@@ -30,7 +30,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
     private final AutoGridJdbcProperties gridJdbcProperties;
 
-    public AbstractGridSqlParser(AutoGridJdbcProperties gridJdbcProperties){
+    public AbstractGridSqlParser(AutoGridJdbcProperties gridJdbcProperties) {
         this.gridJdbcProperties = gridJdbcProperties;
     }
 
@@ -198,6 +198,9 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
         for (Map.Entry<String, GridFieldDefinition> entry : fields.entrySet()) {
             GridFieldDefinition fieldDefinition = entry.getValue();
+            if (fieldDefinition.getQueryStrategy() == QueryStrategyEnum.HIDE) {
+                continue;
+            }
 
             builder.append(this.formatDbField(fieldDefinition.getDbField()));
             builder.append(" as ");
@@ -255,6 +258,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
     /**
      * 解析逻辑删除语句
+     *
      * @param gridDefinition 表格定义
      * @return 逻辑删除语句
      */
@@ -364,7 +368,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
                 continue;
             }
             GridFieldDefinition fieldDefinition = fieldMap.get(field);
-            if (fieldDefinition == null || fieldDefinition.getQueryStrategy() == QueryStrategyEnum.FORBID) {
+            if (fieldDefinition == null || fieldDefinition.getQueryStrategy() == QueryStrategyEnum.FORBID || fieldDefinition.getQueryStrategy() == QueryStrategyEnum.HIDE) {
                 log.warn("表格中字段{}不允许查询", field);
                 continue;
             }
@@ -425,5 +429,4 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
 
         return this.formatDbField(dbField);
     }
-
 }
