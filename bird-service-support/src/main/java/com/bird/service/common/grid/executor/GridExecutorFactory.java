@@ -2,7 +2,9 @@ package com.bird.service.common.grid.executor;
 
 import com.bird.service.common.grid.GridClassContainer;
 import com.bird.service.common.grid.GridDefinition;
+import com.bird.service.common.grid.enums.GridActionEnum;
 import com.bird.service.common.grid.exception.GridException;
+import com.bird.service.common.grid.interceptor.GridInterceptorChain;
 import com.bird.service.common.service.query.PagedListQuery;
 import com.bird.service.common.service.query.PagedResult;
 
@@ -15,10 +17,12 @@ import java.util.Map;
 public class GridExecutorFactory {
 
     private final GridClassContainer container;
-    private final Map<DialectType,IGridExecutor> gridExecutors;
+    private final GridInterceptorChain interceptorChain;
+    private final Map<DialectType, IGridExecutor> gridExecutors;
 
-    public GridExecutorFactory(GridClassContainer container,IGridExecutorLoader gridExecutorLoader) {
+    public GridExecutorFactory(GridClassContainer container, GridInterceptorChain interceptorChain, IGridExecutorLoader gridExecutorLoader) {
         this.container = container;
+        this.interceptorChain = interceptorChain;
         this.gridExecutors = gridExecutorLoader.loadExecutors();
     }
 
@@ -31,6 +35,10 @@ public class GridExecutorFactory {
      */
     public PagedResult<Map<String, Object>> listPaged(String gridName, PagedListQuery query) {
         GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        if (!this.interceptorChain.preHandle(gridName, GridActionEnum.QUERY, gridDefinition, query)) {
+            return new PagedResult<>();
+        }
+
         IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
         return gridExecutor.listPaged(gridDefinition, query);
     }
@@ -44,6 +52,10 @@ public class GridExecutorFactory {
      */
     public Object insert(String gridName, Map<String, Object> model) {
         GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        if (!this.interceptorChain.preHandle(gridName, GridActionEnum.INSERT, gridDefinition, model)) {
+            return null;
+        }
+
         IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
         return gridExecutor.add(gridDefinition, model);
     }
@@ -57,6 +69,10 @@ public class GridExecutorFactory {
      */
     public Object update(String gridName, Map<String, Object> model) {
         GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        if (!this.interceptorChain.preHandle(gridName, GridActionEnum.UPDATE, gridDefinition, model)) {
+            return null;
+        }
+
         IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
         return gridExecutor.edit(gridDefinition, model);
     }
@@ -69,6 +85,9 @@ public class GridExecutorFactory {
      */
     public void delete(String gridName, String id) {
         GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        if (!this.interceptorChain.preHandle(gridName, GridActionEnum.DELETE, gridDefinition, id)) {
+            return;
+        }
         IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
         gridExecutor.delete(gridDefinition, id);
     }
@@ -85,7 +104,7 @@ public class GridExecutorFactory {
         }
         DialectType dialectType = gridDefinition.getDialectType();
         IGridExecutor gridExecutor = gridExecutors.get(dialectType);
-        if(gridExecutor == null){
+        if (gridExecutor == null) {
             throw new GridException("不支持的表格处理器");
         }
         return gridExecutor;
