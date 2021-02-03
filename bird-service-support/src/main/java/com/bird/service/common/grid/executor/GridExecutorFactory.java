@@ -43,7 +43,9 @@ public class GridExecutorFactory {
      * @return 主键id
      */
     public Object insert(String gridName, Map<String, Object> model) {
-        return null;
+        GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
+        return gridExecutor.add(gridDefinition, model);
     }
 
     /**
@@ -54,7 +56,9 @@ public class GridExecutorFactory {
      * @return 主键id
      */
     public Object update(String gridName, Map<String, Object> model) {
-        return null;
+        GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
+        return gridExecutor.edit(gridDefinition, model);
     }
 
     /**
@@ -64,6 +68,9 @@ public class GridExecutorFactory {
      * @param id       主键id
      */
     public void delete(String gridName, String id) {
+        GridDefinition gridDefinition = this.container.getGridDefinition(gridName);
+        IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
+        gridExecutor.delete(gridDefinition, id);
     }
 
     /**

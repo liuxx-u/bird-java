@@ -99,6 +99,7 @@ public enum GridFieldType implements SQLType {
     public static GridFieldType parse(String javaClass){
         switch (javaClass){
             case "java.lang.String":
+            case "java.util.UUID":
                 return GridFieldType.VARCHAR;
             case "int":
             case "java.lang.Integer":

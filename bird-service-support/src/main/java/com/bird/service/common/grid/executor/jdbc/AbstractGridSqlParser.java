@@ -113,7 +113,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         PreparedStateParameter updateParameter = new PreparedStateParameter();
         for (Map.Entry<String, Object> entry : pojo.entrySet()) {
             GridFieldDefinition fieldDefinition = fieldMap.get(entry.getKey());
-            if (Objects.equals(gridDefinition.getPrimaryKey(), fieldDefinition.getFieldName())) {
+            if (fieldDefinition == null || Objects.equals(gridDefinition.getPrimaryKey(), fieldDefinition.getFieldName())) {
                 continue;
             }
             if (SaveStrategyEnum.isIgnoreUpdate(fieldDefinition.getSaveStrategy())) {
