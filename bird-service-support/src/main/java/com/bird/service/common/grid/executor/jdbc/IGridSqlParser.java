@@ -55,4 +55,14 @@ public interface IGridSqlParser {
      * @return statement
      */
     PreparedStateParameter delete(GridDefinition gridDefinition, Object id);
+
+
+    /**
+     * 解析逻辑删除SQL语句
+     *
+     * @param gridDefinition 表格描述符
+     * @param id             主键
+     * @return statement
+     */
+    PreparedStateParameter logicDelete(GridDefinition gridDefinition, Object id);
 }

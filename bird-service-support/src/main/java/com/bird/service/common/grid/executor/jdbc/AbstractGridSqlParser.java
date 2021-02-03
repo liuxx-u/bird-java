@@ -163,6 +163,30 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
         return stateParameter;
     }
 
+    @Override
+    public PreparedStateParameter logicDelete(GridDefinition gridDefinition, Object id) {
+        GridFieldDefinition primaryKey = gridDefinition.getPrimaryField();
+        if (primaryKey == null) {
+            throw new GridException("表格:" + gridDefinition.getName() + "删除失败,主键列未定义");
+        }
+        if (id == null || StringUtils.isBlank(id.toString())) {
+            throw new GridException("表格:" + gridDefinition.getName() + "删除失败,删除的主键值为空");
+        }
+        GridFieldDefinition logicDeleteField = gridDefinition.getFieldDefinition(gridDefinition.getLogicDeleteField());
+        if (logicDeleteField == null) {
+            throw new GridException("表格:" + gridDefinition.getName() + "不支持逻辑删除");
+        }
+        Object logicDeleteValue = logicDeleteField.getLogicDeleteValue();
+        if (logicDeleteValue == null || StringUtils.isBlank(logicDeleteValue.toString())) {
+            logicDeleteValue = this.gridJdbcProperties.getLogicDeleteValue();
+        }
+
+        PreparedStateParameter stateParameter = new PreparedStateParameter("update " + gridDefinition.getMainTable() + " set " + this.formatDbField(logicDeleteField.getDbField()) + " = ?" + " where " + this.formatDbField(primaryKey.getDbField()) + " = ?");
+        stateParameter.addParameter(logicDeleteField.getFieldType(), logicDeleteValue);
+        stateParameter.addParameter(primaryKey.getFieldType(), id);
+        return stateParameter;
+    }
+
     /**
      * 解析select语句
      *

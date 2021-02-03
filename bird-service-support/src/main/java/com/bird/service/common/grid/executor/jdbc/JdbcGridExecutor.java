@@ -8,6 +8,7 @@ import com.bird.service.common.service.query.PagedListQuery;
 import com.bird.service.common.service.query.PagedResult;
 import com.bird.service.common.incrementer.UUIDHexGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -124,7 +125,9 @@ public class JdbcGridExecutor implements IGridExecutor {
             log.warn("表格:{}指定的数据源类型:{} 未设置SQL解析器", gridDefinition.getName(), gridDefinition.getDialectType());
             return false;
         }
-        PreparedStateParameter stateParameter = sqlParser.delete(gridDefinition, id);
+        PreparedStateParameter stateParameter = StringUtils.isBlank(gridDefinition.getLogicDeleteField())
+                ? sqlParser.delete(gridDefinition, id)
+                : sqlParser.logicDelete(gridDefinition, id);
         return this.execute(stateParameter);
     }
 
