@@ -1,6 +1,5 @@
 package com.bird.lock.expression;
 
-import com.bird.core.session.SessionContext;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.ExpressionParser;
@@ -9,6 +8,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Parameter;
+import java.util.Map;
 
 /**
  * Spel表达式解析
@@ -20,7 +20,12 @@ import java.lang.reflect.Parameter;
  */
 public class SpelLockKeyParser implements ILockKeyParser {
 
-    private final static String SESSION_KEY = "session";
+    private final IKeyVariableProvider variableProvider;
+
+    public SpelLockKeyParser(IKeyVariableProvider variableProvider){
+        this.variableProvider = variableProvider;
+    }
+
     private final TemplateParserContext templateParserContext = new TemplateParserContext("{", "}");
 
     @Override
@@ -32,8 +37,10 @@ public class SpelLockKeyParser implements ILockKeyParser {
         ExpressionParser expressionParser = new SpelExpressionParser();
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
 
-        //默认添加当前用户的Session变量
-        evaluationContext.setVariable(SESSION_KEY, SessionContext.getSession());
+        Map<String,Object> basicVariables = this.variableProvider.variables();
+        for(Map.Entry<String,Object> entry : basicVariables.entrySet()){
+            evaluationContext.setVariable(entry.getKey(), entry.getValue());
+        }
 
         //添加方法中的参数变量
         int n = Integer.min(parameters.length, args.length);

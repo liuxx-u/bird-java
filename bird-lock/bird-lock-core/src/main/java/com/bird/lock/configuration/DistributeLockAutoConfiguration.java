@@ -3,7 +3,9 @@ package com.bird.lock.configuration;
 import com.bird.lock.DistributedLockTemplate;
 import com.bird.lock.IDistributedLock;
 import com.bird.lock.aspect.DistributedLockAspect;
+import com.bird.lock.expression.IKeyVariableProvider;
 import com.bird.lock.expression.ILockKeyParser;
+import com.bird.lock.expression.SessionVariableProvider;
 import com.bird.lock.expression.SpelLockKeyParser;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -20,9 +22,15 @@ import org.springframework.context.annotation.Configuration;
 public class DistributeLockAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(IKeyVariableProvider.class)
+    public IKeyVariableProvider keyVariableProvider() {
+        return new SessionVariableProvider();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(ILockKeyParser.class)
-    public ILockKeyParser lockKeyParser() {
-        return new SpelLockKeyParser();
+    public ILockKeyParser lockKeyParser(IKeyVariableProvider keyVariableProvider) {
+        return new SpelLockKeyParser(keyVariableProvider);
     }
 
     @Bean
