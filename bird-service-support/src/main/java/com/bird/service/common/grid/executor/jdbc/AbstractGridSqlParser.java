@@ -283,7 +283,22 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
      * @param dbField 字段名
      * @return 格式化后的字段名
      */
-    protected String formatDbField(String dbField) {
+    private String formatDbField(String dbField) {
+        if (StringUtils.startsWith(dbField, "{") && StringUtils.endsWith(dbField, "}")) {
+            dbField = StringUtils.removeStart(dbField, "{");
+            dbField = StringUtils.removeEnd(dbField, "}");
+            return dbField;
+        }
+
+        return this.dbFormatField(dbField);
+    }
+
+    /**
+     * 数据库字段格式化方式，由子类重写
+     * @param dbField 数据库字段名
+     * @return 格式化后的数据库字段名
+     */
+    protected String dbFormatField(String dbField){
         return dbField;
     }
 

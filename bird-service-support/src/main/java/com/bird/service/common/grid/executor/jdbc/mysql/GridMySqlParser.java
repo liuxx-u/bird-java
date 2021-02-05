@@ -15,7 +15,7 @@ public class GridMySqlParser extends AbstractGridSqlParser {
     }
 
     @Override
-    protected String formatDbField(String dbField) {
+    protected String dbFormatField(String dbField) {
         return StringUtils.wrapIfMissing(dbField, "`");
     }
 }
