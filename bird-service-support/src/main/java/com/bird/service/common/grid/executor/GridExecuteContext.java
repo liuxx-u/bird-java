@@ -5,8 +5,11 @@ import com.bird.service.common.grid.GridDefinition;
 import com.bird.service.common.grid.enums.GridActionEnum;
 import com.bird.service.common.grid.exception.GridException;
 import com.bird.service.common.grid.interceptor.IGridInterceptor;
+import com.bird.service.common.grid.interceptor.IGridQueryInterceptor;
 import com.bird.service.common.service.query.PagedListQuery;
+import com.bird.service.common.service.query.PagedResult;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.BeanFactory;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -20,11 +23,13 @@ import java.util.stream.Collectors;
  */
 public class GridExecuteContext {
 
+    private final BeanFactory beanFactory;
     private final GridClassContainer container;
     private final Map<DialectType, IGridExecutor> gridExecutors;
     private final Map<GridActionEnum, List<IGridInterceptor>> actionInterceptorMap;
 
-    public GridExecuteContext(GridClassContainer container, IGridExecutorLoader gridExecutorLoader, List<IGridInterceptor> interceptors) {
+    public GridExecuteContext(BeanFactory beanFactory, GridClassContainer container, IGridExecutorLoader gridExecutorLoader, List<IGridInterceptor> interceptors) {
+        this.beanFactory = beanFactory;
         this.container = container;
         this.gridExecutors = gridExecutorLoader.loadExecutors();
 
@@ -69,9 +74,23 @@ public class GridExecuteContext {
 
     private Object doExecute(GridActionEnum actionEnum, GridDefinition gridDefinition, Object inputData) {
         IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
+
+
         switch (actionEnum) {
             case QUERY:
-                return gridExecutor.listPaged(gridDefinition, (PagedListQuery) inputData);
+                IGridQueryInterceptor queryInterceptor = null;
+                PagedListQuery query = (PagedListQuery) inputData;
+                if (gridDefinition.getQueryInterceptorClass() != null) {
+                    queryInterceptor = this.beanFactory.getBean(gridDefinition.getQueryInterceptorClass());
+                }
+                if (queryInterceptor != null) {
+                    queryInterceptor.preQuery(query);
+                }
+                PagedResult<Map<String, Object>> result = gridExecutor.listPaged(gridDefinition, query);
+                if (queryInterceptor != null) {
+                    queryInterceptor.afterQuery(result);
+                }
+                return result;
             case INSERT:
                 return gridExecutor.add(gridDefinition, (Map<String, Object>) inputData);
             case UPDATE:

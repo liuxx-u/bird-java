@@ -3,6 +3,7 @@ package com.bird.service.common.grid.annotation;
 import com.bird.service.common.grid.enums.DbFieldMode;
 import com.bird.service.common.grid.enums.SortDirectionEnum;
 import com.bird.service.common.grid.executor.DialectType;
+import com.bird.service.common.grid.interceptor.IGridQueryInterceptor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -70,4 +71,9 @@ public @interface AutoGrid {
      * 数据库字段模式，默认：与表格字段相同
      */
     DbFieldMode dbFeildMode() default DbFieldMode.SAME;
+
+    /**
+     * 查询拦截器类名
+     */
+    Class<? extends IGridQueryInterceptor> queryInterceptorClass() default IGridQueryInterceptor.class;
 }

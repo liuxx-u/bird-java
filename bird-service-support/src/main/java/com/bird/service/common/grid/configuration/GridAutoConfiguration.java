@@ -12,6 +12,7 @@ import com.bird.service.common.grid.interceptor.GridResultWrapperInterceptor;
 import com.bird.service.common.grid.interceptor.IGridInterceptor;
 import com.bird.service.common.grid.scanner.IGridDefinitionScanner;
 import com.bird.service.common.grid.scanner.SpringGridDefinitionScanner;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -69,8 +70,8 @@ public class GridAutoConfiguration {
     }
 
     @Bean
-    public GridExecuteContext gridExecuteContext(GridClassContainer gridClassContainer, IGridExecutorLoader gridExecutorLoader, ObjectProvider<List<IGridInterceptor>> interceptors) {
-        return new GridExecuteContext(gridClassContainer, gridExecutorLoader, interceptors.getIfAvailable(ArrayList::new));
+    public GridExecuteContext gridExecuteContext(BeanFactory beanFactory, GridClassContainer gridClassContainer, IGridExecutorLoader gridExecutorLoader, ObjectProvider<List<IGridInterceptor>> interceptors) {
+        return new GridExecuteContext(beanFactory, gridClassContainer, gridExecutorLoader, interceptors.getIfAvailable(ArrayList::new));
     }
 
     @Bean
