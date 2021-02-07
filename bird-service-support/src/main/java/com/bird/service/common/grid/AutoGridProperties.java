@@ -16,5 +16,12 @@ public class AutoGridProperties {
      */
     private String[] basePackages;
 
-
+    /**
+     * 是否对响应结果进行全局包装
+     */
+    private Boolean resultWrapper = true;
+    /**
+     * 是否自动注入审计字段值
+     */
+    private Boolean auditMetaObject = true;
 }

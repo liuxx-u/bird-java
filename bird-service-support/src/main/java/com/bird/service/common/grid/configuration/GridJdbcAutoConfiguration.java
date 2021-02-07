@@ -1,7 +1,6 @@
 package com.bird.service.common.grid.configuration;
 
 import com.bird.service.common.grid.executor.jdbc.*;
-import com.bird.service.common.grid.interceptor.GridMetaObjectInterceptor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,11 +29,6 @@ public class GridJdbcAutoConfiguration {
     @ConditionalOnMissingBean(IGridSqlParserLoader.class)
     public IGridSqlParserLoader gridSqlParserLoader(AutoGridJdbcProperties gridJdbcProperties) {
         return new DefaultGridSqlParserLoader(gridJdbcProperties);
-    }
-
-    @Bean
-    public GridMetaObjectInterceptor gridMetaObjectInterceptor(){
-        return new GridMetaObjectInterceptor();
     }
 
     @Bean
