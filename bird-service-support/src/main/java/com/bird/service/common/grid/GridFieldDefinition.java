@@ -105,7 +105,6 @@ public class GridFieldDefinition {
             }
             fieldDefinition.setSaveStrategy(gridField.saveStrategy());
             fieldDefinition.setQueryStrategy(gridField.queryStrategy());
-            fieldDefinition.setFillStrategy(gridField.fillStrategy());
         }
 
         if (Objects.equals(fieldDefinition.fieldType, GridFieldType.NULL)) {
