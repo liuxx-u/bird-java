@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
+ * 事件参数
+ *
  * @author liuxx
+ * @since 2021/2/22
  */
 @Data
 public abstract class EventArg implements IEventArg{

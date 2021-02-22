@@ -1,6 +1,7 @@
 package com.bird.eventbus.configuration;
 
 import com.bird.eventbus.EventBus;
+import com.bird.eventbus.handler.EventMethodInvoker;
 import com.bird.eventbus.log.*;
 import com.bird.eventbus.sender.IEventSendInterceptor;
 import com.bird.eventbus.sender.IEventSender;
@@ -22,7 +23,7 @@ public class EventCoreAutoConfiguration {
 
     private final EventLogProperties logProperties;
 
-    public EventCoreAutoConfiguration(EventLogProperties logProperties){
+    public EventCoreAutoConfiguration(EventLogProperties logProperties) {
         this.logProperties = logProperties;
     }
 
@@ -50,7 +51,7 @@ public class EventCoreAutoConfiguration {
      * 注册 Eventbus
      */
     @Bean
-    public EventBus eventBus(ObjectProvider<IEventSender> eventSender, ObjectProvider<Collection<IEventSendInterceptor>> interceptors) {
-        return new EventBus(eventSender.getIfAvailable(), interceptors.getIfAvailable());
+    public EventBus eventBus(ObjectProvider<IEventSender> eventSender, ObjectProvider<EventMethodInvoker> eventMethodInvoker, ObjectProvider<Collection<IEventSendInterceptor>> interceptors) {
+        return new EventBus(eventSender.getIfAvailable(), eventMethodInvoker.getIfAvailable(), interceptors.getIfAvailable());
     }
 }
