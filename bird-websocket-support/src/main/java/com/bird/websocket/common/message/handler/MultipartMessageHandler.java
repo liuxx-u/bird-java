@@ -31,7 +31,7 @@ public class MultipartMessageHandler extends AbstractMessageHandler<MultipartMes
                 }
             }
         }
-        if (CollectionUtils.isEmpty(sessions) && CollectionUtils.isEmpty(message.getUserIds())) {
+        if (CollectionUtils.isEmpty(sessions) && CollectionUtils.isNotEmpty(message.getUserIds())) {
             for (String userId : message.getUserIds()) {
                 List<Session> sessionList = sessionDirectory.getUserSessions(userId);
                 if (sessionList != null) {
