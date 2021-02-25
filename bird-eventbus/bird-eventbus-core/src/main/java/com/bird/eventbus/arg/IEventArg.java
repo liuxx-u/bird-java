@@ -17,4 +17,11 @@ public interface IEventArg extends Serializable {
      * 事件发布时间
      */
     Date getEventTime();
+
+    /**
+     * 是否本地事件
+     */
+    default Boolean isLocal() {
+        return false;
+    }
 }

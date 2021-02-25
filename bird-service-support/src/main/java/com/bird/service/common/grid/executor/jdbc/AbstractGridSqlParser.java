@@ -142,7 +142,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
             return null;
         }
 
-        stateParameter.append(updateParameter).append(" where ").append(this.formatDbField(primaryKey.getDbField())).append(" = ?");
+        stateParameter.append(updateParameter).append(" where ").append(this.formatDbField(primaryKey.getDbField())).append(" = ? limit 1");
         stateParameter.addParameter(primaryKey.getFieldType(), id);
 
         return stateParameter;
@@ -158,7 +158,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
             throw new GridException("表格:" + gridDefinition.getName() + "删除失败,删除的主键值为空");
         }
 
-        PreparedStateParameter stateParameter = new PreparedStateParameter("delete from " + gridDefinition.getMainTable() + " where " + this.formatDbField(primaryKey.getDbField()) + " = ?");
+        PreparedStateParameter stateParameter = new PreparedStateParameter("delete from " + gridDefinition.getMainTable() + " where " + this.formatDbField(primaryKey.getDbField()) + " = ? limit 1");
         stateParameter.addParameter(primaryKey.getFieldType(), id);
         return stateParameter;
     }

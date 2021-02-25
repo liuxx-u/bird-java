@@ -6,6 +6,16 @@
       "sourceType": "com.bird.service.common.ServiceProperties"
     },
     {
+      "name": "bird.service.grid",
+      "type": "com.bird.service.common.grid.AutoGridProperties",
+      "sourceType": "com.bird.service.common.grid.AutoGridProperties"
+    },
+    {
+      "name": "bird.service.grid.jdbc",
+      "type": "com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties",
+      "sourceType": "com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties"
+    },
+    {
       "name": "bird.trace.db-field",
       "type": "com.bird.service.common.trace.FieldTraceProperties",
       "sourceType": "com.bird.service.common.trace.FieldTraceProperties"
@@ -32,6 +42,46 @@
       "description": "全局逻辑删除字段，默认：delFlag",
       "sourceType": "com.bird.service.common.ServiceProperties",
       "defaultValue": "delFlag"
+    },
+    {
+      "name": "bird.service.grid.audit-meta-object",
+      "type": "java.lang.Boolean",
+      "description": "是否自动注入审计字段值",
+      "sourceType": "com.bird.service.common.grid.AutoGridProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.service.grid.base-packages",
+      "type": "java.lang.String[]",
+      "description": "扫描的包路径",
+      "sourceType": "com.bird.service.common.grid.AutoGridProperties"
+    },
+    {
+      "name": "bird.service.grid.jdbc.db-field-mode",
+      "type": "com.bird.service.common.grid.enums.DbFieldMode",
+      "description": "字段命名规范，默认：小驼峰",
+      "sourceType": "com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties"
+    },
+    {
+      "name": "bird.service.grid.jdbc.logic-delete-value",
+      "type": "java.lang.Object",
+      "description": "逻辑删除全局值（默认 1、表示已删除）",
+      "sourceType": "com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "bird.service.grid.jdbc.logic-not-delete-value",
+      "type": "java.lang.Object",
+      "description": "逻辑未删除全局值（默认 0、表示未删除）",
+      "sourceType": "com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "bird.service.grid.result-wrapper",
+      "type": "java.lang.Boolean",
+      "description": "是否对响应结果进行全局包装",
+      "sourceType": "com.bird.service.common.grid.AutoGridProperties",
+      "defaultValue": true
     },
     {
       "name": "bird.service.optimistic-lock-check",

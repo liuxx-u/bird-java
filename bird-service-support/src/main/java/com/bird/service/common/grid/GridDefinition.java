@@ -3,6 +3,7 @@ package com.bird.service.common.grid;
 import com.bird.service.common.grid.annotation.AutoGrid;
 import com.bird.service.common.grid.enums.SortDirectionEnum;
 import com.bird.service.common.grid.executor.DialectType;
+import com.bird.service.common.grid.interceptor.IGridQueryInterceptor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
@@ -12,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author liuxx
@@ -71,6 +73,10 @@ public class GridDefinition {
      * 字段集合
      */
     private Map<String, GridFieldDefinition> fields;
+    /**
+     * 查询拦截器类名
+     */
+    Class<? extends IGridQueryInterceptor> queryInterceptorClass;
 
     /**
      * 获取主键列定义
@@ -150,6 +156,9 @@ public class GridDefinition {
         gridDefinition.setDefaultSortDirection(autoGrid.defaultSortDirection());
         gridDefinition.setFields(fieldDefinitions);
         gridDefinition.setLogicDeleteField(logicDeleteField);
+        if (!Objects.equals(autoGrid.queryInterceptorClass(), IGridQueryInterceptor.class)) {
+            gridDefinition.setQueryInterceptorClass(autoGrid.queryInterceptorClass());
+        }
 
         return gridDefinition;
     }

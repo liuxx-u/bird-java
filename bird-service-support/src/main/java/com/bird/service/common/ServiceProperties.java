@@ -22,11 +22,6 @@ public class ServiceProperties {
     private Boolean blockAttack = true;
 
     /**
-     * 全局逻辑删除字段，默认：delFlag
-     */
-    private String globalLogicDeleteField = "delFlag";
-
-    /**
      * 是否开启 乐观锁检测
      * 支持的数据类型只有:int,Integer,long,Long,Date,Timestamp,LocalDateTime
      * 整数类型下 newVersion = oldVersion + 1, newVersion 会回写到 entity 中

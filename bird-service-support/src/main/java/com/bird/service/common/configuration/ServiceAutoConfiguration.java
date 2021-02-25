@@ -2,12 +2,12 @@ package com.bird.service.common.configuration;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.bird.service.common.ServiceProperties;
 import com.bird.service.common.incrementer.StringKeyGenerator;
 import com.bird.service.common.mapper.injector.AuditMetaObjectHandler;
-import com.bird.service.common.mapper.interceptor.OptimizeBlockAttackInnerInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -55,8 +55,8 @@ public class ServiceAutoConfiguration {
      */
     @Bean
     @ConditionalOnProperty(value = PREFIX + "block-attack", havingValue = "true", matchIfMissing = true)
-    public OptimizeBlockAttackInnerInterceptor blockAttackInnerInterceptor() {
-        return new OptimizeBlockAttackInnerInterceptor(this.serviceProperties.getGlobalLogicDeleteField());
+    public BlockAttackInnerInterceptor blockAttackInnerInterceptor() {
+        return new BlockAttackInnerInterceptor();
     }
 
     /**

@@ -74,4 +74,8 @@ public class SpringGridDefinitionScanner implements IGridDefinitionScanner {
 
         return classes;
     }
+
+    public static void main(String[] args) {
+        System.out.println(DEFAULT_CAPACITY);
+    }
 }

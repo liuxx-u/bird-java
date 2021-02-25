@@ -9,6 +9,8 @@ import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.amqp.support.converter.SimpleMessageConverter;
 
+import java.io.IOException;
+
 /**
  * @author liuxx
  * @date 2019/1/18
@@ -21,10 +23,10 @@ public class RabbitEventArgListener implements ChannelAwareMessageListener {
 
     public RabbitEventArgListener(EventMethodInvoker eventMethodInvoker) {
         this.eventMethodInvoker = eventMethodInvoker;
-        this.messageConverter =  new SimpleMessageConverter();
+        this.messageConverter = new SimpleMessageConverter();
     }
 
-    public void setMessageConverter(MessageConverter messageConverter){
+    public void setMessageConverter(MessageConverter messageConverter) {
         this.messageConverter = messageConverter;
     }
 
@@ -37,9 +39,14 @@ public class RabbitEventArgListener implements ChannelAwareMessageListener {
             if (IEventArg.class.isAssignableFrom(clazz)) {
                 IEventArg eventArg = (IEventArg) messageConverter.fromMessage(message);
                 eventMethodInvoker.invoke(eventArg);
+
+                long deliveryTag = message.getMessageProperties().getDeliveryTag();
+                channel.basicAck(deliveryTag, true);
             }
         } catch (ClassNotFoundException ex) {
             log.error("事件处理失败：", ex);
+        } catch (IOException ex) {
+            log.error("消息处理状态回执失败：", ex);
         }
     }
 }

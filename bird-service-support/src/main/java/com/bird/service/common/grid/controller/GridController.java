@@ -1,8 +1,8 @@
 package com.bird.service.common.grid.controller;
 
-import com.bird.service.common.grid.executor.GridExecutorFactory;
+import com.bird.service.common.grid.enums.GridActionEnum;
+import com.bird.service.common.grid.executor.GridExecuteContext;
 import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,10 +15,10 @@ import java.util.Map;
 @RequestMapping("/v1/infra/grid")
 public class GridController {
 
-    private final GridExecutorFactory executorFactory;
+    private final GridExecuteContext executeContext;
 
-    public GridController(GridExecutorFactory executorFactory) {
-        this.executorFactory = executorFactory;
+    public GridController(GridExecuteContext executeContext) {
+        this.executeContext = executeContext;
     }
 
     /**
@@ -29,8 +29,8 @@ public class GridController {
      * @return 查询结果
      */
     @PostMapping("/{gridName}/listPaged")
-    public PagedResult<Map<String, Object>> listPaged(@PathVariable("gridName") String gridName, @RequestBody PagedListQuery query) {
-        return executorFactory.listPaged(gridName, query);
+    public Object listPaged(@PathVariable("gridName") String gridName, @RequestBody PagedListQuery query) {
+        return executeContext.execute(gridName, GridActionEnum.QUERY, query);
     }
 
     /**
@@ -42,7 +42,7 @@ public class GridController {
      */
     @PostMapping("/{gridName}/insert")
     public Object insert(@PathVariable("gridName") String gridName, @RequestBody Map<String, Object> model) {
-        return executorFactory.insert(gridName, model);
+        return executeContext.execute(gridName, GridActionEnum.INSERT, model);
     }
 
     /**
@@ -54,7 +54,7 @@ public class GridController {
      */
     @PostMapping("/{gridName}/update")
     public Object update(@PathVariable("gridName") String gridName, @RequestBody Map<String, Object> model) {
-        return executorFactory.update(gridName, model);
+        return executeContext.execute(gridName, GridActionEnum.UPDATE, model);
     }
 
     /**
@@ -65,6 +65,6 @@ public class GridController {
      */
     @PostMapping("/{gridName}/delete")
     public void delete(@PathVariable("gridName") String gridName, String id) {
-        executorFactory.delete(gridName, id);
+        executeContext.execute(gridName, GridActionEnum.DELETE, id);
     }
 }
