@@ -17,6 +17,8 @@ public @interface SsoAuthorize {
 
     String[] permissions() default {};
 
+    String[] roles() default {};
+
     boolean isCheckAll() default false;
 
     boolean anonymous() default false;

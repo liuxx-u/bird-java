@@ -13,8 +13,9 @@ public interface IUserPermissionChecker {
      *
      * @param userId      用户id
      * @param permissions 权限集合
+     * @param roles       角色集合
      * @param checkAll    是否满足全部
      * @return true or false
      */
-    boolean hasPermissions(String userId, List<String> permissions, boolean checkAll);
+    boolean hasPermissions(String userId, List<String> permissions, List<String> roles, boolean checkAll);
 }
