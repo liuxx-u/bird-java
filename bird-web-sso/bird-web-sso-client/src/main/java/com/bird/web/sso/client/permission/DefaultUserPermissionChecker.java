@@ -9,7 +9,7 @@ import java.util.List;
 public class DefaultUserPermissionChecker implements IUserPermissionChecker {
 
     @Override
-    public boolean hasPermissions(String userId, List<String> permissions, boolean checkAll) {
+    public boolean hasPermissions(String userId, List<String> permissions, List<String> roles, boolean checkAll) {
         return true;
     }
 }

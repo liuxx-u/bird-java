@@ -29,10 +29,11 @@ public abstract class AbstractAuthorizeInterceptor extends HandlerInterceptorAda
      * 校验权限
      * @param userId userId
      * @param permissions 权限集合
+     * @param roles 角色集合
      * @param checkAll 是否检查全部
      * @return 是否检查通过
      */
-    protected abstract boolean checkPermissions(String userId, List<String> permissions, boolean checkAll);
+    protected abstract boolean checkPermissions(String userId, List<String> permissions, List<String> roles, boolean checkAll);
 
     /**
      * 拦截器处理方法
@@ -84,8 +85,8 @@ public abstract class AbstractAuthorizeInterceptor extends HandlerInterceptorAda
             }
 
             boolean isCheckAll = methodAuthorize.isCheckAll();
-            if (!checkPermissions(session.getUserId().toString(), permissions, isCheckAll)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,"用户没有当前操作的权限");
+            if (!checkPermissions(session.getUserId().toString(), permissions, Arrays.asList(methodAuthorize.roles()), isCheckAll)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "用户没有当前操作的权限");
                 return false;
             }
         }
