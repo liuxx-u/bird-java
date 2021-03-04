@@ -3,6 +3,8 @@ package com.bird.websocket.common.message.handler;
 import com.bird.websocket.common.message.MessageSendUtil;
 import com.bird.websocket.common.message.MultipartMessage;
 import com.bird.websocket.common.server.ISessionDirectory;
+import com.bird.websocket.common.synchronizer.MessageSyncComposite;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.websocket.Session;
@@ -16,8 +18,8 @@ import java.util.List;
  */
 public class MultipartMessageHandler extends AbstractMessageHandler<MultipartMessage> {
 
-    public MultipartMessageHandler(ISessionDirectory sessionDirectory) {
-        super(sessionDirectory);
+    public MultipartMessageHandler(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+        super(messageSyncComposite, sessionDirectory);
     }
 
     @Override
@@ -43,9 +45,17 @@ public class MultipartMessageHandler extends AbstractMessageHandler<MultipartMes
     }
 
     @Override
-    protected void sendMessage(List<Session> sessions, String messageContent) {
+    protected void sendMessage(List<Session> sessions, MultipartMessage message) {
+        List<Session> successList = Lists.newArrayList();
+        List<Session> failList = Lists.newArrayList();
+
         for (Session session : sessions) {
-            MessageSendUtil.sendMessage(session, messageContent);
+            if (MessageSendUtil.sendMessage(session, message.getContent())) {
+                successList.add(session);
+                continue;
+            }
+            failList.add(session);
         }
+        messageSyncComposite.sendMessageAfter(message, successList, failList);
     }
 }

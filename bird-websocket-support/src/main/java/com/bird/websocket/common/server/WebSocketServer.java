@@ -2,6 +2,7 @@ package com.bird.websocket.common.server;
 
 import com.bird.core.SpringContextHolder;
 import com.bird.websocket.common.message.MessageSendUtil;
+import com.bird.websocket.common.synchronizer.WebSocketServerSyncComposite;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +21,7 @@ import java.io.IOException;
 public class WebSocketServer {
 
     private volatile ISessionDirectory sessionDirectory;
+    private volatile WebSocketServerSyncComposite webSocketServerSyncComposite;
 
     /**
      * 客户端建立连接
@@ -34,6 +36,8 @@ public class WebSocketServer {
             MessageSendUtil.sendMessage(session, "用户未登录或当前token已经建立连接");
             session.close();
         }
+
+        getWebSocketServerSyncComposite().onOpen(session, token);
     }
 
     /**
@@ -45,6 +49,8 @@ public class WebSocketServer {
     public void onClose(@PathParam(value = "token") String token) {
         ISessionDirectory directory = this.getSessionDirectory();
         directory.remove(token);
+
+        getWebSocketServerSyncComposite().onClose(token);
     }
 
     /**
@@ -58,6 +64,8 @@ public class WebSocketServer {
         ISessionDirectory directory = this.getSessionDirectory();
         Session session = directory.getSession(token);
         MessageSendUtil.sendMessage(session, message);
+
+        getWebSocketServerSyncComposite().onMessage(token, message);
     }
 
     /**
@@ -69,6 +77,8 @@ public class WebSocketServer {
     @OnError
     public void onError(Session session, Throwable throwable) {
         log.error(throwable.getMessage(), throwable);
+
+        getWebSocketServerSyncComposite().onError(session, throwable);
     }
 
     private ISessionDirectory getSessionDirectory() {
@@ -80,6 +90,17 @@ public class WebSocketServer {
             }
         }
         return this.sessionDirectory;
+    }
+
+    private WebSocketServerSyncComposite getWebSocketServerSyncComposite() {
+        if (this.webSocketServerSyncComposite == null) {
+            synchronized (WebSocketServer.class) {
+                if (this.webSocketServerSyncComposite == null) {
+                    this.webSocketServerSyncComposite = SpringContextHolder.getBean(WebSocketServerSyncComposite.class);
+                }
+            }
+        }
+        return this.webSocketServerSyncComposite;
     }
 
 }

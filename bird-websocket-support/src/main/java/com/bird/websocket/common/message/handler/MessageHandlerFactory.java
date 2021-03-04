@@ -2,11 +2,12 @@ package com.bird.websocket.common.message.handler;
 
 import com.bird.websocket.common.message.*;
 import com.bird.websocket.common.server.ISessionDirectory;
+import com.bird.websocket.common.synchronizer.MessageSyncComposite;
+import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,8 @@ public class MessageHandlerFactory {
 
     private Map<MessageTypeEnum, IMessageHandler<? extends Message>> handlers;
 
-    public MessageHandlerFactory(ISessionDirectory sessionDirectory) {
-        this.handlers = initHandlerMap(sessionDirectory);
+    public MessageHandlerFactory(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+        this.handlers = initHandlerMap(messageSyncComposite, sessionDirectory);
     }
 
     /**
@@ -34,11 +35,11 @@ public class MessageHandlerFactory {
         return null;
     }
 
-    public Map<MessageTypeEnum, IMessageHandler<? extends Message>> initHandlerMap(ISessionDirectory sessionDirectory) {
-        Map<MessageTypeEnum, IMessageHandler<? extends Message>> handlerMap = new HashMap<>(6);
-        handlerMap.put(MessageTypeEnum.SINGLE_POINT, new SingleMessageHandler(sessionDirectory));
-        handlerMap.put(MessageTypeEnum.MULTIPART, new MultipartMessageHandler(sessionDirectory));
-        handlerMap.put(MessageTypeEnum.BROADCAST, new BroadcastMessageHandler(sessionDirectory));
+    public Map<MessageTypeEnum, IMessageHandler<? extends Message>> initHandlerMap(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+        Map<MessageTypeEnum, IMessageHandler<? extends Message>> handlerMap = Maps.newHashMap();
+        handlerMap.put(MessageTypeEnum.SINGLE_POINT, new SingleMessageHandler(messageSyncComposite, sessionDirectory));
+        handlerMap.put(MessageTypeEnum.MULTIPART, new MultipartMessageHandler(messageSyncComposite, sessionDirectory));
+        handlerMap.put(MessageTypeEnum.BROADCAST, new BroadcastMessageHandler(messageSyncComposite, sessionDirectory));
         return handlerMap;
     }
 

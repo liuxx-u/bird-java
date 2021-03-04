@@ -21,7 +21,6 @@ public class WebSocketPublisher {
     /**
      * 发送消息，目前只支持 单点消息、多点消息、广播消息。
      *
-     *
      * @param message 消息体, 可以使用 {@link MessageBuilder} 进行消息体的构建
      */
     public void sendMessage(Message message) {

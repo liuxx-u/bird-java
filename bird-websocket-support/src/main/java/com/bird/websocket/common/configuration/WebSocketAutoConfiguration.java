@@ -7,11 +7,14 @@ import com.bird.websocket.common.server.BasicSessionDirectory;
 import com.bird.websocket.common.server.ISessionDirectory;
 import com.bird.websocket.common.server.WebSocketPublisher;
 import com.bird.websocket.common.server.WebSocketServer;
+import com.bird.websocket.common.synchronizer.MessageSyncComposite;
+import com.bird.websocket.common.synchronizer.WebSocketServerSyncComposite;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 /**
@@ -21,6 +24,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @Configuration
 @EnableConfigurationProperties(WebSocketProperties.class)
 @AutoConfigureAfter({SsoClientWebSocketAutoConfiguration.class})
+@Import({MessageSyncComposite.class, WebSocketServerSyncComposite.class})
 public class WebSocketAutoConfiguration {
 
     /**
@@ -62,8 +66,8 @@ public class WebSocketAutoConfiguration {
      * 注册 消息处理器工厂
      */
     @Bean
-    public MessageHandlerFactory messageHandlerFactory(ISessionDirectory sessionDirectory) {
-        return new MessageHandlerFactory(sessionDirectory);
+    public MessageHandlerFactory messageHandlerFactory(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+        return new MessageHandlerFactory(messageSyncComposite, sessionDirectory);
     }
 
     /**

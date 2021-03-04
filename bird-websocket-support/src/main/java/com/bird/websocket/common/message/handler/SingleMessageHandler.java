@@ -3,6 +3,8 @@ package com.bird.websocket.common.message.handler;
 import com.bird.websocket.common.message.MessageSendUtil;
 import com.bird.websocket.common.message.SingleMessage;
 import com.bird.websocket.common.server.ISessionDirectory;
+import com.bird.websocket.common.synchronizer.MessageSyncComposite;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.websocket.Session;
@@ -16,8 +18,8 @@ import java.util.List;
  */
 public class SingleMessageHandler extends AbstractMessageHandler<SingleMessage> {
 
-    public SingleMessageHandler(ISessionDirectory sessionDirectory) {
-        super(sessionDirectory);
+    public SingleMessageHandler(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+        super(messageSyncComposite, sessionDirectory);
     }
 
     @Override
@@ -39,11 +41,16 @@ public class SingleMessageHandler extends AbstractMessageHandler<SingleMessage> 
     }
 
     @Override
-    protected void sendMessage(List<Session> sessions, String messageContent) {
+    protected void sendMessage(List<Session> sessions, SingleMessage message) {
+        List<Session> successList = Lists.newArrayList();
+        List<Session> failList = Lists.newArrayList();
         for (Session session : sessions) {
-            if (MessageSendUtil.sendMessage(session, messageContent)) {
+            if (MessageSendUtil.sendMessage(session, message.getContent())) {
+                successList.add(session);
                 return;
             }
+            failList.add(session);
         }
+        messageSyncComposite.sendMessageAfter(message, successList, failList);
     }
 }
