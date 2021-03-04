@@ -30,12 +30,6 @@ public class ServiceAutoConfiguration {
 
     private final static String PREFIX = "bird.service.";
 
-    private final ServiceProperties serviceProperties;
-
-    public ServiceAutoConfiguration(ServiceProperties serviceProperties){
-        this.serviceProperties = serviceProperties;
-    }
-
 
     /**
      * 加载 审计字段（createTime,modifiedTime）自动填充处理器
