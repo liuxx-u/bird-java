@@ -1,8 +1,8 @@
 package com.bird.websocket.common.message.handler;
 
+import com.bird.websocket.common.interceptor.MessageInterceptorComposite;
 import com.bird.websocket.common.message.*;
 import com.bird.websocket.common.server.ISessionDirectory;
-import com.bird.websocket.common.synchronizer.MessageSyncComposite;
 import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class MessageHandlerFactory {
 
     private Map<MessageTypeEnum, IMessageHandler<? extends Message>> handlers;
 
-    public MessageHandlerFactory(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+    public MessageHandlerFactory(MessageInterceptorComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
         this.handlers = initHandlerMap(messageSyncComposite, sessionDirectory);
     }
 
@@ -35,7 +35,7 @@ public class MessageHandlerFactory {
         return null;
     }
 
-    public Map<MessageTypeEnum, IMessageHandler<? extends Message>> initHandlerMap(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+    public Map<MessageTypeEnum, IMessageHandler<? extends Message>> initHandlerMap(MessageInterceptorComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
         Map<MessageTypeEnum, IMessageHandler<? extends Message>> handlerMap = Maps.newHashMap();
         handlerMap.put(MessageTypeEnum.SINGLE_POINT, new SingleMessageHandler(messageSyncComposite, sessionDirectory));
         handlerMap.put(MessageTypeEnum.MULTIPART, new MultipartMessageHandler(messageSyncComposite, sessionDirectory));

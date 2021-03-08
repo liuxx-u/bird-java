@@ -1,6 +1,5 @@
-package com.bird.websocket.common.synchronizer;
+package com.bird.websocket.common.interceptor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import javax.websocket.Session;
@@ -12,14 +11,13 @@ import java.util.List;
  *
  * @author YJ
  */
-public class WebSocketServerSyncComposite {
+public class WebSocketServerInterceptorComposite {
 
-    private List<WebSocketServerSync> syncs = new ArrayList<>();
+    private List<WebSocketServerInterceptor> interceptors = new ArrayList<>();
 
-    @Autowired(required = false)
-    public void setSyncs(List<WebSocketServerSync> syncs) {
-        if (!CollectionUtils.isEmpty(syncs)) {
-            this.syncs = syncs;
+    public WebSocketServerInterceptorComposite(List<WebSocketServerInterceptor> interceptors) {
+        if (!CollectionUtils.isEmpty(interceptors)) {
+            this.interceptors = interceptors;
         }
     }
 
@@ -30,8 +28,8 @@ public class WebSocketServerSyncComposite {
      * @param token   用户token
      */
     public void onOpen(Session session, String token) {
-        for (WebSocketServerSync sync : syncs) {
-            sync.onOpen(session, token);
+        for (WebSocketServerInterceptor interceptor : interceptors) {
+            interceptor.onOpen(session, token);
         }
     }
 
@@ -41,8 +39,8 @@ public class WebSocketServerSyncComposite {
      * @param token 用户token
      */
     public void onClose(String token) {
-        for (WebSocketServerSync sync : syncs) {
-            sync.onClose(token);
+        for (WebSocketServerInterceptor interceptor : interceptors) {
+            interceptor.onClose(token);
         }
     }
 
@@ -53,8 +51,8 @@ public class WebSocketServerSyncComposite {
      * @param message 消息体
      */
     public void onMessage(String token, String message) {
-        for (WebSocketServerSync sync : syncs) {
-            sync.onMessage(token, message);
+        for (WebSocketServerInterceptor interceptor : interceptors) {
+            interceptor.onMessage(token, message);
         }
     }
 
@@ -65,8 +63,8 @@ public class WebSocketServerSyncComposite {
      * @param throwable 异常信息
      */
     public void onError(Session session, Throwable throwable) {
-        for (WebSocketServerSync sync : syncs) {
-            sync.onError(session, throwable);
+        for (WebSocketServerInterceptor interceptor : interceptors) {
+            interceptor.onError(session, throwable);
         }
     }
 }

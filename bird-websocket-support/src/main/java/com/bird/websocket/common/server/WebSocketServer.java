@@ -2,7 +2,7 @@ package com.bird.websocket.common.server;
 
 import com.bird.core.SpringContextHolder;
 import com.bird.websocket.common.message.MessageSendUtil;
-import com.bird.websocket.common.synchronizer.WebSocketServerSyncComposite;
+import com.bird.websocket.common.interceptor.WebSocketServerInterceptorComposite;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class WebSocketServer {
 
     private volatile ISessionDirectory sessionDirectory;
-    private volatile WebSocketServerSyncComposite webSocketServerSyncComposite;
+    private volatile WebSocketServerInterceptorComposite webSocketServerInterceptorComposite;
 
     /**
      * 客户端建立连接
@@ -37,7 +37,7 @@ public class WebSocketServer {
             session.close();
         }
 
-        getWebSocketServerSyncComposite().onOpen(session, token);
+        getWebSocketServerInterceptorComposite().onOpen(session, token);
     }
 
     /**
@@ -50,7 +50,7 @@ public class WebSocketServer {
         ISessionDirectory directory = this.getSessionDirectory();
         directory.remove(token);
 
-        getWebSocketServerSyncComposite().onClose(token);
+        getWebSocketServerInterceptorComposite().onClose(token);
     }
 
     /**
@@ -65,7 +65,7 @@ public class WebSocketServer {
         Session session = directory.getSession(token);
         MessageSendUtil.sendMessage(session, message);
 
-        getWebSocketServerSyncComposite().onMessage(token, message);
+        getWebSocketServerInterceptorComposite().onMessage(token, message);
     }
 
     /**
@@ -78,7 +78,7 @@ public class WebSocketServer {
     public void onError(Session session, Throwable throwable) {
         log.error(throwable.getMessage(), throwable);
 
-        getWebSocketServerSyncComposite().onError(session, throwable);
+        getWebSocketServerInterceptorComposite().onError(session, throwable);
     }
 
     private ISessionDirectory getSessionDirectory() {
@@ -92,15 +92,15 @@ public class WebSocketServer {
         return this.sessionDirectory;
     }
 
-    private WebSocketServerSyncComposite getWebSocketServerSyncComposite() {
-        if (this.webSocketServerSyncComposite == null) {
+    private WebSocketServerInterceptorComposite getWebSocketServerInterceptorComposite() {
+        if (this.webSocketServerInterceptorComposite == null) {
             synchronized (WebSocketServer.class) {
-                if (this.webSocketServerSyncComposite == null) {
-                    this.webSocketServerSyncComposite = SpringContextHolder.getBean(WebSocketServerSyncComposite.class);
+                if (this.webSocketServerInterceptorComposite == null) {
+                    this.webSocketServerInterceptorComposite = SpringContextHolder.getBean(WebSocketServerInterceptorComposite.class);
                 }
             }
         }
-        return this.webSocketServerSyncComposite;
+        return this.webSocketServerInterceptorComposite;
     }
 
 }

@@ -1,7 +1,6 @@
-package com.bird.websocket.common.synchronizer;
+package com.bird.websocket.common.interceptor;
 
 import com.bird.websocket.common.message.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import javax.websocket.Session;
@@ -11,14 +10,13 @@ import java.util.List;
 /**
  * @author YJ
  */
-public class MessageSyncComposite {
+public class MessageInterceptorComposite {
 
-    private List<MessageSync> messageSyncs = new ArrayList<>();
+    private List<MessageInterceptor> messageInterceptors = new ArrayList<>();
 
-    @Autowired(required = false)
-    public void setMessageSyncs(List<MessageSync> messageSyncs) {
-        if (!CollectionUtils.isEmpty(messageSyncs)) {
-            this.messageSyncs = messageSyncs;
+    public MessageInterceptorComposite(List<MessageInterceptor> messageInterceptors) {
+        if (!CollectionUtils.isEmpty(messageInterceptors)) {
+            this.messageInterceptors = messageInterceptors;
         }
     }
 
@@ -29,8 +27,8 @@ public class MessageSyncComposite {
      * @return 是否继续发送
      */
     public boolean preSendMessage(Message message) {
-        for (MessageSync messageSync : messageSyncs) {
-            if (!messageSync.preSendMessage(message)) {
+        for (MessageInterceptor messageInterceptor : messageInterceptors) {
+            if (!messageInterceptor.preSendMessage(message)) {
                 return false;
             }
         }
@@ -44,8 +42,8 @@ public class MessageSyncComposite {
      * @param sessions session集合
      */
     public void getSessionAfter(Message message, List<Session> sessions) {
-        for (MessageSync messageSync : messageSyncs) {
-            messageSync.getSessionAfter(message, sessions);
+        for (MessageInterceptor messageInterceptor : messageInterceptors) {
+            messageInterceptor.getSessionAfter(message, sessions);
         }
     }
 
@@ -57,8 +55,8 @@ public class MessageSyncComposite {
      * @param failSessions    发送失败的session
      */
     public void sendMessageAfter(Message message, List<Session> successSessions, List<Session> failSessions) {
-        for (MessageSync messageSync : messageSyncs) {
-            messageSync.sendMessageAfter(message, successSessions, failSessions);
+        for (MessageInterceptor messageInterceptor : messageInterceptors) {
+            messageInterceptor.sendMessageAfter(message, successSessions, failSessions);
         }
     }
 
@@ -68,8 +66,9 @@ public class MessageSyncComposite {
      * @param message 消息体
      */
     public void afterCompletion(Message message) {
-        for (MessageSync messageSync : messageSyncs) {
-            messageSync.afterCompletion(message);
+        for (int i = messageInterceptors.size(); i > 0; i--) {
+            MessageInterceptor messageInterceptor = messageInterceptors.get(i - 1);
+            messageInterceptor.afterCompletion(message);
         }
     }
 }

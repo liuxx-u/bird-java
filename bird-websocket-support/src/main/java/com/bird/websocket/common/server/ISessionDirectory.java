@@ -44,6 +44,21 @@ public interface ISessionDirectory {
     Session getSession(String token);
 
     /**
+     * 根据token获取用户信息
+     *
+     * @param token token
+     * @return userId
+     */
+    String getUser(String token);
+
+    /**
+     * 获取所有建立连接的用户信息
+     *
+     * @return 所有用户信息
+     */
+    List<String> getAllUser();
+
+    /**
      * 获取所有Session
      *
      * @return session集合

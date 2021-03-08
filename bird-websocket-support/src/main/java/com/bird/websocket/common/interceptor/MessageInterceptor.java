@@ -1,4 +1,4 @@
-package com.bird.websocket.common.synchronizer;
+package com.bird.websocket.common.interceptor;
 
 import com.bird.websocket.common.message.Message;
 
@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author YJ
  */
-public interface MessageSync {
+public interface MessageInterceptor {
 
     /**
      * 发送消息前

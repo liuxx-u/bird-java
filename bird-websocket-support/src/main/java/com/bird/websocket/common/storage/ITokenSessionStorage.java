@@ -43,6 +43,13 @@ public interface ITokenSessionStorage {
     boolean contain(String token);
 
     /**
+     * 获取所有注册的token
+     *
+     * @return tokens
+     */
+    List<String> getAllToken();
+
+    /**
      * 获取所有session
      *
      * @return Session集合

@@ -19,22 +19,26 @@ public abstract class BasicMessage implements Message {
     private boolean isAsync;
     /** 消息体 */
     private String content;
+    /** 是否开启延时缓存功能 */
+    private boolean isDelay;
+    /** 自定义延时缓存时间 */
+    private long delayDuration;
     /** 业务key */
-    private Map<String, String> businessItem;
+    private Map<String, String> item;
 
     @Override
-    public String getBusinessItem(String key) {
-        return getBusinessItem().get(key);
+    public String getItem(String key) {
+        return getItem().get(key);
     }
 
-    public void addBusinessItem(String key, String value) {
-        getBusinessItem().put(key, value);
+    public void addItem(String key, String value) {
+        getItem().put(key, value);
     }
 
-    public Map<String, String> getBusinessItem() {
-        if (businessItem == null) {
-            businessItem = Maps.newHashMap();
+    public Map<String, String> getItem() {
+        if (item == null) {
+            item = Maps.newConcurrentMap();
         }
-        return businessItem;
+        return item;
     }
 }

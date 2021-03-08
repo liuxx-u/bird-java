@@ -1,9 +1,9 @@
 package com.bird.websocket.common.message.handler;
 
+import com.bird.websocket.common.interceptor.MessageInterceptorComposite;
 import com.bird.websocket.common.message.BroadcastMessage;
 import com.bird.websocket.common.message.MessageSendUtil;
 import com.bird.websocket.common.server.ISessionDirectory;
-import com.bird.websocket.common.synchronizer.MessageSyncComposite;
 import com.google.common.collect.Lists;
 
 import javax.websocket.Session;
@@ -14,13 +14,18 @@ import java.util.List;
  */
 public class BroadcastMessageHandler extends AbstractMessageHandler<BroadcastMessage> {
 
-    public BroadcastMessageHandler(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+    public BroadcastMessageHandler(MessageInterceptorComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
         super(messageSyncComposite, sessionDirectory);
     }
 
     @Override
     protected List<Session> getSession(BroadcastMessage message) {
         return sessionDirectory.getAllSession();
+    }
+
+    @Override
+    protected List<String> getUser(BroadcastMessage message) {
+        return sessionDirectory.getAllUser();
     }
 
     @Override

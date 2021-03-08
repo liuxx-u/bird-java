@@ -1,5 +1,7 @@
 package com.bird.websocket.common.storage;
 
+import com.google.common.collect.Lists;
+
 import javax.websocket.Session;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,11 @@ public class InternalTokenSessionStorage implements ITokenSessionStorage {
     @Override
     public boolean contain(String token) {
         return TOKEN_SESSION_MAP.containsKey(token);
+    }
+
+    @Override
+    public List<String> getAllToken() {
+        return Lists.newArrayList(TOKEN_SESSION_MAP.keySet());
     }
 
     @Override

@@ -2,15 +2,25 @@ package com.bird.websocket.common.configuration;
 
 import com.bird.websocket.common.authorize.IAuthorizeResolver;
 import com.bird.websocket.common.authorize.NullAuthorizeResolver;
+import com.bird.websocket.common.delay.DelayMessageInterceptor;
+import com.bird.websocket.common.delay.DelayWebSocketServerInterceptor;
+import com.bird.websocket.common.delay.IDelayMessageStorage;
+import com.bird.websocket.common.delay.MemoryDelayMessageStorage;
+import com.bird.websocket.common.interceptor.MessageInterceptor;
+import com.bird.websocket.common.interceptor.MessageInterceptorComposite;
+import com.bird.websocket.common.interceptor.WebSocketServerInterceptor;
+import com.bird.websocket.common.interceptor.WebSocketServerInterceptorComposite;
+import com.bird.websocket.common.interceptor.log.LogMessageInterceptor;
+import com.bird.websocket.common.interceptor.log.LogWebSocketServerInterceptor;
 import com.bird.websocket.common.message.handler.MessageHandlerFactory;
 import com.bird.websocket.common.server.BasicSessionDirectory;
 import com.bird.websocket.common.server.ISessionDirectory;
 import com.bird.websocket.common.server.WebSocketPublisher;
 import com.bird.websocket.common.server.WebSocketServer;
-import com.bird.websocket.common.synchronizer.MessageSyncComposite;
-import com.bird.websocket.common.synchronizer.WebSocketServerSyncComposite;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +34,11 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @Configuration
 @EnableConfigurationProperties(WebSocketProperties.class)
 @AutoConfigureAfter({SsoClientWebSocketAutoConfiguration.class})
-@Import({MessageSyncComposite.class, WebSocketServerSyncComposite.class})
+@Import({LogMessageInterceptor.class, LogWebSocketServerInterceptor.class, MessageInterceptorComposite.class, WebSocketServerInterceptorComposite.class})
 public class WebSocketAutoConfiguration {
+
+    @Autowired
+    private WebSocketProperties webSocketProperties;
 
     /**
      * ServerEndpointExporter 作用
@@ -66,8 +79,8 @@ public class WebSocketAutoConfiguration {
      * 注册 消息处理器工厂
      */
     @Bean
-    public MessageHandlerFactory messageHandlerFactory(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
-        return new MessageHandlerFactory(messageSyncComposite, sessionDirectory);
+    public MessageHandlerFactory messageHandlerFactory(MessageInterceptorComposite messageInterceptorComposite, ISessionDirectory sessionDirectory) {
+        return new MessageHandlerFactory(messageInterceptorComposite, sessionDirectory);
     }
 
     /**
@@ -77,4 +90,29 @@ public class WebSocketAutoConfiguration {
     public WebSocketPublisher webSocketPublisher(MessageHandlerFactory messageHandlerFactory) {
         return new WebSocketPublisher(messageHandlerFactory);
     }
+
+    @Configuration(proxyBeanMethods = false)
+    @EnableConfigurationProperties(DelayProperties.class)
+    @ConditionalOnProperty(prefix = "bird.websocket.delay", name = "enable", havingValue = "true", matchIfMissing = true)
+    static class Delay {
+
+        @Bean
+        @ConditionalOnMissingBean(IDelayMessageStorage.class)
+        public IDelayMessageStorage delayMessageStorage(DelayProperties delayProperties) {
+            MemoryDelayMessageStorage delayMessageStorage = new MemoryDelayMessageStorage(delayProperties.getDuration());
+            delayMessageStorage.schedulePrune(delayProperties.getClearInterval());
+            return delayMessageStorage;
+        }
+
+        @Bean
+        public MessageInterceptor delayMessageInterceptor(IDelayMessageStorage delayMessageStorage, DelayProperties delayProperties) {
+            return new DelayMessageInterceptor(delayMessageStorage, delayProperties.getDuration());
+        }
+
+        @Bean
+        public WebSocketServerInterceptor webSocketServerInterceptor(IDelayMessageStorage delayMessageStorage, ISessionDirectory sessionDirectory) {
+            return new DelayWebSocketServerInterceptor(delayMessageStorage, sessionDirectory);
+        }
+    }
+
 }

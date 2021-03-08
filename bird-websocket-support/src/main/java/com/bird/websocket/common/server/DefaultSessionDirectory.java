@@ -1,6 +1,7 @@
 package com.bird.websocket.common.server;
 
 import com.bird.websocket.common.authorize.IAuthorizeResolver;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -31,7 +32,7 @@ public class DefaultSessionDirectory implements ISessionDirectory {
     /**
      * token - session 映射关系
      */
-    private static ConcurrentHashMap<String,Session> TOKEN_SESSION_MAP = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Session> TOKEN_SESSION_MAP = new ConcurrentHashMap<>();
 
     /**
      * token - userId 解析器
@@ -94,7 +95,7 @@ public class DefaultSessionDirectory implements ISessionDirectory {
      */
     @Override
     public List<Session> getUserSessions(String userId) {
-        if(StringUtils.isBlank(userId)){
+        if (StringUtils.isBlank(userId)) {
             return new ArrayList<>();
         }
 
@@ -112,10 +113,22 @@ public class DefaultSessionDirectory implements ISessionDirectory {
      */
     @Override
     public Session getSession(String token) {
-        if(StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             return null;
         }
         return TOKEN_SESSION_MAP.get(token);
+    }
+
+    @Override
+    public String getUser(String token) {
+        return this.authorizeResolver.resolve(token);
+    }
+
+    @Override
+    public List<String> getAllUser() {
+        List<String> allToken = Lists.newArrayList(TOKEN_SESSION_MAP.keySet());
+        return allToken.stream().map(authorizeResolver::resolve)
+                .collect(Collectors.toList());
     }
 
     @Override

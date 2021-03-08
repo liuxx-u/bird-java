@@ -1,9 +1,9 @@
 package com.bird.websocket.common.message.handler;
 
+import com.bird.websocket.common.interceptor.MessageInterceptorComposite;
 import com.bird.websocket.common.message.MessageSendUtil;
 import com.bird.websocket.common.message.MultipartMessage;
 import com.bird.websocket.common.server.ISessionDirectory;
-import com.bird.websocket.common.synchronizer.MessageSyncComposite;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MultipartMessageHandler extends AbstractMessageHandler<MultipartMessage> {
 
-    public MultipartMessageHandler(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+    public MultipartMessageHandler(MessageInterceptorComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
         super(messageSyncComposite, sessionDirectory);
     }
 
@@ -42,6 +42,23 @@ public class MultipartMessageHandler extends AbstractMessageHandler<MultipartMes
             }
         }
         return sessions;
+    }
+
+    @Override
+    protected List<String> getUser(MultipartMessage message) {
+        List<String> userIds = Lists.newArrayList();
+        if (CollectionUtils.isNotEmpty(message.getTokens())) {
+            for (String token : message.getTokens()) {
+                String userId = sessionDirectory.getUser(token);
+                if (userId != null) {
+                    userIds.add(userId);
+                }
+            }
+        }
+        if (CollectionUtils.isNotEmpty(message.getUserIds())) {
+            userIds.addAll(message.getUserIds());
+        }
+        return userIds;
     }
 
     @Override

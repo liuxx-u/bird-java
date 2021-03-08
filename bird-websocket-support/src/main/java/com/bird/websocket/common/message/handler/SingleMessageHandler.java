@@ -1,9 +1,9 @@
 package com.bird.websocket.common.message.handler;
 
+import com.bird.websocket.common.interceptor.MessageInterceptorComposite;
 import com.bird.websocket.common.message.MessageSendUtil;
 import com.bird.websocket.common.message.SingleMessage;
 import com.bird.websocket.common.server.ISessionDirectory;
-import com.bird.websocket.common.synchronizer.MessageSyncComposite;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class SingleMessageHandler extends AbstractMessageHandler<SingleMessage> {
 
-    public SingleMessageHandler(MessageSyncComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
+    public SingleMessageHandler(MessageInterceptorComposite messageSyncComposite, ISessionDirectory sessionDirectory) {
         super(messageSyncComposite, sessionDirectory);
     }
 
@@ -38,6 +38,21 @@ public class SingleMessageHandler extends AbstractMessageHandler<SingleMessage> 
             }
         }
         return sessions;
+    }
+
+    @Override
+    protected List<String> getUser(SingleMessage message) {
+        List<String> userIds = Lists.newArrayList();
+        if (StringUtils.isNotBlank(message.getToken())) {
+            String userId = sessionDirectory.getUser(message.getToken());
+            if (userId != null) {
+                userIds.add(userId);
+            }
+        }
+        if (StringUtils.isNotBlank(message.getUserId())) {
+            userIds.add(message.getUserId());
+        }
+        return userIds;
     }
 
     @Override

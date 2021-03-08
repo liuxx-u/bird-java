@@ -1,4 +1,4 @@
-package com.bird.websocket.common.synchronizer;
+package com.bird.websocket.common.interceptor;
 
 import javax.websocket.Session;
 
@@ -7,7 +7,7 @@ import javax.websocket.Session;
  *
  * @author YJ
  */
-public interface WebSocketServerSync {
+public interface WebSocketServerInterceptor {
 
     /**
      * 客户端建立连接 时调用
