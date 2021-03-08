@@ -5,6 +5,7 @@ import com.bird.websocket.common.message.MessageSendUtil;
 import com.bird.websocket.common.interceptor.WebSocketServerInterceptorComposite;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -31,9 +32,16 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "token") String token) throws IOException {
         ISessionDirectory directory = this.getSessionDirectory();
+
+        String userId = directory.getUser(token);
+        if (StringUtils.isBlank(userId)) {
+            // 当前token未登录或已过期
+            MessageSendUtil.sendMessage(session, "lose_efficacy");
+            session.close();
+        }
         if (!directory.add(token, session)) {
             // 当前token已经建立连接
-            MessageSendUtil.sendMessage(session, "用户未登录或当前token已经建立连接");
+            MessageSendUtil.sendMessage(session, "connection_exists");
             session.close();
         }
 
