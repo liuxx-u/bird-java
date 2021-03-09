@@ -31,22 +31,23 @@ public class DefaultClientTicketCache implements IClientTicketCache {
     /**
      * 根据token获取TicketInfo
      *
-     * @param token token
+     * @param token       token
+     * @param autoRefresh 是否自动刷新有效期
      * @return ticket
      */
     @Override
-    public ClientTicket get(String token) {
+    public ClientTicket get(String token, boolean autoRefresh) {
         if (StringUtils.isBlank(token)) {
             return null;
         }
 
         try {
-            ClientTicket ticket = cache.get(token, () -> ticketHandler.getTicket(token));
+            ClientTicket ticket = cache.get(token, () -> ticketHandler.getTicket(token, autoRefresh));
             //客户端缓存时间超过一半，重新获取票据
             if (ticket != null) {
                 long span = System.currentTimeMillis() - ticket.getCreateTime().getTime();
                 if (span > this.halfCacheMillis) {
-                    ticket = ticketHandler.getTicket(token);
+                    ticket = ticketHandler.getTicket(token, autoRefresh);
                     if (ticket != null) {
                         cache.put(token, ticket);
                     }
