@@ -58,11 +58,12 @@ public class SsoClientAuthorizeInterceptor extends AbstractAuthorizeInterceptor 
      *
      * @param userId      userId
      * @param permissions 权限集合
+     * @param roles       角色集合
      * @param checkAll    是否检查全部
      * @return 是否检查通过
      */
     @Override
-    protected boolean checkPermissions(String userId, List<String> permissions, boolean checkAll) {
-        return this.userPermissionChecker.hasPermissions(userId, permissions, checkAll);
+    protected boolean checkPermissions(String userId, List<String> permissions, List<String> roles, boolean checkAll) {
+        return this.userPermissionChecker.hasPermissions(userId, permissions, roles, checkAll);
     }
 }

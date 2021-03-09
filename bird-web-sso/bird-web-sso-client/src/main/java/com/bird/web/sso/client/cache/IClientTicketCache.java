@@ -14,13 +14,14 @@ public interface IClientTicketCache {
 
     /**
      * 根据token获取TicketInfo
-     *
+     * <p>
      * 先从缓存获取，本地缓存没有则从sso服务端获取
      *
-     * @param token token
+     * @param token       token
+     * @param autoRefresh 是否自动刷新有效期
      * @return ticket
      */
-    ClientTicket get(String token);
+    ClientTicket get(String token, boolean autoRefresh);
 
     /**
      * 移除token的客户端缓存

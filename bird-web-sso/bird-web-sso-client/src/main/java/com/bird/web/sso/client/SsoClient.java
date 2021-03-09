@@ -28,10 +28,21 @@ public class SsoClient {
     private EventBus eventBus;
 
 
-    public SsoClient(SsoClientProperties clientProperties, IRemoteTicketHandler ticketHandler,IClientTicketCache clientTicketCache) {
+    public SsoClient(SsoClientProperties clientProperties, IRemoteTicketHandler ticketHandler, IClientTicketCache clientTicketCache) {
         this.clientProperties = clientProperties;
         this.ticketHandler = ticketHandler;
         this.clientTicketCache = clientTicketCache;
+    }
+
+    /**
+     * 解析票据信息
+     * 如果服务端开启了自动刷新票据，此方法获取Ticket时会自动刷新票据
+     *
+     * @param request request
+     * @return TicketInfo
+     */
+    public ClientTicket getTicket(HttpServletRequest request) {
+        return this.getTicket(request,true);
     }
 
     /**
@@ -40,29 +51,41 @@ public class SsoClient {
      * @param request request
      * @return TicketInfo
      */
-    public ClientTicket getTicket(HttpServletRequest request) {
+    public ClientTicket getTicket(HttpServletRequest request, boolean autoRefresh) {
         String token = this.getToken(request);
-        return this.getTicket(token);
+        return this.getTicket(token,autoRefresh);
     }
 
     /**
      * 根据token获取票据信息
+     * 如果服务端开启了自动刷新票据，此方法获取Ticket时会自动刷新票据
      *
      * @param token token
      * @return TicketInfo
      */
     public ClientTicket getTicket(String token) {
+        return this.getTicket(token, true);
+    }
+
+    /**
+     * 根据token获取票据信息
+     *
+     * @param token       token
+     * @param autoRefresh 是否自动刷新服务端有效期
+     * @return TicketInfo
+     */
+    public ClientTicket getTicket(String token, boolean autoRefresh) {
         if (StringUtils.isBlank(token)) {
             return null;
         }
 
-        return clientTicketCache.get(token);
+        return clientTicketCache.get(token, autoRefresh);
     }
 
     /**
      * 刷新票据信息
      *
-     * @param request    request
+     * @param request      request
      * @param clientTicket 新的票据信息
      */
     public void refreshTicket(HttpServletRequest request, ClientTicket clientTicket) {
@@ -74,7 +97,7 @@ public class SsoClient {
     /**
      * 刷新票据信息
      *
-     * @param token      token
+     * @param token        token
      * @param clientTicket 新的票据信息
      */
     public void refreshTicket(String token, ClientTicket clientTicket) {

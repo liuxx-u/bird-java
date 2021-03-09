@@ -2,6 +2,7 @@ package com.bird.core.trace;
 
 import com.bird.core.SpringContextHolder;
 import com.bird.core.trace.dispatch.ITraceLogDispatcher;
+import com.bird.core.trace.interceptor.ITraceInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -52,6 +53,13 @@ public class TraceContext {
         TraceDefinition current = current();
         TraceDefinition next = current == null ? TraceDefinition.initWithDefault(entrance, params) : current.next(entrance, params);
         next.setDescription(description);
+
+        // 轨迹记录前拦截操作
+        try {
+            ITraceInterceptor interceptor = SpringContextHolder.getBean(ITraceInterceptor.class);
+            interceptor.enter(current, next);
+        } catch (Exception ignore) {
+        }
 
         TraceMap traceMap = LOCAL.get();
         traceMap.setCurrentTraceId(next.getTraceId());
@@ -108,6 +116,14 @@ public class TraceContext {
         if (traceMap == null) {
             return;
         }
+
+        // 轨迹退出时拦截操作
+        try {
+            ITraceInterceptor interceptor = SpringContextHolder.getBean(ITraceInterceptor.class);
+            interceptor.exit(current);
+        } catch (Exception ignore) {
+        }
+
         TraceDefinition parent = traceMap.get(current.getParentTraceId());
         if (parent != null) {
             traceMap.setCurrentTraceId(parent.getTraceId());
@@ -121,7 +137,7 @@ public class TraceContext {
      *
      * @param returnValue 返回值
      */
-    public static void exitAndClear(Object returnValue){
+    public static void exitAndClear(Object returnValue) {
         exit(returnValue);
         clear();
     }
@@ -132,7 +148,7 @@ public class TraceContext {
     private static void clear() {
         try {
             Collection<TraceDefinition> traceLogs = LOCAL.get().values();
-            if(CollectionUtils.isEmpty(traceLogs)){
+            if (CollectionUtils.isEmpty(traceLogs)) {
                 return;
             }
 

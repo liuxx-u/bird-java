@@ -19,6 +19,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -117,7 +118,7 @@ public class SsoServer {
      * @param token token
      * @return 票据
      */
-    public ServerTicket getTicket(String token) {
+    public ServerTicket getTicket(String token,Boolean autoRefresh) {
         if (StringUtils.isBlank(token)) {
             return null;
         }
@@ -125,11 +126,11 @@ public class SsoServer {
         ServerTicket serverTicket;
         if (serverProperties.getUseSessionStore()) {
             serverTicket = sessionStore.getTicket(token);
-            if (serverTicket != null && serverProperties.getAutoRefresh()) {
+            if (serverTicket != null && serverProperties.getAutoRefresh() && BooleanUtils.isTrue(autoRefresh)) {
                 //如果超过一半的有效期，则刷新
                 long span = System.currentTimeMillis() - serverTicket.getLastRefreshTime().getTime();
-                if(span > this.halfCacheMillis ){
-                    ServerTicket origin = JSON.parseObject(JSON.toJSONString(serverTicket),ServerTicket.class);
+                if (span > this.halfCacheMillis) {
+                    ServerTicket origin = JSON.parseObject(JSON.toJSONString(serverTicket), ServerTicket.class);
                     serverTicket = sessionStore.refreshTicket(token, serverTicket, Duration.ofMinutes(serverProperties.getExpire()));
                     //触发票据刷新事件
                     this.postEvent(new SsoServerRefreshTicketEvent(token, origin, true, serverTicket));
@@ -146,16 +147,17 @@ public class SsoServer {
      * @param appId appId
      * @param clientHost clientHost
      * @param token token
+     * @param autoRefresh autoRefresh
      * @return 客户端票据
      */
-    public ClientTicket getClientTicket(String appId,String clientHost, String token){
+    public ClientTicket getClientTicket(String appId,String clientHost, String token, Boolean autoRefresh) {
         if (StringUtils.isBlank(clientHost) || StringUtils.isBlank(token)) {
             return null;
         }
         clientStore.store(token, clientHost);
 
-        ServerTicket serverTicket = this.getTicket(token);
-        if(serverTicket == null){
+        ServerTicket serverTicket = this.getTicket(token, autoRefresh);
+        if (serverTicket == null) {
             return null;
         }
 
