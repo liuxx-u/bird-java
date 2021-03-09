@@ -38,16 +38,17 @@ public class DefaultRemoteTicketHandler implements IRemoteTicketHandler {
      * 从sso服务器获取票据信息
      *
      * @param token token
+     * @param autoRefresh 是否自动刷新有效期
      * @return 票据信息
      */
     @Override
-    public ClientTicket getTicket(String token) {
+    public ClientTicket getTicket(String token, boolean autoRefresh) {
         if (StringUtils.isBlank(token)) {
             return null;
         }
 
         int retryCount = 3;
-        String url = clientProperties.getServer() + GET_TICKET_URL + "?token=" + token + "&clientHost=" + clientProperties.getHost() + "&appId=" + clientProperties.getAppId();
+        String url = clientProperties.getServer() + GET_TICKET_URL + "?token=" + token + "&clientHost=" + clientProperties.getHost() + "&appId=" + clientProperties.getAppId() + "&autoRefresh=" + autoRefresh;
         List<String> headers = Arrays.asList("Accept-Encoding", "gzip,deflate,sdch");
 
         int resCode = 0;
