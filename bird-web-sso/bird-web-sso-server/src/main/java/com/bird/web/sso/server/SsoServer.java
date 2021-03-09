@@ -150,7 +150,7 @@ public class SsoServer {
      * @param autoRefresh autoRefresh
      * @return 客户端票据
      */
-    public ClientTicket getClientTicket(String appId,String clientHost, String token, @RequestParam(value = "autoRefresh",defaultValue = "true") Boolean autoRefresh) {
+    public ClientTicket getClientTicket(String appId,String clientHost, String token, Boolean autoRefresh) {
         if (StringUtils.isBlank(clientHost) || StringUtils.isBlank(token)) {
             return null;
         }
