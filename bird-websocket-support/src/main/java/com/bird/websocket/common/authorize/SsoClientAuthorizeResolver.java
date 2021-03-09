@@ -12,7 +12,7 @@ public class SsoClientAuthorizeResolver implements IAuthorizeResolver {
 
     private final SsoClient ssoClient;
 
-    public SsoClientAuthorizeResolver(SsoClient ssoClient){
+    public SsoClientAuthorizeResolver(SsoClient ssoClient) {
         this.ssoClient = ssoClient;
     }
 
@@ -24,8 +24,7 @@ public class SsoClientAuthorizeResolver implements IAuthorizeResolver {
      */
     @Override
     public String resolve(String token) {
-        ClientTicket clientTicket = ssoClient.getTicket(token);
-
+        ClientTicket clientTicket = ssoClient.getTicket(token, false);
         return clientTicket == null ? StringUtils.EMPTY : clientTicket.getUserId();
     }
 }
