@@ -33,18 +33,19 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam(value = "token") String token) throws IOException {
         ISessionDirectory directory = this.getSessionDirectory();
 
+        boolean flag = true;
         String userId = directory.getUser(token);
         if (StringUtils.isBlank(userId)) {
             // 当前token未登录或已过期
             MessageSendUtil.sendMessage(session, "lose_efficacy");
             session.close();
+            flag = false;
         }
-        if (!directory.add(token, session)) {
+        if (flag && !directory.add(token, session)) {
             // 当前token已经建立连接
             MessageSendUtil.sendMessage(session, "connection_exists");
             session.close();
         }
-
         getWebSocketServerInterceptorComposite().onOpen(session, token);
     }
 
@@ -68,9 +69,18 @@ public class WebSocketServer {
      * @param message 消息体
      */
     @OnMessage
-    public void onMessage(@PathParam(value = "token") String token, String message) {
+    public void onMessage(@PathParam(value = "token") String token, String message) throws IOException {
         ISessionDirectory directory = this.getSessionDirectory();
         Session session = directory.getSession(token);
+
+        String userId = directory.getUser(token);
+        if (StringUtils.isBlank(userId)) {
+            // 当前token未登录或已过期
+            MessageSendUtil.sendMessage(session, "lose_efficacy");
+            session.close();
+
+            directory.remove(token);
+        }
         MessageSendUtil.sendMessage(session, message);
 
         getWebSocketServerInterceptorComposite().onMessage(token, message);
