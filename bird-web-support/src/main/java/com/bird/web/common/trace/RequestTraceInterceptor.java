@@ -7,19 +7,34 @@ import com.bird.web.common.interceptor.PathMatchInterceptorAdapter;
 import com.bird.web.common.reader.BodyReaderFilter;
 import com.bird.web.common.utils.RequestHelper;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.core.MethodParameter;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liuxx
  * @since 2020/10/10
  */
-public class RequestTraceInterceptor extends PathMatchInterceptorAdapter {
+@RestControllerAdvice
+public class RequestTraceInterceptor extends PathMatchInterceptorAdapter implements ResponseBodyAdvice<Object> {
+
+    private final static List<MediaType> SUPPORT_RESPONSE_CONTENT_TYPE = new ArrayList<>();
+
+    static {
+        SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.APPLICATION_JSON);
+        SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.APPLICATION_XML);
+        SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.TEXT_PLAIN);
+        SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.TEXT_XML);
+    }
 
     private final RequestTraceProperties requestTraceProperties;
     private final IGlobalTraceIdProvider globalTraceIdProvider;
@@ -71,7 +86,21 @@ public class RequestTraceInterceptor extends PathMatchInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        //移除线程中trace信息
-        TraceContext.exitAndClear(null);
+        if(TraceContext.current() != null){
+            TraceContext.exitAndClear(null);
+        }
+    }
+
+    @Override
+    public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
+        return TraceContext.current() != null;
+    }
+
+    @Override
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+        if(SUPPORT_RESPONSE_CONTENT_TYPE.contains(selectedContentType)){
+            TraceContext.exitAndClear(body);
+        }
+        return body;
     }
 }
