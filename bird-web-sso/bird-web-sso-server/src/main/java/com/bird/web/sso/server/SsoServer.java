@@ -260,7 +260,7 @@ public class SsoServer {
                 try {
                     HttpClient.HttpResult result = HttpClient.httpGet(url, headers, null, HttpClient.DEFAULT_CONTENT_TYPE);
                     if (HttpURLConnection.HTTP_OK != result.code) {
-                        throw new IOException("Error while requesting: " + url + "'. Server returned: " + result.code);
+                        throw new RuntimeException("Error while requesting: " + url + ". Server returned: " + result.code);
                     }
                     resCode = result.code;
 
