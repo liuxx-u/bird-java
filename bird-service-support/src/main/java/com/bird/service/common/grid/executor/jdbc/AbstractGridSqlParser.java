@@ -313,6 +313,7 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
     private PreparedStateParameter sum(GridDefinition gridDefinition, PagedListQuery query, Boolean useAlias) {
         StringBuilder sb = new StringBuilder("select count(1) as totalCount");
         for (String field : query.getSumFields()) {
+            field = StringUtils.trim(field);
             GridFieldDefinition fieldDefinition = gridDefinition.getFieldDefinition(field);
             if (field == null || !GridFieldType.isSummable(fieldDefinition.getFieldType())) {
                 continue;

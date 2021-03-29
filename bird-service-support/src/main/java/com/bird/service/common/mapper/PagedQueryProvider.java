@@ -46,6 +46,7 @@ public class PagedQueryProvider {
     private StringBuilder getSumSql(PagedQueryParam param, Boolean useAlias) {
         StringBuilder sb = new StringBuilder("select count(1) as totalCount");
         for (String field : param.getQuery().getSumFields()) {
+            field = StringUtils.trim(field);
             sb.append(",")
                     .append("sum(")
                     .append(useAlias ? param.getDbFieldName(field) : field)
