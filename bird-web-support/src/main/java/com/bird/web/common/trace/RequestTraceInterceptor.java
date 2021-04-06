@@ -8,6 +8,7 @@ import com.bird.web.common.reader.BodyReaderFilter;
 import com.bird.web.common.utils.RequestHelper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -59,7 +60,7 @@ public class RequestTraceInterceptor extends PathMatchInterceptorAdapter impleme
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
-        if(super.match(request,requestTraceProperties.getUrlPatterns())){
+        if (super.match(request, requestTraceProperties.getUrlPatterns())) {
             HttpParam httpParam = new HttpParam();
 
             boolean traceAllHeaders = this.requestTraceProperties.traceAllHeaders();
@@ -68,7 +69,7 @@ public class RequestTraceInterceptor extends PathMatchInterceptorAdapter impleme
 
             while (headerNames.hasMoreElements()) {
                 String headerName = headerNames.nextElement();
-                if(traceAllHeaders || ArrayUtils.contains(this.requestTraceProperties.getTraceHeaders(),headerName)){
+                if (traceAllHeaders || ArrayUtils.contains(this.requestTraceProperties.getTraceHeaders(), headerName)) {
                     headers.put(headerName, request.getHeader(headerName));
                 }
             }
@@ -77,7 +78,16 @@ public class RequestTraceInterceptor extends PathMatchInterceptorAdapter impleme
             httpParam.setParams(request.getQueryString());
             if (BodyReaderFilter.canReadBody(request)) {
                 httpParam.setBody(RequestHelper.getBodyString(request));
+            } else if (Objects.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE, request.getHeader(HttpHeaders.CONTENT_TYPE))) {
+                StringJoiner parameters = new StringJoiner("&");
+                Enumeration<String> parameterNames = request.getParameterNames();
+                while (parameterNames.hasMoreElements()) {
+                    String parameterName = parameterNames.nextElement();
+                    parameters.add(parameterName + "=" + request.getParameter(parameterName));
+                }
+                httpParam.setBody(parameters.toString());
             }
+
             TraceContext.enter(request.getMethod() + ":" + request.getRequestURI(), new Object[]{httpParam}, null);
             TraceContext.current().setGlobalTraceId(globalTraceIdProvider.globalTraceId());
         }

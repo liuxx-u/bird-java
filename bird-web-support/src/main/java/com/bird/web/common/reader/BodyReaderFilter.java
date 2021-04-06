@@ -1,10 +1,10 @@
 package com.bird.web.common.reader;
 
 import com.bird.core.SpringContextHolder;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -27,13 +27,16 @@ public class BodyReaderFilter extends OncePerRequestFilter {
 
     private final static String BODY_READ_PROPERTY = "bird.web.body-read.enabled";
     private final static String TRUE = "true";
-    private final static String MULTIPART_HEAD = "multipart/form-data";
     private final static List<HttpMethod> SUPPORT_HTTP_METHODS = new ArrayList<>();
+    private final static List<String> SUPPORT_MEDIA_TYPES = new ArrayList<>();
+
 
     static {
         SUPPORT_HTTP_METHODS.add(HttpMethod.POST);
         SUPPORT_HTTP_METHODS.add(HttpMethod.PUT);
         SUPPORT_HTTP_METHODS.add(HttpMethod.PATCH);
+
+        SUPPORT_MEDIA_TYPES.add(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Override
@@ -58,12 +61,7 @@ public class BodyReaderFilter extends OncePerRequestFilter {
         }
 
         HttpMethod method = HttpMethod.resolve(request.getMethod());
-        return SUPPORT_HTTP_METHODS.contains(method) && !(request instanceof MultipartHttpServletRequest) && !isMultipart(request);
-    }
-
-    private static boolean isMultipart(HttpServletRequest request) {
-
         String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
-        return StringUtils.startsWith(contentType, MULTIPART_HEAD);
+        return SUPPORT_HTTP_METHODS.contains(method) && SUPPORT_MEDIA_TYPES.contains(contentType) && !(request instanceof MultipartHttpServletRequest);
     }
 }
