@@ -27,6 +27,7 @@ public class BodyReaderFilter extends OncePerRequestFilter {
 
     private final static String BODY_READ_PROPERTY = "bird.web.body-read.enabled";
     private final static String TRUE = "true";
+    private final static String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
     private final static List<HttpMethod> SUPPORT_HTTP_METHODS = new ArrayList<>();
     private final static List<String> SUPPORT_MEDIA_TYPES = new ArrayList<>();
 
@@ -37,6 +38,7 @@ public class BodyReaderFilter extends OncePerRequestFilter {
         SUPPORT_HTTP_METHODS.add(HttpMethod.PATCH);
 
         SUPPORT_MEDIA_TYPES.add(MediaType.APPLICATION_JSON_VALUE);
+        SUPPORT_MEDIA_TYPES.add(APPLICATION_JSON_UTF8_VALUE);
     }
 
     @Override
