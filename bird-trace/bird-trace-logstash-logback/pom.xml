@@ -9,10 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>bird-trace-skywalking</artifactId>
+    <artifactId>bird-trace-logstash</artifactId>
 
     <properties>
-        <skywalking.version>8.0.1</skywalking.version>
+        <!--logstash-logback-->
+        <logstash-logback.version>5.0</logstash-logback.version>
     </properties>
 
     <dependencies>
@@ -32,14 +33,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-opentracing</artifactId>
-            <version>${skywalking.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-trace</artifactId>
-            <version>${skywalking.version}</version>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
