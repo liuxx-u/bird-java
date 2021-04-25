@@ -35,11 +35,11 @@ public class TraceLogstashProvider extends AbstractFieldJsonProvider<ILoggingEve
         }
     }
 
-    public static class TraceLoggingEvent extends LoggingEvent {
+    static class TraceLoggingEvent extends LoggingEvent {
 
         private TraceDefinition definition;
 
-        public TraceLoggingEvent(TraceDefinition definition, Logger logger) {
+        TraceLoggingEvent(TraceDefinition definition, Logger logger) {
             super(null, logger, Level.INFO, definition.getEntrance(), null, null);
             this.definition = definition;
         }
