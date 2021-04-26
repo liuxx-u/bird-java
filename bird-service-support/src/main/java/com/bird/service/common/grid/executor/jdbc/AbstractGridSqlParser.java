@@ -416,8 +416,9 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
                     default:
                         break;
                 }
+                stateParameter.addParameter(GridFieldType.VARCHAR, dbFieldName);
                 stateParameter.addParameter(fieldDefinition.getFieldType(), value);
-                sb.append(dbFieldName).append(" ").append(ruleOperate.getDbValue()).append(" ?");
+                sb.append("?").append(" ").append(ruleOperate.getDbValue()).append(" ?");
             }
             isStart = false;
         }
