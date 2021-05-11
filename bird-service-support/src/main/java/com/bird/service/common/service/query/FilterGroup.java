@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * 筛选条件组
@@ -17,6 +18,14 @@ import java.util.Map;
  */
 @Getter
 public class FilterGroup implements Serializable {
+
+    /**
+     * 预编译SQL过滤正则表达式
+     */
+    private final static Pattern sqlPattern = Pattern.compile(
+            "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|(\\b(select|update|and|or|delete|insert|trancate|char|substr|ascii|declare|exec|count|master|into|drop|execute)\\b)",
+            Pattern.CASE_INSENSITIVE);
+
     /**
      * 组内筛选条件
      */
@@ -115,6 +124,9 @@ public class FilterGroup implements Serializable {
             String field = StringUtils.strip(rule.getField());
             String value = StringUtils.strip(rule.getValue());
             if (StringUtils.isBlank(field) || StringUtils.isBlank(value)) {
+                continue;
+            }
+            if(sqlPattern.matcher(field).find() || sqlPattern.matcher(value).find()){
                 continue;
             }
             if (!isStart) {
