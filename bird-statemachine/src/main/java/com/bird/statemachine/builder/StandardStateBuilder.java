@@ -4,8 +4,7 @@ import com.bird.statemachine.Event;
 import com.bird.statemachine.State;
 import com.bird.statemachine.StateContext;
 import com.bird.statemachine.StateProcessor;
-import com.bird.statemachine.condition.ConditionalStateProcessor;
-import com.bird.statemachine.condition.InternalConditionalStateProcessor;
+import com.bird.statemachine.condition.ConditionalStateProcessorCluster;
 import com.bird.statemachine.condition.LambdaConditionStateProcessor;
 import com.bird.statemachine.exception.StateMachineException;
 import com.bird.statemachine.factory.StandardState;
@@ -65,17 +64,17 @@ public class StandardStateBuilder<S extends State, E extends Event, C extends St
             throw new StateMachineException("perform condition and processor can`t be null");
         }
 
-        InternalConditionalStateProcessor<S, C> conditionalStateProcessor;
+        ConditionalStateProcessorCluster<S, C> conditionalProcessorCluster;
         StateProcessor<S, C> stateProcessor = sourceState.obtainProcessor(this.event);
         if (stateProcessor == null) {
-            conditionalStateProcessor = new InternalConditionalStateProcessor<>();
-            sourceState.setProcessor(this.event, conditionalStateProcessor);
-        } else if (stateProcessor instanceof InternalConditionalStateProcessor) {
-            conditionalStateProcessor = (InternalConditionalStateProcessor<S, C>) stateProcessor;
+            conditionalProcessorCluster = new ConditionalStateProcessorCluster<>();
+            sourceState.setProcessor(this.event, conditionalProcessorCluster);
+        } else if (stateProcessor instanceof ConditionalStateProcessorCluster) {
+            conditionalProcessorCluster = (ConditionalStateProcessorCluster<S, C>) stateProcessor;
         } else {
             throw new StateMachineException(event + " already exist, you can not add another one");
         }
 
-        conditionalStateProcessor.addCondition(new LambdaConditionStateProcessor<>(priority, condition, processor));
+        conditionalProcessorCluster.addCondition(new LambdaConditionStateProcessor<>(priority, condition, processor));
     }
 }

@@ -12,11 +12,11 @@ import java.util.List;
  * @author liuxx
  * @since 2021/5/7
  */
-public class InternalConditionalStateProcessor<S extends State,C extends StateContext> implements StateProcessor<S,C> {
+public class ConditionalStateProcessorCluster<S extends State,C extends StateContext> implements StateProcessor<S,C> {
 
     private final List<ConditionalStateProcessor<S, C>> processors;
 
-    public InternalConditionalStateProcessor(){
+    public ConditionalStateProcessorCluster(){
         this.processors = new ArrayList<>();
     }
 
