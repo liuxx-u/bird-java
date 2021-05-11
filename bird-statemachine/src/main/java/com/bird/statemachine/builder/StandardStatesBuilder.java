@@ -6,11 +6,9 @@ import com.bird.statemachine.StateContext;
 import com.bird.statemachine.StateProcessor;
 import com.bird.statemachine.factory.StandardState;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author liuxx
@@ -18,15 +16,20 @@ import java.util.function.Function;
  */
 public class StandardStatesBuilder<S extends State, E extends Event, C extends StateContext> extends StandardStateBuilder<S,E,C> {
 
-    private final List<StandardState<S, E, C>> sources = new ArrayList<>();
+    private final List<StandardState<S, C>> sources = new ArrayList<>();
 
-    StandardStatesBuilder(Map<S, StandardState<S, E, C>> stateMap) {
+    StandardStatesBuilder(Map<String, StandardState<S, C>> stateMap) {
         super(stateMap);
     }
 
-    public On<S, E, C> fromAmong(S... stateIds) {
-        for (S stateId : stateIds) {
-            sources.add(this.stateMap.computeIfAbsent(stateId, p -> new StandardState<>(stateId.getName(), new HashMap<>(4))));
+    public On<S, E, C> fromAmong(S... states) {
+        String[] stateNames = Arrays.stream(states).map(State::getName).collect(Collectors.toList()).toArray(new String[]{});
+        return fromAmong(stateNames);
+    }
+
+    public On<S, E, C> fromAmong(String... stateNames) {
+        for (String stateName : stateNames) {
+            sources.add(this.stateMap.computeIfAbsent(stateName, p -> new StandardState<>(stateName, new HashMap<>(4))));
         }
         return this;
     }

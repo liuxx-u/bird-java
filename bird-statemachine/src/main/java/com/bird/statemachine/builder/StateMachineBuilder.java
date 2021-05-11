@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class StateMachineBuilder<S extends State, E extends Event, C extends StateContext> {
 
-    private final Map<S, StandardState<S, E, C>> stateMap = new ConcurrentHashMap<>();
+    private final Map<String, StandardState<S, C>> stateMap = new ConcurrentHashMap<>();
 
     private StateMachineBuilder() {
     }
