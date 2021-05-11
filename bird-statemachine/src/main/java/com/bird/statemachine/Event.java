@@ -1,17 +1,17 @@
 package com.bird.statemachine;
 
 /**
- * state
+ * event
  *
  * @author liuxx
  * @since 2021/5/7
  */
-public interface State {
+public interface Event {
 
     /**
-     * state name
+     * event name
      *
-     * @return state name
+     * @return event name
      */
     String getName();
 }

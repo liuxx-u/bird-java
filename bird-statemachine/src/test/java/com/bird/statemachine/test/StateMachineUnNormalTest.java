@@ -1,38 +1,39 @@
 package com.bird.statemachine.test;
 
-import com.bird.statemachine.StateMachineException;
 import com.bird.statemachine.builder.StateMachineBuilder;
+import com.bird.statemachine.exception.StateMachineException;
+import com.bird.statemachine.test.pojo.EventEnum;
+import com.bird.statemachine.test.pojo.StateEnum;
+import com.bird.statemachine.test.pojo.TestStateContext;
 import org.junit.Test;
 
 /**
- * StateMachineUnNormalTest
- *
- * @author Frank Zhang
- * @date 2020-02-08 5:52 PM
+ * @author liuxx
+ * @since 2021/5/11
  */
 public class StateMachineUnNormalTest {
 
     @Test(expected = StateMachineException.class)
-    public void testDuplicatedTransition() {
-        StateMachineBuilder<StateMachineTest.States, StateMachineTest.Events, StateMachineTest.Context> builder = StateMachineBuilder.init();
-        builder.transition()
-                .from(StateMachineTest.States.STATE1)
-                .on(StateMachineTest.Events.EVENT1)
-                .perform(ctx->StateMachineTest.States.STATE2);
+    public void testDuplicatedEvent() {
+        StateMachineBuilder<StateEnum, EventEnum, TestStateContext> builder = StateMachineBuilder.init();
+        builder.state()
+                .from(StateEnum.STATE1)
+                .on(EventEnum.EVENT1)
+                .perform(ctx->StateEnum.STATE2);
 
-        builder.transition()
-                .from(StateMachineTest.States.STATE1)
-                .on(StateMachineTest.Events.EVENT1)
-                .perform(ctx->StateMachineTest.States.STATE2);
+        builder.state()
+                .from(StateEnum.STATE1)
+                .on(EventEnum.EVENT1)
+                .perform(ctx->StateEnum.STATE2);
     }
 
     @Test(expected = StateMachineException.class)
     public void testDuplicateMachine() {
-        StateMachineBuilder<StateMachineTest.States, StateMachineTest.Events, StateMachineTest.Context> builder = StateMachineBuilder.init();
-        builder.transition()
-                .from(StateMachineTest.States.STATE1)
-                .on(StateMachineTest.Events.EVENT1)
-                .perform(ctx->StateMachineTest.States.STATE2);
+        StateMachineBuilder<StateEnum, EventEnum, TestStateContext> builder = StateMachineBuilder.init();
+        builder.state()
+                .from(StateEnum.STATE1)
+                .on(EventEnum.EVENT1)
+                .perform(ctx->StateEnum.STATE2);
 
         builder.build("DuplicatedMachine");
         builder.build("DuplicatedMachine");

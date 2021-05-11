@@ -1,127 +1,134 @@
 package com.bird.statemachine.test;
 
-import com.bird.statemachine.StateMachine;
-import com.bird.statemachine.StateMachineFactory;
 import com.bird.statemachine.builder.StateMachineBuilder;
+import com.bird.statemachine.factory.StateMachine;
+import com.bird.statemachine.factory.StateMachineFactory;
+import com.bird.statemachine.test.pojo.EventEnum;
+import com.bird.statemachine.test.pojo.StateEnum;
+import com.bird.statemachine.test.pojo.TestStateContext;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * @author liuxx
- * @since 2020/8/7
+ * @since 2021/5/11
  */
 public class StateMachineTest {
 
     static String MACHINE_ID = "TestStateMachine";
 
-    enum States {
-        STATE1, STATE2, STATE3, STATE4
-    }
-
-    enum Events {
-        EVENT1, EVENT2, EVENT3, EVENT4
-    }
-
-    static class Context {
-        String operator = "liuxx";
-        String entityId = "123465";
-        int amount = 10000;
-    }
-
-    static class SubContext extends Context{
-        String text = "subContext";
-    }
-
     @Test
     public void testNormal() {
-        StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.transition()
-                .from(States.STATE1)
-                .on(Events.EVENT1)
-                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
-                .perform(3,context -> context.amount > 5000,context -> States.STATE3)
-                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
+        StateMachineBuilder<StateEnum, EventEnum, TestStateContext> builder = StateMachineBuilder.init();
+        builder.state()
+                .from(StateEnum.STATE1)
+                .on(EventEnum.EVENT1)
+                .perform(1, ctx -> ctx.getAge() > 200, ctx -> StateEnum.STATE2)
+                .perform(3, ctx -> ctx.getAge() > 50, ctx -> StateEnum.STATE3)
+                .perform(2, ctx -> ctx.getAge() > 30, ctx -> StateEnum.STATE4);
 
-        StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID);
-        States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, new SubContext());
-        Assert.assertEquals(States.STATE4, target);
+        StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = builder.build(MACHINE_ID);
+        StateEnum target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT1, new TestStateContext(60));
+        Assert.assertEquals(StateEnum.STATE4, target);
     }
 
     @Test
-    public void testExternalTransitionsNormal() {
-        StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.transitions()
-                .fromAmong(States.STATE1, States.STATE2, States.STATE3)
-                .on(Events.EVENT1)
-                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
-                .perform(3, context -> context.amount > 5000, context -> States.STATE3)
-                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
+    public void testConditionProcessorNormal() {
+        StateMachineBuilder<StateEnum, EventEnum, TestStateContext> builder = StateMachineBuilder.init();
+        builder.states()
+                .fromAmong(StateEnum.STATE1, StateEnum.STATE2, StateEnum.STATE3)
+                .on(EventEnum.EVENT1)
+                .perform(1, ctx -> ctx.getAge() > 200, ctx -> StateEnum.STATE2)
+                .perform(3, ctx -> ctx.getAge() > 50, ctx -> StateEnum.STATE3)
+                .perform(2, ctx -> ctx.getAge() > 30, ctx -> StateEnum.STATE4);
 
-        StateMachine<States, Events, Context> stateMachine = builder.build(MACHINE_ID + "1");
-        States target = stateMachine.fireEvent(States.STATE2, Events.EVENT1, new Context());
-        Assert.assertEquals(States.STATE4, target);
+        StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = builder.build(MACHINE_ID + "1");
+        StateEnum target1 = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT1, new TestStateContext(60));
+        Assert.assertEquals(StateEnum.STATE4, target1);
+
+        StateEnum target2 = stateMachine.fireEvent(StateEnum.STATE2, EventEnum.EVENT1, new TestStateContext(60));
+        Assert.assertEquals(StateEnum.STATE4, target2);
+
+        StateEnum target3 = stateMachine.fireEvent(StateEnum.STATE3, EventEnum.EVENT1, new TestStateContext(60));
+        Assert.assertEquals(StateEnum.STATE4, target3);
     }
 
     @Test
-    public void testExternalInternalNormal(){
-        StateMachine<States, Events, Context> stateMachine = buildStateMachine("testExternalInternalNormal");
+    public void testMixedProcessorNormal() {
+        StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = buildStateMachine("testExternalInternalNormal");
 
-        Context context = new Context();
-        States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, context);
-        Assert.assertEquals(States.STATE4, target);
-        target = stateMachine.fireEvent(States.STATE2, Events.EVENT2, context);
-        Assert.assertEquals(States.STATE2, target);
-        target = stateMachine.fireEvent(States.STATE1, Events.EVENT3, context);
-        Assert.assertEquals(States.STATE3, target);
+        TestStateContext context = new TestStateContext(60);
+        StateEnum target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT1, context);
+        Assert.assertEquals(StateEnum.STATE4, target);
+        target = stateMachine.fireEvent(StateEnum.STATE2, EventEnum.EVENT2, context);
+        Assert.assertEquals(StateEnum.STATE2, target);
+        target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, context);
+        Assert.assertEquals(StateEnum.STATE3, target);
     }
 
-    private StateMachine<States, Events, Context> buildStateMachine(String machineId) {
-        StateMachineBuilder<States, Events, Context> builder = StateMachineBuilder.init();
-        builder.transition()
-                .from(States.STATE1)
-                .on(Events.EVENT1)
-                .perform(1, ctx -> ctx.amount > 10000, ctx -> States.STATE2)
-                .perform(3,context -> context.amount > 5000,context -> States.STATE3)
-                .perform(2, ctx -> ctx.amount > 3000, ctx -> States.STATE4);
+    private StateMachine<StateEnum, EventEnum, TestStateContext> buildStateMachine(String machineId) {
+        StateMachineBuilder<StateEnum, EventEnum, TestStateContext> builder = StateMachineBuilder.init();
+        builder.state()
+                .from(StateEnum.STATE1)
+                .on(EventEnum.EVENT1)
+                .perform(1, ctx -> ctx.getAge() > 200, ctx -> StateEnum.STATE2)
+                .perform(3, ctx -> ctx.getAge() > 50, ctx -> StateEnum.STATE3)
+                .perform(2, ctx -> ctx.getAge() > 30, ctx -> StateEnum.STATE4);
 
-        builder.transition()
-                .from(States.STATE2)
-                .on(Events.EVENT2)
-                .perform(ctx -> States.STATE2);
+        builder.state()
+                .from(StateEnum.STATE2)
+                .on(EventEnum.EVENT2)
+                .perform(ctx -> StateEnum.STATE2);
 
-        builder.transition()
-                .from(States.STATE1)
-                .on(Events.EVENT3)
-                .perform(ctx -> States.STATE3);
+        builder.state()
+                .from(StateEnum.STATE1)
+                .on(EventEnum.EVENT3)
+                .perform(ctx -> StateEnum.STATE3);
 
         builder.build(machineId);
 
-        StateMachine<States, Events, Context> stateMachine = StateMachineFactory.get(machineId);
-        System.out.println(stateMachine.generateUML());
+        StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = StateMachineFactory.get(machineId);
         return stateMachine;
     }
 
     @Test
-    public void testMultiThread(){
+    public void testMultiThread() throws InterruptedException {
         buildStateMachine("testMultiThread");
+        CountDownLatch cdh = new CountDownLatch(20);
 
-        for(int i=0 ; i<10 ; i++){
-            Thread thread = new Thread(()->{
-                StateMachine<States, Events, Context> stateMachine = StateMachineFactory.get("testMultiThread");
-                States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, new Context());
-                Assert.assertEquals(States.STATE4, target);
-            });
-            thread.start();
-        }
-
-        for(int i=0 ; i<10 ; i++) {
+        for (int i = 0; i < 10; i++) {
             Thread thread = new Thread(() -> {
-                StateMachine<States, Events, Context> stateMachine = StateMachineFactory.get("testMultiThread");
-                States target = stateMachine.fireEvent(States.STATE1, Events.EVENT3, new Context());
-                Assert.assertEquals(States.STATE3, target);
+                try {
+                    Thread.sleep(ThreadLocalRandom.current().nextInt(1000));
+                } catch (InterruptedException ignore) {
+                }
+                StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = StateMachineFactory.get("testMultiThread");
+                StateEnum target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT1, new TestStateContext(60));
+                Assert.assertEquals(StateEnum.STATE4, target);
+                System.out.println("case 1 :" + target.getName() + ",threadName:" + Thread.currentThread().getName());
+                cdh.countDown();
             });
             thread.start();
         }
 
+        for (int i = 0; i < 10; i++) {
+            Thread thread = new Thread(() -> {
+                try {
+                    Thread.sleep(ThreadLocalRandom.current().nextInt(500));
+                } catch (InterruptedException ignore) {
+                }
+                StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = StateMachineFactory.get("testMultiThread");
+                StateEnum target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, new TestStateContext(60));
+                Assert.assertEquals(StateEnum.STATE3, target);
+                System.out.println("case 2 :" + target.getName() + ",threadName:" + Thread.currentThread().getName());
+                cdh.countDown();
+            });
+            thread.start();
+        }
+        cdh.await();
     }
 }

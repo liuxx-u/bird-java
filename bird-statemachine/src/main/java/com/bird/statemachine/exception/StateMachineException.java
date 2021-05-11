@@ -1,10 +1,11 @@
-package com.bird.statemachine;
+package com.bird.statemachine.exception;
 
 /**
  * @author liuxx
- * @since 2020/8/6
+ * @since 2021/5/7
  */
 public class StateMachineException extends RuntimeException{
+
     public StateMachineException(String message){
         super(message);
     }
