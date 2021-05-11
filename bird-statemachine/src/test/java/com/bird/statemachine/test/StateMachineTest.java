@@ -9,7 +9,6 @@ import com.bird.statemachine.test.pojo.TestStateContext;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -66,6 +65,12 @@ public class StateMachineTest {
         Assert.assertEquals(StateEnum.STATE4, target);
         target = stateMachine.fireEvent(StateEnum.STATE2, EventEnum.EVENT2, context);
         Assert.assertEquals(StateEnum.STATE2, target);
+
+        context.setSex("female");
+        target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, context);
+        Assert.assertEquals(StateEnum.STATE5, target);
+
+        context.setSex("male");
         target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, context);
         Assert.assertEquals(StateEnum.STATE3, target);
     }
@@ -87,7 +92,14 @@ public class StateMachineTest {
         builder.state()
                 .from(StateEnum.STATE1)
                 .on(EventEnum.EVENT3)
-                .perform(ctx -> StateEnum.STATE3);
+                .perform("male", ctx -> {
+                    System.out.println("threadName:" + Thread.currentThread().getName() + ", male do it");
+                    return StateEnum.STATE3;
+                })
+                .perform("female", ctx -> {
+                    System.out.println("threadName:" + Thread.currentThread().getName() + ", female do it");
+                    return StateEnum.STATE5;
+                });
 
         builder.build(machineId);
 
@@ -107,9 +119,19 @@ public class StateMachineTest {
                 } catch (InterruptedException ignore) {
                 }
                 StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = StateMachineFactory.get("testMultiThread");
-                StateEnum target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT1, new TestStateContext(60));
+                TestStateContext context = new TestStateContext(60);
+
+                StateEnum target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT1, context);
                 Assert.assertEquals(StateEnum.STATE4, target);
                 System.out.println("case 1 :" + target.getName() + ",threadName:" + Thread.currentThread().getName());
+
+                context.setSex("female");
+                target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, context);
+                Assert.assertEquals(StateEnum.STATE5, target);
+
+                context.setSex("male");
+                target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, context);
+                Assert.assertEquals(StateEnum.STATE3, target);
                 cdh.countDown();
             });
             thread.start();
@@ -122,9 +144,19 @@ public class StateMachineTest {
                 } catch (InterruptedException ignore) {
                 }
                 StateMachine<StateEnum, EventEnum, TestStateContext> stateMachine = StateMachineFactory.get("testMultiThread");
-                StateEnum target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, new TestStateContext(60));
-                Assert.assertEquals(StateEnum.STATE3, target);
+                TestStateContext context = new TestStateContext(60);
+
+                StateEnum target = stateMachine.fireEvent(StateEnum.STATE2, EventEnum.EVENT2, context);
+                Assert.assertEquals(StateEnum.STATE2, target);
                 System.out.println("case 2 :" + target.getName() + ",threadName:" + Thread.currentThread().getName());
+
+                context.setSex("female");
+                target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, context);
+                Assert.assertEquals(StateEnum.STATE5, target);
+
+                context.setSex("male");
+                target = stateMachine.fireEvent(StateEnum.STATE1, EventEnum.EVENT3, context);
+                Assert.assertEquals(StateEnum.STATE3, target);
                 cdh.countDown();
             });
             thread.start();

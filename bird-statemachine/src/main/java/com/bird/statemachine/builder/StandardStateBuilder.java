@@ -5,9 +5,11 @@ import com.bird.statemachine.State;
 import com.bird.statemachine.StateContext;
 import com.bird.statemachine.StateProcessor;
 import com.bird.statemachine.condition.ConditionalStateProcessorCluster;
-import com.bird.statemachine.condition.LambdaConditionStateProcessor;
+import com.bird.statemachine.condition.DefaultConditionStateProcessor;
 import com.bird.statemachine.exception.StateMachineException;
 import com.bird.statemachine.factory.StandardState;
+import com.bird.statemachine.scene.DefaultSceneStateProcessor;
+import com.bird.statemachine.scene.SceneStateProcessorCluster;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +54,12 @@ public class StandardStateBuilder<S extends State, E extends Event, C extends St
         return this;
     }
 
+    @Override
+    public synchronized When<S, C> perform(String sceneId, StateProcessor<S, C> processor) {
+        this.performSceneProcessor(this.source, sceneId, processor);
+        return this;
+    }
+
     protected void performProcessor(StandardState<S, E, C> sourceState, StateProcessor<S, C> processor) {
         sourceState.setProcessor(this.event, processor);
     }
@@ -75,6 +83,27 @@ public class StandardStateBuilder<S extends State, E extends Event, C extends St
             throw new StateMachineException(event + " already exist, you can not add another one");
         }
 
-        conditionalProcessorCluster.addCondition(new LambdaConditionStateProcessor<>(priority, condition, processor));
+        conditionalProcessorCluster.addCondition(new DefaultConditionStateProcessor<>(priority, condition, processor));
+    }
+
+    protected void performSceneProcessor(StandardState<S, E, C> sourceState, String sceneId, StateProcessor<S, C> processor) {
+        if (this.event == null) {
+            throw new StateMachineException("current event is null, please call method [on] before.");
+        }
+        if (processor == null) {
+            throw new StateMachineException("perform processor can`t be null");
+        }
+
+        SceneStateProcessorCluster<S, C> sceneProcessorCluster;
+        StateProcessor<S, C> stateProcessor = sourceState.obtainProcessor(this.event);
+        if (stateProcessor == null) {
+            sceneProcessorCluster = new SceneStateProcessorCluster<>();
+            sourceState.setProcessor(this.event, sceneProcessorCluster);
+        } else if (stateProcessor instanceof SceneStateProcessorCluster) {
+            sceneProcessorCluster = (SceneStateProcessorCluster<S, C>) stateProcessor;
+        } else {
+            throw new StateMachineException(event + " already exist, you can not add another one");
+        }
+        sceneProcessorCluster.addScene(new DefaultSceneStateProcessor<>(sceneId, processor));
     }
 }

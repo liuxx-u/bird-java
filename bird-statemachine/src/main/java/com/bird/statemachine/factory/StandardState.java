@@ -57,7 +57,7 @@ public class StandardState<S extends State,E extends Event,C extends StateContex
             throw new StateMachineException("processor can`t be null");
         }
         if (this.eventMap.containsKey(event)) {
-            throw new StateMachineException(event + " already Exist, you can not add another one");
+            throw new StateMachineException(event + " already exist, you can not add another one");
         }
         this.eventMap.put(event, processor);
     }

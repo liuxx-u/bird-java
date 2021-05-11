@@ -15,7 +15,8 @@ public enum StateEnum implements State {
     STATE1("1"),
     STATE2("2"),
     STATE3("3"),
-    STATE4("4");
+    STATE4("4"),
+    STATE5("5");
 
     private final String name;
 }

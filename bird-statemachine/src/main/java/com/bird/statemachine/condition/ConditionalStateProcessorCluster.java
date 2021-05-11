@@ -16,15 +16,16 @@ public class ConditionalStateProcessorCluster<S extends State,C extends StateCon
 
     private final List<ConditionalStateProcessor<S, C>> processors;
 
-    public ConditionalStateProcessorCluster(){
+    public ConditionalStateProcessorCluster() {
         this.processors = new ArrayList<>();
     }
 
     /**
      * add conditional state processor
+     *
      * @param processor {@link ConditionalStateProcessor}
      */
-    public void addCondition(ConditionalStateProcessor<S, C> processor){
+    public void addCondition(ConditionalStateProcessor<S, C> processor) {
         this.processors.add(processor);
         this.processors.sort(Comparator.comparingInt(ConditionalStateProcessor::getPriority));
     }

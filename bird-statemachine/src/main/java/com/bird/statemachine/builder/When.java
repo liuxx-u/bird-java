@@ -16,7 +16,7 @@ public interface When<S extends State, C extends StateContext> {
     /**
      * Define action to be performed during transition without condition
      *
-     * @param processor performed state processor
+     * @param processor processor to be performed
      * @return When
      */
     When<S, C> perform(StateProcessor<S, C> processor);
@@ -24,21 +24,30 @@ public interface When<S extends State, C extends StateContext> {
     /**
      * Define action to be performed during transition with lowest priority
      *
-     * @param condition condition
-     * @param processor    performed processor
+     * @param condition the condition of processor
+     * @param processor processor to be performed
      * @return When
      */
-    default When<S, C> perform(Function<C, Boolean> condition, StateProcessor<S,C> processor) {
+    default When<S, C> perform(Function<C, Boolean> condition, StateProcessor<S, C> processor) {
         return perform(ConditionalStateProcessor.LOWEST_PRECEDENCE, condition, processor);
     }
 
     /**
      * Define action to be performed during transition
      *
-     * @param priority  performed priority
-     * @param condition performed condition
-     * @param processor    performed processor
+     * @param priority  the priority of processor
+     * @param condition the condition of processor
+     * @param processor processor to be performed
      * @return When
      */
-    When<S, C> perform(int priority, Function<C, Boolean> condition, StateProcessor<S,C> processor);
+    When<S, C> perform(int priority, Function<C, Boolean> condition, StateProcessor<S, C> processor);
+
+    /**
+     * Define action to be performed in different scene
+     *
+     * @param sceneId   scene id
+     * @param processor processor to be performed
+     * @return When
+     */
+    When<S, C> perform(String sceneId, StateProcessor<S, C> processor);
 }

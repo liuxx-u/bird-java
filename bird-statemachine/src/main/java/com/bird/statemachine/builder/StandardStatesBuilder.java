@@ -42,4 +42,10 @@ public class StandardStatesBuilder<S extends State, E extends Event, C extends S
         this.sources.forEach(state -> super.performConditionProcessor(state, priority, condition, processor));
         return this;
     }
+
+    @Override
+    public synchronized When<S, C> perform(String sceneId, StateProcessor<S, C> processor) {
+        this.sources.forEach(state -> super.performSceneProcessor(state, sceneId, processor));
+        return this;
+    }
 }

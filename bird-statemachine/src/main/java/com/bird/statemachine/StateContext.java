@@ -6,12 +6,14 @@ package com.bird.statemachine;
  */
 public interface StateContext {
 
+    final static String DEFAULT_SCENE = "DEFAULT";
+
     /**
      * scene
      *
      * @return scene id
      */
-    default String getSceneId(){
-        return "DEFAULT";
+    default String getSceneId() {
+        return DEFAULT_SCENE;
     }
 }

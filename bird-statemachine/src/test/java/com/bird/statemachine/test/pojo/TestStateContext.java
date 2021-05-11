@@ -16,9 +16,16 @@ public class TestStateContext implements StateContext {
 
     private String name;
 
+    private String sex = "female";
+
     public TestStateContext(){}
 
     public TestStateContext(Integer age){
         this.age = age;
+    }
+
+    @Override
+    public String getSceneId() {
+        return this.sex;
     }
 }
