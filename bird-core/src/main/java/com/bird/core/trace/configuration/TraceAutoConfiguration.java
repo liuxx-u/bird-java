@@ -1,7 +1,6 @@
 package com.bird.core.trace.configuration;
 
 import com.bird.core.CoreAutoConfiguration;
-import com.bird.core.json.JsonSerializer;
 import com.bird.core.trace.TraceableAspect;
 import com.bird.core.trace.dispatch.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +25,8 @@ public class TraceAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean({ITraceLogStore.class, ITraceLogDispatcher.class})
-    public ITraceLogStore traceLogStore(JsonSerializer jsonSerializer) {
-        return new NullTraceLogStore(jsonSerializer);
+    public ITraceLogStore traceLogStore() {
+        return new NullTraceLogStore();
     }
 
     @Bean
