@@ -10,7 +10,7 @@ import com.bird.statemachine.StateContext;
  * @author liuxx
  * @since 2021/5/7
  */
-public interface StateMachine<S extends State,E extends Event,C extends StateContext> {
+public interface StateMachine<C extends StateContext> {
 
     /**
      * get machine id
@@ -29,10 +29,22 @@ public interface StateMachine<S extends State,E extends Event,C extends StateCon
     /**
      * fire state event
      *
+     * @param stateName  source state name
+     * @param eventName    event name
+     * @param stateContext state context
+     * @return target state name
+     */
+    String fireEvent(String stateName, String eventName, C stateContext);
+
+    /**
+     * fire state event
+     *
      * @param sourceState  source state
      * @param event        event
      * @param stateContext state context
      * @return target state
      */
-    S fireEvent(S sourceState, E event, C stateContext);
+    default String fireEvent(State sourceState, Event event, C stateContext) {
+        return this.fireEvent(sourceState.getName(), event.getName(), stateContext);
+    }
 }

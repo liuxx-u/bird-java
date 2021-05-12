@@ -15,25 +15,25 @@ public class StateMachineUnNormalTest {
 
     @Test(expected = StateMachineException.class)
     public void testDuplicatedEvent() {
-        StateMachineBuilder<StateEnum, EventEnum, TestStateContext> builder = StateMachineBuilder.init();
+        StateMachineBuilder<TestStateContext> builder = StateMachineBuilder.init();
         builder.state()
                 .from(StateEnum.STATE1)
                 .on(EventEnum.EVENT1)
-                .perform(ctx->StateEnum.STATE2);
+                .perform(ctx->StateEnum.STATE2.getName());
 
         builder.state()
                 .from(StateEnum.STATE1)
                 .on(EventEnum.EVENT1)
-                .perform(ctx->StateEnum.STATE2);
+                .perform(ctx->StateEnum.STATE2.getName());
     }
 
     @Test(expected = StateMachineException.class)
     public void testDuplicateMachine() {
-        StateMachineBuilder<StateEnum, EventEnum, TestStateContext> builder = StateMachineBuilder.init();
+        StateMachineBuilder<TestStateContext> builder = StateMachineBuilder.init();
         builder.state()
                 .from(StateEnum.STATE1)
                 .on(EventEnum.EVENT1)
-                .perform(ctx->StateEnum.STATE2);
+                .perform(ctx->StateEnum.STATE2.getName());
 
         builder.build("DuplicatedMachine");
         builder.build("DuplicatedMachine");

@@ -1,6 +1,5 @@
 package com.bird.statemachine.condition;
 
-import com.bird.statemachine.State;
 import com.bird.statemachine.StateContext;
 import com.bird.statemachine.StateProcessor;
 
@@ -12,9 +11,9 @@ import java.util.List;
  * @author liuxx
  * @since 2021/5/7
  */
-public class ConditionalStateProcessorCluster<S extends State,C extends StateContext> implements StateProcessor<S,C> {
+public class ConditionalStateProcessorCluster<C extends StateContext> implements StateProcessor<C> {
 
-    private final List<ConditionalStateProcessor<S, C>> processors;
+    private final List<ConditionalStateProcessor<C>> processors;
 
     public ConditionalStateProcessorCluster() {
         this.processors = new ArrayList<>();
@@ -25,14 +24,14 @@ public class ConditionalStateProcessorCluster<S extends State,C extends StateCon
      *
      * @param processor {@link ConditionalStateProcessor}
      */
-    public void addCondition(ConditionalStateProcessor<S, C> processor) {
+    public void addCondition(ConditionalStateProcessor<C> processor) {
         this.processors.add(processor);
         this.processors.sort(Comparator.comparingInt(ConditionalStateProcessor::getPriority));
     }
 
     @Override
-    public S action(C context) {
-        for (ConditionalStateProcessor<S, C> processor : processors) {
+    public String action(C context) {
+        for (ConditionalStateProcessor<C> processor : processors) {
             if (processor.judge(context)) {
                 return processor.action(context);
             }

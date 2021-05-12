@@ -5,7 +5,7 @@ package com.bird.statemachine;
  * @since 2021/5/7
  */
 @FunctionalInterface
-public interface StateProcessor<S extends State,C extends StateContext> {
+public interface StateProcessor<C extends StateContext> {
 
     /**
      * execute state action
@@ -13,5 +13,5 @@ public interface StateProcessor<S extends State,C extends StateContext> {
      * @param context state context
      * @return  result state
      */
-    S action(C context);
+    String action(C context);
 }

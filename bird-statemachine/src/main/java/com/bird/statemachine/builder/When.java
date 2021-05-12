@@ -1,6 +1,5 @@
 package com.bird.statemachine.builder;
 
-import com.bird.statemachine.State;
 import com.bird.statemachine.StateContext;
 import com.bird.statemachine.StateProcessor;
 import com.bird.statemachine.condition.ConditionalStateProcessor;
@@ -11,7 +10,7 @@ import java.util.function.Function;
  * @author liuxx
  * @since 2021/5/10
  */
-public interface When<S extends State, C extends StateContext> {
+public interface When<C extends StateContext> {
 
     /**
      * Define action to be performed during transition without condition
@@ -19,7 +18,7 @@ public interface When<S extends State, C extends StateContext> {
      * @param processor processor to be performed
      * @return When
      */
-    When<S, C> perform(StateProcessor<S, C> processor);
+    When<C> perform(StateProcessor<C> processor);
 
     /**
      * Define action to be performed during transition with lowest priority
@@ -28,7 +27,7 @@ public interface When<S extends State, C extends StateContext> {
      * @param processor processor to be performed
      * @return When
      */
-    default When<S, C> perform(Function<C, Boolean> condition, StateProcessor<S, C> processor) {
+    default When<C> perform(Function<C, Boolean> condition, StateProcessor<C> processor) {
         return perform(ConditionalStateProcessor.LOWEST_PRECEDENCE, condition, processor);
     }
 
@@ -40,7 +39,7 @@ public interface When<S extends State, C extends StateContext> {
      * @param processor processor to be performed
      * @return When
      */
-    When<S, C> perform(int priority, Function<C, Boolean> condition, StateProcessor<S, C> processor);
+    When<C> perform(int priority, Function<C, Boolean> condition, StateProcessor<C> processor);
 
     /**
      * Define action to be performed in different scene
@@ -49,5 +48,5 @@ public interface When<S extends State, C extends StateContext> {
      * @param processor processor to be performed
      * @return When
      */
-    When<S, C> perform(String sceneId, StateProcessor<S, C> processor);
+    When<C> perform(String sceneId, StateProcessor<C> processor);
 }

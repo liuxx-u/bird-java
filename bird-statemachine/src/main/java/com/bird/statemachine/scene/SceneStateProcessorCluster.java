@@ -1,6 +1,5 @@
 package com.bird.statemachine.scene;
 
-import com.bird.statemachine.State;
 import com.bird.statemachine.StateContext;
 import com.bird.statemachine.StateProcessor;
 import com.bird.statemachine.condition.ConditionalStateProcessor;
@@ -14,9 +13,9 @@ import java.util.Map;
  * @author liuxx
  * @since 2021/5/11
  */
-public class SceneStateProcessorCluster <S extends State,C extends StateContext> implements StateProcessor<S,C> {
+public class SceneStateProcessorCluster <C extends StateContext> implements StateProcessor<C> {
 
-    private final Map<String, SceneStateProcessor<S, C>> sceneProcessorMap;
+    private final Map<String, SceneStateProcessor<C>> sceneProcessorMap;
 
     public SceneStateProcessorCluster() {
         sceneProcessorMap = new HashMap<>();
@@ -27,7 +26,7 @@ public class SceneStateProcessorCluster <S extends State,C extends StateContext>
      *
      * @param processor {@link ConditionalStateProcessor}
      */
-    public void addScene(SceneStateProcessor<S, C> processor) {
+    public void addScene(SceneStateProcessor<C> processor) {
         if (processor == null) {
             throw new StateMachineException("scene processor can not be null.");
         }
@@ -43,13 +42,13 @@ public class SceneStateProcessorCluster <S extends State,C extends StateContext>
     }
 
     @Override
-    public S action(C context) {
+    public String action(C context) {
         String sceneId = context.getSceneId();
         if (StringUtils.isEmpty(sceneId)) {
             sceneId = StateContext.DEFAULT_SCENE;
         }
 
-        SceneStateProcessor<S, C> stateProcessor = sceneProcessorMap.get(sceneId);
+        SceneStateProcessor<C> stateProcessor = sceneProcessorMap.get(sceneId);
         if (stateProcessor == null) {
             throw new StateMachineException("scene processor[" + sceneId + "] is null, exit.");
         }
