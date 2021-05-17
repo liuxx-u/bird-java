@@ -23,7 +23,7 @@ bird-java提供了一些简单的功能特性，包括：
  4. [执行链路追踪 - Trace；](https://www.yuque.com/docs/share/24986ccd-0153-46ec-9720-6ea03ded7edb)
  5. [SSO使用指南；](https://www.yuque.com/docs/share/e9f0720a-c18a-4c26-88f6-0c3be6b99cb5)
  6. [文件上传；](https://www.yuque.com/docs/share/7bce3f28-fe1c-4f29-889e-d1dc9056be73)
- 7. [状态机使用指南；](https://www.yuque.com/docs/share/7bce3f28-fe1c-4f29-889e-d1dc9056be73)
+ 7. [状态机使用指南；](https://www.yuque.com/docs/share/4373d6b9-bd3f-49b9-93d9-d2f0f74acfbc)
  8. [Eventbus使用指南；](https://www.yuque.com/docs/share/3ddd2558-b6ea-4d55-b8cc-aa60cdd2d1ef)
  9. [分布式锁使用指南;](https://www.yuque.com/docs/share/904b1677-9308-40cc-af38-b32586eb093a)
  
