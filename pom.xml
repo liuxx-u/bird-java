@@ -30,19 +30,15 @@
 
         <!-- 版本号 -->
         <bird.version>2.1.0-SNAPSHOT</bird.version>
-        <spring.version>5.2.6.RELEASE</spring.version>
-        <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
+        <spring.version>5.3.10.RELEASE</spring.version>
+        <spring-boot.version>2.5.5</spring-boot.version>
 
-        <javax.version>3.1.0</javax.version>
-        <spring-kafka.version>2.5.8.RELEASE</spring-kafka.version>
-        <mybatisplus.version>3.4.2</mybatisplus.version>
-        <mysql-connector.version>8.0.21</mysql-connector.version>
+        <mybatisplus.version>3.4.3.1</mybatisplus.version>
         <druid.version>1.1.22</druid.version>
         <fastjson.version>1.2.76</fastjson.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
-        <aspectj.version>1.8.13</aspectj.version>
     </properties>
 
     <dependencies>
@@ -82,6 +78,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.bird</groupId>
+                <artifactId>bird-dependencies</artifactId>
+                <version>${bird.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

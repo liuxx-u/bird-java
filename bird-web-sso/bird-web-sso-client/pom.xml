@@ -15,17 +15,14 @@
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-core</artifactId>
-            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-web-sso-core</artifactId>
-            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

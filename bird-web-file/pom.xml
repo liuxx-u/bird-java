@@ -15,7 +15,6 @@
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-core</artifactId>
-            <version>${bird.version}</version>
         </dependency>
         <!-- 添加spring-boot自动化配置依赖 -->
         <dependency>

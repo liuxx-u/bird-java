@@ -15,13 +15,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
-            <version>${spring-boot.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-web-sso-client</artifactId>
-            <version>${bird.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>

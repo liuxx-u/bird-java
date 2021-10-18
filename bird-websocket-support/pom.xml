@@ -16,12 +16,10 @@
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-core</artifactId>
-            <version>${bird.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bird</groupId>
             <artifactId>bird-web-sso-client</artifactId>
-            <version>${bird.version}</version>
             <scope>provided</scope>
         </dependency>
 
