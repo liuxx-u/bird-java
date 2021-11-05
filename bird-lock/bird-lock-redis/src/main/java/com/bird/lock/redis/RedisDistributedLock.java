@@ -3,9 +3,11 @@ package com.bird.lock.redis;
 import com.bird.lock.AbstractDistributedLock;
 import com.bird.lock.redis.configuration.RedisLockProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
+import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,15 +59,10 @@ public class RedisDistributedLock  extends AbstractDistributedLock {
     @Override
     public boolean releaseLock(String lockKey, String lockValue) {
         String key = this.redisLockProperties.getKeyPrefix() + lockKey;
-        // 获取锁的值
-        String value = redisTemplate.opsForValue().get(key);
-        if (StringUtils.equals(value, lockValue)) {
-            // 如果值匹配, 释放锁
-            //TODO：如果此时锁过期并被其他线程获取到锁，会出现误解锁
-            return redisTemplate.delete(key);
-        }
-        // 值不匹配, 可能是锁过期被其他人获取了, 此时不允许删除其他人获取的锁
-        log.warn("release lock failed, key:{}, current value {} does't match lock value {}", key, lockValue, value);
-        return false;
+
+        String lua = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+        DefaultRedisScript<Integer> redisScript = new DefaultRedisScript<>(lua, Integer.class);
+        Integer result = redisTemplate.execute(redisScript, Collections.singletonList(key), lockValue);
+        return Objects.equals(result, 1);
     }
 }
