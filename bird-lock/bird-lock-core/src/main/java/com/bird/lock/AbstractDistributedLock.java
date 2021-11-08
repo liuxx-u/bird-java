@@ -1,10 +1,11 @@
 package com.bird.lock;
 
 import com.bird.lock.context.LockThreadContext;
+import com.bird.lock.exception.DistributedLockException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.UUID;
 
 /**
  * @author liuxx
@@ -16,19 +17,18 @@ public abstract class AbstractDistributedLock implements IDistributedLock {
     @Override
     public boolean tryLock(String lockKey, long keyExpire, long retryInterval, long retryExpire) {
         if (StringUtils.isBlank(lockKey)) {
-            throw new RuntimeException("lock key cannot be empty");
+            throw new DistributedLockException("lock key cannot be empty");
         }
 
         if (LockThreadContext.reentry(lockKey)) {
             return true;
         }
 
-        long start = System.currentTimeMillis();
         // 生成一个随机字符串, 用于加锁
-        String lockValue = start + "-" + ThreadLocalRandom.current().nextInt(100, 999);
+        String lockValue = UUID.randomUUID().toString();
 
-        long current = start;
-        long end = start + retryExpire;
+        long current = System.currentTimeMillis();
+        long end = current + retryExpire;
         do {
             if (this.tryLock(lockKey, lockValue, keyExpire)) {
                 LockThreadContext.initialize(lockKey, lockValue);
@@ -39,6 +39,7 @@ public abstract class AbstractDistributedLock implements IDistributedLock {
                 Thread.sleep(retryInterval);
             } catch (InterruptedException e) {
                 log.warn("获取锁异常，线程中断", e);
+                Thread.currentThread().interrupt();
             }
         } while (current <= end);
 

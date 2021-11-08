@@ -4,6 +4,9 @@
 # IDEA file
 .idea/
 
+# mac file
+.DS_Store
+
 # spring boot file
 .mvn/
 
