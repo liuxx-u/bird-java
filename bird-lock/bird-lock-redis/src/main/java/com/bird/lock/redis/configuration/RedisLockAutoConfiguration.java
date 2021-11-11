@@ -5,6 +5,7 @@ import com.bird.lock.configuration.DistributeLockAutoConfiguration;
 import com.bird.lock.redis.RedisDistributedLock;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,9 +19,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * @since 2020/10/26
  */
 @Configuration
-@ConditionalOnProperty(value = "spring.redis.host")
 @EnableConfigurationProperties(RedisLockProperties.class)
-@ConditionalOnClass(name = "org.springframework.data.redis.core.RedisTemplate")
+@ConditionalOnBean(value = StringRedisTemplate.class)
 @AutoConfigureBefore(DistributeLockAutoConfiguration.class)
 @AutoConfigureAfter(name = "org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration")
 public class RedisLockAutoConfiguration {
