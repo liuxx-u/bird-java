@@ -2,6 +2,7 @@ package com.bird.lock.redis;
 
 import com.bird.lock.AbstractDistributedLock;
 import com.bird.lock.redis.configuration.RedisLockProperties;
+import com.bird.lock.redis.watchdog.RedisLockWatchDog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -19,10 +20,12 @@ public class RedisDistributedLock  extends AbstractDistributedLock {
 
     private final StringRedisTemplate redisTemplate;
     private final RedisLockProperties redisLockProperties;
+    private final RedisLockWatchDog watchDog;
 
-    public RedisDistributedLock(StringRedisTemplate redisTemplate, RedisLockProperties redisLockProperties) {
+    public RedisDistributedLock(StringRedisTemplate redisTemplate, RedisLockProperties redisLockProperties, RedisLockWatchDog watchDog) {
         this.redisTemplate = redisTemplate;
         this.redisLockProperties = redisLockProperties;
+        this.watchDog = watchDog;
     }
 
     @Override
@@ -53,11 +56,19 @@ public class RedisDistributedLock  extends AbstractDistributedLock {
     @Override
     public boolean tryLock(String lockKey, String lockValue, long expire) {
         // 尝试加锁
-        return redisTemplate.opsForValue().setIfAbsent(this.redisLockProperties.getKeyPrefix() + lockKey, lockValue, expire, TimeUnit.MILLISECONDS);
+        boolean isSuccess = redisTemplate.opsForValue().setIfAbsent(this.redisLockProperties.getKeyPrefix() + lockKey, lockValue, expire, TimeUnit.MILLISECONDS);
+        if (isSuccess && this.watchDog != null) {
+            this.watchDog.addWatch(Thread.currentThread().getId(), lockKey, expire);
+        }
+        return isSuccess;
     }
 
     @Override
     public boolean releaseLock(String lockKey, String lockValue) {
+        if (this.watchDog != null) {
+            this.watchDog.removeWatch(Thread.currentThread().getId(), lockKey);
+        }
+
         String key = this.redisLockProperties.getKeyPrefix() + lockKey;
 
         String lua = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
