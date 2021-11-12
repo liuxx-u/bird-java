@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2020/10/26
  */
 @Slf4j
-public class RedisDistributedLock  extends AbstractDistributedLock {
+public class RedisDistributedLock extends AbstractDistributedLock {
 
     private final StringRedisTemplate redisTemplate;
     private final RedisLockProperties redisLockProperties;
