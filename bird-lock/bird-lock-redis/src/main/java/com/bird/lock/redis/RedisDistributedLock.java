@@ -58,7 +58,7 @@ public class RedisDistributedLock extends AbstractDistributedLock {
         // 尝试加锁
         boolean isSuccess = redisTemplate.opsForValue().setIfAbsent(this.redisLockProperties.getKeyPrefix() + lockKey, lockValue, expire, TimeUnit.MILLISECONDS);
         if (isSuccess && this.watchDog != null) {
-            this.watchDog.addWatch(Thread.currentThread().getId(), lockKey, expire);
+            this.watchDog.addWatch(Thread.currentThread().getId(), lockKey, lockValue, expire);
         }
         return isSuccess;
     }
@@ -72,8 +72,9 @@ public class RedisDistributedLock extends AbstractDistributedLock {
         String key = this.redisLockProperties.getKeyPrefix() + lockKey;
 
         String lua = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-        DefaultRedisScript<Integer> redisScript = new DefaultRedisScript<>(lua, Integer.class);
-        Integer result = redisTemplate.execute(redisScript, Collections.singletonList(key), lockValue);
-        return Objects.equals(result, 1);
+        // 这里不能使用Integer接收结果，org.springframework.data.redis.connection.ReturnType中只判断了Long类型
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>(lua, Long.class);
+        Long result = redisTemplate.execute(redisScript, Collections.singletonList(key), lockValue);
+        return Objects.equals(result, 1L);
     }
 }

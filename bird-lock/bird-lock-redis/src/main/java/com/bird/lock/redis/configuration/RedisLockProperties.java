@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  * @since 2020/12/2
  */
 @Data
-@ConfigurationProperties(value = "bird.lock.redis")
+@ConfigurationProperties(prefix = "bird.lock.redis")
 public class RedisLockProperties {
 
     /**
