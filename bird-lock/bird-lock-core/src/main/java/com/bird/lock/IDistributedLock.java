@@ -9,17 +9,17 @@ package com.bird.lock;
 public interface IDistributedLock {
 
     /**
-     * 默认的锁过期时间：1分钟
+     * 默认的锁过期时间：10秒
      */
-    int DEFAULT_KEY_EXPIRE = 60 * 1000;
+    int DEFAULT_KEY_EXPIRE = 10 * 1000;
     /**
      * 默认的重试周期：1秒
      */
     int DEFAULT_RETRY_INTERVAL = 1000;
     /**
-     * 默认的过期时间: 1分钟,
+     * 默认的最长重试时间: 30秒,
      */
-    int DEFAULT_RETRY_EXPIRE = 60 * 1000;
+    int DEFAULT_RETRY_EXPIRE = 30 * 1000;
 
     /**
      * 获取锁

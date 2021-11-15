@@ -4,15 +4,20 @@
       "name": "bird.lock.redis",
       "type": "com.bird.lock.redis.configuration.RedisLockProperties",
       "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties"
+    },
+    {
+      "name": "bird.lock.redis.watchdog",
+      "type": "com.bird.lock.redis.watchdog.WatchdogProperties",
+      "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties"
     }
   ],
   "properties": [
     {
       "name": "bird.lock.redis.key-expire",
       "type": "java.lang.Long",
-      "description": "锁过期时间，默认：1分钟",
+      "description": "锁过期时间，默认：10秒",
       "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
-      "defaultValue": 60000
+      "defaultValue": 10000
     },
     {
       "name": "bird.lock.redis.key-prefix",
@@ -24,9 +29,9 @@
     {
       "name": "bird.lock.redis.retry-expire",
       "type": "java.lang.Long",
-      "description": "tryLock失败时最大重试时间，默认：1分钟",
+      "description": "tryLock失败时最大重试时间，默认：30秒",
       "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
-      "defaultValue": 60000
+      "defaultValue": 30000
     },
     {
       "name": "bird.lock.redis.retry-interval",
@@ -34,6 +39,27 @@
       "description": "获取锁失败时重试周期，默认：1秒",
       "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
       "defaultValue": 1000
+    },
+    {
+      "name": "bird.lock.redis.watchdog.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否开启看门狗，默认：true",
+      "sourceType": "com.bird.lock.redis.watchdog.WatchdogProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "bird.lock.redis.watchdog.pool-size",
+      "type": "java.lang.Integer",
+      "description": "看门狗线程池大小，默认：1",
+      "sourceType": "com.bird.lock.redis.watchdog.WatchdogProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "bird.lock.redis.watchdog.renew-count",
+      "type": "java.lang.Integer",
+      "description": "续期次数，默认：3次 续期机制：锁超时时间达到一半时，开始续期，每次续期后重置有效期，三次续期后有效期总计 = 2.5 * 原有效期",
+      "sourceType": "com.bird.lock.redis.watchdog.WatchdogProperties",
+      "defaultValue": 3
     }
   ],
   "hints": []

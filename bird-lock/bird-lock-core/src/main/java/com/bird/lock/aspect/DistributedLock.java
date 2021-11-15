@@ -21,7 +21,7 @@ public @interface DistributedLock {
     String key();
 
     /**
-     * 锁过期时间，默认：1分钟
+     * 锁过期时间，默认：10秒
      */
     long keyExpire() default IDistributedLock.DEFAULT_KEY_EXPIRE;
 
@@ -31,7 +31,7 @@ public @interface DistributedLock {
     long retryInterval() default IDistributedLock.DEFAULT_RETRY_INTERVAL;
 
     /**
-     * 最长重试时间，默认：1分钟
+     * 最长重试时间，默认：30秒
      */
     long retryExpire() default IDistributedLock.DEFAULT_RETRY_EXPIRE;
 }
