@@ -29,16 +29,16 @@
     {
       "name": "bird.lock.redis.retry-expire",
       "type": "java.lang.Long",
-      "description": "tryLock失败时最大重试时间，默认：30秒",
+      "description": "tryLock失败时最大重试时间，默认：10秒",
       "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
-      "defaultValue": 30000
+      "defaultValue": 10000
     },
     {
       "name": "bird.lock.redis.retry-interval",
       "type": "java.lang.Long",
-      "description": "获取锁失败时重试周期，默认：1秒",
+      "description": "获取锁失败时重试周期，默认：500毫秒",
       "sourceType": "com.bird.lock.redis.configuration.RedisLockProperties",
-      "defaultValue": 1000
+      "defaultValue": 500
     },
     {
       "name": "bird.lock.redis.watchdog.enabled",

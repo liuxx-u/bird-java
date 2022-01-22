@@ -13,18 +13,18 @@ public interface IDistributedLock {
      */
     int DEFAULT_KEY_EXPIRE = 10 * 1000;
     /**
-     * 默认的重试周期：1秒
+     * 默认的重试周期：500毫秒
      */
-    int DEFAULT_RETRY_INTERVAL = 1000;
+    int DEFAULT_RETRY_INTERVAL = 500;
     /**
-     * 默认的最长重试时间: 30秒,
+     * 默认的最长重试时间: 10秒
      */
-    int DEFAULT_RETRY_EXPIRE = 30 * 1000;
+    int DEFAULT_RETRY_EXPIRE = 10 * 1000;
 
     /**
      * 获取锁
      * <p>
-     * 如果锁被其他方持有，一直重试直到获取锁成功，默认重试周期：1秒
+     * 如果锁被其他方持有，一直重试直到获取锁成功，默认重试周期：500毫秒
      *
      * @param lockKey 锁的Key
      */
@@ -35,7 +35,7 @@ public interface IDistributedLock {
     /**
      * 获取锁
      * <p>
-     * 如果锁被其他方持有，一直重试直到获取锁成功，默认重试周期：1秒
+     * 如果锁被其他方持有，一直重试直到获取锁成功，默认重试周期：500毫秒
      *
      * @param lockKey 锁的Key
      * @param keyExpire 锁过期时间
@@ -60,7 +60,7 @@ public interface IDistributedLock {
     /**
      * 尝试获取锁
      *
-     * 如果锁被其他方持有，在一分钟内进行重试，默认重试周期：1秒
+     * 如果锁被其他方持有，在一分钟内进行重试，默认重试周期：500毫秒
      *
      * @param lockKey 锁的Key
      * @return 是否获取成功
@@ -72,7 +72,7 @@ public interface IDistributedLock {
     /**
      * 尝试获取锁
      *
-     * 如果锁被其他方持有，在一分钟内进行重试，默认重试周期：1秒
+     * 如果锁被其他方持有，在一分钟内进行重试，默认重试周期：500毫秒
      *
      * @param lockKey 锁的Key
      * @param keyExpire 锁过期时间
@@ -85,7 +85,7 @@ public interface IDistributedLock {
     /**
      * 尝试获取锁
      *
-     * 如果锁被其他方持有，在指定时间范围内进行重试，默认重试周期：1秒
+     * 如果锁被其他方持有，在指定时间范围内进行重试，默认重试周期：500毫秒
      *
      * @param lockKey 锁的Key
      * @param keyExpire 锁过期时间

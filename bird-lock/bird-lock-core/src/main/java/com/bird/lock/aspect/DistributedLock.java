@@ -26,12 +26,12 @@ public @interface DistributedLock {
     long keyExpire() default IDistributedLock.DEFAULT_KEY_EXPIRE;
 
     /**
-     * 重试周期，默认：1秒
+     * 重试周期，默认：500毫秒
      */
     long retryInterval() default IDistributedLock.DEFAULT_RETRY_INTERVAL;
 
     /**
-     * 最长重试时间，默认：30秒
+     * 最长重试时间，默认：10秒
      */
     long retryExpire() default IDistributedLock.DEFAULT_RETRY_EXPIRE;
 }
