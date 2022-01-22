@@ -9,6 +9,10 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 轨迹信息记录切面
@@ -23,7 +27,7 @@ import java.lang.reflect.Method;
 @Order(Ordered.HIGHEST_PRECEDENCE + 3)
 public class TraceableAspect {
 
-    private final static String ERROR = "error:";
+    private static final String ERROR = "error:";
 
     /**
      * 定义切点 @Pointcut
@@ -31,6 +35,7 @@ public class TraceableAspect {
      */
     @Pointcut("@annotation(com.bird.core.trace.Traceable)")
     public void logPointCut() {
+        // PointCut
     }
 
     @Before("logPointCut()")
@@ -44,8 +49,9 @@ public class TraceableAspect {
             String entrance = signature.getDeclaringTypeName() + "#" + method.getName();
             Traceable traceable = method.getAnnotation(Traceable.class);
             String description = traceable == null ? StringUtils.EMPTY : traceable.value();
+            List<String> tags = traceable == null ? Collections.emptyList() : Arrays.stream(traceable.tags()).collect(Collectors.toList());
 
-            TraceContext.enter(entrance, args, description);
+            TraceContext.enter(entrance, args, description, tags);
         } catch (Exception ex) {
             log.error("操作日志记录失败：" + ex.getMessage());
         }

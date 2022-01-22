@@ -6,9 +6,7 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author liuxx
@@ -17,7 +15,7 @@ import java.util.UUID;
 @Data
 public class TraceDefinition implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2405172041920251807L;
 
     /**
      * 全局轨迹id
@@ -35,6 +33,10 @@ public class TraceDefinition implements Serializable {
      * 轨迹描述
      */
     private String description;
+    /**
+     * 标签集合
+     */
+    private List<String> tags;
     /**
      * 请求入口
      */
@@ -70,10 +72,11 @@ public class TraceDefinition implements Serializable {
 
     public TraceDefinition() {
         this.claims = new HashMap<>();
+        this.tags = new ArrayList<>();
     }
 
     public TraceDefinition next(String entrance, Object[] params) {
-        TraceDefinition next = initWithDefault(entrance,params);
+        TraceDefinition next = initWithDefault(entrance, params);
         next.globalTraceId = this.globalTraceId;
         next.parentTraceId = this.traceId;
         return next;
@@ -94,6 +97,23 @@ public class TraceDefinition implements Serializable {
                     : session.getUserName();
         }
         return definition;
+    }
+
+    public void addTag(String tag) {
+        if (StringUtils.isBlank(tag)) {
+            return;
+        }
+        if (this.tags == null) {
+            this.tags = new ArrayList<>();
+        }
+        this.tags.add(tag);
+    }
+
+    public boolean hasTag(String tag) {
+        if (StringUtils.isBlank(tag)) {
+            return false;
+        }
+        return this.tags.contains(tag);
     }
 
     public Object getClaim(String key) {

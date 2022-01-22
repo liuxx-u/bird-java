@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author liuxx
@@ -47,23 +48,24 @@ public class TraceContext {
      * @param entrance    入口
      * @param params      参数
      * @param description 描述
+     * @param tags 标签
      */
-    public static void enter(String entrance, Object[] params, String description) {
+    public static void enter(String entrance, Object[] params, String description, List<String> tags) {
 
         TraceDefinition current = current();
         TraceDefinition next = current == null ? TraceDefinition.initWithDefault(entrance, params) : current.next(entrance, params);
         next.setDescription(description);
+        next.setTags(tags);
 
         // 轨迹记录前拦截操作
         try {
             ITraceInterceptor interceptor = SpringContextHolder.getBean(ITraceInterceptor.class);
             interceptor.enter(current, next);
-        } catch (Exception ignore) {
+        } finally {
+            TraceMap traceMap = LOCAL.get();
+            traceMap.setCurrentTraceId(next.getTraceId());
+            traceMap.put(next.getTraceId(), next);
         }
-
-        TraceMap traceMap = LOCAL.get();
-        traceMap.setCurrentTraceId(next.getTraceId());
-        traceMap.put(next.getTraceId(), next);
     }
 
     /**
@@ -96,6 +98,33 @@ public class TraceContext {
     }
 
     /**
+     * 向当前轨迹信息中添加标签
+     *
+     * @param tag 标签
+     */
+    public static void addTag(String tag) {
+        TraceDefinition current = current();
+        if (current == null) {
+            log.warn("当前轨迹信息为NULL");
+            return;
+        }
+        current.addTag(tag);
+    }
+
+    /**
+     * 判断是否包含某个标签
+     * @param tag 标签
+     * @return 是否包含
+     */
+    public static boolean hasTag(String tag) {
+        TraceDefinition current = current();
+        if (current == null) {
+            return false;
+        }
+        return current.hasTag(tag);
+    }
+
+    /**
      * 退出方法
      *
      * @param returnValue 返回值
@@ -121,14 +150,13 @@ public class TraceContext {
         try {
             ITraceInterceptor interceptor = SpringContextHolder.getBean(ITraceInterceptor.class);
             interceptor.exit(current);
-        } catch (Exception ignore) {
-        }
-
-        TraceDefinition parent = traceMap.get(current.getParentTraceId());
-        if (parent != null) {
-            traceMap.setCurrentTraceId(parent.getTraceId());
-        } else {
-            clear();
+        } finally {
+            TraceDefinition parent = traceMap.get(current.getParentTraceId());
+            if (parent != null) {
+                traceMap.setCurrentTraceId(parent.getTraceId());
+            } else {
+                clear();
+            }
         }
     }
 

@@ -28,11 +28,12 @@ import java.util.*;
 @RestControllerAdvice
 public class RequestTraceInterceptor extends PathMatchInterceptorAdapter implements ResponseBodyAdvice<Object> {
 
-    private final static String IP_CLAIM = "ip";
-    private final static List<MediaType> SUPPORT_RESPONSE_CONTENT_TYPE = new ArrayList<>();
+    private static final String IP_CLAIM = "ip";
+    private static final List<MediaType> SUPPORT_RESPONSE_CONTENT_TYPE = new ArrayList<>();
 
     static {
         SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.APPLICATION_JSON);
+        SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.APPLICATION_JSON_UTF8);
         SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.APPLICATION_XML);
         SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.TEXT_PLAIN);
         SUPPORT_RESPONSE_CONTENT_TYPE.add(MediaType.TEXT_XML);
@@ -89,7 +90,7 @@ public class RequestTraceInterceptor extends PathMatchInterceptorAdapter impleme
                 httpParam.setBody(parameters.toString());
             }
 
-            TraceContext.enter(request.getMethod() + ":" + request.getRequestURI(), new Object[]{httpParam}, null);
+            TraceContext.enter(request.getMethod() + ":" + request.getRequestURI(), new Object[]{httpParam}, null, Collections.emptyList());
             TraceContext.current().setClaim(IP_CLAIM, RequestHelper.getRealIp(request));
             TraceContext.current().setGlobalTraceId(globalTraceIdProvider.globalTraceId());
         }

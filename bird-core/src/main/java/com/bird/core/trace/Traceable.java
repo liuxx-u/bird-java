@@ -18,4 +18,10 @@ public @interface Traceable {
      * @return value
      */
     String value() default "";
+    /**
+     * 标签集合
+     *
+     * @return 标签集合
+     */
+    String[] tags() default {};
 }
