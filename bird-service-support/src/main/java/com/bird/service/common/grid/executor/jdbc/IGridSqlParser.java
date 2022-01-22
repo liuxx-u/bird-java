@@ -1,7 +1,7 @@
 package com.bird.service.common.grid.executor.jdbc;
 
 import com.bird.service.common.grid.GridDefinition;
-import com.bird.service.common.service.query.PagedListQuery;
+import com.bird.service.common.grid.pojo.PagedListQuery;
 
 import java.util.Map;
 

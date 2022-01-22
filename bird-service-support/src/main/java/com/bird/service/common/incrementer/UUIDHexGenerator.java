@@ -16,12 +16,12 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 public final class UUIDHexGenerator {
 
-    private final static int RADIX = 36;
-    private final static int TIME_BACK_OFFSET = 1000;
-    private final static int MAX_PID = 1000000;
-    private final static String DELIMITER = "-";
-    private final static String MACHINE_ID = formatMachineId();
-    private final static String JVM_PID = formatJvmPid();
+    private static final int RADIX = 36;
+    private static final int TIME_BACK_OFFSET = 1000;
+    private static final int MAX_PID = 1000000;
+    private static final String DELIMITER = "-";
+    private static final String MACHINE_ID = formatMachineId();
+    private static final String JVM_PID = formatJvmPid();
 
     private static volatile Short SEQUENCE = 0;
     private static volatile long LAST_TIME_STAMP = timeGen();
@@ -34,7 +34,7 @@ public final class UUIDHexGenerator {
      *
      * @return 下一个 ID
      */
-    public synchronized static String generate() {
+    public static synchronized String generate() {
         long timestamp = timeGen();
         //闰秒
         if (timestamp < LAST_TIME_STAMP) {

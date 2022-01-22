@@ -2,7 +2,7 @@ package com.bird.service.common.grid.controller;
 
 import com.bird.service.common.grid.enums.GridActionEnum;
 import com.bird.service.common.grid.executor.GridExecuteContext;
-import com.bird.service.common.service.query.PagedListQuery;
+import com.bird.service.common.grid.pojo.PagedListQuery;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

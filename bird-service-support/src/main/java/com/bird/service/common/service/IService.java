@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
-import com.bird.service.common.model.IDO;
-import com.bird.service.common.service.dto.IEntityBO;
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedListResult;
+import com.bird.service.common.model.IPO;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -19,16 +16,7 @@ import java.util.Map;
  * @author liuxx
  * @date 2019/8/22
  */
-public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
-
-    /**
-     * 自定义通用分页查询方法
-     * @param queryDTO 分页查询参数
-     * @param cls DTO类名
-     * @return 查询结果
-     */
-    @Deprecated
-    PagedListResult queryPagedList(PagedListQuery queryDTO, Class cls);
+public interface IService<T extends IPO<TKey>,TKey extends Serializable> {
 
     /**
      * 根据主键查询实体
@@ -114,30 +102,6 @@ public interface IService<T extends IDO<TKey>,TKey extends Serializable> {
      * @return 是否成功
      */
     boolean update(T model);
-
-    /**
-     * 根据DTO保存数据
-     * @param dto dto
-     * @return 保存后主键值
-     */
-    @Deprecated
-    TKey save(IEntityBO<TKey> dto);
-
-    /**
-     * 根据DTO新增数据
-     * @param dto 数据
-     * @return 新增后的主键值
-     */
-    @Deprecated
-    TKey insert(IEntityBO<TKey> dto);
-
-    /**
-     * 根据DTO更新数据
-     * @param dto 数据
-     * @return 更新后的主键值
-     */
-    @Deprecated
-    TKey update(IEntityBO<TKey> dto);
 
     /**
      * 根据主键删除数据

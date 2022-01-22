@@ -5,8 +5,8 @@ import com.bird.service.common.grid.enums.SortDirectionEnum;
 import com.bird.service.common.grid.executor.jdbc.AutoGridJdbcProperties;
 import com.bird.service.common.grid.executor.jdbc.PreparedStateParameter;
 import com.bird.service.common.grid.executor.jdbc.mysql.GridMySqlParser;
-import com.bird.service.common.service.query.FilterRule;
-import com.bird.service.common.service.query.PagedListQuery;
+import com.bird.service.common.grid.pojo.FilterRule;
+import com.bird.service.common.grid.pojo.PagedListQuery;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -6,8 +6,8 @@ import com.bird.service.common.grid.enums.GridActionEnum;
 import com.bird.service.common.grid.exception.GridException;
 import com.bird.service.common.grid.interceptor.IGridInterceptor;
 import com.bird.service.common.grid.interceptor.IGridQueryInterceptor;
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedResult;
+import com.bird.service.common.grid.pojo.PagedListQuery;
+import com.bird.service.common.grid.pojo.PagedResult;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.BeanFactory;
 

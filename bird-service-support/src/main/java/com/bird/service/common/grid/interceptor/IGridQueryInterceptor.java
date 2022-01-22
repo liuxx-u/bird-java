@@ -1,7 +1,7 @@
 package com.bird.service.common.grid.interceptor;
 
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedResult;
+import com.bird.service.common.grid.pojo.PagedListQuery;
+import com.bird.service.common.grid.pojo.PagedResult;
 
 import java.util.Map;
 

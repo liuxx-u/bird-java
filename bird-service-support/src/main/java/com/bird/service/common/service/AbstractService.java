@@ -1,6 +1,7 @@
 package com.bird.service.common.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
@@ -8,43 +9,23 @@ import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.bird.service.common.mapper.AbstractMapper;
-import com.bird.service.common.mapper.CommonSaveParam;
-import com.bird.service.common.mapper.PagedQueryParam;
-import com.bird.service.common.model.IDO;
-import com.bird.service.common.service.dto.IEntityBO;
-import com.bird.service.common.service.query.PagedListQuery;
-import com.bird.service.common.service.query.PagedListResult;
+import com.bird.service.common.model.IPO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liuxx
  * @date 2019/8/22
  */
-public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<TKey>,TKey extends Serializable> extends BaseService implements IService<T,TKey> {
+public abstract class AbstractService<M extends AbstractMapper<T>,T extends IPO<TKey>,TKey extends Serializable> extends BaseService implements IService<T,TKey> {
 
     @Autowired
     protected M mapper;
-
-    /**
-     * 自定义通用分页查询方法
-     * @param query 分页查询参数
-     * @param cls DTO类名
-     * @return 查询结果
-     */
-    @Override
-    public PagedListResult queryPagedList(PagedListQuery query, Class cls) {
-        PagedQueryParam param = new PagedQueryParam(query, cls);
-        return this.queryPagedList(param);
-    }
 
     /**
      * 根据主键查询实体
@@ -109,33 +90,6 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
     }
 
     /**
-     * 查询（根据ID 批量查询）并转换为指定的数据类型
-     *
-     * @param ids 主键ID列表
-     * @return 指定类型的数据列表
-     */
-    @Override
-    public <K> List<K> listByIds(Collection<TKey> ids, Class<K> cls) {
-        List<T> list = listByIds(ids);
-        List<K> list2 = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (T t : list) {
-                try {
-                    Constructor<K> constructor = cls.getDeclaredConstructor();
-                    constructor.setAccessible(true);
-                    K k = constructor.newInstance();
-                    BeanUtils.copyProperties(t, k);
-                    list2.add(k);
-                } catch (Exception e) {
-                    logger.error("类型转换错误", e);
-                    return list2;
-                }
-            }
-        }
-        return list2;
-    }
-
-    /**
      * 查询列表
      *
      * @param queryWrapper 实体对象封装操作类
@@ -165,6 +119,23 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
     @Override
     public int count(Wrapper<T> queryWrapper) {
         return SqlHelper.retCount(mapper.selectCount(queryWrapper));
+    }
+
+    /**
+     * 校验是否存在（单条件）
+     *
+     * @param column 列
+     * @param value 值
+     * @param excludeId 排除的id
+     * @return 是否存在
+     */
+    public boolean checkExist(SFunction<T, ?> column, Object value, Long excludeId) {
+        T model = lambdaQuery().eq(column, value).last("limit 1").one();
+        if (model == null) {
+            return false;
+        }
+
+        return !Objects.equals(model.getId(), excludeId);
     }
 
     /**
@@ -204,45 +175,6 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
     public boolean update(T model) {
         int result = mapper.updateById(model);
         return result >= 1;
-    }
-
-    /**
-     * 根据DTO保存数据
-     * @param dto dto
-     * @return 保存后主键值
-     */
-    @Override
-    public TKey save(IEntityBO<TKey> dto) {
-        TKey id = dto.getId();
-        if (this.isEmptyKey(id)) {
-            return this.insert(dto);
-        } else {
-            return this.update(dto);
-        }
-    }
-
-    /**
-     * 根据DTO新增数据
-     * @param dto 数据
-     * @return 新增后的主键值
-     */
-    @Override
-    public TKey insert(IEntityBO<TKey> dto) {
-        CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
-        mapper.insertDto(param);
-        return dto.getId();
-    }
-
-    /**
-     * 根据DTO更新数据
-     * @param dto 数据
-     * @return 更新后的主键值
-     */
-    @Override
-    public TKey update(IEntityBO<TKey> dto){
-        CommonSaveParam<TKey> param = new CommonSaveParam<>(dto, dto.getClass());
-        mapper.updateDto(param);
-        return dto.getId();
     }
 
     /**
@@ -345,24 +277,7 @@ public abstract class AbstractService<M extends AbstractMapper<T>,T extends IDO<
      * @param id id
      * @return true or false
      */
-    protected Boolean isEmptyKey(TKey id) {
+    protected boolean isEmptyKey(TKey id) {
         return id == null;
-    }
-
-    /**
-     * 自定义通用分页查询方法
-     * @param param 分页查询参数
-     * @return 查询结果
-     */
-    @Deprecated
-    protected PagedListResult queryPagedList(PagedQueryParam param) {
-        Map<String, Object> sum = mapper.queryPagedSum(param);
-        Long totalCount = Long.parseLong(sum.getOrDefault("totalCount", 0L).toString());
-        List<Map> items = new ArrayList<>();
-        if (totalCount > 0) {
-            items = mapper.queryPagedList(param);
-
-        }
-        return new PagedListResult(totalCount, items, sum);
     }
 }

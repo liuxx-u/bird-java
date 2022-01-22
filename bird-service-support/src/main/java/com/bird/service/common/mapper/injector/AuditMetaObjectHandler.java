@@ -19,15 +19,15 @@ public class AuditMetaObjectHandler implements MetaObjectHandler {
         Date current = new Date();
 
         setFieldValByName("delFlag", false, metaObject);
-        setFieldValByName("creatorId", SessionContext.getUserId(), metaObject);
-        setFieldValByName("createTime", current, metaObject);
-        setFieldValByName("modifierId", SessionContext.getUserId(), metaObject);
-        setFieldValByName("modifiedTime", current, metaObject);
+        setFieldValByName("createdAt", current, metaObject);
+        setFieldValByName("createdBy", SessionContext.getUserId(), metaObject);
+        setFieldValByName("updatedAt", current, metaObject);
+        setFieldValByName("updatedBy", SessionContext.getUserId(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        setFieldValByName("modifierId", SessionContext.getUserId(), metaObject);
-        setFieldValByName("modifiedTime", new Date(), metaObject);
+        setFieldValByName("updatedAt", new Date(), metaObject);
+        setFieldValByName("updatedBy", SessionContext.getUserId(), metaObject);
     }
 }
