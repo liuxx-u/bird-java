@@ -23,7 +23,7 @@ public abstract class StringPO extends StringPurePO implements ISoftDelete, IHas
     private Boolean delFlag;
 
     @TableField(fill = FieldFill.INSERT)
-    private Date createAt;
+    private Date createdAt;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updatedAt;
