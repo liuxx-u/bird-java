@@ -50,14 +50,6 @@ public interface IService<T extends IPO<TKey>,TKey extends Serializable> {
     List<T> listByIds(Collection<TKey> ids);
 
     /**
-     * 查询（根据ID 批量查询）并转换为指定的数据类型
-     *
-     * @param ids 主键ID列表
-     * @return 指定类型的数据列表
-     */
-    <K> List<K> listByIds(Collection<TKey> ids, Class<K> cls);
-
-    /**
      * 查询列表
      *
      * @param queryWrapper 实体对象封装操作类
