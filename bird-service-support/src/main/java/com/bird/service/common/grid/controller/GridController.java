@@ -28,8 +28,8 @@ public class GridController {
      * @param query    查询条件
      * @return 查询结果
      */
-    @PostMapping("/{gridName}/listPaged")
-    public Object listPaged(@PathVariable("gridName") String gridName, @RequestBody PagedListQuery query) {
+    @PostMapping("/{gridName}/listPage")
+    public Object listPage(@PathVariable("gridName") String gridName, @RequestBody PagedListQuery query) {
         return executeContext.execute(gridName, GridActionEnum.QUERY, query);
     }
 
