@@ -29,15 +29,16 @@ public class GridMetaObjectInterceptor implements IGridInterceptor {
         }
 
         Date current = new Date();
+        String userId = SessionContext.getUserId();
 
         Map<String, Object> pojo = (Map<String, Object>) inputData;
-        pojo.put("modifierId", SessionContext.getUserId());
-        pojo.put("modifiedTime", current);
+        pojo.put("updatedAt", current);
+        pojo.put("updatedBy", userId);
 
         if (actionEnum == GridActionEnum.INSERT) {
             pojo.put("delFlag", 0);
-            pojo.put("createTime", current);
-            pojo.put("creatorId", SessionContext.getUserId());
+            pojo.put("createdAt", current);
+            pojo.put("createdBy", userId);
         }
         return true;
     }

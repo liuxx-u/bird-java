@@ -22,8 +22,8 @@ public abstract class StringAutoGrid extends StringPureAutoGrid {
     @GridField(queryStrategy = QueryStrategyEnum.HIDE)
     private Boolean delFlag;
 
-    private Date createTime;
+    private Date createdAt;
 
     @GridField(queryStrategy = QueryStrategyEnum.HIDE)
-    private Date modifiedTime;
+    private Date updatedAt;
 }

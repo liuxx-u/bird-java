@@ -70,7 +70,7 @@ public @interface AutoGrid {
     /**
      * 数据库字段模式，默认：与表格字段相同
      */
-    DbFieldMode dbFeildMode() default DbFieldMode.SAME;
+    DbFieldMode dbFieldMode() default DbFieldMode.SAME;
 
     /**
      * 查询拦截器类名
