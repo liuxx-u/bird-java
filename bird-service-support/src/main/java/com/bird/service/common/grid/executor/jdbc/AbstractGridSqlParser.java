@@ -87,12 +87,17 @@ public abstract class AbstractGridSqlParser implements IGridSqlParser {
             if (SaveStrategyEnum.isIgnoreInsert(fieldDefinition.getSaveStrategy())) {
                 continue;
             }
+            Object fieldValue = pojo.get(fieldDefinition.getFieldName());
+            if (fieldValue == null) {
+                continue;
+            }
+
             if (!isStart) {
                 stateParameter.append(",");
                 valueSql.append(",");
             }
             stateParameter.append(this.formatDbField(fieldDefinition.getDbField()));
-            stateParameter.addParameter(fieldDefinition.getFieldType(), pojo.get(fieldDefinition.getFieldName()));
+            stateParameter.addParameter(fieldDefinition.getFieldType(), fieldValue);
             valueSql.append("?");
             isStart = false;
         }
