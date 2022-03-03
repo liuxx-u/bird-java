@@ -123,7 +123,7 @@ public class GridDefinition {
         String logicDeleteField = StringUtils.EMPTY;
         Map<String, GridFieldDefinition> fieldDefinitions = new LinkedHashMap<>(32);
 
-        Class tempClass = gridClass;
+        Class<?> tempClass = gridClass;
         while (tempClass != null && !StringUtils.equals(tempClass.getName(), OBJECT_CLASS_NAME)) {
             Field[] tempFields = tempClass.getDeclaredFields();
             for (Field field : tempFields) {

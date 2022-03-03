@@ -75,7 +75,6 @@ public class GridExecuteContext {
     private Object doExecute(GridActionEnum actionEnum, GridDefinition gridDefinition, Object inputData) {
         IGridExecutor gridExecutor = this.gridExecutor(gridDefinition);
 
-
         switch (actionEnum) {
             case QUERY:
                 IGridQueryInterceptor queryInterceptor = null;

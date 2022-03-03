@@ -47,6 +47,13 @@ public class JdbcGridExecutor implements IGridExecutor {
             return new PagedResult<>();
         }
 
+        if (StringUtils.isNotBlank(gridDefinition.getLogicDeleteField())) {
+            GridFieldDefinition logicDeleteField = gridDefinition.getFieldDefinition(gridDefinition.getLogicDeleteField());
+            if (logicDeleteField != null) {
+                query.addFilter(gridDefinition.getLogicDeleteField(), logicDeleteField.getLogicNotDeleteValue().toString());
+            }
+        }
+
         PreparedStateParameter sumStateParameter = sqlParser.listSum(gridDefinition, query);
         Map<String, Object> sum = this.executeQuery(sumStateParameter, PreparedStateUtils::readFirstRow);
         if (sum == null) {

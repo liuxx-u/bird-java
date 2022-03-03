@@ -64,7 +64,7 @@ public class GridController {
      * @param id       主键id
      */
     @PostMapping("/{gridName}/delete")
-    public void delete(@PathVariable("gridName") String gridName, String id) {
-        executeContext.execute(gridName, GridActionEnum.DELETE, id);
+    public Object delete(@PathVariable("gridName") String gridName, String id) {
+        return executeContext.execute(gridName, GridActionEnum.DELETE, id);
     }
 }
