@@ -13,7 +13,7 @@
 
     <properties>
         <!--logstash-logback-->
-        <logstash-logback.version>5.0</logstash-logback.version>
+        <logstash-logback.version>6.6</logstash-logback.version>
     </properties>
 
     <dependencies>
