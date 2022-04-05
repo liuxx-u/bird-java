@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2020/7/27
  */
 @RestController
-@RequestMapping("/vb/idempotency")
+@RequestMapping("/v1/idempotency")
 public class IdempotencyController {
 
     @Autowired(required = false)
