@@ -48,7 +48,7 @@ public final class PreparedStateUtils {
             while (resultSet.next()) {
                 Map<String, Object> rowData = new HashMap<>(16);
                 for (int i = 1; i <= columnCount; i++) {
-                    rowData.put(metaData.getColumnName(i), resultSet.getObject(i));
+                    rowData.put(metaData.getColumnLabel(i), resultSet.getObject(i));
                 }
                 list.add(rowData);
             }
