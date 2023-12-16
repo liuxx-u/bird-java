@@ -123,12 +123,12 @@
         <repository>
             <id>releases</id>
             <name>Internal Releases</name>
-            <url>http://10.10.128.154:8081/repository/maven-releases</url>
+            <url>https://10.10.128.154:8081/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>Internal Snapshots</name>
-            <url>http://10.10.128.154:8081/repository/maven-snapshots</url>
+            <url>https://10.10.128.154:8081/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
